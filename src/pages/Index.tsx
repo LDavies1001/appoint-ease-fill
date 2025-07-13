@@ -80,7 +80,7 @@ const Index = () => {
                     className="flex-1 border-border/40"
                   >
                     <Building className="w-4 h-4 mr-2" />
-                    Provider
+                    Business
                   </Button>
                 </div>
                 
