@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
-import { Calendar, ChevronDown, User, Settings, LogOut } from 'lucide-react';
+import { Calendar, ChevronDown, User, Settings, LogOut, Building } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   DropdownMenu,
@@ -47,6 +47,12 @@ const Header = () => {
                     <Link to="/dashboard" className="flex items-center">
                       <User className="h-4 w-4 mr-2" />
                       Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/business-profile" className="flex items-center">
+                      <Building className="h-4 w-4 mr-2" />
+                      My Business Profile
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
