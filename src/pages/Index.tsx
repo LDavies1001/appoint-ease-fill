@@ -55,41 +55,46 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Search Card */}
+            {/* Sign Up Form */}
             <Card className="p-6 shadow-soft border border-border/40">
               <div className="space-y-4">
-                <div className="flex gap-2">
-                  <Button variant="default" size="sm" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
-                    <Search className="w-4 h-4 mr-2" />
-                    Services
+                <div className="text-center mb-4">
+                  <h2 className="text-lg font-semibold text-foreground mb-2">Join FillMyHole</h2>
+                  <p className="text-sm text-muted-foreground">Choose your account type</p>
+                </div>
+                
+                <div className="flex gap-2 mb-6">
+                  <Button variant="default" size="sm" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 flex-1">
+                    <User className="w-4 h-4 mr-2" />
+                    Customer
                   </Button>
-                  <Button variant="outline" size="sm" className="border-border/40">
+                  <Button variant="outline" size="sm" className="border-border/40 flex-1">
                     <Building className="w-4 h-4 mr-2" />
-                    Providers
+                    Business
                   </Button>
                 </div>
                 
                 <div className="space-y-3">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search for treatments" className="pl-10 h-12 text-base" />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input placeholder="First Name" className="h-12 text-base" />
+                    <Input placeholder="Last Name" className="h-12 text-base" />
                   </div>
                   
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Enter location" className="pl-10 h-12 text-base" />
-                  </div>
+                  <Input placeholder="Email Address" type="email" className="h-12 text-base" />
                   
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Any date" className="pl-10 h-12 text-base" />
-                  </div>
+                  <Input placeholder="Password" type="password" className="h-12 text-base" />
+                  
+                  <Input placeholder="Confirm Password" type="password" className="h-12 text-base" />
                 </div>
                 
                 <Button variant="hero" size="lg" className="w-full h-12 text-base font-semibold">
-                  Search Available Slots
+                  Create Account
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
+                
+                <p className="text-center text-sm text-muted-foreground">
+                  Already have an account? <button className="text-primary hover:underline">Sign In</button>
+                </p>
               </div>
             </Card>
 
