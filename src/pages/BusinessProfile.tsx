@@ -63,6 +63,7 @@ const BusinessProfile = () => {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [availableServices, setAvailableServices] = useState<any[]>([]);
 
   const { user, profile } = useAuth();
   const { toast } = useToast();
@@ -80,6 +81,7 @@ const BusinessProfile = () => {
     }
 
     fetchBusinessDetails();
+    fetchAvailableServices();
   }, [user, profile, navigate]);
 
   const fetchBusinessDetails = async () => {
@@ -104,6 +106,20 @@ const BusinessProfile = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAvailableServices = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .order('category', { ascending: true });
+      
+      if (error) throw error;
+      setAvailableServices(data || []);
+    } catch (error) {
+      console.error('Error fetching services:', error);
     }
   };
 
@@ -230,6 +246,11 @@ const BusinessProfile = () => {
       // Reset the input
       event.target.value = '';
     }
+  };
+
+  const getServiceNameById = (serviceId: string) => {
+    const service = availableServices.find(s => s.id === serviceId);
+    return service ? service.name : serviceId;
   };
 
   const handleFileDelete = async (fileUrl: string, fileName: string) => {
@@ -586,21 +607,25 @@ const BusinessProfile = () => {
                 <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Services Offered</Label>
                 <div className="space-y-3">
                   {details.services_offered?.length ? (
-                    <div className="flex flex-wrap gap-2">
-                      {details.services_offered.map((service, index) => (
-                        <Badge 
-                          key={index} 
-                          variant="secondary" 
-                          className="px-3 py-1 text-sm bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors"
-                        >
-                          {service}
-                        </Badge>
+                    <div className="space-y-2">
+                      {details.services_offered.map((serviceId, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-background/80 rounded-lg border">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-2 h-2 bg-primary rounded-full"></div>
+                            <span className="font-medium text-foreground">{getServiceNameById(serviceId)}</span>
+                          </div>
+                          <Badge variant="secondary" className="bg-primary/10 text-primary">
+                            Active
+                          </Badge>
+                        </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-muted-foreground italic">No services configured yet</p>
+                    <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
+                      No services configured yet. Set up your services to show what you offer.
+                    </p>
                   )}
-                  <div className="flex items-center text-muted-foreground text-sm">
+                  <div className="flex items-center text-muted-foreground text-sm mt-3">
                     <Users className="h-4 w-4 mr-2" />
                     {details.services_offered?.length || 0} service{details.services_offered?.length !== 1 ? 's' : ''} available
                   </div>
@@ -646,11 +671,19 @@ const BusinessProfile = () => {
                 ) : (
                   <div className="space-y-3">
                     {formatPricingInfo(details.pricing_info) ? (
-                      <div className="grid gap-3">
+                      <div className="space-y-2">
                         {formatPricingInfo(details.pricing_info).map((item: any, index: number) => (
-                          <div key={index} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg border">
-                            <span className="font-medium text-foreground">{item.service}</span>
-                            <span className="text-lg font-bold text-primary">£{item.price}</span>
+                          <div key={index} className="flex items-center justify-between p-4 bg-background/80 rounded-lg border hover:bg-background/90 transition-colors">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                                <DollarSign className="h-4 w-4 text-primary" />
+                              </div>
+                              <span className="font-medium text-foreground text-base">{item.service}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-xl font-bold text-primary">£{item.price}</span>
+                              <p className="text-xs text-muted-foreground">Standard rate</p>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -659,7 +692,7 @@ const BusinessProfile = () => {
                         No pricing information set. Add your service prices to help customers understand your rates.
                       </p>
                     )}
-                    <div className="flex items-center text-muted-foreground text-sm">
+                    <div className="flex items-center text-muted-foreground text-sm mt-3">
                       <DollarSign className="h-4 w-4 mr-2" />
                       Standard pricing for your services
                     </div>
