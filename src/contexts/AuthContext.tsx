@@ -99,12 +99,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          role: role
-        }
+        emailRedirectTo: redirectUrl
       }
     });
+
+    // If signup was successful and we need a provider role, update it
+    if (!error && data.user && role === 'provider') {
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ role: 'provider' })
+        .eq('user_id', data.user.id);
+      
+      if (updateError) {
+        console.error('Error updating role:', updateError);
+      }
+    }
 
     return { error };
   };
