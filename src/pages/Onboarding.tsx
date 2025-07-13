@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Building, MapPin, Phone, FileText, CheckCircle } from 'lucide-react';
+import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star } from 'lucide-react';
 import Header from '@/components/ui/header';
 
 interface Service {
@@ -22,13 +22,27 @@ interface Service {
 const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
+    // Personal Information
     name: '',
     phone: '',
     location: '',
     bio: '',
+    // Business Information
     business_name: '',
+    business_description: '',
     services_offered: [] as string[],
-    availability_notes: ''
+    availability_notes: '',
+    // Business Details
+    business_email: '',
+    business_website: '',
+    years_experience: '',
+    pricing_info: '',
+    operating_hours: '',
+    service_area: '',
+    // Additional Business Info
+    insurance_info: '',
+    certifications: '',
+    emergency_available: false
   });
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
@@ -95,12 +109,15 @@ const Onboarding = () => {
     if (currentStep === 1 && profile?.role === 'provider') {
       return formData.business_name.trim() && formData.services_offered.length > 0;
     }
+    if (currentStep === 2 && profile?.role === 'provider') {
+      return formData.business_description.trim() && formData.years_experience.trim();
+    }
     return true;
   };
 
   const handleNext = () => {
     if (validateStep()) {
-      if (profile?.role === 'customer' || currentStep === 1) {
+      if (profile?.role === 'customer' || currentStep === 2) {
         handleComplete();
       } else {
         setCurrentStep(prev => prev + 1);
@@ -163,18 +180,20 @@ const Onboarding = () => {
   const getStepTitle = () => {
     if (currentStep === 0) return "Complete Your Profile";
     if (currentStep === 1) return "Business Information";
+    if (currentStep === 2) return "Business Details";
     return "";
   };
 
   const getStepDescription = () => {
     if (currentStep === 0) return "Tell us about yourself";
-    if (currentStep === 1) return "Set up your business details";
+    if (currentStep === 1) return "Set up your business basics";
+    if (currentStep === 2) return "Add detailed business information";
     return "";
   };
 
   if (!profile) return null;
 
-  const totalSteps = profile.role === 'provider' ? 2 : 1;
+  const totalSteps = profile.role === 'provider' ? 3 : 1;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -321,6 +340,150 @@ const Onboarding = () => {
             </div>
           )}
 
+          {currentStep === 2 && profile.role === 'provider' && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="business_description">Business Description *</Label>
+                <div className="relative">
+                  <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Textarea
+                    id="business_description"
+                    placeholder="Describe your business and what makes you unique..."
+                    value={formData.business_description}
+                    onChange={(e) => handleInputChange('business_description', e.target.value)}
+                    className="pl-10 min-h-[80px]"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="years_experience">Years of Experience *</Label>
+                  <div className="relative">
+                    <Star className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="years_experience"
+                      type="number"
+                      min="0"
+                      placeholder="Years"
+                      value={formData.years_experience}
+                      onChange={(e) => handleInputChange('years_experience', e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="business_email">Business Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="business_email"
+                      type="email"
+                      placeholder="business@example.com"
+                      value={formData.business_email}
+                      onChange={(e) => handleInputChange('business_email', e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="business_website">Business Website</Label>
+                <div className="relative">
+                  <Globe className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="business_website"
+                    placeholder="https://www.yourbusiness.com"
+                    value={formData.business_website}
+                    onChange={(e) => handleInputChange('business_website', e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="service_area">Service Area</Label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="service_area"
+                    placeholder="Areas you serve (e.g., Within 20 miles of London)"
+                    value={formData.service_area}
+                    onChange={(e) => handleInputChange('service_area', e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="operating_hours">Operating Hours</Label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="operating_hours"
+                    placeholder="e.g., Mon-Fri 8AM-6PM, Sat 9AM-4PM"
+                    value={formData.operating_hours}
+                    onChange={(e) => handleInputChange('operating_hours', e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="pricing_info">Pricing Information</Label>
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Textarea
+                    id="pricing_info"
+                    placeholder="Your pricing structure (e.g., £50/hour, £200 call-out fee)"
+                    value={formData.pricing_info}
+                    onChange={(e) => handleInputChange('pricing_info', e.target.value)}
+                    className="pl-10 min-h-[60px]"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="certifications">Certifications & Qualifications</Label>
+                <Textarea
+                  id="certifications"
+                  placeholder="List any relevant certifications, licenses, or qualifications..."
+                  value={formData.certifications}
+                  onChange={(e) => handleInputChange('certifications', e.target.value)}
+                  className="min-h-[60px]"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="insurance_info">Insurance Information</Label>
+                <Textarea
+                  id="insurance_info"
+                  placeholder="Details about your business insurance coverage..."
+                  value={formData.insurance_info}
+                  onChange={(e) => handleInputChange('insurance_info', e.target.value)}
+                  className="min-h-[60px]"
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="emergency_available"
+                  checked={formData.emergency_available}
+                  onCheckedChange={(checked) => 
+                    setFormData(prev => ({ ...prev, emergency_available: !!checked }))
+                  }
+                />
+                <Label htmlFor="emergency_available" className="text-sm font-normal cursor-pointer">
+                  Available for emergency/urgent calls
+                </Label>
+              </div>
+            </div>
+          )}
+
           <div className="flex justify-between mt-6">
             {currentStep > 0 && (
               <Button
@@ -341,7 +504,7 @@ const Onboarding = () => {
                 "Saving..."
               ) : (
                 <>
-                  {profile.role === 'customer' || currentStep === 1 ? (
+                  {profile.role === 'customer' || currentStep === 2 ? (
                     <>
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Complete Profile
