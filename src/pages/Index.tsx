@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import heroImage from '@/assets/hero-appointment-scene.jpg';
 
 const Index = () => {
   return (
@@ -121,24 +122,25 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Right Side - Hero Image Placeholder */}
+          {/* Right Side - Hero Image */}
           <div className="lg:pl-8">
-            <div className="aspect-square bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5 rounded-3xl flex items-center justify-center relative overflow-hidden">
-              <div className="text-center space-y-4">
-                <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mx-auto">
-                  <Sparkles className="h-12 w-12 text-white" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-foreground">5-Star Service</h3>
-                  <p className="text-muted-foreground">Trusted by thousands</p>
-                </div>
-              </div>
+            <div className="aspect-square bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
+              <img 
+                src={heroImage} 
+                alt="Professional appointment booking experience"
+                className="w-full h-full object-cover"
+              />
               {/* Floating elements */}
-              <div className="absolute top-8 right-8 bg-white rounded-full p-3 shadow-soft">
+              <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-soft">
                 <Star className="h-6 w-6 text-accent fill-accent" />
               </div>
-              <div className="absolute bottom-8 left-8 bg-white rounded-full p-3 shadow-soft">
+              <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-soft">
                 <Clock className="h-6 w-6 text-primary" />
+              </div>
+              {/* Overlay text */}
+              <div className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-soft max-w-xs">
+                <div className="text-sm font-semibold text-foreground">Book instantly</div>
+                <div className="text-xs text-muted-foreground">Available now</div>
               </div>
             </div>
           </div>
