@@ -5,10 +5,8 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import heroImage from '@/assets/hero-appointment-scene.jpg';
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-white">
+  return <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="bg-white border-b border-border/40 sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,77 +55,41 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Sign Up Card */}
+            {/* Search Card */}
             <Card className="p-6 shadow-soft border border-border/40">
               <div className="space-y-4">
-                <div className="text-center mb-4">
-                  <h3 className="text-lg font-semibold text-foreground mb-2">Get Started Today</h3>
-                  <p className="text-sm text-muted-foreground">Join as a customer or list your services</p>
-                </div>
-                
                 <div className="flex gap-2">
-                  <Button
-                    variant="default"
-                    size="sm"
-                    className="flex-1 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20"
-                  >
-                    <User className="w-4 h-4 mr-2" />
-                    Customer
+                  <Button variant="default" size="sm" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
+                    <Search className="w-4 h-4 mr-2" />
+                    Services
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 border-border/40"
-                  >
+                  <Button variant="outline" size="sm" className="border-border/40">
                     <Building className="w-4 h-4 mr-2" />
-                    Business
+                    Providers
                   </Button>
                 </div>
                 
                 <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <Input
-                      placeholder="First name"
-                      className="h-12 text-base"
-                    />
-                    <Input
-                      placeholder="Last name"
-                      className="h-12 text-base"
-                    />
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search for treatments" className="pl-10 h-12 text-base" />
                   </div>
                   
-                  <Input
-                    type="email"
-                    placeholder="Email address"
-                    className="h-12 text-base"
-                  />
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Enter location" className="pl-10 h-12 text-base" />
+                  </div>
                   
-                  <Input
-                    type="password"
-                    placeholder="Create a password"
-                    className="h-12 text-base"
-                  />
-                  
-                  <Input
-                    type="password"
-                    placeholder="Confirm password"
-                    className="h-12 text-base"
-                  />
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Any date" className="pl-10 h-12 text-base" />
+                  </div>
                 </div>
                 
-                <Link to="/auth?tab=signup">
-                  <Button variant="hero" size="lg" className="w-full h-12 text-base font-semibold">
-                    Create Account
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                
-                <p className="text-center text-sm text-muted-foreground">
-                  Already have an account?{' '}
-                  <Link to="/auth" className="text-primary hover:underline font-medium">
-                    Sign in
-                  </Link>
-                </p>
+                <Button variant="hero" size="lg" className="w-full h-12 text-base font-semibold">
+                  Search Available Slots
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
               </div>
             </Card>
 
@@ -144,14 +106,10 @@ const Index = () => {
           {/* Right Side - Hero Image */}
           <div className="lg:pl-8">
             <div className="aspect-square bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
-              <img 
-                src={heroImage} 
-                alt="Professional appointment booking experience"
-                className="w-full h-full object-cover"
-              />
+              <img src={heroImage} alt="Professional appointment booking experience" className="w-full h-full object-cover" />
               {/* Floating elements */}
               <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-soft">
-                <Star className="h-6 w-6 text-accent fill-accent" />
+                
               </div>
               <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-soft">
                 <Clock className="h-6 w-6 text-primary" />
@@ -169,16 +127,12 @@ const Index = () => {
         <div className="py-16 border-t border-border/40">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">How It Works</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Simple booking for everyone
-            </p>
+            
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="p-6 text-center border-0 bg-gradient-to-br from-background to-muted/20 hover:shadow-soft transition-all duration-300">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Clock className="h-6 w-6 text-primary" />
-              </div>
+              
               <h3 className="text-lg font-semibold mb-2 text-foreground">Book Instantly</h3>
               <p className="text-muted-foreground text-sm">
                 See what's available and book right away. No waiting around.
@@ -236,8 +190,6 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
