@@ -13,11 +13,13 @@ import {
   Plus, 
   Calendar, 
   Clock, 
-  DollarSign, 
+  PoundSterling, 
   Users,
   LogOut,
   Settings,
-  BookOpen
+  BookOpen,
+  Upload,
+  X
 } from 'lucide-react';
 
 interface Service {
@@ -34,6 +36,8 @@ interface AvailabilitySlot {
   end_time: string;
   duration: number;
   price: number;
+  discount_price?: number;
+  image_url?: string;
   notes: string;
   is_booked: boolean;
   service: {
@@ -70,8 +74,12 @@ const ProviderDashboard = () => {
     start_time: '',
     duration: 60,
     price: '',
-    notes: ''
+    discount_price: '',
+    notes: '',
+    image_url: ''
   });
+  const [uploading, setUploading] = useState(false);
+  const [providerServices, setProviderServices] = useState<Array<{name: string, price: number}>>([]);
   
   const { profile, signOut } = useAuth();
   const { toast } = useToast();
@@ -80,6 +88,7 @@ const ProviderDashboard = () => {
     fetchServices();
     fetchMySlots();
     fetchMyBookings();
+    fetchProviderServices();
   }, []);
 
   const fetchServices = async () => {
@@ -156,10 +165,33 @@ const ProviderDashboard = () => {
     }
   };
 
+  const fetchProviderServices = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('provider_details')
+        .select('pricing_info')
+        .eq('user_id', profile?.user_id)
+        .single();
+
+      if (error) throw error;
+
+      if (data?.pricing_info) {
+        try {
+          const services = JSON.parse(data.pricing_info);
+          setProviderServices(services);
+        } catch (parseError) {
+          console.error('Error parsing pricing info:', parseError);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching provider services:', error);
+    }
+  };
+
   const handleAddSlot = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!slotForm.service_id || !slotForm.date || !slotForm.start_time) {
+    if (!slotForm.service_id || !slotForm.date || !slotForm.start_time || !slotForm.price) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive"
@@ -180,7 +212,9 @@ const ProviderDashboard = () => {
           start_time: slotForm.start_time,
           end_time: endTime.toTimeString().slice(0, 5),
           duration: slotForm.duration,
-          price: slotForm.price ? parseFloat(slotForm.price) : null,
+          price: parseFloat(slotForm.price),
+          discount_price: slotForm.discount_price ? parseFloat(slotForm.discount_price) : null,
+          image_url: slotForm.image_url || null,
           notes: slotForm.notes
         });
 
@@ -197,7 +231,9 @@ const ProviderDashboard = () => {
         start_time: '',
         duration: 60,
         price: '',
-        notes: ''
+        discount_price: '',
+        notes: '',
+        image_url: ''
       });
       setShowAddSlot(false);
       fetchMySlots();
@@ -207,6 +243,51 @@ const ProviderDashboard = () => {
         description: error.message,
         variant: "destructive"
       });
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image under 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${profile?.user_id}-slot-${Date.now()}.${fileExt}`;
+      const filePath = `${profile?.user_id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('business-photos')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('business-photos')
+        .getPublicUrl(filePath);
+
+      setSlotForm(prev => ({ ...prev, image_url: publicUrl }));
+      
+      toast({
+        title: "Image uploaded successfully!",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error uploading image",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -336,35 +417,44 @@ const ProviderDashboard = () => {
           <div className="space-y-6">
             {/* Add Slot Button */}
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-foreground">Availability Slots</h2>
-              <Button
-                variant="hero"
-                onClick={() => setShowAddSlot(!showAddSlot)}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Slot
-              </Button>
+              <h2 className="text-xl font-semibold text-foreground">Add a Slot</h2>
+              {!showAddSlot && (
+                <Button
+                  variant="hero"
+                  onClick={() => setShowAddSlot(!showAddSlot)}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Slot
+                </Button>
+              )}
             </div>
 
             {/* Add Slot Form */}
             {showAddSlot && (
               <Card className="card-elegant p-6">
-                <h3 className="text-lg font-semibold mb-4">Add New Availability Slot</h3>
+                <h3 className="text-lg font-semibold mb-4">Add New Slot</h3>
                 <form onSubmit={handleAddSlot} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="service">Service *</Label>
                       <Select 
                         value={slotForm.service_id} 
-                        onValueChange={(value) => setSlotForm(prev => ({ ...prev, service_id: value }))}
+                        onValueChange={(value) => {
+                          setSlotForm(prev => ({ ...prev, service_id: value }));
+                          // Auto-fill price from provider's price list
+                          const selectedService = providerServices.find(s => s.name === value);
+                          if (selectedService) {
+                            setSlotForm(prev => ({ ...prev, price: selectedService.price.toString() }));
+                          }
+                        }}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select a service" />
                         </SelectTrigger>
                         <SelectContent>
-                          {services.map((service) => (
-                            <SelectItem key={service.id} value={service.id}>
-                              {service.name} ({service.category})
+                          {providerServices.map((service, index) => (
+                            <SelectItem key={index} value={service.name}>
+                              {service.name} (£{service.price})
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -407,9 +497,9 @@ const ProviderDashboard = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="price">Price (optional)</Label>
+                      <Label htmlFor="price">Price *</Label>
                       <div className="relative">
-                        <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <PoundSterling className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="price"
                           type="number"
@@ -418,8 +508,63 @@ const ProviderDashboard = () => {
                           value={slotForm.price}
                           onChange={(e) => setSlotForm(prev => ({ ...prev, price: e.target.value }))}
                           className="pl-10"
+                          required
                         />
                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="discount_price">Discounted Price (optional)</Label>
+                      <div className="relative">
+                        <PoundSterling className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="discount_price"
+                          type="number"
+                          step="0.01"
+                          placeholder="0.00"
+                          value={slotForm.discount_price}
+                          onChange={(e) => setSlotForm(prev => ({ ...prev, discount_price: e.target.value }))}
+                          className="pl-10"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="image">Image (optional)</Label>
+                    <div className="flex items-center gap-4">
+                      <label htmlFor="image-upload" className="cursor-pointer">
+                        <div className="flex items-center gap-2 p-2 border border-border rounded-md hover:bg-muted/50">
+                          <Upload className="h-4 w-4" />
+                          <span className="text-sm">{uploading ? "Uploading..." : "Upload Image"}</span>
+                        </div>
+                        <input
+                          id="image-upload"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          disabled={uploading}
+                        />
+                      </label>
+                      {slotForm.image_url && (
+                        <div className="relative">
+                          <img 
+                            src={slotForm.image_url} 
+                            alt="Slot" 
+                            className="w-16 h-16 object-cover rounded"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="absolute -top-2 -right-2 w-6 h-6 p-0"
+                            onClick={() => setSlotForm(prev => ({ ...prev, image_url: '' }))}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -492,9 +637,16 @@ const ProviderDashboard = () => {
                               {slot.is_booked ? 'Booked' : 'Available'}
                             </Badge>
                             {slot.price && (
-                              <p className="text-sm font-medium text-foreground mt-1">
-                                ${slot.price}
-                              </p>
+                              <div className="text-sm font-medium text-foreground mt-1">
+                                {slot.discount_price ? (
+                                  <div className="flex flex-col">
+                                    <span className="line-through text-muted-foreground">£{slot.price}</span>
+                                    <span className="text-destructive">£{slot.discount_price}</span>
+                                  </div>
+                                ) : (
+                                  <span>£{slot.price}</span>
+                                )}
+                              </div>
                             )}
                           </div>
                         </div>
