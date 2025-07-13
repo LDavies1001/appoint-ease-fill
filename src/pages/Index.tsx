@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import heroImage from '@/assets/hero-lash-tech-scene.jpg';
+import heroImage from '@/assets/hero-appointment-scene.jpg';
 const Index = () => {
   return <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -51,39 +51,39 @@ const Index = () => {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Find available appointment slots in seconds. Beauty, wellness, and personal services - all at your fingertips.
+                Find available appointment slots in seconds. Get the services you need, when you need them.
               </p>
             </div>
 
-            {/* Sign Up Form */}
+            {/* Search Card */}
             <Card className="p-6 shadow-soft border border-border/40">
               <div className="space-y-4">
-                <div className="text-center mb-4">
-                  <h2 className="text-lg font-semibold text-foreground mb-2">Start Booking Today</h2>
-                  <p className="text-sm text-muted-foreground">Join thousands of happy customers</p>
+                <div className="flex gap-2">
+                  <Button variant="default" size="sm" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
+                    <Search className="w-4 h-4 mr-2" />
+                    Services
+                  </Button>
+                  <Button variant="outline" size="sm" className="border-border/40">
+                    <Building className="w-4 h-4 mr-2" />
+                    Providers
+                  </Button>
                 </div>
                 
                 <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <Input placeholder="First Name" className="h-12 text-base" />
-                    <Input placeholder="Last Name" className="h-12 text-base" />
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search for treatments" className="pl-10 h-12 text-base" />
                   </div>
                   
-                  <Input placeholder="Email Address" type="email" className="h-12 text-base" />
                   
-                  <Input placeholder="Password" type="password" className="h-12 text-base" />
                   
-                  <Input placeholder="Confirm Password" type="password" className="h-12 text-base" />
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Any date" className="pl-10 h-12 text-base" />
+                  </div>
                 </div>
                 
-                <Button variant="hero" size="lg" className="w-full h-12 text-base font-semibold">
-                  Create Account
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
                 
-                <p className="text-center text-sm text-muted-foreground">
-                  Already have an account? <button className="text-primary hover:underline">Sign In</button>
-                </p>
               </div>
             </Card>
 
@@ -126,9 +126,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="p-6 text-center border-0 bg-gradient-to-br from-background to-muted/20 hover:shadow-soft transition-all duration-300">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Calendar className="h-6 w-6 text-primary" />
-              </div>
+              
               <h3 className="text-lg font-semibold mb-2 text-foreground">Book Instantly</h3>
               <p className="text-muted-foreground text-sm">
                 See what's available and book right away. No waiting around.
