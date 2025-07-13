@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star } from 'lucide-react';
+import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate } from 'lucide-react';
 import Header from '@/components/ui/header';
 
 interface Service {
@@ -102,6 +102,85 @@ const Onboarding = () => {
         ? prev.services_offered.filter(id => id !== serviceId)
         : [...prev.services_offered, serviceId]
     }));
+  };
+
+  const detectLocation = async () => {
+    if (!navigator.geolocation) {
+      toast({
+        title: "Geolocation not supported",
+        description: "Your browser doesn't support location detection",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+    
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          
+          // Use OpenStreetMap's Nominatim for reverse geocoding (free service)
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
+          );
+          
+          if (!response.ok) throw new Error('Failed to get location');
+          
+          const data = await response.json();
+          
+          // Extract city, region, and country for a nice readable format
+          const { city, town, village, county, state, country } = data.address || {};
+          const locationString = [
+            city || town || village,
+            county || state,
+            country
+          ].filter(Boolean).join(', ');
+          
+          handleInputChange('location', locationString || `${latitude}, ${longitude}`);
+          
+          toast({
+            title: "Location detected",
+            description: `Set to: ${locationString}`
+          });
+          
+        } catch (error) {
+          console.error('Error reverse geocoding:', error);
+          toast({
+            title: "Location detection failed",
+            description: "Could not determine your address",
+            variant: "destructive"
+          });
+        } finally {
+          setLoading(false);
+        }
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        setLoading(false);
+        
+        let message = "Could not access your location";
+        if (error.code === error.PERMISSION_DENIED) {
+          message = "Location access denied. Please enable location permissions";
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          message = "Location information unavailable";
+        } else if (error.code === error.TIMEOUT) {
+          message = "Location request timed out";
+        }
+        
+        toast({
+          title: "Location detection failed",
+          description: message,
+          variant: "destructive"
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000
+      }
+    );
   };
 
   const validateStep = () => {
@@ -262,9 +341,19 @@ const Onboarding = () => {
                     placeholder="Enter your city or area"
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
-                    className="pl-10"
+                    className="pl-10 pr-12"
                     required
                   />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={detectLocation}
+                    disabled={loading}
+                    className="absolute right-1 top-1 h-8 w-8 p-0 hover:bg-primary/10"
+                  >
+                    <Locate className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
 
