@@ -99,21 +99,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl
+        emailRedirectTo: redirectUrl,
+        data: {
+          role: role
+        }
       }
     });
-
-    if (!error && data.user) {
-      // Update the profile with the selected role
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ role })
-        .eq('user_id', data.user.id);
-      
-      if (profileError) {
-        console.error('Error updating role:', profileError);
-      }
-    }
 
     return { error };
   };
