@@ -18,9 +18,11 @@ export type Database = {
         Row: {
           created_at: string
           date: string
+          discount_price: number | null
           duration: number
           end_time: string
           id: string
+          image_url: string | null
           is_booked: boolean | null
           is_recurring: boolean | null
           notes: string | null
@@ -34,9 +36,11 @@ export type Database = {
         Insert: {
           created_at?: string
           date: string
+          discount_price?: number | null
           duration: number
           end_time: string
           id?: string
+          image_url?: string | null
           is_booked?: boolean | null
           is_recurring?: boolean | null
           notes?: string | null
@@ -50,9 +54,11 @@ export type Database = {
         Update: {
           created_at?: string
           date?: string
+          discount_price?: number | null
           duration?: number
           end_time?: string
           id?: string
+          image_url?: string | null
           is_booked?: boolean | null
           is_recurring?: boolean | null
           notes?: string | null
