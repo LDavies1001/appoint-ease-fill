@@ -218,6 +218,7 @@ export type Database = {
           business_email: string | null
           business_name: string | null
           business_website: string | null
+          certification_files: string[] | null
           certifications: string | null
           created_at: string
           emergency_available: boolean | null
@@ -239,6 +240,7 @@ export type Database = {
           business_email?: string | null
           business_name?: string | null
           business_website?: string | null
+          certification_files?: string[] | null
           certifications?: string | null
           created_at?: string
           emergency_available?: boolean | null
@@ -260,6 +262,7 @@ export type Database = {
           business_email?: string | null
           business_name?: string | null
           business_website?: string | null
+          certification_files?: string[] | null
           certifications?: string | null
           created_at?: string
           emergency_available?: boolean | null

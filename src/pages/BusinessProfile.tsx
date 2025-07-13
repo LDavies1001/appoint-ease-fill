@@ -30,7 +30,10 @@ import {
   Users,
   TrendingUp,
   Camera,
-  ExternalLink
+  ExternalLink,
+  Upload,
+  Download,
+  Trash2
 } from 'lucide-react';
 import Header from '@/components/ui/header';
 
@@ -50,6 +53,7 @@ interface ProviderDetails {
   emergency_available: boolean;
   rating: number;
   total_reviews: number;
+  certification_files: string[];
 }
 
 const BusinessProfile = () => {
@@ -58,6 +62,7 @@ const BusinessProfile = () => {
   const [editValue, setEditValue] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
 
   const { user, profile } = useAuth();
   const { toast } = useToast();
@@ -155,22 +160,102 @@ const BusinessProfile = () => {
   const formatOperatingHours = (hoursString: string) => {
     try {
       const hours = JSON.parse(hoursString);
-      return hours.map((day: any) => 
-        `${day.day}: ${day.closed ? 'Closed' : `${day.open} - ${day.close}`}`
-      ).join('\n');
+      return hours;
     } catch {
-      return hoursString;
+      return null;
     }
   };
 
   const formatPricingInfo = (pricingString: string) => {
     try {
       const pricing = JSON.parse(pricingString);
-      return pricing.map((item: any) => 
-        `${item.service}: £${item.price}`
-      ).join('\n');
+      return pricing;
     } catch {
-      return pricingString;
+      return null;
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      toast({
+        title: "File too large",
+        description: "Please choose a file under 10MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploadingFile(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user?.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('certifications')
+        .upload(fileName, file);
+        
+      if (uploadError) throw uploadError;
+      
+      const { data } = supabase.storage
+        .from('certifications')
+        .getPublicUrl(fileName);
+        
+      const newFiles = [...(details?.certification_files || []), data.publicUrl];
+      
+      const { error: updateError } = await supabase
+        .from('provider_details')
+        .update({ certification_files: newFiles })
+        .eq('user_id', user?.id);
+
+      if (updateError) throw updateError;
+
+      setDetails(prev => prev ? { ...prev, certification_files: newFiles } : null);
+
+      toast({
+        title: "File uploaded successfully",
+        description: `${file.name} has been uploaded`
+      });
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast({
+        title: "Upload failed",
+        description: "Could not upload the file. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingFile(false);
+      // Reset the input
+      event.target.value = '';
+    }
+  };
+
+  const handleFileDelete = async (fileUrl: string, fileName: string) => {
+    try {
+      const newFiles = details?.certification_files?.filter(url => url !== fileUrl) || [];
+      
+      const { error: updateError } = await supabase
+        .from('provider_details')
+        .update({ certification_files: newFiles })
+        .eq('user_id', user?.id);
+
+      if (updateError) throw updateError;
+
+      setDetails(prev => prev ? { ...prev, certification_files: newFiles } : null);
+
+      toast({
+        title: "File deleted",
+        description: `${fileName} has been removed`
+      });
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      toast({
+        title: "Delete failed",
+        description: "Could not delete the file. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -546,7 +631,7 @@ const BusinessProfile = () => {
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
                       className="min-h-[100px] font-mono text-sm"
-                      placeholder="Service: £Price format or JSON"
+                      placeholder='[{"service": "Service Name", "price": "50"}]'
                     />
                     <div className="flex space-x-2">
                       <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
@@ -560,14 +645,23 @@ const BusinessProfile = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <div className="bg-muted/50 rounded-lg p-4 border">
-                      <pre className="text-sm whitespace-pre-wrap text-foreground">
-                        {details.pricing_info ? formatPricingInfo(details.pricing_info) : 'No pricing information set'}
-                      </pre>
-                    </div>
+                    {formatPricingInfo(details.pricing_info) ? (
+                      <div className="grid gap-3">
+                        {formatPricingInfo(details.pricing_info).map((item: any, index: number) => (
+                          <div key={index} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg border">
+                            <span className="font-medium text-foreground">{item.service}</span>
+                            <span className="text-lg font-bold text-primary">£{item.price}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
+                        No pricing information set. Add your service prices to help customers understand your rates.
+                      </p>
+                    )}
                     <div className="flex items-center text-muted-foreground text-sm">
                       <DollarSign className="h-4 w-4 mr-2" />
-                      Service pricing structure
+                      Standard pricing for your services
                     </div>
                   </div>
                 )}
@@ -593,7 +687,7 @@ const BusinessProfile = () => {
           <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Schedule</Label>
+                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Operating Schedule</Label>
                 {editingField !== 'operating_hours' && (
                   <Button
                     size="sm"
@@ -612,7 +706,7 @@ const BusinessProfile = () => {
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
                     className="min-h-[120px] font-mono text-sm"
-                    placeholder="JSON format or Day: Time format"
+                    placeholder='[{"day": "Monday", "open": "09:00", "close": "17:00", "closed": false}]'
                   />
                   <div className="flex space-x-2">
                     <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
@@ -626,14 +720,25 @@ const BusinessProfile = () => {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <div className="bg-muted/50 rounded-lg p-4 border">
-                    <pre className="text-sm whitespace-pre-wrap text-foreground">
-                      {details.operating_hours ? formatOperatingHours(details.operating_hours) : 'No operating hours set'}
-                    </pre>
-                  </div>
+                  {formatOperatingHours(details.operating_hours) ? (
+                    <div className="grid gap-2">
+                      {formatOperatingHours(details.operating_hours).map((day: any, index: number) => (
+                        <div key={index} className="flex justify-between items-center p-3 rounded-lg border bg-background/50">
+                          <span className="font-medium text-foreground min-w-[80px]">{day.day}</span>
+                          <span className={`font-medium ${day.closed ? 'text-muted-foreground' : 'text-foreground'}`}>
+                            {day.closed ? 'Closed' : `${day.open} - ${day.close}`}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
+                      No operating hours set. Add your business hours to help customers know when you're available.
+                    </p>
+                  )}
                   <div className="flex items-center text-muted-foreground text-sm">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Weekly availability schedule
+                    <Clock className="h-4 w-4 mr-2" />
+                    Weekly business operating schedule
                   </div>
                 </div>
               )}
@@ -651,57 +756,136 @@ const BusinessProfile = () => {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-foreground">Professional Details</h2>
-              <p className="text-muted-foreground">Certifications and additional information</p>
+              <p className="text-muted-foreground">Certifications, qualifications, and uploaded documents</p>
             </div>
           </div>
 
-          <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Certifications & Qualifications</Label>
-                {editingField !== 'certifications' && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleEdit('certifications', details.certifications)}
-                    className="h-8 w-8 p-0 hover:bg-primary/10"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Certifications Text */}
+            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Certifications & Qualifications</Label>
+                  {editingField !== 'certifications' && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleEdit('certifications', details.certifications)}
+                      className="h-8 w-8 p-0 hover:bg-primary/10"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                
+                {editingField === 'certifications' ? (
+                  <div className="space-y-3">
+                    <Textarea
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="min-h-[100px]"
+                      placeholder="List your professional certifications, qualifications, and achievements..."
+                    />
+                    <div className="flex space-x-2">
+                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                        <Save className="h-4 w-4 mr-2" />
+                        Save
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={handleCancel}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-base leading-relaxed text-foreground">
+                      {details.certifications || 'No certifications listed yet. Add your professional qualifications to build trust with customers.'}
+                    </p>
+                    <div className="flex items-center text-muted-foreground text-sm">
+                      <Award className="h-4 w-4 mr-2" />
+                      Professional credentials and achievements
+                    </div>
+                  </div>
                 )}
               </div>
-              
-              {editingField === 'certifications' ? (
-                <div className="space-y-3">
-                  <Textarea
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="min-h-[100px]"
-                    placeholder="List your professional certifications, qualifications, and achievements..."
-                  />
-                  <div className="flex space-x-2">
-                    <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                      <Save className="h-4 w-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={handleCancel}>
-                      <X className="h-4 w-4" />
+            </Card>
+
+            {/* Certification Files Upload */}
+            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Certification Documents</Label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                      onChange={handleFileUpload}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      disabled={uploadingFile}
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={uploadingFile}
+                      className="h-8 px-3"
+                    >
+                      {uploadingFile ? (
+                        <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
+                      ) : (
+                        <Upload className="h-4 w-4 mr-2" />
+                      )}
+                      Upload
                     </Button>
                   </div>
                 </div>
-              ) : (
-                <div className="space-y-3">
-                  <p className="text-base leading-relaxed text-foreground">
-                    {details.certifications || 'No certifications listed yet. Add your professional qualifications to build trust with customers.'}
-                  </p>
-                  <div className="flex items-center text-muted-foreground text-sm">
-                    <Award className="h-4 w-4 mr-2" />
-                    Professional credentials and achievements
+                
+                <div className="space-y-2">
+                  {details.certification_files?.length ? (
+                    details.certification_files.map((fileUrl, index) => {
+                      const fileName = fileUrl.split('/').pop()?.split('?')[0] || `Document ${index + 1}`;
+                      const displayName = fileName.split('.')[0];
+                      return (
+                        <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border">
+                          <div className="flex items-center space-x-3">
+                            <FileText className="h-4 w-4 text-primary" />
+                            <span className="text-sm font-medium text-foreground truncate max-w-[150px]">
+                              {displayName}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => window.open(fileUrl, '_blank')}
+                              className="h-7 w-7 p-0"
+                            >
+                              <Download className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleFileDelete(fileUrl, displayName)}
+                              className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
+                      No certification documents uploaded yet. Upload PDFs or images of your certifications.
+                    </p>
+                  )}
+                  <div className="flex items-center text-muted-foreground text-xs">
+                    <Shield className="h-3 w-3 mr-2" />
+                    Supported formats: PDF, DOC, DOCX, JPG, PNG (max 10MB)
                   </div>
                 </div>
-              )}
-            </div>
-          </Card>
+              </div>
+            </Card>
+          </div>
         </section>
 
         {/* Action Buttons */}
