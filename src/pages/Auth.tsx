@@ -107,18 +107,24 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-accent/10 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
+          <div className="flex items-center justify-center space-x-2 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+              <User className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+          </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome to FillMyHole
+            Welcome back
           </h1>
           <p className="text-muted-foreground">
-            Connect with service providers for spontaneous appointments
+            Sign in to manage your appointments and bookings
           </p>
         </div>
 
-        <Card className="card-elegant p-6">
+        <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="signin">Sign In</TabsTrigger>

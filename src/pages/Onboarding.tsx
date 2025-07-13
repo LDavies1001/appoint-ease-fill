@@ -176,28 +176,34 @@ const Onboarding = () => {
   const totalSteps = profile.role === 'provider' ? 2 : 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
         <div className="text-center mb-8">
+          <div className="flex items-center justify-center space-x-2 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+              <CheckCircle className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+          </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
             {getStepTitle()}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mb-6">
             {getStepDescription()}
           </p>
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center">
             {Array.from({ length: totalSteps }).map((_, index) => (
               <div
                 key={index}
-                className={`w-3 h-3 rounded-full mx-1 ${
-                  index <= currentStep ? 'bg-primary' : 'bg-muted'
+                className={`w-3 h-3 rounded-full mx-1 transition-all duration-300 ${
+                  index <= currentStep ? 'bg-primary shadow-sm' : 'bg-muted'
                 }`}
               />
             ))}
           </div>
         </div>
 
-        <Card className="card-elegant p-6">
+        <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
           {currentStep === 0 && (
             <div className="space-y-4">
               <div className="space-y-2">
