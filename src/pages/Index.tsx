@@ -52,7 +52,7 @@ const Index = () => {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Find available appointment slots in seconds. Professional services when you need them.
+                Find available appointment slots in seconds. Get the services you need, when you need them.
               </p>
             </div>
 
@@ -147,9 +147,9 @@ const Index = () => {
         {/* Features Section */}
         <div className="py-16 border-t border-border/40">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Why Choose FillMyHole?</h2>
+            <h2 className="text-3xl font-bold text-foreground mb-4">How It Works</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              The professional way to book and offer appointment services
+              Simple booking for everyone
             </p>
           </div>
 
@@ -158,9 +158,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Clock className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">Instant Booking</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Book Instantly</h3>
               <p className="text-muted-foreground text-sm">
-                Book available slots immediately. No waiting for confirmations.
+                See what's available and book right away. No waiting around.
               </p>
             </Card>
 
@@ -168,9 +168,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Shield className="h-6 w-6 text-accent" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">Verified Providers</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Trusted People</h3>
               <p className="text-muted-foreground text-sm">
-                All professionals are verified and rated for quality assurance.
+                All service providers are verified and rated by real customers.
               </p>
             </Card>
 
@@ -178,9 +178,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Star className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">Quality Guaranteed</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Great Service</h3>
               <p className="text-muted-foreground text-sm">
-                Read authentic reviews from real customers before booking.
+                Read real reviews from customers before you book.
               </p>
             </Card>
           </div>
@@ -195,16 +195,16 @@ const Index = () => {
                 <span className="text-sm font-medium text-primary uppercase tracking-wider">For Businesses</span>
               </div>
               <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                Fill Your Empty Appointment Slots
+                Got Empty Appointment Slots?
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Turn last-minute cancellations into revenue. List your availability and get booked by customers nearby.
+                Turn last-minute cancellations into bookings. List your availability and get found by customers nearby.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/auth?tab=provider">
                   <Button variant="hero" size="xl" className="w-full sm:w-auto">
                     <Building className="mr-2 h-5 w-5" />
-                    Join as Provider
+                    Start Earning More
                   </Button>
                 </Link>
                 <Button variant="outline" size="xl" className="w-full sm:w-auto">
