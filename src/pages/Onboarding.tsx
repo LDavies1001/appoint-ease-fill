@@ -62,6 +62,11 @@ const Onboarding = () => {
       return;
     }
 
+    // DEBUG: Log profile information
+    console.log('Profile data:', profile);
+    console.log('User role:', profile.role);
+    console.log('Current step:', currentStep);
+
     // Pre-fill form with existing data
     setFormData(prev => ({
       ...prev,
@@ -73,7 +78,7 @@ const Onboarding = () => {
 
     // Fetch services
     fetchServices();
-  }, [user, profile, navigate]);
+  }, [user, profile, navigate, currentStep]);
 
   const fetchServices = async () => {
     try {
