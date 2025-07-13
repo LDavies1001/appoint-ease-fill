@@ -85,15 +85,32 @@ const Index = () => {
                 </div>
                 
                 <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      placeholder="First name"
+                      className="h-12 text-base"
+                    />
+                    <Input
+                      placeholder="Last name"
+                      className="h-12 text-base"
+                    />
+                  </div>
+                  
                   <Input
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Email address"
                     className="h-12 text-base"
                   />
                   
                   <Input
                     type="password"
                     placeholder="Create a password"
+                    className="h-12 text-base"
+                  />
+                  
+                  <Input
+                    type="password"
+                    placeholder="Confirm password"
                     className="h-12 text-base"
                   />
                 </div>
