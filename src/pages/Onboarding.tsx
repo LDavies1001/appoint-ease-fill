@@ -62,10 +62,7 @@ const Onboarding = () => {
       return;
     }
 
-    if (profile.is_profile_complete) {
-      navigate('/dashboard');
-      return;
-    }
+    // Allow access to onboarding for profile updates - don't redirect completed profiles
 
     // DEBUG: Log profile information
     console.log('Profile data:', profile);
@@ -79,6 +76,11 @@ const Onboarding = () => {
       location: profile.location || '',
       bio: profile.bio || ''
     }));
+
+    // Fetch existing provider details if user is a provider
+    if (profile.role === 'provider') {
+      fetchProviderDetails();
+    }
 
     // Fetch services
     fetchServices();
@@ -100,6 +102,35 @@ const Onboarding = () => {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const fetchProviderDetails = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('provider_details')
+        .select('*')
+        .eq('user_id', user?.id)
+        .maybeSingle();
+      
+      if (error) throw error;
+      
+      if (data) {
+        // Pre-populate form with existing provider details
+        setFormData(prev => ({
+          ...prev,
+          business_name: data.business_name || '',
+          business_description: data.business_description || '',
+          services_offered: data.services_offered || [],
+          business_website: data.business_website || '',
+          years_experience: data.years_experience?.toString() || '',
+          pricing_info: data.pricing_info ? JSON.parse(data.pricing_info) : [],
+          operating_hours: data.operating_hours ? JSON.parse(data.operating_hours) : prev.operating_hours,
+          certifications: data.certifications || ''
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching provider details:', error);
+    }
   };
 
   const handleServiceToggle = (serviceId: string) => {
