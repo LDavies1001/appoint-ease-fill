@@ -33,7 +33,6 @@ const Onboarding = () => {
     services_offered: [] as string[],
     availability_notes: '',
     // Business Details
-    business_email: '',
     business_website: '',
     years_experience: '',
     pricing_info: '',
@@ -161,7 +160,6 @@ const Onboarding = () => {
             business_description: formData.business_description,
             services_offered: formData.services_offered,
             availability_notes: formData.availability_notes,
-            business_email: formData.business_email,
             business_website: formData.business_website,
             years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
             pricing_info: formData.pricing_info,
@@ -372,37 +370,20 @@ const Onboarding = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="years_experience">Years of Experience *</Label>
-                  <div className="relative">
-                    <Star className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="years_experience"
-                      type="number"
-                      min="0"
-                      placeholder="Years"
-                      value={formData.years_experience}
-                      onChange={(e) => handleInputChange('years_experience', e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="business_email">Business Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="business_email"
-                      type="email"
-                      placeholder="business@example.com"
-                      value={formData.business_email}
-                      onChange={(e) => handleInputChange('business_email', e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
+              <div className="space-y-2">
+                <Label htmlFor="years_experience">Years of Experience *</Label>
+                <div className="relative">
+                  <Star className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="years_experience"
+                    type="number"
+                    min="0"
+                    placeholder="Years"
+                    value={formData.years_experience}
+                    onChange={(e) => handleInputChange('years_experience', e.target.value)}
+                    className="pl-10"
+                    required
+                  />
                 </div>
               </div>
 
