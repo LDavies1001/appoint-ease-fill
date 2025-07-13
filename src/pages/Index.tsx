@@ -103,7 +103,7 @@ const Index = () => {
               <img src={heroImage} alt="Professional appointment booking experience" className="w-full h-full object-cover" />
               {/* Floating elements */}
               <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-soft">
-                
+                <Sparkles className="h-6 w-6 text-primary" />
               </div>
               <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-soft">
                 <Clock className="h-6 w-6 text-primary" />
@@ -126,7 +126,9 @@ const Index = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="p-6 text-center border-0 bg-gradient-to-br from-background to-muted/20 hover:shadow-soft transition-all duration-300">
-              
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Calendar className="h-6 w-6 text-primary" />
+              </div>
               <h3 className="text-lg font-semibold mb-2 text-foreground">Book Instantly</h3>
               <p className="text-muted-foreground text-sm">
                 See what's available and book right away. No waiting around.
