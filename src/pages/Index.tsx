@@ -51,7 +51,7 @@ const Index = () => {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Find available appointment slots in seconds. Get the services you need, when you need them.
+                Find available appointment slots in seconds. Beauty, wellness, and personal services - all at your fingertips.
               </p>
             </div>
 
@@ -59,19 +59,8 @@ const Index = () => {
             <Card className="p-6 shadow-soft border border-border/40">
               <div className="space-y-4">
                 <div className="text-center mb-4">
-                  <h2 className="text-lg font-semibold text-foreground mb-2">Join FillMyHole</h2>
-                  <p className="text-sm text-muted-foreground">Choose your account type</p>
-                </div>
-                
-                <div className="flex gap-2 mb-6">
-                  <Button variant="default" size="sm" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 flex-1">
-                    <User className="w-4 h-4 mr-2" />
-                    Customer
-                  </Button>
-                  <Button variant="outline" size="sm" className="border-border/40 flex-1">
-                    <Building className="w-4 h-4 mr-2" />
-                    Business
-                  </Button>
+                  <h2 className="text-lg font-semibold text-foreground mb-2">Start Booking Today</h2>
+                  <p className="text-sm text-muted-foreground">Join thousands of happy customers</p>
                 </div>
                 
                 <div className="space-y-3">
@@ -137,7 +126,9 @@ const Index = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="p-6 text-center border-0 bg-gradient-to-br from-background to-muted/20 hover:shadow-soft transition-all duration-300">
-              
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Calendar className="h-6 w-6 text-primary" />
+              </div>
               <h3 className="text-lg font-semibold mb-2 text-foreground">Book Instantly</h3>
               <p className="text-muted-foreground text-sm">
                 See what's available and book right away. No waiting around.
