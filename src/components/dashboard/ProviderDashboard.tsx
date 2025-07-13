@@ -454,7 +454,7 @@ const ProviderDashboard = () => {
                         <SelectContent>
                           {providerServices.map((service, index) => (
                             <SelectItem key={index} value={service.name}>
-                              {service.name} (£{service.price})
+                              {service.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
