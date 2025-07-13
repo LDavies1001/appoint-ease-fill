@@ -33,7 +33,12 @@ const Header = () => {
                     <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
                       <User className="h-4 w-4" />
                     </div>
-                    <span className="text-sm font-medium">{profile.name || profile.email}</span>
+                    <span className="text-sm font-medium">
+                      {profile.role === 'provider' 
+                        ? (profile.business_name || profile.name || profile.email)
+                        : (profile.name || profile.email)
+                      }
+                    </span>
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>

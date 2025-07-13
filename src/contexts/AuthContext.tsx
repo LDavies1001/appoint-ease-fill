@@ -13,6 +13,7 @@ interface Profile {
   avatar_url: string | null;
   bio: string | null;
   is_profile_complete: boolean;
+  business_name?: string | null;
 }
 
 interface AuthContextType {
@@ -79,14 +80,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
         .single();
       
-      if (error) throw error;
-      setProfile(data);
+      if (profileError) throw profileError;
+
+      let finalProfile: Profile = profileData;
+
+      // If user is a provider, also fetch business details
+      if (profileData.role === 'provider') {
+        const { data: businessData, error: businessError } = await supabase
+          .from('provider_details')
+          .select('business_name')
+          .eq('user_id', userId)
+          .maybeSingle();
+        
+        if (!businessError && businessData) {
+          finalProfile = { ...profileData, business_name: businessData.business_name };
+        }
+      }
+      
+      setProfile(finalProfile);
     } catch (error) {
       console.error('Error fetching profile:', error);
     }

@@ -171,7 +171,7 @@ const ProviderDashboard = () => {
         .from('provider_details')
         .select('pricing_info')
         .eq('user_id', profile?.user_id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
@@ -345,7 +345,7 @@ const ProviderDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div>
-              <h1 className="text-xl font-bold text-foreground">Provider Dashboard</h1>
+              <h1 className="text-xl font-bold text-foreground">Business Dashboard</h1>
               <p className="text-sm text-muted-foreground">Welcome back, {profile?.name}</p>
             </div>
             <Button
