@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,7 +24,13 @@ import {
   Save, 
   X, 
   DollarSign,
-  FileText 
+  FileText,
+  Shield,
+  Award,
+  Users,
+  TrendingUp,
+  Camera,
+  ExternalLink
 } from 'lucide-react';
 import Header from '@/components/ui/header';
 
@@ -199,71 +207,100 @@ const BusinessProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10">
       <Header />
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground">My Business Profile</h1>
-          <p className="text-muted-foreground">Manage your business information and settings</p>
+      
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-r from-primary/10 via-primary/5 to-accent/10 border-b">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="relative max-w-7xl mx-auto px-6 py-12">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
+            <div className="flex-shrink-0">
+              <Avatar className="h-24 w-24 border-4 border-white shadow-lg">
+                <AvatarImage src={profile?.avatar_url || undefined} />
+                <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-primary to-accent text-white">
+                  {details.business_name?.charAt(0) || 'B'}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="flex-1 space-y-4">
+              <div>
+                <h1 className="text-4xl font-bold text-foreground mb-2">
+                  {details.business_name || 'Business Profile'}
+                </h1>
+                <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
+                  {details.business_description || 'Manage your business information and showcase your professional services'}
+                </p>
+              </div>
+              
+              {/* Quick Stats */}
+              <div className="flex flex-wrap items-center gap-6 pt-4">
+                <div className="flex items-center space-x-2 bg-white/50 rounded-lg px-4 py-2 backdrop-blur-sm">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                  <span className="font-semibold text-lg">{details.rating || 0}</span>
+                  <span className="text-muted-foreground">({details.total_reviews || 0} reviews)</span>
+                </div>
+                
+                <div className="flex items-center space-x-2 bg-white/50 rounded-lg px-4 py-2 backdrop-blur-sm">
+                  <Award className="h-5 w-5 text-primary" />
+                  <span className="font-semibold">{details.years_experience || 0} years</span>
+                  <span className="text-muted-foreground">experience</span>
+                </div>
+                
+                <div className="flex items-center space-x-2 bg-white/50 rounded-lg px-4 py-2 backdrop-blur-sm">
+                  <Users className="h-5 w-5 text-accent" />
+                  <span className="font-semibold">{details.services_offered?.length || 0}</span>
+                  <span className="text-muted-foreground">services</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Business Overview */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center">
-              <Building className="h-5 w-5 mr-2" />
-              Business Information
-            </h2>
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* Business Information Section */}
+        <section className="space-y-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+              <Building className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">Business Information</h2>
+              <p className="text-muted-foreground">Core details about your business</p>
+            </div>
           </div>
           
-          <div className="space-y-4">
-            {/* Business Name */}
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <Label className="text-sm font-medium">Business Name</Label>
-                {editingField === 'business_name' ? (
-                  <div className="flex items-center space-x-2 mt-1">
-                    <Input
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      className="flex-1"
-                    />
-                    <Button size="sm" onClick={handleSave} disabled={updating}>
-                      <Save className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={handleCancel}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-foreground">{details.business_name || 'Not set'}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Business Name Card */}
+            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Business Name</Label>
+                  {editingField !== 'business_name' && (
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => handleEdit('business_name', details.business_name)}
+                      className="h-8 w-8 p-0 hover:bg-primary/10"
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Business Description */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <Label className="text-sm font-medium">Business Description</Label>
-                {editingField === 'business_description' ? (
-                  <div className="flex items-start space-x-2 mt-1">
-                    <Textarea
+                  )}
+                </div>
+                
+                {editingField === 'business_name' ? (
+                  <div className="space-y-3">
+                    <Input
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
-                      className="flex-1 min-h-[80px]"
+                      className="text-lg font-medium"
+                      placeholder="Enter business name"
                     />
-                    <div className="flex flex-col space-y-1">
-                      <Button size="sm" onClick={handleSave} disabled={updating}>
-                        <Save className="h-4 w-4" />
+                    <div className="flex space-x-2">
+                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                        <Save className="h-4 w-4 mr-2" />
+                        Save
                       </Button>
                       <Button size="sm" variant="outline" onClick={handleCancel}>
                         <X className="h-4 w-4" />
@@ -271,136 +308,46 @@ const BusinessProfile = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-start justify-between mt-1">
-                    <p className="text-foreground flex-1 pr-4">{details.business_description || 'Not set'}</p>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEdit('business_description', details.business_description)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                  <div className="space-y-2">
+                    <p className="text-xl font-semibold text-foreground">{details.business_name || 'Not set'}</p>
+                    <div className="flex items-center text-muted-foreground text-sm">
+                      <Building className="h-4 w-4 mr-2" />
+                      Primary business identifier
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
+            </Card>
 
-            {/* Business Website */}
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <Label className="text-sm font-medium">Website</Label>
-                {editingField === 'business_website' ? (
-                  <div className="flex items-center space-x-2 mt-1">
-                    <Input
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      className="flex-1"
-                      placeholder="https://..."
-                    />
-                    <Button size="sm" onClick={handleSave} disabled={updating}>
-                      <Save className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={handleCancel}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-foreground flex items-center">
-                      <Globe className="h-4 w-4 mr-2" />
-                      {details.business_website ? (
-                        <a href={details.business_website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                          {details.business_website}
-                        </a>
-                      ) : (
-                        'Not set'
-                      )}
-                    </p>
+            {/* Business Website Card */}
+            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Website</Label>
+                  {editingField !== 'business_website' && (
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => handleEdit('business_website', details.business_website)}
+                      className="h-8 w-8 p-0 hover:bg-primary/10"
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Years of Experience */}
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <Label className="text-sm font-medium">Years of Experience</Label>
-                {editingField === 'years_experience' ? (
-                  <div className="flex items-center space-x-2 mt-1">
+                  )}
+                </div>
+                
+                {editingField === 'business_website' ? (
+                  <div className="space-y-3">
                     <Input
-                      type="number"
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
-                      className="flex-1"
+                      className="text-lg"
+                      placeholder="https://your-website.com"
                     />
-                    <Button size="sm" onClick={handleSave} disabled={updating}>
-                      <Save className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={handleCancel}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-foreground">{details.years_experience || 'Not set'} years</p>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEdit('years_experience', details.years_experience?.toString() || '')}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Services & Pricing */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center">
-              <DollarSign className="h-5 w-5 mr-2" />
-              Services & Pricing
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {/* Services Offered */}
-            <div>
-              <Label className="text-sm font-medium">Services Offered</Label>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {details.services_offered?.map((service, index) => (
-                  <Badge key={index} variant="secondary">
-                    {service}
-                  </Badge>
-                )) || <p className="text-muted-foreground">No services set</p>}
-              </div>
-            </div>
-
-            {/* Pricing Information */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <Label className="text-sm font-medium">Pricing Information</Label>
-                {editingField === 'pricing_info' ? (
-                  <div className="flex items-start space-x-2 mt-1">
-                    <Textarea
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      className="flex-1 min-h-[100px]"
-                      placeholder="Service: £Price format or JSON"
-                    />
-                    <div className="flex flex-col space-y-1">
-                      <Button size="sm" onClick={handleSave} disabled={updating}>
-                        <Save className="h-4 w-4" />
+                    <div className="flex space-x-2">
+                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                        <Save className="h-4 w-4 mr-2" />
+                        Save
                       </Button>
                       <Button size="sm" variant="outline" onClick={handleCancel}>
                         <X className="h-4 w-4" />
@@ -408,46 +355,59 @@ const BusinessProfile = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-start justify-between mt-1">
-                    <pre className="text-foreground whitespace-pre-wrap text-sm bg-muted p-2 rounded flex-1 mr-4">
-                      {details.pricing_info ? formatPricingInfo(details.pricing_info) : 'Not set'}
-                    </pre>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEdit('pricing_info', details.pricing_info)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                  <div className="space-y-2">
+                    {details.business_website ? (
+                      <a 
+                        href={details.business_website} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-lg font-medium text-primary hover:text-primary/80 transition-colors flex items-center group"
+                      >
+                        {details.business_website}
+                        <ExternalLink className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      </a>
+                    ) : (
+                      <p className="text-lg text-muted-foreground">Not set</p>
+                    )}
+                    <div className="flex items-center text-muted-foreground text-sm">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Online presence
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Operating Hours */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center">
-              <Clock className="h-5 w-5 mr-2" />
-              Operating Hours
-            </h2>
+            </Card>
           </div>
 
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              {editingField === 'operating_hours' ? (
-                <div className="flex items-start space-x-2 mt-1">
+          {/* Business Description - Full Width */}
+          <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Business Description</Label>
+                {editingField !== 'business_description' && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleEdit('business_description', details.business_description)}
+                    className="h-8 w-8 p-0 hover:bg-primary/10"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+              
+              {editingField === 'business_description' ? (
+                <div className="space-y-3">
                   <Textarea
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
-                    className="flex-1 min-h-[120px]"
-                    placeholder="JSON format or Day: Time format"
+                    className="min-h-[120px] text-base leading-relaxed"
+                    placeholder="Describe your business, services, and what makes you unique..."
                   />
-                  <div className="flex flex-col space-y-1">
-                    <Button size="sm" onClick={handleSave} disabled={updating}>
-                      <Save className="h-4 w-4" />
+                  <div className="flex space-x-2">
+                    <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                      <Save className="h-4 w-4 mr-2" />
+                      Save
                     </Button>
                     <Button size="sm" variant="outline" onClick={handleCancel}>
                       <X className="h-4 w-4" />
@@ -455,47 +415,143 @@ const BusinessProfile = () => {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-start justify-between mt-1">
-                  <pre className="text-foreground whitespace-pre-wrap text-sm bg-muted p-2 rounded flex-1 mr-4">
-                    {details.operating_hours ? formatOperatingHours(details.operating_hours) : 'Not set'}
-                  </pre>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleEdit('operating_hours', details.operating_hours)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
+                <div className="space-y-3">
+                  <p className="text-base leading-relaxed text-foreground">
+                    {details.business_description || 'No description provided yet. Add a compelling description of your business.'}
+                  </p>
+                  <div className="flex items-center text-muted-foreground text-sm">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Tell customers about your business
+                  </div>
                 </div>
               )}
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        {/* Additional Information */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center">
-              <FileText className="h-5 w-5 mr-2" />
-              Additional Information
-            </h2>
+          {/* Experience */}
+          <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Years of Experience</Label>
+                {editingField !== 'years_experience' && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleEdit('years_experience', details.years_experience?.toString() || '')}
+                    className="h-8 w-8 p-0 hover:bg-primary/10"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+              
+              {editingField === 'years_experience' ? (
+                <div className="space-y-3">
+                  <Input
+                    type="number"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    className="text-lg"
+                    placeholder="0"
+                  />
+                  <div className="flex space-x-2">
+                    <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                      <Save className="h-4 w-4 mr-2" />
+                      Save
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={handleCancel}>
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-4">
+                    <span className="text-3xl font-bold text-primary">{details.years_experience || 0}</span>
+                    <span className="text-lg text-muted-foreground">years of professional experience</span>
+                  </div>
+                  <div className="flex items-center text-muted-foreground text-sm">
+                    <TrendingUp className="h-4 w-4 mr-2" />
+                    Professional experience level
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+        </section>
+
+        <Separator className="my-8" />
+
+        {/* Services & Pricing Section */}
+        <section className="space-y-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-accent to-primary rounded-lg flex items-center justify-center">
+              <DollarSign className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">Services & Pricing</h2>
+              <p className="text-muted-foreground">What you offer and your pricing structure</p>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            {/* Certifications */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <Label className="text-sm font-medium">Certifications</Label>
-                {editingField === 'certifications' ? (
-                  <div className="flex items-start space-x-2 mt-1">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Services Offered */}
+            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <div className="space-y-4">
+                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Services Offered</Label>
+                <div className="space-y-3">
+                  {details.services_offered?.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {details.services_offered.map((service, index) => (
+                        <Badge 
+                          key={index} 
+                          variant="secondary" 
+                          className="px-3 py-1 text-sm bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors"
+                        >
+                          {service}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground italic">No services configured yet</p>
+                  )}
+                  <div className="flex items-center text-muted-foreground text-sm">
+                    <Users className="h-4 w-4 mr-2" />
+                    {details.services_offered?.length || 0} service{details.services_offered?.length !== 1 ? 's' : ''} available
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Pricing Information */}
+            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Pricing Information</Label>
+                  {editingField !== 'pricing_info' && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleEdit('pricing_info', details.pricing_info)}
+                      className="h-8 w-8 p-0 hover:bg-primary/10"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                
+                {editingField === 'pricing_info' ? (
+                  <div className="space-y-3">
                     <Textarea
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
-                      className="flex-1 min-h-[80px]"
+                      className="min-h-[100px] font-mono text-sm"
+                      placeholder="Service: £Price format or JSON"
                     />
-                    <div className="flex flex-col space-y-1">
-                      <Button size="sm" onClick={handleSave} disabled={updating}>
-                        <Save className="h-4 w-4" />
+                    <div className="flex space-x-2">
+                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                        <Save className="h-4 w-4 mr-2" />
+                        Save
                       </Button>
                       <Button size="sm" variant="outline" onClick={handleCancel}>
                         <X className="h-4 w-4" />
@@ -503,43 +559,166 @@ const BusinessProfile = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-start justify-between mt-1">
-                    <p className="text-foreground flex-1 pr-4">{details.certifications || 'Not set'}</p>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEdit('certifications', details.certifications)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                  <div className="space-y-3">
+                    <div className="bg-muted/50 rounded-lg p-4 border">
+                      <pre className="text-sm whitespace-pre-wrap text-foreground">
+                        {details.pricing_info ? formatPricingInfo(details.pricing_info) : 'No pricing information set'}
+                      </pre>
+                    </div>
+                    <div className="flex items-center text-muted-foreground text-sm">
+                      <DollarSign className="h-4 w-4 mr-2" />
+                      Service pricing structure
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
+            </Card>
+          </div>
+        </section>
 
-            {/* Rating Display */}
-            <div className="flex items-center space-x-4 pt-4 border-t">
-              <div className="flex items-center">
-                <Star className="h-5 w-5 text-yellow-500 mr-2" />
-                <span className="text-lg font-semibold">{details.rating || 0}</span>
-                <span className="text-muted-foreground ml-1">/ 5</span>
-              </div>
-              <div className="text-muted-foreground">
-                Based on {details.total_reviews || 0} review{details.total_reviews !== 1 ? 's' : ''}
-              </div>
+        <Separator className="my-8" />
+
+        {/* Operating Hours Section */}
+        <section className="space-y-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+              <Clock className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">Operating Hours</h2>
+              <p className="text-muted-foreground">When your business is available</p>
             </div>
           </div>
-        </Card>
+
+          <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Schedule</Label>
+                {editingField !== 'operating_hours' && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleEdit('operating_hours', details.operating_hours)}
+                    className="h-8 w-8 p-0 hover:bg-primary/10"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+              
+              {editingField === 'operating_hours' ? (
+                <div className="space-y-3">
+                  <Textarea
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    className="min-h-[120px] font-mono text-sm"
+                    placeholder="JSON format or Day: Time format"
+                  />
+                  <div className="flex space-x-2">
+                    <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                      <Save className="h-4 w-4 mr-2" />
+                      Save
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={handleCancel}>
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="bg-muted/50 rounded-lg p-4 border">
+                    <pre className="text-sm whitespace-pre-wrap text-foreground">
+                      {details.operating_hours ? formatOperatingHours(details.operating_hours) : 'No operating hours set'}
+                    </pre>
+                  </div>
+                  <div className="flex items-center text-muted-foreground text-sm">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Weekly availability schedule
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+        </section>
+
+        <Separator className="my-8" />
+
+        {/* Professional Details Section */}
+        <section className="space-y-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <Shield className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">Professional Details</h2>
+              <p className="text-muted-foreground">Certifications and additional information</p>
+            </div>
+          </div>
+
+          <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Certifications & Qualifications</Label>
+                {editingField !== 'certifications' && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleEdit('certifications', details.certifications)}
+                    className="h-8 w-8 p-0 hover:bg-primary/10"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+              
+              {editingField === 'certifications' ? (
+                <div className="space-y-3">
+                  <Textarea
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    className="min-h-[100px]"
+                    placeholder="List your professional certifications, qualifications, and achievements..."
+                  />
+                  <div className="flex space-x-2">
+                    <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                      <Save className="h-4 w-4 mr-2" />
+                      Save
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={handleCancel}>
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-base leading-relaxed text-foreground">
+                    {details.certifications || 'No certifications listed yet. Add your professional qualifications to build trust with customers.'}
+                  </p>
+                  <div className="flex items-center text-muted-foreground text-sm">
+                    <Award className="h-4 w-4 mr-2" />
+                    Professional credentials and achievements
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+        </section>
 
         {/* Action Buttons */}
-        <div className="flex justify-center space-x-4">
+        <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 pt-8">
           <Button 
             variant="outline" 
             onClick={() => navigate('/onboarding')}
+            className="w-full sm:w-auto min-w-[200px] h-12 text-base"
           >
+            <Edit className="h-5 w-5 mr-2" />
             Complete Profile Update
           </Button>
-          <Button onClick={() => navigate('/dashboard')}>
+          <Button 
+            onClick={() => navigate('/dashboard')}
+            className="w-full sm:w-auto min-w-[200px] h-12 text-base"
+          >
+            <Building className="h-5 w-5 mr-2" />
             Back to Dashboard
           </Button>
         </div>
