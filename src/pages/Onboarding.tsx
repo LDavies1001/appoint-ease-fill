@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate } from 'lucide-react';
+import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera } from 'lucide-react';
 import Header from '@/components/ui/header';
 
 interface Service {
@@ -26,10 +26,12 @@ const Onboarding = () => {
     phone: '',
     location: '',
     bio: '',
+    profile_photo: null as File | null,
     // Business Information
     business_name: '',
     business_description: '',
     services_offered: [] as string[],
+    business_photos: [] as File[],
     // Business Details
     business_website: '',
     years_experience: '',
@@ -48,6 +50,7 @@ const Onboarding = () => {
   });
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   
   const { user, profile, updateProfile } = useAuth();
   const { toast } = useToast();
@@ -138,6 +141,65 @@ const Onboarding = () => {
         i === index ? { ...item, [field]: value } : item
       )
     }));
+  };
+
+  const handleProfilePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast({
+          title: "File too large",
+          description: "Please choose a photo under 5MB",
+          variant: "destructive"
+        });
+        return;
+      }
+      setFormData(prev => ({ ...prev, profile_photo: file }));
+    }
+  };
+
+  const handleBusinessPhotosUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    const validFiles = files.filter(file => {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: `${file.name} is over 5MB and was skipped`,
+          variant: "destructive"
+        });
+        return false;
+      }
+      return true;
+    });
+    
+    setFormData(prev => ({
+      ...prev,
+      business_photos: [...prev.business_photos, ...validFiles].slice(0, 5) // Max 5 photos
+    }));
+  };
+
+  const removeBusinessPhoto = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      business_photos: prev.business_photos.filter((_, i) => i !== index)
+    }));
+  };
+
+  const uploadPhotoToStorage = async (file: File, bucket: string, folder: string): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${folder}/${Date.now()}.${fileExt}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, file);
+      
+    if (uploadError) throw uploadError;
+    
+    const { data } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(fileName);
+      
+    return data.publicUrl;
   };
 
   const detectLocation = async () => {
@@ -249,13 +311,38 @@ const Onboarding = () => {
 
   const handleComplete = async () => {
     setLoading(true);
+    setUploadingPhoto(true);
 
     try {
+      let profilePhotoUrl = '';
+      let businessPhotoUrls: string[] = [];
+
+      // Upload profile photo if provided
+      if (formData.profile_photo) {
+        profilePhotoUrl = await uploadPhotoToStorage(
+          formData.profile_photo, 
+          'profile-photos', 
+          user!.id
+        );
+      }
+
+      // Upload business photos if provider and photos provided
+      if (profile?.role === 'provider' && formData.business_photos.length > 0) {
+        businessPhotoUrls = await Promise.all(
+          formData.business_photos.map(photo => 
+            uploadPhotoToStorage(photo, 'business-photos', user!.id)
+          )
+        );
+      }
+
+      setUploadingPhoto(false);
+
       // Update profile
       const profileUpdates = {
         phone: formData.phone,
         location: formData.location,
         bio: formData.bio,
+        avatar_url: profilePhotoUrl || profile?.avatar_url,
         is_profile_complete: true
       };
 
@@ -295,6 +382,7 @@ const Onboarding = () => {
       });
     } finally {
       setLoading(false);
+      setUploadingPhoto(false);
     }
   };
 
@@ -402,6 +490,53 @@ const Onboarding = () => {
                   />
                 </div>
               </div>
+
+              <div className="space-y-3">
+                <Label>Profile Photo</Label>
+                <div className="flex items-center space-x-4">
+                  {formData.profile_photo ? (
+                    <div className="relative">
+                      <img 
+                        src={URL.createObjectURL(formData.profile_photo)} 
+                        alt="Profile preview" 
+                        className="w-20 h-20 rounded-full object-cover border-2 border-muted"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setFormData(prev => ({ ...prev, profile_photo: null }))}
+                        className="absolute -top-2 -right-2 h-6 w-6 p-0 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-muted-foreground/50">
+                      <Camera className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <Label 
+                      htmlFor="profile_photo" 
+                      className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Choose Photo
+                    </Label>
+                    <input
+                      id="profile_photo"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProfilePhotoUpload}
+                      className="hidden"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Upload a profile photo (max 5MB)
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -440,6 +575,51 @@ const Onboarding = () => {
                       </Label>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Label>Business Photos</Label>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-2">
+                    {formData.business_photos.map((photo, index) => (
+                      <div key={index} className="relative group">
+                        <img 
+                          src={URL.createObjectURL(photo)} 
+                          alt={`Business photo ${index + 1}`}
+                          className="w-full h-20 object-cover rounded-lg border"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeBusinessPhoto(index)}
+                          className="absolute -top-2 -right-2 h-6 w-6 p-0 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                    {formData.business_photos.length < 5 && (
+                      <Label 
+                        htmlFor="business_photos" 
+                        className="w-full h-20 border-2 border-dashed border-muted-foreground/50 rounded-lg flex items-center justify-center cursor-pointer hover:border-muted-foreground/70 transition-colors"
+                      >
+                        <Upload className="h-6 w-6 text-muted-foreground" />
+                      </Label>
+                    )}
+                  </div>
+                  <input
+                    id="business_photos"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleBusinessPhotosUpload}
+                    className="hidden"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Upload up to 5 business photos (max 5MB each)
+                  </p>
                 </div>
               </div>
 
@@ -591,7 +771,7 @@ const Onboarding = () => {
               <Button
                 variant="outline"
                 onClick={() => setCurrentStep(prev => prev - 1)}
-                disabled={loading}
+                disabled={loading || uploadingPhoto}
               >
                 Back
               </Button>
@@ -599,11 +779,11 @@ const Onboarding = () => {
             <Button
               variant="hero"
               onClick={handleNext}
-              disabled={loading || !validateStep()}
+              disabled={loading || uploadingPhoto || !validateStep()}
               className="ml-auto"
             >
-              {loading ? (
-                "Saving..."
+              {loading || uploadingPhoto ? (
+                uploadingPhoto ? "Uploading photos..." : "Saving..."
               ) : (
                 <>
                   {profile.role === 'customer' || currentStep === 2 ? (
