@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { User, UserCheck, Mail, Lock, Eye, EyeOff, Calendar } from 'lucide-react';
+import Header from '@/components/ui/header';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -119,7 +120,9 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <Header />
+      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-6">
@@ -291,6 +294,7 @@ const Auth = () => {
           </Tabs>
         </Card>
       </div>
+    </div>
     </div>
   );
 };

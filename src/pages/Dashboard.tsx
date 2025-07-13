@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 import CustomerDashboard from '@/components/dashboard/CustomerDashboard';
 import ProviderDashboard from '@/components/dashboard/ProviderDashboard';
+import Header from '@/components/ui/header';
 
 const Dashboard = () => {
   const { user, profile, loading } = useAuth();
@@ -25,6 +26,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       {profile.role === 'customer' ? (
         <CustomerDashboard />
       ) : (

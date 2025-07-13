@@ -11,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Building, MapPin, Phone, FileText, CheckCircle } from 'lucide-react';
+import Header from '@/components/ui/header';
 
 interface Service {
   id: string;
@@ -176,7 +177,9 @@ const Onboarding = () => {
   const totalSteps = profile.role === 'provider' ? 2 : 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <Header />
+      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
       <div className="w-full max-w-lg">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-6">
@@ -352,6 +355,7 @@ const Onboarding = () => {
           </div>
         </Card>
       </div>
+    </div>
     </div>
   );
 };
