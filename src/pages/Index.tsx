@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import heroImage from '@/assets/hero-appointment-scene.jpg';
+import heroImage from '@/assets/hero-lash-tech-scene.jpg';
 const Index = () => {
   return <div className="min-h-screen bg-white">
       {/* Navigation */}
