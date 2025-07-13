@@ -30,7 +30,6 @@ const Onboarding = () => {
     business_name: '',
     business_description: '',
     services_offered: [] as string[],
-    availability_notes: '',
     // Business Details
     business_website: '',
     years_experience: '',
@@ -235,7 +234,7 @@ const Onboarding = () => {
             business_name: formData.business_name,
             business_description: formData.business_description,
             services_offered: formData.services_offered,
-            availability_notes: formData.availability_notes,
+            
             business_website: formData.business_website,
             years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
             pricing_info: formData.pricing_info,
@@ -411,16 +410,6 @@ const Onboarding = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="availability_notes">Availability Notes</Label>
-                <Textarea
-                  id="availability_notes"
-                  placeholder="Any notes about your general availability..."
-                  value={formData.availability_notes}
-                  onChange={(e) => handleInputChange('availability_notes', e.target.value)}
-                  className="min-h-[60px]"
-                />
-              </div>
             </div>
           )}
 
