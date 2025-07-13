@@ -40,8 +40,8 @@ const Index = () => {
           </h1>
           
           <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-            Connect with professional service providers for spontaneous appointments. 
-            Book available slots instantly or offer your availability to earn more.
+            The marketplace for last-minute appointments. 
+            Book services instantly or list your availability to fill empty slots.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -110,14 +110,14 @@ const Index = () => {
         <div className="mt-24 text-center">
           <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-3xl p-12 border border-border/40">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Ready to fill your schedule?
+              Ready to get started?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of professionals and customers who trust our platform for flexible appointment booking.
+              Whether you're looking to book services or offer your availability, join thousands who trust our platform.
             </p>
             <Link to="/auth">
               <Button variant="hero" size="xl" className="shadow-elegant">
-                Start Booking Today
+                Join Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
