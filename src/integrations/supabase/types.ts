@@ -208,36 +208,66 @@ export type Database = {
       provider_details: {
         Row: {
           availability_notes: string | null
+          business_description: string | null
+          business_email: string | null
           business_name: string | null
+          business_website: string | null
+          certifications: string | null
           created_at: string
+          emergency_available: boolean | null
           id: string
+          insurance_info: string | null
+          operating_hours: string | null
+          pricing_info: string | null
           rating: number | null
+          service_area: string | null
           services_offered: string[] | null
           total_reviews: number | null
           updated_at: string
           user_id: string
+          years_experience: number | null
         }
         Insert: {
           availability_notes?: string | null
+          business_description?: string | null
+          business_email?: string | null
           business_name?: string | null
+          business_website?: string | null
+          certifications?: string | null
           created_at?: string
+          emergency_available?: boolean | null
           id?: string
+          insurance_info?: string | null
+          operating_hours?: string | null
+          pricing_info?: string | null
           rating?: number | null
+          service_area?: string | null
           services_offered?: string[] | null
           total_reviews?: number | null
           updated_at?: string
           user_id: string
+          years_experience?: number | null
         }
         Update: {
           availability_notes?: string | null
+          business_description?: string | null
+          business_email?: string | null
           business_name?: string | null
+          business_website?: string | null
+          certifications?: string | null
           created_at?: string
+          emergency_available?: boolean | null
           id?: string
+          insurance_info?: string | null
+          operating_hours?: string | null
+          pricing_info?: string | null
           rating?: number | null
+          service_area?: string | null
           services_offered?: string[] | null
           total_reviews?: number | null
           updated_at?: string
           user_id?: string
+          years_experience?: number | null
         }
         Relationships: [
           {

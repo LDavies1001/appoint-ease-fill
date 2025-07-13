@@ -153,8 +153,18 @@ const Onboarding = () => {
           .upsert({
             user_id: user!.id,
             business_name: formData.business_name,
+            business_description: formData.business_description,
             services_offered: formData.services_offered,
-            availability_notes: formData.availability_notes
+            availability_notes: formData.availability_notes,
+            business_email: formData.business_email,
+            business_website: formData.business_website,
+            years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
+            pricing_info: formData.pricing_info,
+            operating_hours: formData.operating_hours,
+            service_area: formData.service_area,
+            insurance_info: formData.insurance_info,
+            certifications: formData.certifications,
+            emergency_available: formData.emergency_available
           });
 
         if (providerError) throw providerError;
