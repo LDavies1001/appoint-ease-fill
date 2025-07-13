@@ -107,6 +107,11 @@ const Auth = () => {
           title: "Account created!",
           description: "Please check your email for verification",
         });
+        // Redirect to sign in tab after successful signup
+        setActiveTab('signin');
+        setEmail(''); // Clear the email field for sign in
+        setPassword('');
+        setConfirmPassword('');
       }
     } catch (error) {
       toast({
