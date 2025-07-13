@@ -33,13 +33,18 @@ const Onboarding = () => {
     // Business Details
     business_website: '',
     years_experience: '',
-    pricing_info: '',
-    operating_hours: '',
-    service_area: '',
+    pricing_info: [] as { service: string; price: string }[],
+    operating_hours: [
+      { day: 'Monday', open: '09:00', close: '17:00', closed: false },
+      { day: 'Tuesday', open: '09:00', close: '17:00', closed: false },
+      { day: 'Wednesday', open: '09:00', close: '17:00', closed: false },
+      { day: 'Thursday', open: '09:00', close: '17:00', closed: false },
+      { day: 'Friday', open: '09:00', close: '17:00', closed: false },
+      { day: 'Saturday', open: '09:00', close: '17:00', closed: true },
+      { day: 'Sunday', open: '09:00', close: '17:00', closed: true }
+    ],
     // Additional Business Info
-    insurance_info: '',
-    certifications: '',
-    emergency_available: false
+    certifications: ''
   });
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
@@ -100,6 +105,38 @@ const Onboarding = () => {
       services_offered: prev.services_offered.includes(serviceId)
         ? prev.services_offered.filter(id => id !== serviceId)
         : [...prev.services_offered, serviceId]
+    }));
+  };
+
+  const handleOperatingHoursChange = (dayIndex: number, field: 'open' | 'close' | 'closed', value: string | boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      operating_hours: prev.operating_hours.map((day, index) => 
+        index === dayIndex ? { ...day, [field]: value } : day
+      )
+    }));
+  };
+
+  const addPriceItem = () => {
+    setFormData(prev => ({
+      ...prev,
+      pricing_info: [...prev.pricing_info, { service: '', price: '' }]
+    }));
+  };
+
+  const removePriceItem = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      pricing_info: prev.pricing_info.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updatePriceItem = (index: number, field: 'service' | 'price', value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      pricing_info: prev.pricing_info.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
     }));
   };
 
@@ -234,15 +271,11 @@ const Onboarding = () => {
             business_name: formData.business_name,
             business_description: formData.business_description,
             services_offered: formData.services_offered,
-            
             business_website: formData.business_website,
             years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
-            pricing_info: formData.pricing_info,
-            operating_hours: formData.operating_hours,
-            service_area: formData.service_area,
-            insurance_info: formData.insurance_info,
-            certifications: formData.certifications,
-            emergency_available: formData.emergency_available
+            pricing_info: JSON.stringify(formData.pricing_info),
+            operating_hours: JSON.stringify(formData.operating_hours),
+            certifications: formData.certifications
           });
 
         if (providerError) throw providerError;
@@ -461,81 +494,94 @@ const Onboarding = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="service_area">Service Area</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="service_area"
-                    placeholder="Areas you serve (e.g., Within 20 miles of London)"
-                    value={formData.service_area}
-                    onChange={(e) => handleInputChange('service_area', e.target.value)}
-                    className="pl-10"
-                  />
+              <div className="space-y-3">
+                <Label>Operating Hours</Label>
+                <div className="space-y-2">
+                  {formData.operating_hours.map((dayHours, index) => (
+                    <div key={dayHours.day} className="flex items-center space-x-2 text-sm">
+                      <div className="w-20 font-medium">{dayHours.day}</div>
+                      <Checkbox
+                        checked={!dayHours.closed}
+                        onCheckedChange={(checked) => handleOperatingHoursChange(index, 'closed', !checked)}
+                      />
+                      <div className="flex items-center space-x-1">
+                        <Input
+                          type="time"
+                          value={dayHours.open}
+                          onChange={(e) => handleOperatingHoursChange(index, 'open', e.target.value)}
+                          disabled={dayHours.closed}
+                          className="w-24"
+                        />
+                        <span>to</span>
+                        <Input
+                          type="time"
+                          value={dayHours.close}
+                          onChange={(e) => handleOperatingHoursChange(index, 'close', e.target.value)}
+                          disabled={dayHours.closed}
+                          className="w-24"
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="operating_hours">Operating Hours</Label>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="operating_hours"
-                    placeholder="e.g., Mon-Fri 8AM-6PM, Sat 9AM-4PM"
-                    value={formData.operating_hours}
-                    onChange={(e) => handleInputChange('operating_hours', e.target.value)}
-                    className="pl-10"
-                  />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>Standard Price List</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addPriceItem}
+                  >
+                    Add Item
+                  </Button>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="pricing_info">Pricing Information</Label>
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Textarea
-                    id="pricing_info"
-                    placeholder="Your pricing structure (e.g., £50/hour, £200 call-out fee)"
-                    value={formData.pricing_info}
-                    onChange={(e) => handleInputChange('pricing_info', e.target.value)}
-                    className="pl-10 min-h-[60px]"
-                  />
+                <div className="space-y-2">
+                  {formData.pricing_info.map((item, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <Input
+                        placeholder="Service/Item"
+                        value={item.service}
+                        onChange={(e) => updatePriceItem(index, 'service', e.target.value)}
+                        className="flex-1"
+                      />
+                      <Input
+                        placeholder="Price"
+                        value={item.price}
+                        onChange={(e) => updatePriceItem(index, 'price', e.target.value)}
+                        className="w-24"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removePriceItem(index)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ))}
+                  {formData.pricing_info.length === 0 && (
+                    <p className="text-sm text-muted-foreground">Click "Add Item" to create your price list</p>
+                  )}
                 </div>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="certifications">Certifications & Qualifications</Label>
-                <Textarea
-                  id="certifications"
-                  placeholder="List any relevant certifications, licenses, or qualifications..."
-                  value={formData.certifications}
-                  onChange={(e) => handleInputChange('certifications', e.target.value)}
-                  className="min-h-[60px]"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="insurance_info">Insurance Information</Label>
-                <Textarea
-                  id="insurance_info"
-                  placeholder="Details about your business insurance coverage..."
-                  value={formData.insurance_info}
-                  onChange={(e) => handleInputChange('insurance_info', e.target.value)}
-                  className="min-h-[60px]"
-                />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="emergency_available"
-                  checked={formData.emergency_available}
-                  onCheckedChange={(checked) => 
-                    setFormData(prev => ({ ...prev, emergency_available: !!checked }))
-                  }
-                />
-                <Label htmlFor="emergency_available" className="text-sm font-normal cursor-pointer">
-                  Available for emergency/urgent calls
-                </Label>
+                <div className="relative">
+                  <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Textarea
+                    id="certifications"
+                    placeholder="List your certifications, qualifications, or training..."
+                    value={formData.certifications}
+                    onChange={(e) => handleInputChange('certifications', e.target.value)}
+                    className="pl-10 min-h-[60px]"
+                  />
+                </div>
               </div>
             </div>
           )}
