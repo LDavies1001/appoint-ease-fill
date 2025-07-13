@@ -23,7 +23,6 @@ const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     // Personal Information
-    name: '',
     phone: '',
     location: '',
     bio: '',
@@ -69,7 +68,6 @@ const Onboarding = () => {
     // Pre-fill form with existing data
     setFormData(prev => ({
       ...prev,
-      name: profile.name || '',
       phone: profile.phone || '',
       location: profile.location || '',
       bio: profile.bio || ''
@@ -108,7 +106,7 @@ const Onboarding = () => {
 
   const validateStep = () => {
     if (currentStep === 0) {
-      return formData.name.trim() && formData.location.trim();
+      return formData.location.trim();
     }
     if (currentStep === 1 && profile?.role === 'provider') {
       return formData.business_name.trim() && formData.services_offered.length > 0;
@@ -140,7 +138,6 @@ const Onboarding = () => {
     try {
       // Update profile
       const profileUpdates = {
-        name: formData.name,
         phone: formData.phone,
         location: formData.location,
         bio: formData.bio,
@@ -241,21 +238,6 @@ const Onboarding = () => {
         <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
           {currentStep === 0 && (
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name *</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="name"
-                    placeholder="Enter your full name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
                 <div className="relative">
