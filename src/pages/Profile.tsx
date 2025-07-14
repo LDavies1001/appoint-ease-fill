@@ -142,6 +142,23 @@ const Profile = () => {
     }
   };
 
+  const getDayName = (dayKey: string | number) => {
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const numericKey = typeof dayKey === 'string' ? parseInt(dayKey) : dayKey;
+    
+    // If it's a numeric key (0-6), map to day name
+    if (typeof numericKey === 'number' && numericKey >= 0 && numericKey <= 6) {
+      return dayNames[numericKey];
+    }
+    
+    // If it's already a day name, return as is (but capitalize)
+    if (typeof dayKey === 'string') {
+      return dayKey.charAt(0).toUpperCase() + dayKey.slice(1).toLowerCase();
+    }
+    
+    return 'Unknown Day';
+  };
+
   if (!user || !profile) {
     return (
       <div className="min-h-screen bg-background">
@@ -512,7 +529,7 @@ const Profile = () => {
 
                         return (
                           <div key={day} className="flex justify-between">
-                            <span className="capitalize font-medium">{day}</span>
+                            <span className="capitalize font-medium">{getDayName(day)}</span>
                             <span className="text-muted-foreground">{displayTime}</span>
                           </div>
                         );
@@ -786,7 +803,7 @@ const Profile = () => {
 
                           return (
                             <div key={day} className="flex justify-between items-center">
-                              <span className="capitalize font-medium">{day}</span>
+                              <span className="capitalize font-medium">{getDayName(day)}</span>
                               <span className="text-muted-foreground">{displayTime}</span>
                             </div>
                           );
