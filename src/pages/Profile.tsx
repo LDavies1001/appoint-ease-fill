@@ -14,8 +14,6 @@ const Profile = () => {
 
   const handleCustomerProfileSubmit = async (data: any) => {
     try {
-      const isNewProfile = !profile?.is_profile_complete;
-      
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -37,10 +35,10 @@ const Profile = () => {
         description: "Your profile has been updated successfully.",
       });
 
-      // Redirect to dashboard if this was profile creation
-      if (isNewProfile) {
+      // Always redirect to dashboard after profile update
+      setTimeout(() => {
         navigate('/dashboard');
-      }
+      }, 1000); // Small delay to show the toast
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
