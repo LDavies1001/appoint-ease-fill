@@ -143,6 +143,11 @@ const Index = () => {
                       <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input type="password" placeholder="Password" className="pl-10 h-11 text-sm bg-white/80" />
                     </div>
+                    
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input type="password" placeholder="Confirm Password" className="pl-10 h-11 text-sm bg-white/80" />
+                    </div>
                   </div>
                   
                   <Link to="/auth?tab=provider" className="block">
