@@ -26,9 +26,9 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check URL params for business signup - but show info page, not signup form
+    // Check URL params for provider info page
     const tab = searchParams.get('tab');
-    if (tab === 'business-signup') {
+    if (tab === 'provider') {
       setShowBusinessSignup(false); // Show info page, not signup form
     }
   }, [searchParams]);
