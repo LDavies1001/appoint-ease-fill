@@ -125,12 +125,12 @@ const BusinessProfile = () => {
 
   const handleEdit = (field: string, currentValue: string) => {
     setEditingField(field);
-    setEditValue(currentValue || '');
+    setEditValue('');
   };
 
   const handleEditServices = () => {
     setEditingField('services_offered');
-    setEditValue(details?.services_offered || []);
+    setEditValue([]);
   };
 
   const handleServiceToggle = (serviceId: string, checked: boolean) => {
