@@ -94,14 +94,23 @@ const Profile = () => {
 
   const isOwner = user?.id === profile?.user_id;
   
-  // Debug logging
-  console.log('Edit Debug:', {
+  // Debug logging - this should show immediately when component loads
+  console.log('Profile Debug Info:', {
     userId: user?.id,
     profileUserId: profile?.user_id,
+    profileRole: profile?.role,
     isOwner,
     isEditMode,
-    userRole: profile?.role
+    userExists: !!user,
+    profileExists: !!profile
   });
+
+  // Function to handle edit button click
+  const handleEditToggle = () => {
+    console.log('Edit button clicked! Current isEditMode:', isEditMode);
+    setIsEditMode(!isEditMode);
+    console.log('Edit mode toggled to:', !isEditMode);
+  };
 
   const handleCustomerProfileSubmit = async (data: any) => {
     try {
@@ -243,7 +252,7 @@ const Profile = () => {
       {isOwner && (
         <div className="fixed top-20 right-4 z-50 space-y-2">
           <Button
-            onClick={() => setIsEditMode(!isEditMode)}
+            onClick={handleEditToggle}
             variant={isEditMode ? "default" : "outline"}
             size="sm"
             className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-elegant"
