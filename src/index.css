@@ -8,7 +8,8 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 99%;
+    /* Primary Colors - Soft Beige as main background */
+    --background: 40 29% 94%; /* Soft Beige #F5F0E6 */
     --foreground: 222 15% 15%;
 
     --card: 0 0% 100%;
@@ -17,42 +18,53 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222 15% 15%;
 
-    --primary: 263 85% 65%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 263 85% 75%;
+    /* Sage Green as primary brand color */
+    --primary: 120 20% 70%; /* Sage Green #D4E8D4 */
+    --primary-foreground: 222 15% 15%;
+    --primary-glow: 120 25% 80%;
 
-    --secondary: 220 13% 96%;
+    /* Blush as secondary */
+    --secondary: 0 40% 91%; /* Blush #FAD7D7 */
     --secondary-foreground: 222 15% 25%;
 
-    --muted: 220 13% 96%;
+    --muted: 40 20% 92%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 159 85% 65%;
-    --accent-foreground: 0 0% 100%;
-    --accent-glow: 159 85% 75%;
+    /* Muted Lavender as accent */
+    --accent: 270 25% 85%; /* Muted Lavender #D7D1E3 */
+    --accent-foreground: 222 15% 15%;
+    --accent-glow: 270 30% 90%;
+
+    /* Pale Blue as tertiary accent */
+    --tertiary: 210 40% 90%; /* Pale Blue #D0E6F7 */
+    --tertiary-foreground: 222 15% 15%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 96%;
-    --ring: 263 85% 65%;
+    --border: 40 15% 85%;
+    --input: 40 20% 92%;
+    --ring: 120 20% 70%;
 
-    --radius: 0.75rem;
+    /* Updated radius for modern feel */
+    --radius: 0.75rem; /* 12px for buttons/inputs */
+    --radius-lg: 1rem; /* 16px for cards */
 
     /* Gradients for beautiful backgrounds */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
+    --gradient-tertiary: linear-gradient(135deg, hsl(var(--tertiary)), hsl(var(--secondary)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
 
-    /* Shadows with brand colors */
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
-    --shadow-accent: 0 8px 25px -8px hsl(var(--accent) / 0.3);
-    --shadow-soft: 0 4px 15px -4px hsl(220 13% 0% / 0.1);
+    /* Soft shadows for modern UI */
+    --shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.08);
+    --shadow-elegant: 0 12px 30px rgba(0, 0, 0, 0.1);
 
-    /* Animation values */
+    /* Animation values - 300ms duration as specified */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-spring: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-scale: transform 0.15s ease-in-out;
 
     --sidebar-background: 0 0% 98%;
 
@@ -72,17 +84,19 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Dark mode - Background (#121212) */
+    --background: 0 0% 7%; /* #121212 */
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 0 0% 10%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 0 0% 10%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Sage Green adapted for dark mode */
+    --primary: 120 25% 50%; /* Darker sage green */
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -90,15 +104,20 @@ All colors MUST be HSL.
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
+    /* Muted Lavender for dark mode - #5A4E6E */
+    --accent: 270 20% 37%;
     --accent-foreground: 210 40% 98%;
+
+    /* Sage Green for dark mode tertiary - #7D9D7C */
+    --tertiary: 120 18% 55%;
+    --tertiary-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 120 25% 50%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -121,27 +140,66 @@ All colors MUST be HSL.
 }
 
 @layer components {
-  /* Hero button variant for CTAs */
-  .btn-hero {
-    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground hover:shadow-elegant;
+  /* Modern button variants */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl px-6 py-3 font-medium shadow-soft hover:shadow-medium transition-smooth hover:scale-[0.98] active:scale-95;
   }
 
-  /* Accent button variant */
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-xl px-6 py-3 font-medium shadow-soft hover:shadow-medium transition-smooth hover:scale-[0.98] active:scale-95;
+  }
+
   .btn-accent {
-    @apply bg-gradient-to-r from-accent to-accent-glow text-accent-foreground hover:shadow-accent;
+    @apply bg-accent text-accent-foreground hover:bg-accent/90 rounded-xl px-6 py-3 font-medium shadow-soft hover:shadow-medium transition-smooth hover:scale-[0.98] active:scale-95;
   }
 
-  /* Card components with elegant shadows */
-  .card-elegant {
-    @apply bg-card border border-border rounded-xl shadow-soft;
+  /* Modern card components with 16px radius */
+  .card-modern {
+    @apply bg-card border border-border rounded-2xl shadow-soft p-6 transition-smooth hover:shadow-medium;
   }
 
-  /* Smooth transitions for interactive elements */
+  .card-interactive {
+    @apply bg-card border border-border rounded-2xl shadow-soft p-6 transition-smooth hover:shadow-medium hover:scale-[1.02] cursor-pointer;
+  }
+
+  /* Input styling with 12px radius and proper padding */
+  .input-modern {
+    @apply bg-background border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-smooth;
+  }
+
+  /* Spacing utilities for consistent layout */
+  .section-padding {
+    @apply px-6 py-8 sm:px-8 sm:py-12;
+  }
+
+  .card-spacing {
+    @apply space-y-6;
+  }
+
+  /* Animation classes */
   .transition-smooth {
     transition: var(--transition-smooth);
   }
 
   .transition-spring {
     transition: var(--transition-spring);
+  }
+
+  .transition-scale {
+    transition: var(--transition-scale);
+  }
+
+  /* Page transition effects */
+  .fade-in {
+    @apply animate-in fade-in duration-300;
+  }
+
+  .slide-up {
+    @apply animate-in slide-in-from-bottom-4 duration-300;
+  }
+
+  /* Loading state */
+  .loading-shimmer {
+    @apply animate-pulse bg-gradient-to-r from-muted via-muted/50 to-muted;
   }
 }
