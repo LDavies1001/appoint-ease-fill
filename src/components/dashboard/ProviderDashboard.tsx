@@ -21,8 +21,10 @@ import {
   BookOpen,
   Upload,
   X,
-  Wrench
+  Wrench,
+  Zap
 } from 'lucide-react';
+import BulkSlotCreator from './BulkSlotCreator';
 
 interface ProviderService {
   id: string;
@@ -84,6 +86,7 @@ const ProviderDashboard = () => {
   
   // Form state for adding slots
   const [showAddSlot, setShowAddSlot] = useState(false);
+  const [showBulkCreator, setShowBulkCreator] = useState(false);
   const [slotForm, setSlotForm] = useState({
     provider_service_id: '',
     custom_service_name: '',
@@ -445,15 +448,24 @@ const ProviderDashboard = () => {
           <div className="space-y-6">
             {/* Add Slot Button */}
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-foreground">Add a Slot</h2>
-              {!showAddSlot && (
-                <Button
-                  variant="hero"
-                  onClick={() => setShowAddSlot(!showAddSlot)}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Slot
-                </Button>
+              <h2 className="text-xl font-semibold text-foreground">Manage Availability</h2>
+              {!showAddSlot && !showBulkCreator && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowBulkCreator(true)}
+                  >
+                    <Zap className="h-4 w-4 mr-2" />
+                    Bulk Create
+                  </Button>
+                  <Button
+                    variant="hero"
+                    onClick={() => setShowAddSlot(true)}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Slot
+                  </Button>
+                </div>
               )}
             </div>
 
@@ -642,6 +654,18 @@ const ProviderDashboard = () => {
                   </div>
                 </form>
               </Card>
+            )}
+
+            {/* Bulk Slot Creator */}
+            {showBulkCreator && (
+              <BulkSlotCreator
+                providerServices={providerServices}
+                onSuccess={() => {
+                  setShowBulkCreator(false);
+                  fetchMySlots();
+                }}
+                onCancel={() => setShowBulkCreator(false)}
+              />
             )}
 
             {/* Slots List */}
