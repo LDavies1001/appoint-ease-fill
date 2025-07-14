@@ -1,12 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building, Navigation } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 import { Input } from '@/components/ui/input';
-import heroImage from '@/assets/hero-appointment-scene.jpg';
+import heroImage from '@/assets/hero-lash-tech-scene.jpg';
+
 const Index = () => {
+  const [selectedPanel, setSelectedPanel] = useState<'customer' | 'business' | null>(null);
+
+  const getMainHeading = () => {
+    if (selectedPanel === 'customer') {
+      return 'Book Last-Minute Appointments';
+    } else if (selectedPanel === 'business') {
+      return 'Fill Your Empty Slots';
+    }
+    return 'Book Last-Minute Appointments';
+  };
+
+  const getSubHeading = () => {
+    if (selectedPanel === 'customer') {
+      return 'Find available appointment slots in seconds. Get the services you need, when you need them.';
+    } else if (selectedPanel === 'business') {
+      return 'Turn cancellations into revenue. Connect with customers looking for immediate appointments and maximize your booking potential.';
+    }
+    return 'Find available appointment slots in seconds. Get the services you need, when you need them.';
+  };
   return <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="bg-white border-b border-border/40 sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/95">
@@ -44,22 +64,29 @@ const Index = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center py-16 lg:py-24">
           {/* Left Side - Search Interface */}
           <div className="space-y-8">
-            <div>
-              <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-4 leading-tight">
-                Book Last-Minute
-                <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  Appointments
-                </span>
-              </h1>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Find available appointment slots in seconds. Get the services you need, when you need them.
-              </p>
-            </div>
+             <div>
+               <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-4 leading-tight">
+                 {selectedPanel === 'business' ? 'Fill Your Empty' : 'Book Last-Minute'}
+                 <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                   {selectedPanel === 'business' ? 'Slots' : 'Appointments'}
+                 </span>
+               </h1>
+               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                 {getSubHeading()}
+               </p>
+             </div>
 
             {/* Split Sign Up Forms */}
             <div className="grid md:grid-cols-2 gap-6">
               {/* Customer Sign Up Panel */}
-              <Card className="p-6 shadow-soft border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+              <Card 
+                className={`p-6 shadow-soft border-2 cursor-pointer transition-all duration-300 ${
+                  selectedPanel === 'customer' 
+                    ? 'border-primary bg-gradient-to-br from-primary/20 to-primary/30 shadow-medium' 
+                    : 'border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 hover:border-primary/30'
+                }`}
+                onClick={() => setSelectedPanel('customer')}
+              >
                 <div className="space-y-4">
                   <div className="text-center mb-4">
                     <div className="flex items-center justify-center space-x-2 mb-2">
@@ -107,7 +134,14 @@ const Index = () => {
               </Card>
 
               {/* Business Sign Up Panel */}
-              <Card className="p-6 shadow-soft border-2 border-accent/20 bg-gradient-to-br from-accent/5 to-accent/10">
+              <Card 
+                className={`p-6 shadow-soft border-2 cursor-pointer transition-all duration-300 ${
+                  selectedPanel === 'business' 
+                    ? 'border-accent bg-gradient-to-br from-accent/20 to-accent/30 shadow-medium' 
+                    : 'border-accent/20 bg-gradient-to-br from-accent/5 to-accent/10 hover:border-accent/30'
+                }`}
+                onClick={() => setSelectedPanel('business')}
+              >
                 <div className="space-y-4">
                   <div className="text-center mb-4">
                     <div className="flex items-center justify-center space-x-2 mb-2">
@@ -158,15 +192,6 @@ const Index = () => {
                   </Link>
                 </div>
               </Card>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="flex flex-wrap gap-3">
-              <span className="text-sm text-muted-foreground">Popular:</span>
-              <button className="text-sm text-primary hover:underline">Haircut</button>
-              <button className="text-sm text-primary hover:underline">Massage</button>
-              <button className="text-sm text-primary hover:underline">Nails</button>
-              <button className="text-sm text-primary hover:underline">Facial</button>
             </div>
           </div>
 
