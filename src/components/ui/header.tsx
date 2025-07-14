@@ -56,12 +56,6 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/onboarding" className="flex items-center">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Update Profile Details
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
                     <Link to="/profile" className="flex items-center">
                       <Settings className="h-4 w-4 mr-2" />
                       MyAdmin
