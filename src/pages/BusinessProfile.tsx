@@ -23,7 +23,6 @@ import {
   Edit, 
   Save, 
   X, 
-  DollarSign,
   FileText,
   Shield,
   Award,
@@ -633,7 +632,7 @@ const BusinessProfile = () => {
         <section className="space-y-6">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 bg-gradient-to-br from-accent to-primary rounded-lg flex items-center justify-center">
-              <DollarSign className="h-5 w-5 text-white" />
+              <span className="text-white font-bold text-lg">£</span>
             </div>
             <div>
               <h2 className="text-2xl font-bold text-foreground">Services & Pricing</h2>
@@ -792,9 +791,9 @@ const BusinessProfile = () => {
                         {formatPricingInfo(details.pricing_info).map((item: any, index: number) => (
                           <div key={index} className="flex items-center justify-between p-4 bg-background/80 rounded-lg border hover:bg-background/90 transition-colors">
                             <div className="flex items-center space-x-3">
-                              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                                <DollarSign className="h-4 w-4 text-primary" />
-                              </div>
+                               <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                                 <span className="font-bold text-primary">£</span>
+                               </div>
                               <span className="font-medium text-foreground text-base">{item.service}</span>
                             </div>
                             <div className="text-right">
