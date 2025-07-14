@@ -203,6 +203,87 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_favourites: {
+        Row: {
+          created_at: string
+          customer_id: string
+          id: string
+          provider_id: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          id?: string
+          provider_id: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          id?: string
+          provider_id?: string
+        }
+        Relationships: []
+      }
+      local_offers: {
+        Row: {
+          created_at: string
+          current_uses: number
+          description: string | null
+          discount_amount: number | null
+          discount_percentage: number | null
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          min_spend: number | null
+          offer_code: string | null
+          provider_id: string
+          service_categories: string[] | null
+          target_location: string | null
+          title: string
+          updated_at: string
+          valid_from: string
+          valid_until: string
+        }
+        Insert: {
+          created_at?: string
+          current_uses?: number
+          description?: string | null
+          discount_amount?: number | null
+          discount_percentage?: number | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          min_spend?: number | null
+          offer_code?: string | null
+          provider_id: string
+          service_categories?: string[] | null
+          target_location?: string | null
+          title: string
+          updated_at?: string
+          valid_from?: string
+          valid_until: string
+        }
+        Update: {
+          created_at?: string
+          current_uses?: number
+          description?: string | null
+          discount_amount?: number | null
+          discount_percentage?: number | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          min_spend?: number | null
+          offer_code?: string | null
+          provider_id?: string
+          service_categories?: string[] | null
+          target_location?: string | null
+          title?: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

@@ -16,7 +16,13 @@ import {
   Star, 
   User,
   LogOut,
-  BookOpen
+  BookOpen,
+  Heart,
+  Tag,
+  Percent,
+  Building,
+  Phone,
+  Mail
 } from 'lucide-react';
 
 interface AvailableSlot {
@@ -56,9 +62,44 @@ interface Booking {
   };
 }
 
+interface FavouriteBusiness {
+  id: string;
+  provider_id: string;
+  provider: {
+    name: string;
+    business_name: string;
+    location: string;
+    rating: number;
+    business_email: string;
+    business_phone: string;
+    business_category: string;
+  };
+}
+
+interface LocalOffer {
+  id: string;
+  provider_id: string;
+  title: string;
+  description: string;
+  discount_percentage: number;
+  discount_amount: number;
+  offer_code: string;
+  min_spend: number;
+  valid_until: string;
+  max_uses: number;
+  current_uses: number;
+  provider: {
+    name: string;
+    business_name: string;
+    location: string;
+  };
+}
+
 const CustomerDashboard = () => {
   const [availableSlots, setAvailableSlots] = useState<AvailableSlot[]>([]);
   const [myBookings, setMyBookings] = useState<Booking[]>([]);
+  const [favouriteBusinesses, setFavouriteBusinesses] = useState<FavouriteBusiness[]>([]);
+  const [localOffers, setLocalOffers] = useState<LocalOffer[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -70,6 +111,8 @@ const CustomerDashboard = () => {
   useEffect(() => {
     fetchAvailableSlots();
     fetchMyBookings();
+    fetchFavouriteBusinesses();
+    fetchLocalOffers();
   }, []);
 
   const fetchAvailableSlots = async () => {
@@ -143,6 +186,80 @@ const CustomerDashboard = () => {
       setMyBookings(formattedBookings);
     } catch (error) {
       console.error('Error fetching bookings:', error);
+    }
+  };
+
+  const fetchFavouriteBusinesses = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('customer_favourites')
+        .select(`
+          *,
+          provider:profiles!customer_favourites_provider_id_fkey(
+            name, 
+            location,
+            provider_details(
+              business_name,
+              business_email,
+              business_phone,
+              business_category,
+              rating
+            )
+          )
+        `)
+        .eq('customer_id', profile?.user_id);
+
+      if (error) throw error;
+
+      const formattedFavourites = data?.map(fav => ({
+        ...fav,
+        provider: {
+          name: fav.provider?.name || 'Unknown',
+          business_name: fav.provider?.provider_details?.[0]?.business_name || 'Unknown Business',
+          location: fav.provider?.location || 'Unknown Location',
+          rating: fav.provider?.provider_details?.[0]?.rating || 0,
+          business_email: fav.provider?.provider_details?.[0]?.business_email || '',
+          business_phone: fav.provider?.provider_details?.[0]?.business_phone || '',
+          business_category: fav.provider?.provider_details?.[0]?.business_category || ''
+        }
+      })) || [];
+
+      setFavouriteBusinesses(formattedFavourites);
+    } catch (error) {
+      console.error('Error fetching favourite businesses:', error);
+    }
+  };
+
+  const fetchLocalOffers = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('local_offers')
+        .select(`
+          *,
+          provider:profiles!local_offers_provider_id_fkey(
+            name,
+            location,
+            provider_details(business_name)
+          )
+        `)
+        .eq('is_active', true)
+        .gte('valid_until', new Date().toISOString())
+        .order('valid_until', { ascending: true });
+
+      if (error) throw error;
+
+      const formattedOffers = data?.map(offer => ({
+        ...offer,
+        provider: {
+          name: offer.provider?.name || 'Unknown',
+          business_name: offer.provider?.provider_details?.[0]?.business_name || 'Unknown Business',
+          location: offer.provider?.location || 'Unknown Location'
+        }
+      })) || [];
+
+      setLocalOffers(formattedOffers);
+    } catch (error) {
+      console.error('Error fetching local offers:', error);
     }
   };
 
