@@ -166,6 +166,30 @@ export type Database = {
           },
         ]
       }
+      business_categories: {
+        Row: {
+          category_type: Database["public"]["Enums"]["business_category_type"]
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category_type: Database["public"]["Enums"]["business_category_type"]
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category_type?: Database["public"]["Enums"]["business_category_type"]
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -214,9 +238,13 @@ export type Database = {
       provider_details: {
         Row: {
           availability_notes: string | null
+          business_address: string | null
+          business_category: string | null
           business_description: string | null
           business_email: string | null
+          business_logo_url: string | null
           business_name: string | null
+          business_phone: string | null
           business_website: string | null
           certification_files: string[] | null
           certifications: string | null
@@ -226,9 +254,12 @@ export type Database = {
           insurance_info: string | null
           operating_hours: string | null
           pricing_info: string | null
+          profile_published: boolean | null
+          profile_visibility: string | null
           rating: number | null
           service_area: string | null
           services_offered: string[] | null
+          social_media_links: Json | null
           total_reviews: number | null
           updated_at: string
           user_id: string
@@ -236,9 +267,13 @@ export type Database = {
         }
         Insert: {
           availability_notes?: string | null
+          business_address?: string | null
+          business_category?: string | null
           business_description?: string | null
           business_email?: string | null
+          business_logo_url?: string | null
           business_name?: string | null
+          business_phone?: string | null
           business_website?: string | null
           certification_files?: string[] | null
           certifications?: string | null
@@ -248,9 +283,12 @@ export type Database = {
           insurance_info?: string | null
           operating_hours?: string | null
           pricing_info?: string | null
+          profile_published?: boolean | null
+          profile_visibility?: string | null
           rating?: number | null
           service_area?: string | null
           services_offered?: string[] | null
+          social_media_links?: Json | null
           total_reviews?: number | null
           updated_at?: string
           user_id: string
@@ -258,9 +296,13 @@ export type Database = {
         }
         Update: {
           availability_notes?: string | null
+          business_address?: string | null
+          business_category?: string | null
           business_description?: string | null
           business_email?: string | null
+          business_logo_url?: string | null
           business_name?: string | null
+          business_phone?: string | null
           business_website?: string | null
           certification_files?: string[] | null
           certifications?: string | null
@@ -270,15 +312,25 @@ export type Database = {
           insurance_info?: string | null
           operating_hours?: string | null
           pricing_info?: string | null
+          profile_published?: boolean | null
+          profile_visibility?: string | null
           rating?: number | null
           service_area?: string | null
           services_offered?: string[] | null
+          social_media_links?: Json | null
           total_reviews?: number | null
           updated_at?: string
           user_id?: string
           years_experience?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_business_category"
+            columns: ["business_category"]
+            isOneToOne: false
+            referencedRelation: "business_categories"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "provider_details_user_id_fkey"
             columns: ["user_id"]
@@ -375,6 +427,17 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      business_category_type:
+        | "beauty_wellness"
+        | "health_fitness"
+        | "education_training"
+        | "professional_services"
+        | "home_services"
+        | "automotive"
+        | "food_beverage"
+        | "retail_shopping"
+        | "entertainment"
+        | "other"
       user_role: "customer" | "provider"
     }
     CompositeTypes: {
@@ -503,6 +566,18 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      business_category_type: [
+        "beauty_wellness",
+        "health_fitness",
+        "education_training",
+        "professional_services",
+        "home_services",
+        "automotive",
+        "food_beverage",
+        "retail_shopping",
+        "entertainment",
+        "other",
+      ],
       user_role: ["customer", "provider"],
     },
   },

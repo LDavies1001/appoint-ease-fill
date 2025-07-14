@@ -342,10 +342,15 @@ const BusinessProfile = () => {
           <div className="text-center">
             <Building className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h1 className="text-xl font-semibold mb-2">No Business Profile Found</h1>
-            <p className="text-muted-foreground mb-4">Complete your profile setup to view your business details</p>
-            <Button onClick={() => navigate('/onboarding')}>
-              Complete Profile Setup
-            </Button>
+            <p className="text-muted-foreground mb-4">Create your business profile to showcase your services and attract customers</p>
+            <div className="space-x-4">
+              <Button onClick={() => navigate('/create-business-profile')}>
+                Create Business Profile
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/onboarding')}>
+                Complete Basic Setup First
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -796,19 +801,28 @@ const BusinessProfile = () => {
                 
                 <div className="space-y-3">
                   <Button 
+                    onClick={() => navigate('/create-business-profile')}
+                    className="w-full h-12 text-base justify-start"
+                  >
+                    <Edit className="h-5 w-5 mr-3" />
+                    Edit Full Profile
+                  </Button>
+                  
+                  <Button 
                     variant="outline" 
                     onClick={() => navigate('/onboarding')}
                     className="w-full h-12 text-base justify-start"
                   >
-                    <Edit className="h-5 w-5 mr-3" />
-                    Complete Profile Setup
+                    <Building className="h-5 w-5 mr-3" />
+                    Quick Setup
                   </Button>
                   
                   <Button 
+                    variant="outline"
                     onClick={() => navigate('/dashboard')}
                     className="w-full h-12 text-base justify-start"
                   >
-                    <Building className="h-5 w-5 mr-3" />
+                    <Users className="h-5 w-5 mr-3" />
                     Back to Dashboard
                   </Button>
                 </div>

@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import BusinessProfile from "./pages/BusinessProfile";
+import CreateBusinessProfile from "./pages/CreateBusinessProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/business-profile" element={<BusinessProfile />} />
+            <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
