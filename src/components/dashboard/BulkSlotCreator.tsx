@@ -20,7 +20,9 @@ import {
   Clock,
   Calendar as CalendarDays,
   Save,
-  Trash2
+  Trash2,
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
 import { format, addDays, eachDayOfInterval, isWeekend } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -57,6 +59,8 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
   const [price, setPrice] = useState('');
   const [discountPrice, setDiscountPrice] = useState('');
   const [notes, setNotes] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [skipWeekends, setSkipWeekends] = useState(true);
   const [selectedWeekdays, setSelectedWeekdays] = useState([1, 2, 3, 4, 5]); // Mon-Fri
   const [loading, setLoading] = useState(false);
@@ -137,6 +141,69 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
     return selectedDates.length * timeSlots.length;
   };
 
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload a JPEG, PNG, or WebP image",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image under 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${profile?.user_id}-bulk-slot-${Date.now()}.${fileExt}`;
+      const filePath = `${profile?.user_id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('business-photos')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('business-photos')
+        .getPublicUrl(filePath);
+
+      setImageUrl(publicUrl);
+      
+      toast({
+        title: "Image uploaded successfully!",
+        description: "This image will be applied to all created slots"
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error uploading image",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingImage(false);
+      // Reset the input
+      event.target.value = '';
+    }
+  };
+
+  const removeImage = () => {
+    setImageUrl('');
+  };
+
   const handleBulkCreate = async () => {
     if (selectedDates.length === 0) {
       toast({
@@ -187,7 +254,8 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
             duration: timeSlot.duration,
             price: parseFloat(price),
             discount_price: discountPrice ? parseFloat(discountPrice) : null,
-            notes: notes.trim() || null
+            notes: notes.trim() || null,
+            image_url: imageUrl || null
           };
 
           if (selectedService) {
@@ -399,6 +467,59 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Image Upload */}
+        <div className="space-y-4">
+          <Label>Slot Image (optional)</Label>
+          <p className="text-sm text-muted-foreground">
+            Upload an image that will be applied to all slots created in this bulk operation
+          </p>
+          
+          <div className="flex items-center gap-4">
+            <label htmlFor="bulk-image-upload" className="cursor-pointer">
+              <div className="flex items-center gap-2 p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+                <Upload className="h-4 w-4" />
+                <span className="text-sm">
+                  {uploadingImage ? "Uploading..." : "Upload Image"}
+                </span>
+              </div>
+              <input
+                id="bulk-image-upload"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageUpload}
+                className="hidden"
+                disabled={uploadingImage}
+              />
+            </label>
+            
+            {imageUrl && (
+              <div className="relative">
+                <img 
+                  src={imageUrl} 
+                  alt="Bulk slot image" 
+                  className="w-20 h-20 object-cover rounded-lg border"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="absolute -top-2 -right-2 w-6 h-6 p-0 bg-background"
+                  onClick={removeImage}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            )}
+          </div>
+          
+          {imageUrl && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <ImageIcon className="h-4 w-4" />
+              <span>This image will be added to all {calculateTotalSlots()} slots</span>
+            </div>
+          )}
         </div>
 
         {/* Pricing */}
