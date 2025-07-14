@@ -287,7 +287,7 @@ export const CustomerProfileForm: React.FC<CustomerProfileFormProps> = ({
                 className="hidden"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                JPEG/PNG only, max 2MB. This helps businesses recognize you.
+                JPEG/PNG only, max 2MB. This helps businesses recognise you.
               </p>
             </div>
           </div>

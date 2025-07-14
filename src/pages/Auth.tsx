@@ -305,7 +305,7 @@ const Auth = () => {
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground text-sm mb-2">Increase Your Revenue</h3>
                       <p className="text-xs text-muted-foreground">
-                        Maximize your booking capacity and reduce downtime
+                        Maximise your booking capacity and reduce downtime
                       </p>
                     </div>
                   </div>

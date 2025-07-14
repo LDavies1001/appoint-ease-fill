@@ -23,7 +23,7 @@ const Index = () => {
     if (selectedPanel === 'customer') {
       return 'Find available appointment slots in seconds. Get the services you need, when you need them.';
     } else if (selectedPanel === 'business') {
-      return 'Turn cancellations into revenue. Connect with customers looking for immediate appointments and maximize your booking potential.';
+      return 'Turn cancellations into revenue. Connect with customers looking for immediate appointments and maximise your booking potential.';
     }
     return 'Find available appointment slots in seconds. Get the services you need, when you need them.';
   };
