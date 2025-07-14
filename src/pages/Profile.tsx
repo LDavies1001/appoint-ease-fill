@@ -5,13 +5,17 @@ import BusinessProfileForm from '@/components/business/BusinessProfileForm';
 import Header from '@/components/ui/header';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const { user, profile } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleCustomerProfileSubmit = async (data: any) => {
     try {
+      const isNewProfile = !profile?.is_profile_complete;
+      
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -22,6 +26,7 @@ const Profile = () => {
           privacy_settings: data.privacy_settings,
           gdpr_consent: data.gdpr_consent,
           terms_accepted: data.terms_accepted,
+          is_profile_complete: true,
         })
         .eq('user_id', user?.id);
 
@@ -31,6 +36,11 @@ const Profile = () => {
         title: "Profile updated",
         description: "Your profile has been updated successfully.",
       });
+
+      // Redirect to dashboard if this was profile creation
+      if (isNewProfile) {
+        navigate('/dashboard');
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
