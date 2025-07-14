@@ -439,4 +439,5 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ service, onSave, onCa
   );
 };
 
+console.log('ServiceManager component loaded');
 export default ServiceManager;

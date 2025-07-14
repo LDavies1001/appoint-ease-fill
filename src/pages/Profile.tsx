@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 import BusinessProfileForm from '@/components/business/BusinessProfileForm';
 import PortfolioManager from '@/components/business/PortfolioManager';
-import ServiceManager from '@/components/business/ServiceManager';
+
 import Header from '@/components/ui/header';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -262,7 +262,21 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="services">
-            <ServiceManager />
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold">Services & Pricing</h2>
+                <p className="text-muted-foreground">Manage your service offerings</p>
+              </div>
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Services coming soon</h3>
+                  <p className="text-muted-foreground text-center">
+                    Service management functionality will be available soon.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="reviews">
