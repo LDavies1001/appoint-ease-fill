@@ -452,6 +452,33 @@ const Onboarding = () => {
           });
 
         if (providerError) throw providerError;
+
+        // Create individual service records from pricing info
+        if (formData.pricing_info.length > 0) {
+          const serviceRecords = formData.pricing_info
+            .filter(item => item.service.trim() && item.price.trim())
+            .map(item => ({
+              provider_id: user!.id,
+              service_name: item.service.trim(),
+              base_price: parseFloat(item.price) || null,
+              duration_minutes: 60, // Default duration
+              is_active: true
+            }));
+
+          if (serviceRecords.length > 0) {
+            const { error: servicesError } = await supabase
+              .from('provider_services')
+              .upsert(serviceRecords, { 
+                onConflict: 'provider_id,service_name',
+                ignoreDuplicates: false 
+              });
+
+            if (servicesError) {
+              console.error('Error creating service records:', servicesError);
+              // Don't throw error here to avoid blocking onboarding completion
+            }
+          }
+        }
       }
 
       toast({
