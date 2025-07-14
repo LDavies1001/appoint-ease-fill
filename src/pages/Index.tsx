@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building, Navigation } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 import { Input } from '@/components/ui/input';
-import heroImage from '@/assets/hero-lash-tech-scene.jpg';
+import heroImage from '@/assets/hero-appointment-scene.jpg';
 
 const Index = () => {
   const [selectedPanel, setSelectedPanel] = useState<'customer' | 'business' | null>(null);
@@ -27,7 +27,8 @@ const Index = () => {
     }
     return 'Find available appointment slots in seconds. Get the services you need, when you need them.';
   };
-  return <div className="min-h-screen bg-white">
+  return (
+    <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="bg-white border-b border-border/40 sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -194,18 +195,6 @@ const Index = () => {
           <div className="lg:pl-8">
             <div className="aspect-square bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
               <img src={heroImage} alt="Professional appointment booking experience" className="w-full h-full object-cover" />
-              {/* Floating elements */}
-              <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-soft">
-                <Sparkles className="h-6 w-6 text-primary" />
-              </div>
-              <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-soft">
-                <Clock className="h-6 w-6 text-primary" />
-              </div>
-              {/* Overlay text */}
-              <div className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-soft max-w-xs">
-                <div className="text-sm font-semibold text-foreground">Book instantly</div>
-                <div className="text-xs text-muted-foreground">Available now</div>
-              </div>
             </div>
           </div>
         </div>
@@ -218,67 +207,40 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-6 text-center border-0 bg-gradient-to-br from-background to-muted/20 hover:shadow-soft transition-all duration-300">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Calendar className="h-6 w-6 text-primary" />
+            <Card className="p-8 text-center border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 hover:shadow-medium hover:border-primary/30 transition-all duration-300">
+              <div className="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Calendar className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">Book Instantly</h3>
-              <p className="text-muted-foreground text-sm">
+              <h3 className="text-xl font-bold mb-3 text-foreground">Book Instantly</h3>
+              <p className="text-muted-foreground">
                 See what's available and book right away. No waiting around.
               </p>
             </Card>
 
-            <Card className="p-6 text-center border-0 bg-gradient-to-br from-background to-muted/20 hover:shadow-soft transition-all duration-300">
-              <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-6 w-6 text-accent" />
+            <Card className="p-8 text-center border-2 border-accent/20 bg-gradient-to-br from-accent/10 to-accent/5 hover:shadow-medium hover:border-accent/30 transition-all duration-300">
+              <div className="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Shield className="h-8 w-8 text-accent" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">Trusted People</h3>
-              <p className="text-muted-foreground text-sm">
+              <h3 className="text-xl font-bold mb-3 text-foreground">Trusted People</h3>
+              <p className="text-muted-foreground">
                 All service providers are verified and rated by real customers.
               </p>
             </Card>
 
-            <Card className="p-6 text-center border-0 bg-gradient-to-br from-background to-muted/20 hover:shadow-soft transition-all duration-300">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Star className="h-6 w-6 text-primary" />
+            <Card className="p-8 text-center border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 hover:shadow-medium hover:border-primary/30 transition-all duration-300">
+              <div className="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Star className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">Great Service</h3>
-              <p className="text-muted-foreground text-sm">
+              <h3 className="text-xl font-bold mb-3 text-foreground">Great Service</h3>
+              <p className="text-muted-foreground">
                 Read real reviews from customers before you book.
               </p>
             </Card>
           </div>
         </div>
-
-        {/* Business CTA Section */}
-        <div className="py-16 border-t border-border/40">
-          <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8 lg:p-12 text-center">
-            <div className="max-w-3xl mx-auto">
-              <div className="flex items-center justify-center space-x-2 mb-4">
-                <Building className="h-6 w-6 text-primary" />
-                <span className="text-sm font-medium text-primary uppercase tracking-wider">For Businesses</span>
-              </div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                Got Empty Appointment Slots?
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Turn last-minute cancellations into bookings. List your availability and get found by customers nearby.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/auth?tab=provider">
-                  <Button variant="hero" size="xl" className="w-full sm:w-auto">
-                    <Building className="mr-2 h-5 w-5" />
-                    Start Earning More
-                  </Button>
-                </Link>
-                <Button variant="outline" size="xl" className="w-full sm:w-auto">
-                  Learn More
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
