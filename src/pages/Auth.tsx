@@ -300,7 +300,7 @@ const Auth = () => {
               {/* Key Benefits - Fixed heights for consistent sizing */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg min-h-[110px]">
+                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[120px]">
                     <DollarSign className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground text-sm mb-2">Fill Last-Minute Cancellations</h3>
@@ -309,7 +309,7 @@ const Auth = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg min-h-[110px]">
+                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[120px]">
                     <TrendingUp className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground text-sm mb-2">Increase Your Revenue</h3>
@@ -320,7 +320,7 @@ const Auth = () => {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg min-h-[110px]">
+                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[120px]">
                     <Users className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground text-sm mb-2">Reach New Customers</h3>
@@ -329,7 +329,7 @@ const Auth = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg min-h-[110px]">
+                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[120px]">
                     <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground text-sm mb-2">Complete Control</h3>
