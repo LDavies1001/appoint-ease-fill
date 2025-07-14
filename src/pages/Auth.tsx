@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, UserCheck, Mail, Lock, Eye, EyeOff, Building, TrendingUp, Clock, CheckCircle, DollarSign, Users, Search } from 'lucide-react';
+import { User, UserCheck, Mail, Lock, Eye, EyeOff, Building, TrendingUp, Clock, CheckCircle, PoundSterling, Users, Search } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 import Header from '@/components/ui/header';
 
@@ -136,12 +136,12 @@ const Auth = () => {
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-                  <Building className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+            <div className="flex items-center justify-center space-x-2 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center">
+                <Building className="h-5 w-5 text-white" />
               </div>
+              <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+            </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Create Your Business Account
               </h1>
@@ -271,8 +271,8 @@ const Auth = () => {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-                <Building className="h-5 w-5 text-primary-foreground" />
+              <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center">
+                <Building className="h-5 w-5 text-white" />
               </div>
               <span className="text-2xl font-bold text-foreground">FillMyHole</span>
             </div>
@@ -280,28 +280,19 @@ const Auth = () => {
               Grow Your Business
             </h1>
             <p className="text-muted-foreground">
-              Join the platform designed to help beauty professionals thrive
+              Join the platform designed to help beauty professionals thrive - Turn empty appointment slots into instant revenue
             </p>
           </div>
 
           <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
             <div className="space-y-8 py-4">
-              {/* Hero Section */}
-              <div className="text-center space-y-3">
-                <div className="flex items-center justify-center space-x-2 mb-3">
-                  <Building className="h-6 w-6 text-accent" />
-                  <h2 className="text-xl font-bold text-foreground">For Beauty Professionals</h2>
-                </div>
-                <p className="text-muted-foreground">
-                  Turn empty appointment slots into instant revenue
-                </p>
-              </div>
+              {/* Hero Section - Removed as text is now combined above */}
 
-              {/* Key Benefits - Fixed heights for consistent sizing */}
+              {/* Key Benefits - Fixed heights for consistent sizing with pink, green, green, pink color pattern */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[140px]">
-                    <DollarSign className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[140px]">
+                    <PoundSterling className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground text-sm mb-2">Fill Last-Minute Cancellations</h3>
                       <p className="text-xs text-muted-foreground">
@@ -309,8 +300,8 @@ const Auth = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[140px]">
-                    <TrendingUp className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[140px]">
+                    <TrendingUp className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground text-sm mb-2">Increase Your Revenue</h3>
                       <p className="text-xs text-muted-foreground">
