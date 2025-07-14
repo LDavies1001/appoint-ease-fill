@@ -216,8 +216,10 @@ const BusinessProfile = () => {
   const formatOperatingHours = (hoursString: string) => {
     try {
       const hours = JSON.parse(hoursString);
+      console.log('BusinessProfile operating hours:', hours);
       return hours;
     } catch {
+      console.log('Failed to parse BusinessProfile operating hours:', hoursString);
       return null;
     }
   };
@@ -924,14 +926,38 @@ const BusinessProfile = () => {
                   <div className="space-y-3">
                      {formatOperatingHours(details.operating_hours) ? (
                        <div className="space-y-2">
-                         {formatOperatingHours(details.operating_hours).map((day: any, index: number) => (
-                           <div key={index} className="flex justify-between items-center text-sm">
-                             <span className="font-medium">{day.day}</span>
-                             <span className={day.closed ? 'text-muted-foreground' : 'text-foreground'}>
-                               {day.closed ? 'Closed' : `${day.open}-${day.close}`}
-                             </span>
-                           </div>
-                         ))}
+                         {formatOperatingHours(details.operating_hours).map((dayData: any, index: number) => {
+                           // Handle different data structures
+                           let dayName, isOpen, timeDisplay;
+                           
+                           if (typeof dayData === 'object' && dayData !== null) {
+                             if (dayData.day) {
+                               // Structure: {day: "Monday", open: "09:00", close: "17:00", closed: false}
+                               dayName = dayData.day;
+                               isOpen = !dayData.closed;
+                               timeDisplay = dayData.closed ? 'Closed' : `${dayData.open}-${dayData.close}`;
+                             } else {
+                               // Fallback for unexpected object structure
+                               dayName = `Day ${index + 1}`;
+                               isOpen = false;
+                               timeDisplay = 'Invalid format';
+                             }
+                           } else {
+                             // String fallback
+                             dayName = dayData || `Day ${index + 1}`;
+                             isOpen = true;
+                             timeDisplay = 'Not specified';
+                           }
+
+                           return (
+                             <div key={index} className="flex justify-between items-center text-sm">
+                               <span className="font-medium">{dayName}</span>
+                               <span className={isOpen ? 'text-foreground' : 'text-muted-foreground'}>
+                                 {timeDisplay}
+                               </span>
+                             </div>
+                           );
+                         })}
                        </div>
                     ) : (
                       <p className="text-muted-foreground italic text-sm text-center">
