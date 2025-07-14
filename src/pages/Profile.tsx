@@ -133,8 +133,11 @@ const Profile = () => {
   const formatOperatingHours = (hoursString: string) => {
     if (!hoursString) return null;
     try {
-      return JSON.parse(hoursString);
+      const parsed = JSON.parse(hoursString);
+      console.log('Parsed operating hours:', parsed);
+      return parsed;
     } catch {
+      console.log('Failed to parse operating hours:', hoursString);
       return null;
     }
   };
@@ -489,12 +492,31 @@ const Profile = () => {
                   <div className="space-y-2 text-sm">
                     {(() => {
                       const hours = formatOperatingHours(providerDetails.operating_hours);
-                      return hours ? Object.entries(hours).map(([day, time]) => (
-                        <div key={day} className="flex justify-between">
-                          <span className="capitalize font-medium">{day}</span>
-                          <span className="text-muted-foreground">{time as string}</span>
-                        </div>
-                      )) : (
+                      return hours ? Object.entries(hours).map(([day, timeData]) => {
+                        // Handle both string and object formats
+                        let displayTime;
+                        if (typeof timeData === 'string') {
+                          displayTime = timeData;
+                        } else if (typeof timeData === 'object' && timeData !== null) {
+                          const hoursObj = timeData as any;
+                          if (hoursObj.closed) {
+                            displayTime = 'Closed';
+                          } else if (hoursObj.open && hoursObj.close) {
+                            displayTime = `${hoursObj.open} - ${hoursObj.close}`;
+                          } else {
+                            displayTime = 'Contact for hours';
+                          }
+                        } else {
+                          displayTime = 'Contact for hours';
+                        }
+
+                        return (
+                          <div key={day} className="flex justify-between">
+                            <span className="capitalize font-medium">{day}</span>
+                            <span className="text-muted-foreground">{displayTime}</span>
+                          </div>
+                        );
+                      }) : (
                         <p className="text-muted-foreground italic">Hours available upon request</p>
                       );
                     })()}
