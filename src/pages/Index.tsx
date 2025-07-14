@@ -55,48 +55,105 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Sign Up Form */}
-            <Card className="p-6 shadow-soft border border-border/40">
-              <div className="space-y-4">
-                <div className="text-center mb-4">
-                  <h3 className="text-lg font-semibold text-foreground">Start Booking Today</h3>
-                  <p className="text-sm text-muted-foreground">Join thousands of satisfied customers</p>
+            {/* Split Sign Up Forms */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Customer Sign Up Panel */}
+              <Card className="p-6 shadow-soft border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+                <div className="space-y-4">
+                  <div className="text-center mb-4">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <User className="h-5 w-5 text-primary" />
+                      <span className="text-xs font-semibold text-primary uppercase tracking-wider">For Customers</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground">Start Booking Today</h3>
+                    <p className="text-sm text-muted-foreground">Join thousands of satisfied customers</p>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="First Name" className="pl-10 h-11 text-sm bg-white/80" />
+                      </div>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="Last Name" className="pl-10 h-11 text-sm bg-white/80" />
+                      </div>
+                    </div>
+                    
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input placeholder="Email address" className="pl-10 h-11 text-sm bg-white/80" />
+                    </div>
+                    
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input type="password" placeholder="Password" className="pl-10 h-11 text-sm bg-white/80" />
+                    </div>
+                    
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input type="password" placeholder="Confirm Password" className="pl-10 h-11 text-sm bg-white/80" />
+                    </div>
+                  </div>
+                  
+                  <Link to="/auth?tab=signup" className="block">
+                    <Button className="w-full h-11 text-sm font-medium">
+                      Sign Up as Customer
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
                 </div>
-                
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
+              </Card>
+
+              {/* Business Sign Up Panel */}
+              <Card className="p-6 shadow-soft border-2 border-accent/20 bg-gradient-to-br from-accent/5 to-accent/10">
+                <div className="space-y-4">
+                  <div className="text-center mb-4">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <Building className="h-5 w-5 text-accent" />
+                      <span className="text-xs font-semibold text-accent uppercase tracking-wider">For Businesses</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground">Grow Your Business</h3>
+                    <p className="text-sm text-muted-foreground">Fill your empty appointment slots</p>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input placeholder="Business Name" className="pl-10 h-11 text-sm bg-white/80" />
+                    </div>
+                    
                     <div className="relative">
                       <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="First Name" className="pl-10 h-12 text-base" />
+                      <Input placeholder="Your Name" className="pl-10 h-11 text-sm bg-white/80" />
                     </div>
+                    
                     <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Last Name" className="pl-10 h-12 text-base" />
+                      <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input placeholder="Business Email" className="pl-10 h-11 text-sm bg-white/80" />
+                    </div>
+                    
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input placeholder="Location" className="pl-10 h-11 text-sm bg-white/80" />
+                    </div>
+                    
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input type="password" placeholder="Password" className="pl-10 h-11 text-sm bg-white/80" />
                     </div>
                   </div>
                   
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Email address" className="pl-10 h-12 text-base" />
-                  </div>
-                  
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input type="password" placeholder="Password" className="pl-10 h-12 text-base" />
-                  </div>
-                  
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input type="password" placeholder="Confirm Password" className="pl-10 h-12 text-base" />
-                  </div>
+                  <Link to="/auth?tab=provider" className="block">
+                    <Button className="w-full h-11 text-sm font-medium bg-accent hover:bg-accent/90 text-accent-foreground">
+                      Register Your Business
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
                 </div>
-                
-                <Button className="w-full h-12 text-base font-medium">
-                  Sign Up Now
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </Card>
+              </Card>
+            </div>
 
             {/* Quick Actions */}
             <div className="flex flex-wrap gap-3">
