@@ -137,7 +137,7 @@ const Auth = () => {
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                 <Building className="h-5 w-5 text-white" />
               </div>
               <span className="text-2xl font-bold text-foreground">FillMyHole</span>
@@ -271,7 +271,7 @@ const Auth = () => {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                 <Building className="h-5 w-5 text-white" />
               </div>
               <span className="text-2xl font-bold text-foreground">FillMyHole</span>
