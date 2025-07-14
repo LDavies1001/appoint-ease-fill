@@ -40,7 +40,7 @@ const Index = () => {
               <span className="text-xl font-bold text-foreground">FillMyHole</span>
             </div>
             <div className="flex items-center space-x-4">
-              <Link to="/auth?tab=provider">
+              <Link to="/auth?tab=business-signup">
                 <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                   For Your Business
                 </Button>
@@ -180,7 +180,7 @@ const Index = () => {
                     </div>
                   </div>
                   
-                  <Link to="/auth?tab=provider" className="block">
+                  <Link to="/auth?tab=business-signup" className="block">
                     <Button className="w-full h-11 text-sm font-medium bg-accent hover:bg-accent/90 text-accent-foreground">
                       Register Your Business
                       <ArrowRight className="ml-2 h-4 w-4" />

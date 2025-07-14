@@ -4,10 +4,10 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/custom-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, UserCheck, Mail, Lock, Eye, EyeOff, Calendar, Building, TrendingUp, Clock, Star, CheckCircle, DollarSign, Users, MapPin } from 'lucide-react';
+import { User, UserCheck, Mail, Lock, Eye, EyeOff, Building, TrendingUp, Clock, CheckCircle, DollarSign, Users, Search } from 'lucide-react';
+import { LocationInput } from '@/components/ui/location-input';
 import Header from '@/components/ui/header';
 
 const Auth = () => {
@@ -15,10 +15,10 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<'customer' | 'provider'>('customer');
+  const [businessName, setBusinessName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('signin');
+  const [showBusinessSignup, setShowBusinessSignup] = useState(false);
   
   const [searchParams] = useSearchParams();
   const { signIn, signUp, user, profile } = useAuth();
@@ -26,13 +26,10 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check URL params for tab and role
+    // Check URL params for business signup
     const tab = searchParams.get('tab');
-    if (tab === 'signup' || tab === 'provider') {
-      setActiveTab('signup');
-    }
-    if (tab === 'provider') {
-      setRole('provider');
+    if (tab === 'business-signup') {
+      setShowBusinessSignup(true);
     }
   }, [searchParams]);
 
@@ -46,33 +43,17 @@ const Auth = () => {
     }
   }, [user, profile, navigate]);
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleBusinessSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      const { error } = await signIn(email, password);
-      
-      if (error) {
-        toast({
-          title: "Sign in failed",
-          description: error.message,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
+    
+    if (!businessName.trim()) {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred",
+        title: "Business name required",
+        description: "Please enter your business name",
         variant: "destructive"
       });
-    } finally {
-      setLoading(false);
+      return;
     }
-  };
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
     
     if (!fullName.trim()) {
       toast({
@@ -117,7 +98,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(email, password, role, fullName);
+      const { error } = await signUp(email, password, 'provider', fullName);
       
       if (error) {
         toast({
@@ -130,10 +111,10 @@ const Auth = () => {
           title: "Account created!",
           description: "Please check your email for verification",
         });
-        // Redirect to sign in tab after successful signup
-        setActiveTab('signin');
+        // Clear form
+        setBusinessName('');
         setFullName('');
-        setEmail(''); // Clear the email field for sign in
+        setEmail('');
         setPassword('');
         setConfirmPassword('');
       }
@@ -148,46 +129,69 @@ const Auth = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <Header />
-      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-2 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-              <User className="h-5 w-5 text-primary-foreground" />
+  if (showBusinessSignup) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <Header />
+        <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center space-x-2 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                  <Building className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+              </div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">
+                Create Your Business Account
+              </h1>
+              <p className="text-muted-foreground">
+                Join the platform designed to help beauty professionals thrive
+              </p>
             </div>
-            <span className="text-2xl font-bold text-foreground">FillMyHole</span>
-          </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            {role === 'provider' ? 'Grow Your Business' : 'Welcome back'}
-          </h1>
-          <p className="text-muted-foreground">
-            {role === 'provider' 
-              ? 'Join the platform designed to help beauty professionals thrive' 
-              : 'Sign in to manage your appointments and bookings'
-            }
-          </p>
-        </div>
 
-        <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="signin">
-              <form onSubmit={handleSignIn} className="space-y-4">
+            <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
+              <form onSubmit={handleBusinessSignUp} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signin-email">Email</Label>
+                  <Label htmlFor="business-name">Business Name</Label>
+                  <div className="relative">
+                    <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="business-name"
+                      type="text"
+                      placeholder="Enter your business name"
+                      value={businessName}
+                      onChange={(e) => setBusinessName(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="full-name">Your Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="full-name"
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="business-email">Business Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
-                      id="signin-email"
+                      id="business-email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Enter your business email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-10"
@@ -197,13 +201,21 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
+                  <Label htmlFor="business-location">Business Location</Label>
+                  <LocationInput 
+                    placeholder="Business Location" 
+                    className="h-11 text-sm bg-white/80" 
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="business-password">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
-                      id="signin-password"
+                      id="business-password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder="Create a password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="pl-10 pr-10"
@@ -219,6 +231,22 @@ const Auth = () => {
                   </div>
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-business-password">Confirm Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="confirm-business-password"
+                      type="password"
+                      placeholder="Confirm your password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+
                 <Button
                   type="submit"
                   variant="hero"
@@ -226,212 +254,137 @@ const Auth = () => {
                   className="w-full"
                   disabled={loading}
                 >
-                  {loading ? "Signing in..." : "Sign In"}
+                  {loading ? "Creating account..." : "Create Business Account"}
                 </Button>
               </form>
-            </TabsContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-            <TabsContent value="signup">
-              {role === 'provider' ? (
-                // Clean Business Information Page
-                <div className="space-y-8 py-4">
-                  {/* Hero Section */}
-                  <div className="text-center space-y-3">
-                    <div className="flex items-center justify-center space-x-2 mb-3">
-                      <Building className="h-6 w-6 text-accent" />
-                      <h2 className="text-xl font-bold text-foreground">For Beauty Professionals</h2>
-                    </div>
-                    <p className="text-muted-foreground">
-                      Turn empty appointment slots into instant revenue
-                    </p>
-                  </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <Header />
+      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center space-x-2 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                <Building className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+            </div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              Grow Your Business
+            </h1>
+            <p className="text-muted-foreground">
+              Join the platform designed to help beauty professionals thrive
+            </p>
+          </div>
 
-                  {/* Key Benefits */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-3">
-                      <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg">
-                        <DollarSign className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h3 className="font-semibold text-foreground text-sm">Fill Last-Minute Cancellations</h3>
-                          <p className="text-xs text-muted-foreground">
-                            Connect with customers who need appointments right now
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg">
-                        <TrendingUp className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h3 className="font-semibold text-foreground text-sm">Increase Your Revenue</h3>
-                          <p className="text-xs text-muted-foreground">
-                            Maximize your booking capacity and reduce downtime
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg">
-                        <Users className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h3 className="font-semibold text-foreground text-sm">Reach New Customers</h3>
-                          <p className="text-xs text-muted-foreground">
-                            Get found by customers in your area looking for services
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg">
-                        <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h3 className="font-semibold text-foreground text-sm">Complete Control</h3>
-                          <p className="text-xs text-muted-foreground">
-                            Set your own schedule, prices, and availability
-                          </p>
-                        </div>
-                      </div>
+          <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
+            <div className="space-y-8 py-4">
+              {/* Hero Section */}
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center space-x-2 mb-3">
+                  <Building className="h-6 w-6 text-accent" />
+                  <h2 className="text-xl font-bold text-foreground">For Beauty Professionals</h2>
+                </div>
+                <p className="text-muted-foreground">
+                  Turn empty appointment slots into instant revenue
+                </p>
+              </div>
+
+              {/* Key Benefits - Fixed heights for consistent sizing */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[100px]">
+                    <DollarSign className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-foreground text-sm">Fill Last-Minute Cancellations</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Connect with customers who need appointments right now
+                      </p>
                     </div>
                   </div>
-
-                  {/* Perfect For */}
-                  <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-lg p-5 text-center">
-                    <h3 className="font-semibold text-foreground mb-3">Perfect for:</h3>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="flex items-center justify-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-accent" />
-                        <span className="text-foreground">Eyelash Technicians</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-accent" />
-                        <span className="text-foreground">Hair Stylists</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-accent" />
-                        <span className="text-foreground">Nail Technicians</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-accent" />
-                        <span className="text-foreground">Massage Therapists</span>
-                      </div>
+                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[100px]">
+                    <TrendingUp className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-foreground text-sm">Increase Your Revenue</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Maximize your booking capacity and reduce downtime
+                      </p>
                     </div>
-                  </div>
-
-                  {/* Simple CTA */}
-                  <div className="text-center space-y-3 pt-4">
-                    <h3 className="text-lg font-semibold text-foreground">Ready to grow your business?</h3>
-                    <Button
-                      onClick={() => {
-                        window.location.href = '/auth?tab=signup';
-                      }}
-                      variant="hero"
-                      size="lg"
-                      className="px-8"
-                    >
-                      Get Started Today
-                    </Button>
-                    <p className="text-xs text-muted-foreground">
-                      Join hundreds of professionals already using FillMyHole
-                    </p>
                   </div>
                 </div>
-              ) : (
-                // Regular customer signup form - only show when role is NOT provider
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="full-name">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="full-name"
-                        type="text"
-                        placeholder="Enter your full name"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="signup-email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="signup-password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Create a password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 pr-10"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                    <div className="text-xs text-muted-foreground space-y-1">
-                      <p className={password.length >= 8 ? 'text-green-500' : ''}>
-                        ✓ At least 8 characters
-                      </p>
-                      <p className={/[A-Z]/.test(password) ? 'text-green-500' : ''}>
-                        ✓ At least 1 uppercase letter
-                      </p>
-                      <p className={/\d/.test(password) ? 'text-green-500' : ''}>
-                        ✓ At least 1 number
+                <div className="space-y-3">
+                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[100px]">
+                    <Users className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-foreground text-sm">Reach New Customers</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Get found by customers in your area looking for services
                       </p>
                     </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="confirm-password"
-                        type="password"
-                        placeholder="Confirm your password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
+                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[100px]">
+                    <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-foreground text-sm">Complete Control</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Set your own schedule, prices, and availability
+                      </p>
                     </div>
                   </div>
+                </div>
+              </div>
 
-                  <Button
-                    type="submit"
-                    variant="hero"
-                    size="lg"
-                    className="w-full"
-                    disabled={loading}
-                  >
-                    {loading ? "Creating account..." : "Create Account"}
-                  </Button>
-                </form>
-              )}
-            </TabsContent>
-          </Tabs>
-        </Card>
+              {/* Perfect For - Updated with Deep Cleans */}
+              <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-lg p-5 text-center">
+                <h3 className="font-semibold text-foreground mb-3">Perfect for:</h3>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="flex items-center justify-center space-x-2">
+                    <CheckCircle className="h-4 w-4 text-accent" />
+                    <span className="text-foreground">Eyelash Technicians</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-2">
+                    <CheckCircle className="h-4 w-4 text-accent" />
+                    <span className="text-foreground">Hair Stylists</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-2">
+                    <CheckCircle className="h-4 w-4 text-accent" />
+                    <span className="text-foreground">Nail Technicians</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-2">
+                    <CheckCircle className="h-4 w-4 text-accent" />
+                    <span className="text-foreground">Deep Cleans</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Simple CTA - Updated to go to business signup */}
+              <div className="text-center space-y-3 pt-4">
+                <h3 className="text-lg font-semibold text-foreground">Ready to grow your business?</h3>
+                <Button
+                  onClick={() => {
+                    window.location.href = '/auth?tab=business-signup';
+                  }}
+                  variant="hero"
+                  size="lg"
+                  className="px-8"
+                >
+                  Get Started Today
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  Join hundreds of professionals already using FillMyHole
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
-    </div>
     </div>
   );
 };
