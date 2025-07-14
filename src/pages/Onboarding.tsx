@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera } from 'lucide-react';
 import Header from '@/components/ui/header';
+import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 
 interface Service {
   id: string;
