@@ -487,16 +487,6 @@ const Profile = () => {
                       </div>
                     </div>
                   )}
-                  
-                  {providerDetails?.business_address && (
-                    <div className="flex items-center space-x-4">
-                      <MapPin className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="font-medium">Address</p>
-                        <p className="text-muted-foreground">{providerDetails.business_address}</p>
-                      </div>
-                    </div>
-                  )}
 
                   {providerDetails?.business_website && (
                     <div className="flex items-center space-x-4">
@@ -569,6 +559,29 @@ const Profile = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Address Section */}
+            {providerDetails?.business_address && (
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-xl">
+                    <MapPin className="h-5 w-5 mr-3 text-primary" />
+                    Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-start space-x-4">
+                    <MapPin className="h-5 w-5 text-primary mt-1" />
+                    <div>
+                      <p className="text-lg font-medium mb-2">Business Location</p>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {providerDetails.business_address}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </div>
