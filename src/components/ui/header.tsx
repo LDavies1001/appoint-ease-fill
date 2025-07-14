@@ -49,18 +49,22 @@ const Header = () => {
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/business-profile" className="flex items-center">
-                      <Building className="h-4 w-4 mr-2" />
-                      My Business Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile" className="flex items-center">
-                      <Settings className="h-4 w-4 mr-2" />
-                      MyAdmin
-                    </Link>
-                  </DropdownMenuItem>
+                  {profile.role === 'provider' && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link to="/business-profile" className="flex items-center">
+                          <Building className="h-4 w-4 mr-2" />
+                          My Business Profile
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/profile" className="flex items-center">
+                          <Settings className="h-4 w-4 mr-2" />
+                          MyAdmin
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={signOut} className="flex items-center text-destructive">
                     <LogOut className="h-4 w-4 mr-2" />
