@@ -32,6 +32,9 @@ const Onboarding = () => {
     // Business Information
     business_name: '',
     business_description: '',
+    business_email: '',
+    business_phone: '',
+    business_address: '',
     services_offered: [] as string[],
     business_photos: [] as File[],
     // Business Details
@@ -121,6 +124,9 @@ const Onboarding = () => {
         setFormData(prev => ({
           ...prev,
           business_name: data.business_name || '',
+          business_email: data.business_email || '',
+          business_phone: data.business_phone || '',
+          business_address: data.business_address || '',
           business_description: data.business_description || '',
           services_offered: data.services_offered || [],
           business_website: data.business_website || '',
@@ -319,7 +325,11 @@ const Onboarding = () => {
       return formData.location.trim();
     }
     if (currentStep === 1 && profile?.role === 'provider') {
-      return formData.business_name.trim() && formData.services_offered.length > 0;
+      return formData.business_name.trim() && 
+             formData.business_email.trim() && 
+             formData.business_phone.trim() && 
+             formData.business_address.trim() && 
+             formData.services_offered.length > 0;
     }
     if (currentStep === 2 && profile?.role === 'provider') {
       return formData.business_description.trim() && formData.years_experience.trim();
@@ -442,6 +452,9 @@ const Onboarding = () => {
           .upsert({
             user_id: user!.id,
             business_name: formData.business_name,
+            business_email: formData.business_email || profile.email,
+            business_phone: formData.business_phone,
+            business_address: formData.business_address,
             business_description: formData.business_description,
             services_offered: formData.services_offered,
             business_website: formData.business_website,
@@ -700,6 +713,56 @@ const Onboarding = () => {
                     placeholder="Enter your business name"
                     value={formData.business_name}
                     onChange={(e) => handleInputChange('business_name', e.target.value)}
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="business_email">Business Email *</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="business_email"
+                    type="email"
+                    placeholder={profile.email || "Enter business email"}
+                    value={formData.business_email || profile.email}
+                    onChange={(e) => handleInputChange('business_email', e.target.value)}
+                    className="pl-10"
+                    required
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  This will be shown to customers for booking inquiries
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="business_phone">Business Phone Number *</Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="business_phone"
+                    type="tel"
+                    placeholder="Enter business phone number"
+                    value={formData.business_phone}
+                    onChange={(e) => handleInputChange('business_phone', e.target.value)}
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="business_address">Business Address *</Label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="business_address"
+                    placeholder="Enter your business address"
+                    value={formData.business_address}
+                    onChange={(e) => handleInputChange('business_address', e.target.value)}
                     className="pl-10"
                     required
                   />
