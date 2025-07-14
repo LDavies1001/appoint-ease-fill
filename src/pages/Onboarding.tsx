@@ -341,6 +341,59 @@ const Onboarding = () => {
     }
   };
 
+  const handleCustomerProfileSubmit = async (customerData: any) => {
+    setLoading(true);
+    setUploadingPhoto(true);
+
+    try {
+      let profilePhotoUrl = '';
+
+      // Upload profile photo if provided
+      if (customerData.profile_photo) {
+        profilePhotoUrl = await uploadPhotoToStorage(
+          customerData.profile_photo, 
+          'profile-photos', 
+          user!.id
+        );
+      }
+
+      setUploadingPhoto(false);
+
+      // Update profile with customer data
+      const profileUpdates = {
+        name: customerData.full_name,
+        phone: customerData.phone,
+        location: customerData.location,
+        bio: customerData.bio,
+        avatar_url: profilePhotoUrl || profile?.avatar_url,
+        privacy_settings: customerData.privacy_settings,
+        gdpr_consent: customerData.gdpr_consent,
+        terms_accepted: customerData.terms_accepted,
+        consent_date: new Date().toISOString(),
+        is_profile_complete: true
+      };
+
+      const { error: profileError } = await updateProfile(profileUpdates);
+      if (profileError) throw profileError;
+
+      toast({
+        title: "Profile completed!",
+        description: "Welcome to FillMyHole. You can now start booking appointments!",
+      });
+
+      navigate('/dashboard');
+    } catch (error: any) {
+      toast({
+        title: "Error completing profile",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+      setUploadingPhoto(false);
+    }
+  };
+
   const handleComplete = async () => {
     setLoading(true);
     setUploadingPhoto(true);
@@ -467,7 +520,31 @@ const Onboarding = () => {
         </div>
 
         <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
-          {currentStep === 0 && (
+          {/* Customer Profile Form */}
+          {profile.role === 'customer' && (
+            <CustomerProfileForm
+              initialData={{
+                full_name: profile.name || '',
+                email: profile.email,
+                phone: formData.phone,
+                location: formData.location,
+                bio: formData.bio,
+                privacy_settings: profile.privacy_settings || {
+                  phone_visible: true,
+                  email_visible: false,
+                  location_visible: true
+                },
+                gdpr_consent: profile.gdpr_consent || false,
+                terms_accepted: profile.terms_accepted || false
+              }}
+              onSubmit={handleCustomerProfileSubmit}
+              isLoading={loading || uploadingPhoto}
+              isEdit={profile.is_profile_complete}
+            />
+          )}
+
+          {/* Provider Profile - Step 0 */}
+          {currentStep === 0 && profile.role === 'provider' && (
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
@@ -798,38 +875,41 @@ const Onboarding = () => {
             </div>
           )}
 
-          <div className="flex justify-between mt-6">
-            {currentStep > 0 && (
-              <Button
-                variant="outline"
-                onClick={() => setCurrentStep(prev => prev - 1)}
-                disabled={loading || uploadingPhoto}
-              >
-                Back
-              </Button>
-            )}
-            <Button
-              variant="hero"
-              onClick={handleNext}
-              disabled={loading || uploadingPhoto || !validateStep()}
-              className="ml-auto"
-            >
-              {loading || uploadingPhoto ? (
-                uploadingPhoto ? "Uploading photos..." : "Saving..."
-              ) : (
-                <>
-                  {profile.role === 'customer' || currentStep === 2 ? (
-                    <>
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Complete Profile
-                    </>
-                  ) : (
-                    "Continue"
-                  )}
-                </>
+          {/* Navigation - Only show for providers */}
+          {profile.role === 'provider' && (
+            <div className="flex justify-between mt-6">
+              {currentStep > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(prev => prev - 1)}
+                  disabled={loading || uploadingPhoto}
+                >
+                  Back
+                </Button>
               )}
-            </Button>
-          </div>
+              <Button
+                variant="hero"
+                onClick={handleNext}
+                disabled={loading || uploadingPhoto || !validateStep()}
+                className="ml-auto"
+              >
+                {loading || uploadingPhoto ? (
+                  uploadingPhoto ? "Uploading photos..." : "Saving..."
+                ) : (
+                  <>
+                    {currentStep === 2 ? (
+                      <>
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Complete Profile
+                      </>
+                    ) : (
+                      "Continue"
+                    )}
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </Card>
       </div>
     </div>

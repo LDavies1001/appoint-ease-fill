@@ -14,6 +14,14 @@ interface Profile {
   bio: string | null;
   is_profile_complete: boolean;
   business_name?: string | null;
+  privacy_settings?: {
+    phone_visible: boolean;
+    email_visible: boolean;
+    location_visible: boolean;
+  };
+  gdpr_consent?: boolean;
+  terms_accepted?: boolean;
+  consent_date?: string;
 }
 
 interface AuthContextType {
@@ -88,7 +96,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (profileError) throw profileError;
 
-      let finalProfile: Profile = profileData;
+      let finalProfile: Profile = {
+        ...profileData,
+        privacy_settings: profileData.privacy_settings ? 
+          (typeof profileData.privacy_settings === 'string' ? 
+            JSON.parse(profileData.privacy_settings) : 
+            profileData.privacy_settings
+          ) : undefined
+      };
 
       // If user is a provider, also fetch business details
       if (profileData.role === 'provider') {
@@ -99,7 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           .maybeSingle();
         
         if (!businessError && businessData) {
-          finalProfile = { ...profileData, business_name: businessData.business_name };
+          finalProfile = { ...finalProfile, business_name: businessData.business_name };
         }
       }
       

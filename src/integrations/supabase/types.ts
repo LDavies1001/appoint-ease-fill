@@ -207,42 +207,54 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          consent_date: string | null
           created_at: string
           email: string
+          gdpr_consent: boolean | null
           id: string
           is_profile_complete: boolean | null
           location: string | null
           name: string | null
           phone: string | null
+          privacy_settings: Json | null
           role: Database["public"]["Enums"]["user_role"]
+          terms_accepted: boolean | null
           updated_at: string
           user_id: string
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          consent_date?: string | null
           created_at?: string
           email: string
+          gdpr_consent?: boolean | null
           id?: string
           is_profile_complete?: boolean | null
           location?: string | null
           name?: string | null
           phone?: string | null
+          privacy_settings?: Json | null
           role: Database["public"]["Enums"]["user_role"]
+          terms_accepted?: boolean | null
           updated_at?: string
           user_id: string
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          consent_date?: string | null
           created_at?: string
           email?: string
+          gdpr_consent?: boolean | null
           id?: string
           is_profile_complete?: boolean | null
           location?: string | null
           name?: string | null
           phone?: string | null
+          privacy_settings?: Json | null
           role?: Database["public"]["Enums"]["user_role"]
+          terms_accepted?: boolean | null
           updated_at?: string
           user_id?: string
         }

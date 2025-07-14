@@ -82,10 +82,23 @@ const Auth = () => {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       toast({
-        title: "Password too short",
-        description: "Password must be at least 6 characters",
+        title: "Password too weak",
+        description: "Password must be at least 8 characters",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Check for password strength requirements
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    
+    if (!hasUppercase || !hasNumber) {
+      toast({
+        title: "Password too weak",
+        description: "Password must contain at least 1 uppercase letter and 1 number",
         variant: "destructive"
       });
       return;
@@ -266,6 +279,17 @@ const Auth = () => {
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
+                  </div>
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p className={password.length >= 8 ? 'text-green-500' : ''}>
+                      ✓ At least 8 characters
+                    </p>
+                    <p className={/[A-Z]/.test(password) ? 'text-green-500' : ''}>
+                      ✓ At least 1 uppercase letter
+                    </p>
+                    <p className={/\d/.test(password) ? 'text-green-500' : ''}>
+                      ✓ At least 1 number
+                    </p>
                   </div>
                 </div>
 
