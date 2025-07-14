@@ -460,44 +460,44 @@ const Profile = () => {
               <p className="text-muted-foreground">Ready to book or have questions? We'd love to hear from you</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Contact Information */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-xl">
-                    <Phone className="h-5 w-5 mr-3 text-primary" />
+                  <CardTitle className="flex items-center text-lg">
+                    <Phone className="h-4 w-4 mr-2 text-primary" />
                     Contact Information
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex items-center space-x-4">
-                    <Mail className="h-5 w-5 text-primary" />
+                <CardContent className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <Mail className="h-4 w-4 text-primary" />
                     <div>
-                      <p className="font-medium">Email</p>
-                      <p className="text-muted-foreground">{providerDetails?.business_email || profile.email}</p>
+                      <p className="font-medium text-sm">Email</p>
+                      <p className="text-muted-foreground text-sm">{providerDetails?.business_email || profile.email}</p>
                     </div>
                   </div>
                   
-                  {providerDetails?.business_phone && (
-                    <div className="flex items-center space-x-4">
-                      <Phone className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="font-medium">Phone</p>
-                        <p className="text-muted-foreground">{providerDetails.business_phone}</p>
-                      </div>
+                  <div className="flex items-center space-x-3">
+                    <Phone className="h-4 w-4 text-primary" />
+                    <div>
+                      <p className="font-medium text-sm">Phone</p>
+                      <p className="text-muted-foreground text-sm">
+                        {providerDetails?.business_phone || 'No phone number added'}
+                      </p>
                     </div>
-                  )}
+                  </div>
 
                   {providerDetails?.business_website && (
-                    <div className="flex items-center space-x-4">
-                      <Building className="h-5 w-5 text-primary" />
+                    <div className="flex items-center space-x-3">
+                      <Building className="h-4 w-4 text-primary" />
                       <div>
-                        <p className="font-medium">Website</p>
+                        <p className="font-medium text-sm">Website</p>
                         <a 
                           href={providerDetails.business_website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline"
+                          className="text-primary hover:underline text-sm"
                         >
                           {providerDetails.business_website}
                         </a>
@@ -507,11 +507,38 @@ const Profile = () => {
                 </CardContent>
               </Card>
 
+              {/* Address */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center text-lg">
+                    <MapPin className="h-4 w-4 mr-2 text-primary" />
+                    Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-start space-x-3">
+                    <MapPin className="h-4 w-4 text-primary mt-0.5" />
+                    <div>
+                      <p className="font-medium text-sm mb-1">Business Location</p>
+                      {providerDetails?.business_address ? (
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {providerDetails.business_address}
+                        </p>
+                      ) : (
+                        <p className="text-muted-foreground text-sm italic">
+                          No address added yet
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Operating Hours */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-xl">
-                    <Clock className="h-5 w-5 mr-3 text-primary" />
+                  <CardTitle className="flex items-center text-lg">
+                    <Clock className="h-4 w-4 mr-2 text-primary" />
                     Opening Hours
                   </CardTitle>
                 </CardHeader>
@@ -560,32 +587,6 @@ const Profile = () => {
               </Card>
             </div>
 
-            {/* Address Section */}
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center text-xl">
-                  <MapPin className="h-5 w-5 mr-3 text-primary" />
-                  Address
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-start space-x-4">
-                  <MapPin className="h-5 w-5 text-primary mt-1" />
-                  <div>
-                    <p className="text-lg font-medium mb-2">Business Location</p>
-                    {providerDetails?.business_address ? (
-                      <p className="text-muted-foreground leading-relaxed">
-                        {providerDetails.business_address}
-                      </p>
-                    ) : (
-                      <p className="text-muted-foreground leading-relaxed italic">
-                        No business address added yet. Update your business profile to add your location.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
       </div>
