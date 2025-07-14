@@ -62,7 +62,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center py-16 lg:py-24">
+        <div className="grid lg:grid-cols-2 gap-12 items-start py-16 lg:py-24">
           {/* Left Side - Search Interface */}
           <div className="space-y-8">
              <div>
@@ -192,7 +192,7 @@ const Index = () => {
           </div>
 
           {/* Right Side - Hero Image */}
-          <div className="lg:pl-8 flex items-center">
+          <div className="lg:pl-8 mt-20">
             <div className="w-full bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
               <img src={heroImage} alt="Professional eyelash extension service" className="w-full h-auto object-cover" />
             </div>
