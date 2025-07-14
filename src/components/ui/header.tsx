@@ -45,25 +45,26 @@ const Header = () => {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="flex items-center">
-                      <User className="h-4 w-4 mr-2" />
-                      My Profile
+                      {profile.role === 'provider' ? (
+                        <>
+                          <Building className="h-4 w-4 mr-2" />
+                          My Profile & Business
+                        </>
+                      ) : (
+                        <>
+                          <User className="h-4 w-4 mr-2" />
+                          My Profile
+                        </>
+                      )}
                     </Link>
                   </DropdownMenuItem>
                   {profile.role === 'provider' && (
-                    <>
-                      <DropdownMenuItem asChild>
-                        <Link to="/business-profile" className="flex items-center">
-                          <Building className="h-4 w-4 mr-2" />
-                          My Business Profile
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to="/profile" className="flex items-center">
-                          <Settings className="h-4 w-4 mr-2" />
-                          MyAdmin
-                        </Link>
-                      </DropdownMenuItem>
-                    </>
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile" className="flex items-center">
+                        <Settings className="h-4 w-4 mr-2" />
+                        MyAdmin
+                      </Link>
+                    </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={signOut} className="flex items-center text-destructive">
