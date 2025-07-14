@@ -8,24 +8,24 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Primary Colors - Soft Beige as main background */
-    --background: 40 29% 94%; /* Soft Beige #F5F0E6 */
-    --foreground: 222 15% 15%;
+    /* Updated color scheme */
+    --background: 300 20% 99%; /* #FEFDFE */
+    --foreground: 0 0% 85%; /* #D9D9D9 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 15% 15%;
+    --card: 300 20% 99%;
+    --card-foreground: 0 0% 85%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 15% 15%;
+    --popover: 300 20% 99%;
+    --popover-foreground: 0 0% 85%;
 
-    /* Sage Green as primary brand color */
-    --primary: 120 20% 70%; /* Sage Green #D4E8D4 */
-    --primary-foreground: 222 15% 15%;
-    --primary-glow: 120 25% 80%;
+    /* Primary color */
+    --primary: 356 67% 95%; /* #FDE5E6 */
+    --primary-foreground: 0 0% 20%;
+    --primary-glow: 356 67% 97%;
 
-    /* Blush as secondary */
-    --secondary: 0 40% 91%; /* Blush #FAD7D7 */
-    --secondary-foreground: 222 15% 25%;
+    /* Secondary */
+    --secondary: 300 20% 99%; /* #FEFDFE */
+    --secondary-foreground: 0 0% 20%;
 
     --muted: 40 20% 92%;
     --muted-foreground: 215 16% 47%;
