@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera } from 'lucide-react';
 import Header from '@/components/ui/header';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
+import { CustomerStepper } from '@/components/customer/CustomerStepper';
 
 interface Service {
   id: string;
@@ -494,38 +495,49 @@ const Onboarding = () => {
       <Header />
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
       <div className="w-full max-w-lg">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-2 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-              <CheckCircle className="h-5 w-5 text-primary-foreground" />
+        {/* Only show header and progress for providers */}
+        {profile.role === 'provider' && (
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center space-x-2 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                <CheckCircle className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <span className="text-2xl font-bold text-foreground">FillMyHole</span>
             </div>
-            <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              {getStepTitle()}
+            </h1>
+            <p className="text-muted-foreground mb-6">
+              {getStepDescription()}
+            </p>
+            <div className="flex justify-center">
+              {Array.from({ length: totalSteps }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-3 h-3 rounded-full mx-1 transition-all duration-300 ${
+                    index <= currentStep ? 'bg-primary shadow-sm' : 'bg-muted'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            {getStepTitle()}
-          </h1>
-          <p className="text-muted-foreground mb-6">
-            {getStepDescription()}
-          </p>
-          <div className="flex justify-center">
-            {Array.from({ length: totalSteps }).map((_, index) => (
-              <div
-                key={index}
-                className={`w-3 h-3 rounded-full mx-1 transition-all duration-300 ${
-                  index <= currentStep ? 'bg-primary shadow-sm' : 'bg-muted'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
+        )}
 
-        <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
-          {/* Customer Profile Form */}
-          {profile.role === 'customer' && (
-            <CustomerProfileForm
+        {/* Customer gets clean stepper, Provider gets card wrapper */}
+        {profile.role === 'customer' ? (
+          <div className="space-y-6">
+            <div className="text-center">
+              <div className="flex items-center justify-center space-x-2 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                  <CheckCircle className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+              </div>
+            </div>
+            
+            {/* Customer Step-by-Step Profile */}
+            <CustomerStepper
               initialData={{
-                full_name: profile.name || '',
-                email: profile.email,
                 phone: formData.phone,
                 location: formData.location,
                 bio: formData.bio,
@@ -537,13 +549,14 @@ const Onboarding = () => {
                 gdpr_consent: profile.gdpr_consent || false,
                 terms_accepted: profile.terms_accepted || false
               }}
-              onSubmit={handleCustomerProfileSubmit}
+              onComplete={handleCustomerProfileSubmit}
               isLoading={loading || uploadingPhoto}
-              isEdit={profile.is_profile_complete}
+              userFullName={profile.name || 'Customer'}
+              userEmail={profile.email}
             />
-          )}
-
-          {/* Provider Profile - Step 0 */}
+          </div>
+          ) : (
+            <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
           {currentStep === 0 && profile.role === 'provider' && (
             <div className="space-y-4">
               <div className="space-y-2">
@@ -910,7 +923,8 @@ const Onboarding = () => {
               </Button>
             </div>
           )}
-        </Card>
+            </Card>
+          )}
       </div>
     </div>
     </div>

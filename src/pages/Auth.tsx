@@ -14,6 +14,7 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [role, setRole] = useState<'customer' | 'provider'>('customer');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -73,6 +74,15 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!fullName.trim()) {
+      toast({
+        title: "Full name required",
+        description: "Please enter your full name",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     if (password !== confirmPassword) {
       toast({
         title: "Password mismatch",
@@ -107,7 +117,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(email, password, role);
+      const { error } = await signUp(email, password, role, fullName);
       
       if (error) {
         toast({
@@ -122,6 +132,7 @@ const Auth = () => {
         });
         // Redirect to sign in tab after successful signup
         setActiveTab('signin');
+        setFullName('');
         setEmail(''); // Clear the email field for sign in
         setPassword('');
         setConfirmPassword('');
@@ -219,6 +230,22 @@ const Auth = () => {
 
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="full-name">Full Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="full-name"
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-3">
                   <Label>I am a:</Label>
                   <div className="grid grid-cols-2 gap-3">
