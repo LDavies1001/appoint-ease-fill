@@ -499,7 +499,7 @@ const Onboarding = () => {
         {profile.role === 'provider' && (
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                 <CheckCircle className="h-5 w-5 text-primary-foreground" />
               </div>
               <span className="text-2xl font-bold text-foreground">Open-Slot</span>
@@ -528,7 +528,7 @@ const Onboarding = () => {
           <div className="space-y-6">
             <div className="text-center">
               <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <span className="text-2xl font-bold text-foreground">Open-Slot</span>

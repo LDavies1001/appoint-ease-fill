@@ -34,7 +34,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
                 <Calendar className="h-4 w-4 text-white" />
               </div>
               <span className="text-xl font-bold text-foreground">Open-Slot</span>
@@ -192,7 +192,7 @@ const Index = () => {
           </div>
 
           {/* Right Side - Hero Image */}
-          <div className="lg:pl-8 flex items-end">
+          <div className="lg:pl-8 flex items-center">
             <div className="w-full bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
               <img src={heroImage} alt="Professional eyelash extension service" className="w-full h-auto object-cover" />
             </div>
