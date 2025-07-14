@@ -703,18 +703,23 @@ const BusinessProfile = () => {
                     
                      {editingField === 'pricing_info' ? (
                        <div className="space-y-4">
+                         <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                           <p className="text-xs text-muted-foreground mb-1">Example:</p>
+                           <p className="text-sm font-mono">Service: "Eyelash Extensions"</p>
+                           <p className="text-sm font-mono">Price: "45" (£ symbol will be added automatically)</p>
+                         </div>
                          <div className="space-y-3 max-h-64 overflow-y-auto">
                            {pricingItems.map((item, index) => (
                              <div key={index} className="flex gap-2 items-start p-3 bg-background/80 rounded-lg border">
                                <div className="flex-1 space-y-2">
                                  <Input
-                                   placeholder="Service name"
+                                   placeholder="e.g. Eyelash Extensions"
                                    value={item.service}
                                    onChange={(e) => updatePricingItem(index, 'service', e.target.value)}
                                    className="text-sm"
                                  />
                                  <Input
-                                   placeholder="Price (without £)"
+                                   placeholder="e.g. 45 (without £ symbol)"
                                    value={item.price}
                                    onChange={(e) => updatePricingItem(index, 'price', e.target.value)}
                                    className="text-sm"
@@ -917,22 +922,17 @@ const BusinessProfile = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {formatOperatingHours(details.operating_hours) ? (
-                      <div className="space-y-2">
-                        {formatOperatingHours(details.operating_hours).slice(0, 3).map((day: any, index: number) => (
-                          <div key={index} className="flex justify-between items-center text-sm">
-                            <span className="font-medium">{day.day}</span>
-                            <span className={day.closed ? 'text-muted-foreground' : 'text-foreground'}>
-                              {day.closed ? 'Closed' : `${day.open}-${day.close}`}
-                            </span>
-                          </div>
-                        ))}
-                        {formatOperatingHours(details.operating_hours).length > 3 && (
-                          <p className="text-xs text-muted-foreground text-center pt-2">
-                            +{formatOperatingHours(details.operating_hours).length - 3} more days
-                          </p>
-                        )}
-                      </div>
+                     {formatOperatingHours(details.operating_hours) ? (
+                       <div className="space-y-2">
+                         {formatOperatingHours(details.operating_hours).map((day: any, index: number) => (
+                           <div key={index} className="flex justify-between items-center text-sm">
+                             <span className="font-medium">{day.day}</span>
+                             <span className={day.closed ? 'text-muted-foreground' : 'text-foreground'}>
+                               {day.closed ? 'Closed' : `${day.open}-${day.close}`}
+                             </span>
+                           </div>
+                         ))}
+                       </div>
                     ) : (
                       <p className="text-muted-foreground italic text-sm text-center">
                         No hours set
