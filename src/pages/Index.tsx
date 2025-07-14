@@ -192,7 +192,7 @@ const Index = () => {
           </div>
 
           {/* Right Side - Hero Image */}
-          <div className="lg:pl-8 mt-20">
+          <div className="lg:pl-8 flex items-end">
             <div className="w-full bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
               <img src={heroImage} alt="Professional eyelash extension service" className="w-full h-auto object-cover" />
             </div>
