@@ -149,7 +149,7 @@ const Index = () => {
                       <span className="text-xs font-semibold text-accent uppercase tracking-wider">For Businesses</span>
                     </div>
                     <h3 className="text-lg font-semibold text-foreground">Grow Your Business</h3>
-                    <p className="text-sm text-muted-foreground">Fill your empty appointment slots</p>
+                    <p className="text-sm text-muted-foreground">Fill your empty appointment slots instantly</p>
                   </div>
                   
                   <div className="space-y-3">
