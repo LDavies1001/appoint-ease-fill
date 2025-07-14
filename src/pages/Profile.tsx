@@ -4,6 +4,7 @@ import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { PhotoUpload, DocumentUpload } from '@/components/ui/photo-upload';
 import Header from '@/components/ui/header';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -33,7 +34,9 @@ import {
   Facebook,
   Twitter,
   Save,
-  X
+  X,
+  Upload,
+  FileText
 } from 'lucide-react';
 
 const Profile = () => {
@@ -135,6 +138,8 @@ const Profile = () => {
           operating_hours: editData.operating_hours,
           social_media_links: editData.social_media_links,
           certifications: editData.certifications,
+          business_logo_url: editData.business_logo_url,
+          certification_files: editData.certification_files,
         })
         .eq('user_id', user?.id);
 
@@ -356,9 +361,16 @@ const Profile = () => {
                 </div>
               )}
               {isEditMode && (
-                <Button size="sm" className="absolute -top-2 -right-2 rounded-full w-8 h-8 p-0">
-                  <Camera className="h-4 w-4" />
-                </Button>
+                <PhotoUpload
+                  onUpload={(url) => setEditData({...editData, business_logo_url: url})}
+                  bucket="business-photos"
+                  folder="logos"
+                  className="absolute -top-2 -right-2 rounded-full w-8 h-8 p-0"
+                >
+                  <Button size="sm" className="rounded-full w-8 h-8 p-0">
+                    <Camera className="h-4 w-4" />
+                  </Button>
+                </PhotoUpload>
               )}
             </div>
 
@@ -396,13 +408,13 @@ const Profile = () => {
                   <Calendar className="h-5 w-5 mr-2" />
                   Book Appointment
                 </Button>
-                <Button variant="outline" size="lg" className="border-white/50 text-white hover:bg-white/10">
+                <Button variant="outline" size="lg" className="border-white/80 text-white hover:bg-white/20 bg-black/20 backdrop-blur-sm font-semibold">
                   <Heart className="h-5 w-5 mr-2" />
-                  Save
+                  Save to Favorites
                 </Button>
-                <Button variant="outline" size="lg" className="border-white/50 text-white hover:bg-white/10">
+                <Button variant="outline" size="lg" className="border-white/80 text-white hover:bg-white/20 bg-black/20 backdrop-blur-sm font-semibold">
                   <MessageSquare className="h-5 w-5 mr-2" />
-                  Message
+                  Send Message
                 </Button>
               </div>
             </div>
@@ -527,13 +539,58 @@ const Profile = () => {
                 <h4 className="font-semibold text-lg mb-3 flex items-center">
                   <Award className="h-4 w-4 mr-2" />
                   Certifications & Specialties
+                  {isEditMode && isOwner && (
+                    <DocumentUpload
+                      onUpload={(urls) => {
+                        const currentFiles = editData.certification_files || [];
+                        setEditData({...editData, certification_files: [...currentFiles, ...urls]});
+                      }}
+                      bucket="certifications"
+                      folder="documents"
+                      className="ml-auto"
+                    >
+                      <Button variant="ghost" size="sm">
+                        <Upload className="h-4 w-4 mr-1" />
+                        Upload
+                      </Button>
+                    </DocumentUpload>
+                  )}
                 </h4>
+                
                 {isEditMode ? (
-                  <Input
-                    value={editData.certifications || ''}
-                    onChange={(e) => setEditData({...editData, certifications: e.target.value})}
-                    placeholder="Enter certifications (comma separated)"
-                  />
+                  <div className="space-y-4">
+                    <Input
+                      value={editData.certifications || ''}
+                      onChange={(e) => setEditData({...editData, certifications: e.target.value})}
+                      placeholder="Enter certifications (comma separated)"
+                    />
+                    
+                    {/* Display uploaded certification files */}
+                    {editData.certification_files && editData.certification_files.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium">Uploaded Documents:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {editData.certification_files.map((fileUrl: string, index: number) => (
+                            <div key={index} className="flex items-center p-2 bg-muted rounded-lg text-sm">
+                              <FileText className="h-4 w-4 mr-2" />
+                              <span className="truncate max-w-[200px]">Document {index + 1}</span>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-6 w-6 p-0 ml-2"
+                                onClick={() => {
+                                  const newFiles = editData.certification_files.filter((_, i: number) => i !== index);
+                                  setEditData({...editData, certification_files: newFiles});
+                                }}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ) : providerDetails?.certifications ? (
                   <div className="flex flex-wrap gap-2">
                     {providerDetails.certifications.split(',').map((cert: string, index: number) => (
