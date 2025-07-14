@@ -1,6 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import Header from '@/components/ui/header';
 import { useToast } from '@/hooks/use-toast';
@@ -19,7 +20,10 @@ import {
   Clock,
   Calendar,
   Heart,
-  MessageSquare
+  MessageSquare,
+  Camera,
+  Users,
+  Award
 } from 'lucide-react';
 
 const Profile = () => {
@@ -248,17 +252,76 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Content Sections */}
+      {/* Content Sections with Tabs */}
       <div className="container mx-auto px-4 py-12">
-        <div className="grid gap-12">
-          
-          {/* Portfolio Showcase */}
-          {portfolioItems.length > 0 && (
-            <section>
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-4">Our Work</h2>
-                <p className="text-muted-foreground text-lg">See examples of our recent projects</p>
+        {/* Quick Business Overview */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">About Our Business</h2>
+          <div className="max-w-3xl mx-auto">
+            {providerDetails?.business_description ? (
+              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                {providerDetails.business_description}
+              </p>
+            ) : (
+              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                Welcome to our business! We're dedicated to providing exceptional service and creating memorable experiences for our clients.
+              </p>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {providerDetails?.years_experience && (
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-primary mb-2">{providerDetails.years_experience}+</div>
+                  <p className="text-muted-foreground">Years Experience</p>
+                </div>
+              )}
+              
+              {providerDetails?.total_reviews > 0 && (
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-primary mb-2">{providerDetails.total_reviews}</div>
+                  <p className="text-muted-foreground">Happy Customers</p>
+                </div>
+              )}
+              
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary mb-2">
+                  {providerDetails?.rating ? providerDetails.rating.toFixed(1) : '5.0'}
+                </div>
+                <p className="text-muted-foreground">Star Rating</p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabbed Content */}
+        <Tabs defaultValue="portfolio" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsTrigger value="portfolio" className="flex items-center">
+              <Camera className="h-4 w-4 mr-2" />
+              Portfolio
+            </TabsTrigger>
+            <TabsTrigger value="services" className="flex items-center">
+              <Calendar className="h-4 w-4 mr-2" />
+              Services
+            </TabsTrigger>
+            <TabsTrigger value="testimonials" className="flex items-center">
+              <Users className="h-4 w-4 mr-2" />
+              Reviews
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="flex items-center">
+              <Phone className="h-4 w-4 mr-2" />
+              Contact
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Portfolio Tab */}
+          <TabsContent value="portfolio" className="space-y-6">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold mb-2">Our Work</h3>
+              <p className="text-muted-foreground">See examples of our recent projects and creative work</p>
+            </div>
+            
+            {portfolioItems.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {portfolioItems.map((item) => (
                   <Card key={item.id} className="overflow-hidden group hover:shadow-lg transition-shadow">
@@ -270,7 +333,7 @@ const Profile = () => {
                       />
                     </div>
                     <CardContent className="p-4">
-                      <h3 className="font-semibold mb-2">{item.title}</h3>
+                      <h4 className="font-semibold mb-2">{item.title}</h4>
                       {item.description && (
                         <p className="text-sm text-muted-foreground">{item.description}</p>
                       )}
@@ -278,14 +341,20 @@ const Profile = () => {
                   </Card>
                 ))}
               </div>
-            </section>
-          )}
+            ) : (
+              <Card className="text-center p-12">
+                <Camera className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h4 className="text-xl font-semibold mb-2">Portfolio Coming Soon</h4>
+                <p className="text-muted-foreground">We're currently building our portfolio. Check back soon to see our amazing work!</p>
+              </Card>
+            )}
+          </TabsContent>
 
-          {/* Services & Pricing */}
-          <section>
+          {/* Services Tab */}
+          <TabsContent value="services" className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Services & Pricing</h2>
-              <p className="text-muted-foreground text-lg">Professional services tailored to your needs</p>
+              <h3 className="text-2xl font-bold mb-2">Our Services</h3>
+              <p className="text-muted-foreground">Professional services tailored to meet your specific needs</p>
             </div>
             
             {(() => {
@@ -296,11 +365,11 @@ const Profile = () => {
                     {pricing.map((item: any, index: number) => (
                       <Card key={index} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6 text-center">
-                          <h3 className="text-xl font-semibold mb-4">{item.service}</h3>
+                          <h4 className="text-xl font-semibold mb-4">{item.service}</h4>
                           <div className="text-3xl font-bold text-primary mb-4">{item.price}</div>
-                          <Button className="w-full">
+                          <Button className="w-full" size="lg">
                             <Calendar className="h-4 w-4 mr-2" />
-                            Book Service
+                            Book This Service
                           </Button>
                         </CardContent>
                       </Card>
@@ -309,179 +378,199 @@ const Profile = () => {
                 ) : (
                   <Card className="text-center p-12">
                     <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">Services Available</h3>
-                    <p className="text-muted-foreground">Contact us to learn about our services and pricing</p>
+                    <h4 className="text-xl font-semibold mb-2">Custom Services Available</h4>
+                    <p className="text-muted-foreground mb-6">We offer personalized services to meet your unique requirements. Contact us to discuss your needs and get a custom quote.</p>
+                    <Button size="lg">
+                      <Phone className="h-4 w-4 mr-2" />
+                      Get Custom Quote
+                    </Button>
                   </Card>
                 );
               } catch {
                 return (
                   <Card className="text-center p-12">
                     <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">Services Available</h3>
+                    <h4 className="text-xl font-semibold mb-2">Services Available</h4>
                     <p className="text-muted-foreground">Contact us to learn about our services and pricing</p>
                   </Card>
                 );
               }
             })()}
-          </section>
+          </TabsContent>
 
-          {/* Customer Reviews */}
-          <section>
+          {/* Testimonials Tab */}
+          <TabsContent value="testimonials" className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">What Our Customers Say</h2>
-              <p className="text-muted-foreground text-lg">Real feedback from satisfied clients</p>
+              <h3 className="text-2xl font-bold mb-2">Customer Reviews</h3>
+              <p className="text-muted-foreground">Real feedback from our valued clients</p>
             </div>
 
             {reviews.length === 0 ? (
               <Card className="text-center p-12">
                 <MessageSquare className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Building Our Reputation</h3>
-                <p className="text-muted-foreground">We're excited to serve you and earn your review!</p>
+                <h4 className="text-xl font-semibold mb-2">Building Our Reputation</h4>
+                <p className="text-muted-foreground mb-6">We're excited to serve you and earn your first review! Every great business starts with one satisfied customer.</p>
+                <Button size="lg">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Be Our First Review
+                </Button>
               </Card>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {reviews.map((review) => (
-                  <Card key={review.id} className="hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-center mb-4">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < review.rating
-                                ? 'text-yellow-500 fill-current'
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      {review.comment && (
-                        <p className="text-muted-foreground mb-4 italic">"{review.comment}"</p>
-                      )}
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3">
-                          <User className="h-4 w-4" />
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {reviews.map((review) => (
+                    <Card key={review.id} className="hover:shadow-lg transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-center mb-4">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${
+                                i < review.rating
+                                  ? 'text-yellow-500 fill-current'
+                                  : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
                         </div>
-                        <span className="font-medium">{review.reviewer?.name || 'Customer'}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                        {review.comment && (
+                          <p className="text-muted-foreground mb-4 italic">"{review.comment}"</p>
+                        )}
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                            <User className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <span className="font-medium">{review.reviewer?.name || 'Customer'}</span>
+                            <p className="text-sm text-muted-foreground">Verified Customer</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
             )}
-          </section>
+          </TabsContent>
 
-          {/* Contact & Hours */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Contact Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center text-2xl">
-                  <Phone className="h-6 w-6 mr-3 text-primary" />
-                  Contact Us
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <Mail className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium">Email</p>
-                    <p className="text-muted-foreground">{providerDetails?.business_email || profile.email}</p>
-                  </div>
-                </div>
-                
-                {providerDetails?.business_phone && (
+          {/* Contact Tab */}
+          <TabsContent value="contact" className="space-y-6">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold mb-2">Get In Touch</h3>
+              <p className="text-muted-foreground">Ready to book or have questions? We'd love to hear from you</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Contact Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center text-xl">
+                    <Phone className="h-5 w-5 mr-3 text-primary" />
+                    Contact Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
                   <div className="flex items-center space-x-4">
-                    <Phone className="h-5 w-5 text-primary" />
+                    <Mail className="h-5 w-5 text-primary" />
                     <div>
-                      <p className="font-medium">Phone</p>
-                      <p className="text-muted-foreground">{providerDetails.business_phone}</p>
+                      <p className="font-medium">Email</p>
+                      <p className="text-muted-foreground">{providerDetails?.business_email || profile.email}</p>
                     </div>
                   </div>
-                )}
-                
-                {providerDetails?.business_address && (
-                  <div className="flex items-center space-x-4">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="font-medium">Address</p>
-                      <p className="text-muted-foreground">{providerDetails.business_address}</p>
+                  
+                  {providerDetails?.business_phone && (
+                    <div className="flex items-center space-x-4">
+                      <Phone className="h-5 w-5 text-primary" />
+                      <div>
+                        <p className="font-medium">Phone</p>
+                        <p className="text-muted-foreground">{providerDetails.business_phone}</p>
+                      </div>
                     </div>
-                  </div>
-                )}
-
-                {providerDetails?.business_website && (
-                  <div className="flex items-center space-x-4">
-                    <Building className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="font-medium">Website</p>
-                      <a 
-                        href={providerDetails.business_website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        {providerDetails.business_website}
-                      </a>
+                  )}
+                  
+                  {providerDetails?.business_address && (
+                    <div className="flex items-center space-x-4">
+                      <MapPin className="h-5 w-5 text-primary" />
+                      <div>
+                        <p className="font-medium">Address</p>
+                        <p className="text-muted-foreground">{providerDetails.business_address}</p>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  )}
 
-            {/* Operating Hours */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center text-2xl">
-                  <Clock className="h-6 w-6 mr-3 text-primary" />
-                  Opening Hours
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {(() => {
-                  const hours = formatOperatingHours(providerDetails?.operating_hours);
-                  return hours ? (
-                    <div className="space-y-4">
-                      {Object.entries(hours).map(([day, timeData]) => {
-                        // Handle both string and object formats
-                        let displayTime;
-                        if (typeof timeData === 'string') {
-                          displayTime = timeData;
-                        } else if (typeof timeData === 'object' && timeData !== null) {
-                          // Handle object format like {open: "9:00", close: "17:00", closed: false}
-                          const hoursObj = timeData as any;
-                          if (hoursObj.closed) {
-                            displayTime = 'Closed';
-                          } else if (hoursObj.open && hoursObj.close) {
-                            displayTime = `${hoursObj.open} - ${hoursObj.close}`;
+                  {providerDetails?.business_website && (
+                    <div className="flex items-center space-x-4">
+                      <Building className="h-5 w-5 text-primary" />
+                      <div>
+                        <p className="font-medium">Website</p>
+                        <a 
+                          href={providerDetails.business_website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          {providerDetails.business_website}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Operating Hours */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center text-xl">
+                    <Clock className="h-5 w-5 mr-3 text-primary" />
+                    Opening Hours
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    const hours = formatOperatingHours(providerDetails?.operating_hours);
+                    return hours ? (
+                      <div className="space-y-4">
+                        {Object.entries(hours).map(([day, timeData]) => {
+                          // Handle both string and object formats
+                          let displayTime;
+                          if (typeof timeData === 'string') {
+                            displayTime = timeData;
+                          } else if (typeof timeData === 'object' && timeData !== null) {
+                            // Handle object format like {open: "9:00", close: "17:00", closed: false}
+                            const hoursObj = timeData as any;
+                            if (hoursObj.closed) {
+                              displayTime = 'Closed';
+                            } else if (hoursObj.open && hoursObj.close) {
+                              displayTime = `${hoursObj.open} - ${hoursObj.close}`;
+                            } else {
+                              displayTime = 'Contact for hours';
+                            }
                           } else {
                             displayTime = 'Contact for hours';
                           }
-                        } else {
-                          displayTime = 'Contact for hours';
-                        }
 
-                        return (
-                          <div key={day} className="flex justify-between items-center py-2 border-b last:border-b-0">
-                            <span className="font-medium capitalize text-lg">{day}</span>
-                            <span className="text-muted-foreground">{displayTime}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground">
-                        Contact us for our current operating hours
-                      </p>
-                    </div>
-                  );
-                })()}
-              </CardContent>
-            </Card>
-          </section>
-        </div>
+                          return (
+                            <div key={day} className="flex justify-between items-center py-2 border-b last:border-b-0">
+                              <span className="font-medium capitalize">{day}</span>
+                              <span className="text-muted-foreground">{displayTime}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground">
+                          Contact us for our current operating hours
+                        </p>
+                      </div>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
