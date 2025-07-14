@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import ServiceManager from '@/components/business/ServiceManager';
 import { 
   Plus, 
   Calendar, 
@@ -19,8 +20,18 @@ import {
   Settings,
   BookOpen,
   Upload,
-  X
+  X,
+  Wrench
 } from 'lucide-react';
+
+interface ProviderService {
+  id: string;
+  service_name: string;
+  description?: string;
+  base_price?: number;
+  duration_minutes: number;
+  is_active: boolean;
+}
 
 interface Service {
   id: string;
@@ -40,9 +51,13 @@ interface AvailabilitySlot {
   image_url?: string;
   notes: string;
   is_booked: boolean;
-  service: {
+  provider_service?: {
+    service_name: string;
+  };
+  service?: {
     name: string;
   };
+  custom_service_name?: string;
 }
 
 interface Booking {
@@ -62,6 +77,7 @@ interface Booking {
 const ProviderDashboard = () => {
   const [activeTab, setActiveTab] = useState('slots');
   const [services, setServices] = useState<Service[]>([]);
+  const [providerServices, setProviderServices] = useState<ProviderService[]>([]);
   const [mySlots, setMySlots] = useState<AvailabilitySlot[]>([]);
   const [myBookings, setMyBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +85,8 @@ const ProviderDashboard = () => {
   // Form state for adding slots
   const [showAddSlot, setShowAddSlot] = useState(false);
   const [slotForm, setSlotForm] = useState({
-    service_id: '',
+    provider_service_id: '',
+    custom_service_name: '',
     date: '',
     start_time: '',
     duration: 60,
@@ -79,7 +96,6 @@ const ProviderDashboard = () => {
     image_url: ''
   });
   const [uploading, setUploading] = useState(false);
-  const [providerServices, setProviderServices] = useState<Array<{name: string, price: number}>>([]);
   
   const { profile, signOut } = useAuth();
   const { toast } = useToast();
@@ -111,7 +127,8 @@ const ProviderDashboard = () => {
         .from('availability_slots')
         .select(`
           *,
-          service:services(name)
+          service:services(name),
+          provider_service:provider_services(service_name)
         `)
         .eq('provider_id', profile?.user_id)
         .order('date', { ascending: true })
@@ -122,7 +139,7 @@ const ProviderDashboard = () => {
       const formattedSlots = data?.map(slot => ({
         ...slot,
         service: {
-          name: slot.service?.name || 'Unknown Service'
+          name: slot.service?.name || slot.provider_service?.service_name || slot.custom_service_name || 'Unknown Service'
         }
       })) || [];
 
@@ -168,21 +185,14 @@ const ProviderDashboard = () => {
   const fetchProviderServices = async () => {
     try {
       const { data, error } = await supabase
-        .from('provider_details')
-        .select('pricing_info')
-        .eq('user_id', profile?.user_id)
-        .maybeSingle();
+        .from('provider_services')
+        .select('*')
+        .eq('provider_id', profile?.user_id)
+        .eq('is_active', true)
+        .order('service_name', { ascending: true });
 
       if (error) throw error;
-
-      if (data?.pricing_info) {
-        try {
-          const services = JSON.parse(data.pricing_info);
-          setProviderServices(services);
-        } catch (parseError) {
-          console.error('Error parsing pricing info:', parseError);
-        }
-      }
+      setProviderServices(data || []);
     } catch (error) {
       console.error('Error fetching provider services:', error);
     }
@@ -191,7 +201,9 @@ const ProviderDashboard = () => {
   const handleAddSlot = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!slotForm.service_id || !slotForm.date || !slotForm.start_time || !slotForm.price) {
+    // Validate either provider service or custom service name is provided
+    if ((!slotForm.provider_service_id && !slotForm.custom_service_name) || 
+        !slotForm.date || !slotForm.start_time || !slotForm.price) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive"
@@ -203,20 +215,28 @@ const ProviderDashboard = () => {
       const startTime = new Date(`2000-01-01T${slotForm.start_time}`);
       const endTime = new Date(startTime.getTime() + slotForm.duration * 60000);
       
+      const insertData: any = {
+        provider_id: profile?.user_id,
+        date: slotForm.date,
+        start_time: slotForm.start_time,
+        end_time: endTime.toTimeString().slice(0, 5),
+        duration: slotForm.duration,
+        price: parseFloat(slotForm.price),
+        discount_price: slotForm.discount_price ? parseFloat(slotForm.discount_price) : null,
+        image_url: slotForm.image_url || null,
+        notes: slotForm.notes
+      };
+
+      // Add either provider_service_id or custom_service_name
+      if (slotForm.provider_service_id) {
+        insertData.provider_service_id = slotForm.provider_service_id;
+      } else if (slotForm.custom_service_name) {
+        insertData.custom_service_name = slotForm.custom_service_name;
+      }
+      
       const { error } = await supabase
         .from('availability_slots')
-        .insert({
-          provider_id: profile?.user_id,
-          service_id: slotForm.service_id,
-          date: slotForm.date,
-          start_time: slotForm.start_time,
-          end_time: endTime.toTimeString().slice(0, 5),
-          duration: slotForm.duration,
-          price: parseFloat(slotForm.price),
-          discount_price: slotForm.discount_price ? parseFloat(slotForm.discount_price) : null,
-          image_url: slotForm.image_url || null,
-          notes: slotForm.notes
-        });
+        .insert(insertData);
 
       if (error) throw error;
 
@@ -226,7 +246,8 @@ const ProviderDashboard = () => {
 
       // Reset form
       setSlotForm({
-        service_id: '',
+        provider_service_id: '',
+        custom_service_name: '',
         date: '',
         start_time: '',
         duration: 60,
@@ -405,6 +426,13 @@ const ProviderDashboard = () => {
             My Slots
           </Button>
           <Button
+            variant={activeTab === 'services' ? 'hero' : 'ghost'}
+            onClick={() => setActiveTab('services')}
+          >
+            <Wrench className="h-4 w-4 mr-2" />
+            Services
+          </Button>
+          <Button
             variant={activeTab === 'bookings' ? 'hero' : 'ghost'}
             onClick={() => setActiveTab('bookings')}
           >
@@ -434,32 +462,54 @@ const ProviderDashboard = () => {
               <Card className="card-elegant p-6">
                 <h3 className="text-lg font-semibold mb-4">Add New Slot</h3>
                 <form onSubmit={handleAddSlot} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="service">Service *</Label>
-                      <Select 
-                        value={slotForm.service_id} 
-                        onValueChange={(value) => {
-                          setSlotForm(prev => ({ ...prev, service_id: value }));
-                          // Auto-fill price from provider's price list
-                          const selectedService = providerServices.find(s => s.name === value);
-                          if (selectedService) {
-                            setSlotForm(prev => ({ ...prev, price: selectedService.price.toString() }));
-                          }
-                        }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a service" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {providerServices.map((service, index) => (
-                            <SelectItem key={index} value={service.name}>
-                              {service.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div className="space-y-2">
+                       <Label htmlFor="service">Service *</Label>
+                       {providerServices.length > 0 ? (
+                         <Select 
+                           value={slotForm.provider_service_id} 
+                           onValueChange={(value) => {
+                             setSlotForm(prev => ({ ...prev, provider_service_id: value, custom_service_name: '' }));
+                             // Auto-fill price and duration from provider service
+                             const selectedService = providerServices.find(s => s.id === value);
+                             if (selectedService) {
+                               setSlotForm(prev => ({ 
+                                 ...prev, 
+                                 price: selectedService.base_price?.toString() || '',
+                                 duration: selectedService.duration_minutes
+                               }));
+                             }
+                           }}
+                         >
+                           <SelectTrigger>
+                             <SelectValue placeholder="Select a service" />
+                           </SelectTrigger>
+                           <SelectContent>
+                             {providerServices.map((service) => (
+                               <SelectItem key={service.id} value={service.id}>
+                                 {service.service_name} {service.base_price && `(£${service.base_price})`}
+                               </SelectItem>
+                             ))}
+                           </SelectContent>
+                         </Select>
+                       ) : (
+                         <Input
+                           placeholder="Enter service name (e.g., Classic Lash Extensions)"
+                           value={slotForm.custom_service_name}
+                           onChange={(e) => setSlotForm(prev => ({ 
+                             ...prev, 
+                             custom_service_name: e.target.value,
+                             provider_service_id: ''
+                           }))}
+                           required
+                         />
+                       )}
+                       {providerServices.length === 0 && (
+                         <p className="text-sm text-muted-foreground">
+                           You can type any service name here, or add predefined services in the Services tab for easier management.
+                         </p>
+                       )}
+                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="date">Date *</Label>
@@ -676,6 +726,10 @@ const ProviderDashboard = () => {
               )}
             </div>
           </div>
+        )}
+
+        {activeTab === 'services' && (
+          <ServiceManager onServiceUpdate={fetchProviderServices} />
         )}
 
         {activeTab === 'bookings' && (

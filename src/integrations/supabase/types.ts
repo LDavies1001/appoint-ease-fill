@@ -17,6 +17,7 @@ export type Database = {
       availability_slots: {
         Row: {
           created_at: string
+          custom_service_name: string | null
           date: string
           discount_price: number | null
           duration: number
@@ -28,6 +29,7 @@ export type Database = {
           notes: string | null
           price: number | null
           provider_id: string
+          provider_service_id: string | null
           recurrence_pattern: string | null
           service_id: string | null
           start_time: string
@@ -35,6 +37,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          custom_service_name?: string | null
           date: string
           discount_price?: number | null
           duration: number
@@ -46,6 +49,7 @@ export type Database = {
           notes?: string | null
           price?: number | null
           provider_id: string
+          provider_service_id?: string | null
           recurrence_pattern?: string | null
           service_id?: string | null
           start_time: string
@@ -53,6 +57,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          custom_service_name?: string | null
           date?: string
           discount_price?: number | null
           duration?: number
@@ -64,6 +69,7 @@ export type Database = {
           notes?: string | null
           price?: number | null
           provider_id?: string
+          provider_service_id?: string | null
           recurrence_pattern?: string | null
           service_id?: string | null
           start_time?: string
@@ -82,6 +88,13 @@ export type Database = {
             columns: ["service_id"]
             isOneToOne: false
             referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_availability_slots_provider_service"
+            columns: ["provider_service_id"]
+            isOneToOne: false
+            referencedRelation: "provider_services"
             referencedColumns: ["id"]
           },
         ]
@@ -335,6 +348,50 @@ export type Database = {
             foreignKeyName: "provider_details_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      provider_services: {
+        Row: {
+          base_price: number | null
+          created_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_active: boolean | null
+          provider_id: string
+          service_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          base_price?: number | null
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_active?: boolean | null
+          provider_id: string
+          service_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          base_price?: number | null
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_active?: boolean | null
+          provider_id?: string
+          service_name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_provider_services_provider"
+            columns: ["provider_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
