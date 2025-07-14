@@ -232,220 +232,288 @@ const Auth = () => {
             </TabsContent>
 
             <TabsContent value="signup">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="full-name">Full Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="full-name"
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
+              {role === 'provider' ? (
+                // Full Business Information Page
+                <div className="space-y-8">
+                  {/* Hero Section */}
+                  <div className="text-center space-y-4">
+                    <div className="flex items-center justify-center space-x-2 mb-4">
+                      <Building className="h-8 w-8 text-accent" />
+                      <h2 className="text-2xl font-bold text-foreground">Built for Beauty Professionals</h2>
+                    </div>
+                    <p className="text-muted-foreground text-lg">
+                      Turn your empty appointment slots into revenue with customers who book immediately
+                    </p>
                   </div>
-                </div>
 
-                <div className="space-y-3">
-                  <Label>I am a:</Label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      type="button"
-                      variant={role === 'customer' ? 'hero' : 'elegant'}
-                      onClick={() => setRole('customer')}
-                      className="flex flex-col gap-1 h-16"
-                    >
-                      <User className="h-5 w-5" />
-                      <span className="text-xs">Customer</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={role === 'provider' ? 'hero' : 'elegant'}
-                      onClick={() => setRole('provider')}
-                      className="flex flex-col gap-1 h-16"
-                    >
-                      <UserCheck className="h-5 w-5" />
-                      <span className="text-xs">Provider</span>
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Business Value Proposition - Only shown when provider is selected */}
-                {role === 'provider' && (
-                  <div className="space-y-4 py-4 border-t border-border/40">
-                    <div className="text-center space-y-2">
-                      <div className="flex items-center justify-center space-x-2">
-                        <Building className="h-5 w-5 text-accent" />
-                        <h3 className="text-lg font-semibold text-foreground">Perfect for Your Business</h3>
+                  {/* Key Benefits */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-4 p-4 bg-gradient-to-r from-accent/10 to-accent/5 rounded-xl">
+                        <div className="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <DollarSign className="h-5 w-5 text-accent" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground">Maximize Your Earnings</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Fill last-minute cancellations and gaps in your schedule with customers ready to book now
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        Designed specifically for beauticians, stylists, nail technicians, and cleaning professionals
+
+                      <div className="flex items-start space-x-4 p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl">
+                        <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <TrendingUp className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground">Grow Your Client Base</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Connect with new customers in your area who are actively seeking your services
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-4 p-4 bg-gradient-to-r from-accent/10 to-accent/5 rounded-xl">
+                        <div className="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Clock className="h-5 w-5 text-accent" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground">Flexible Control</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Set your own hours, prices, and availability. Perfect for independent professionals
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl">
+                        <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Users className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground">Instant Bookings</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Customers can book and pay instantly - no back-and-forth scheduling
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* How It Works */}
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-bold text-foreground text-center">How FillMyHole Works for You</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="text-center space-y-3">
+                        <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto">
+                          <span className="text-white font-bold">1</span>
+                        </div>
+                        <h4 className="font-semibold text-foreground">List Your Availability</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Post your open slots with service details and pricing
+                        </p>
+                      </div>
+                      <div className="text-center space-y-3">
+                        <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto">
+                          <span className="text-white font-bold">2</span>
+                        </div>
+                        <h4 className="font-semibold text-foreground">Get Instant Bookings</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Customers find and book your services immediately
+                        </p>
+                      </div>
+                      <div className="text-center space-y-3">
+                        <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto">
+                          <span className="text-white font-bold">3</span>
+                        </div>
+                        <h4 className="font-semibold text-foreground">Earn More Money</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Fill your schedule and maximize your earning potential
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Perfect For */}
+                  <div className="bg-gradient-to-r from-accent/10 to-primary/10 rounded-xl p-6 space-y-4">
+                    <h3 className="text-lg font-bold text-foreground text-center">Perfect for Beauty & Service Professionals</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
+                        <span className="text-sm font-medium text-foreground">Eyelash Technicians</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
+                        <span className="text-sm font-medium text-foreground">Hair Stylists</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
+                        <span className="text-sm font-medium text-foreground">Nail Technicians</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
+                        <span className="text-sm font-medium text-foreground">Aestheticians</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
+                        <span className="text-sm font-medium text-foreground">Massage Therapists</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
+                        <span className="text-sm font-medium text-foreground">Cleaning Services</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Success Stories */}
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-bold text-foreground text-center">Real Results from Real Professionals</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-6 space-y-3">
+                        <div className="flex items-center space-x-2">
+                          <Star className="h-5 w-5 text-primary fill-current" />
+                          <Star className="h-5 w-5 text-primary fill-current" />
+                          <Star className="h-5 w-5 text-primary fill-current" />
+                          <Star className="h-5 w-5 text-primary fill-current" />
+                          <Star className="h-5 w-5 text-primary fill-current" />
+                        </div>
+                        <p className="text-sm text-muted-foreground italic">
+                          "I've increased my monthly income by 35% just by listing my cancellations on FillMyHole. The platform is so easy to use!"
+                        </p>
+                        <p className="text-sm font-medium text-foreground">- Sarah M., Eyelash Technician</p>
+                      </div>
+                      <div className="bg-gradient-to-r from-accent/5 to-accent/10 rounded-xl p-6 space-y-3">
+                        <div className="flex items-center space-x-2">
+                          <Star className="h-5 w-5 text-accent fill-current" />
+                          <Star className="h-5 w-5 text-accent fill-current" />
+                          <Star className="h-5 w-5 text-accent fill-current" />
+                          <Star className="h-5 w-5 text-accent fill-current" />
+                          <Star className="h-5 w-5 text-accent fill-current" />
+                        </div>
+                        <p className="text-sm text-muted-foreground italic">
+                          "Perfect for my mobile nail business. I can update my availability anywhere and get bookings instantly."
+                        </p>
+                        <p className="text-sm font-medium text-foreground">- Jessica L., Mobile Nail Tech</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <div className="text-center space-y-4 py-6">
+                    <h3 className="text-2xl font-bold text-foreground">Ready to Grow Your Business?</h3>
+                    <p className="text-muted-foreground">
+                      Join hundreds of beauty professionals already earning more with FillMyHole
+                    </p>
+                    <Button
+                      onClick={() => {
+                        window.location.href = '/auth?tab=signup';
+                      }}
+                      variant="hero"
+                      size="lg"
+                      className="px-8"
+                    >
+                      <Building className="mr-2 h-5 w-5" />
+                      Get Started Today
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                // Regular customer signup form - only show when role is NOT provider
+                <form onSubmit={handleSignUp} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="full-name">Full Name</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="full-name"
+                        type="text"
+                        placeholder="Enter your full name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="signup-password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create a password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="pl-10 pr-10"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                    <div className="text-xs text-muted-foreground space-y-1">
+                      <p className={password.length >= 8 ? 'text-green-500' : ''}>
+                        ✓ At least 8 characters
+                      </p>
+                      <p className={/[A-Z]/.test(password) ? 'text-green-500' : ''}>
+                        ✓ At least 1 uppercase letter
+                      </p>
+                      <p className={/\d/.test(password) ? 'text-green-500' : ''}>
+                        ✓ At least 1 number
                       </p>
                     </div>
+                  </div>
 
-                    <div className="grid grid-cols-1 gap-3">
-                      <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg">
-                        <DollarSign className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-medium text-foreground text-sm">Turn Cancellations into Cash</h4>
-                          <p className="text-xs text-muted-foreground">
-                            Fill last-minute cancellations with customers actively looking for immediate appointments
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg">
-                        <TrendingUp className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-medium text-foreground text-sm">Increase Revenue by 30%</h4>
-                          <p className="text-xs text-muted-foreground">
-                            Maximize your booking capacity and reduce empty time slots that cost you money
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg">
-                        <Users className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-medium text-foreground text-sm">Reach New Customers</h4>
-                          <p className="text-xs text-muted-foreground">
-                            Connect with customers in your area who need services right now
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg">
-                        <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-medium text-foreground text-sm">Flexible Scheduling</h4>
-                          <p className="text-xs text-muted-foreground">
-                            List availability when it works for you - perfect for independent professionals
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-foreground text-sm">Perfect for:</h4>
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-3 w-3 text-accent" />
-                          <span className="text-muted-foreground">Eyelash Technicians</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-3 w-3 text-accent" />
-                          <span className="text-muted-foreground">Hair Stylists</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-3 w-3 text-accent" />
-                          <span className="text-muted-foreground">Nail Technicians</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-3 w-3 text-accent" />
-                          <span className="text-muted-foreground">Aestheticians</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-3 w-3 text-accent" />
-                          <span className="text-muted-foreground">Massage Therapists</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="h-3 w-3 text-accent" />
-                          <span className="text-muted-foreground">Cleaning Services</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-lg p-3 text-center">
-                      <div className="flex items-center justify-center space-x-2 mb-1">
-                        <Star className="h-4 w-4 text-accent" />
-                        <span className="text-sm font-medium text-foreground">Start Growing Today</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Join hundreds of beauty professionals already earning more with FillMyHole
-                      </p>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-password">Confirm Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="confirm-password"
+                        type="password"
+                        placeholder="Confirm your password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="pl-10"
+                        required
+                      />
                     </div>
                   </div>
-                )}
 
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signup-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Create a password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 pr-10"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                  <div className="text-xs text-muted-foreground space-y-1">
-                    <p className={password.length >= 8 ? 'text-green-500' : ''}>
-                      ✓ At least 8 characters
-                    </p>
-                    <p className={/[A-Z]/.test(password) ? 'text-green-500' : ''}>
-                      ✓ At least 1 uppercase letter
-                    </p>
-                    <p className={/\d/.test(password) ? 'text-green-500' : ''}>
-                      ✓ At least 1 number
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="confirm-password"
-                      type="password"
-                      placeholder="Confirm your password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  variant="hero"
-                  size="lg"
-                  className="w-full"
-                  disabled={loading}
-                >
-                  {loading ? "Creating account..." : "Create Account"}
-                </Button>
-              </form>
+                  <Button
+                    type="submit"
+                    variant="hero"
+                    size="lg"
+                    className="w-full"
+                    disabled={loading}
+                  >
+                    {loading ? "Creating account..." : "Create Account"}
+                  </Button>
+                </form>
+              )}
             </TabsContent>
           </Tabs>
         </Card>
