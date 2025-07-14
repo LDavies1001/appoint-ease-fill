@@ -300,19 +300,19 @@ const Auth = () => {
               {/* Key Benefits - Fixed heights for consistent sizing */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[100px]">
+                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg min-h-[110px]">
                     <DollarSign className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-semibold text-foreground text-sm">Fill Last-Minute Cancellations</h3>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground text-sm mb-2">Fill Last-Minute Cancellations</h3>
                       <p className="text-xs text-muted-foreground">
                         Connect with customers who need appointments right now
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[100px]">
+                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg min-h-[110px]">
                     <TrendingUp className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-semibold text-foreground text-sm">Increase Your Revenue</h3>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground text-sm mb-2">Increase Your Revenue</h3>
                       <p className="text-xs text-muted-foreground">
                         Maximize your booking capacity and reduce downtime
                       </p>
@@ -320,21 +320,21 @@ const Auth = () => {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[100px]">
+                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg min-h-[110px]">
                     <Users className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-semibold text-foreground text-sm">Reach New Customers</h3>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground text-sm mb-2">Reach New Customers</h3>
                       <p className="text-xs text-muted-foreground">
                         Get found by customers in your area looking for services
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[100px]">
+                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg min-h-[110px]">
                     <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-semibold text-foreground text-sm">Complete Control</h3>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground text-sm mb-2">Complete Control</h3>
                       <p className="text-xs text-muted-foreground">
-                        Set your own schedule, prices, and availability
+                        Set your own schedule, prices, and availability to work exactly how you want
                       </p>
                     </div>
                   </div>
