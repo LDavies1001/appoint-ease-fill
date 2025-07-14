@@ -28,18 +28,19 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Reset all state when URL changes
+    setShowBusinessSignup(false);
+    setShowRoleSelection(false);
+    setSelectedRole(null);
+    
     // Check URL params for different flows
     const tab = searchParams.get('tab');
     if (tab === 'provider') {
-      // Show business info page
-      setShowBusinessSignup(false);
-      setShowRoleSelection(false);
-      setSelectedRole(null);
+      // Show business info page - no state changes needed
     } else if (tab === 'signup') {
       setShowRoleSelection(true); // Show role selection page
-      setShowBusinessSignup(false);
-      setSelectedRole(null);
     }
+    // For no tab or any other tab, show login form (default behavior)
   }, [searchParams]);
 
   useEffect(() => {
