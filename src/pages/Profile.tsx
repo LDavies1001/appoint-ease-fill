@@ -1,9 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
-import BusinessProfileForm from '@/components/business/BusinessProfileForm';
-import PortfolioManager from '@/components/business/PortfolioManager';
 
 import Header from '@/components/ui/header';
 import { useToast } from '@/hooks/use-toast';
@@ -11,12 +8,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
 import { 
   User, 
   Building, 
-  Image, 
   Star, 
   Phone, 
   Mail, 
@@ -176,372 +171,297 @@ const Profile = () => {
     );
   }
 
-  // Business Profile View with Tabs
+  // Customer-Facing Business Showcase
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="container mx-auto px-4 py-8">
-        {/* Business Header */}
-        <div className="mb-8">
-          <div className="flex items-start space-x-4">
-            {providerDetails?.business_logo_url ? (
-              <img
-                src={providerDetails.business_logo_url}
-                alt="Business Logo"
-                className="w-20 h-20 rounded-lg object-cover border"
-              />
-            ) : (
-              <div className="w-20 h-20 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Building className="h-8 w-8 text-primary" />
-              </div>
-            )}
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold">
+      
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-background">
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex flex-col lg:flex-row items-start gap-8">
+            {/* Business Logo/Image */}
+            <div className="flex-shrink-0">
+              {providerDetails?.business_logo_url ? (
+                <img
+                  src={providerDetails.business_logo_url}
+                  alt="Business Logo"
+                  className="w-32 h-32 rounded-2xl object-cover shadow-lg border-2 border-white"
+                />
+              ) : (
+                <div className="w-32 h-32 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Building className="h-16 w-16 text-white" />
+                </div>
+              )}
+            </div>
+
+            {/* Business Info */}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent mb-4">
                 {providerDetails?.business_name || profile.name || 'Your Business'}
               </h1>
+              
               {providerDetails?.business_description && (
-                <p className="text-muted-foreground mt-1">{providerDetails.business_description}</p>
+                <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
+                  {providerDetails.business_description}
+                </p>
               )}
-              <div className="flex items-center space-x-4 mt-2">
+
+              <div className="flex flex-wrap items-center gap-6 mb-6">
                 {providerDetails?.rating && (
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                    <span className="font-medium">{providerDetails.rating}</span>
-                    <span className="text-muted-foreground ml-1">
+                  <div className="flex items-center bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-full">
+                    <Star className="h-5 w-5 text-yellow-500 mr-2 fill-current" />
+                    <span className="font-bold text-lg mr-1">{providerDetails.rating}</span>
+                    <span className="text-muted-foreground">
                       ({providerDetails.total_reviews} reviews)
                     </span>
                   </div>
                 )}
-                {providerDetails?.business_address && (
-                  <div className="flex items-center text-muted-foreground">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{providerDetails.business_address}</span>
-                  </div>
+                
+                {providerDetails?.years_experience && (
+                  <Badge variant="secondary" className="text-sm px-3 py-1">
+                    {providerDetails.years_experience} years experience
+                  </Badge>
                 )}
+              </div>
+
+              {providerDetails?.business_address && (
+                <div className="flex items-center text-muted-foreground mb-6">
+                  <MapPin className="h-5 w-5 mr-2 text-primary" />
+                  <span className="text-lg">{providerDetails.business_address}</span>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-4">
+                <Button size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                  <Calendar className="h-5 w-5 mr-2" />
+                  Book Now
+                </Button>
+                <Button variant="outline" size="lg">
+                  <Heart className="h-5 w-5 mr-2" />
+                  Save Business
+                </Button>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <Tabs defaultValue="business-info" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="business-info" className="flex items-center">
-              <Building className="h-4 w-4 mr-2" />
-              Business Info
-            </TabsTrigger>
-            <TabsTrigger value="portfolio" className="flex items-center">
-              <Image className="h-4 w-4 mr-2" />
-              Portfolio
-            </TabsTrigger>
-            <TabsTrigger value="services" className="flex items-center">
-              <Calendar className="h-4 w-4 mr-2" />
-              Services
-            </TabsTrigger>
-            <TabsTrigger value="reviews" className="flex items-center">
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Reviews
-            </TabsTrigger>
-            <TabsTrigger value="contact" className="flex items-center">
-              <Phone className="h-4 w-4 mr-2" />
-              Contact
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="business-info">
-            <div className="space-y-6">
-              {/* Business Overview */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <Building className="h-5 w-5 mr-2" />
-                    Business Information
-                  </CardTitle>
-                  <Button variant="outline" size="sm">
-                    <User className="h-4 w-4 mr-2" />
-                    Edit Details
-                  </Button>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Business Name</Label>
-                      <p className="text-lg font-semibold">{providerDetails?.business_name || 'Not set'}</p>
-                    </div>
-                    <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Business Category</Label>
-                      <p>{providerDetails?.business_category || 'Not set'}</p>
-                    </div>
-                    <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Years of Experience</Label>
-                      <p>{providerDetails?.years_experience ? `${providerDetails.years_experience} years` : 'Not set'}</p>
-                    </div>
-                    <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Website</Label>
-                      <p>{providerDetails?.business_website || 'Not set'}</p>
-                    </div>
-                  </div>
-                  
-                  {providerDetails?.business_description && (
-                    <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Description</Label>
-                      <p className="mt-1">{providerDetails.business_description}</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Contact Information */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <Phone className="h-5 w-5 mr-2" />
-                    Contact Information
-                  </CardTitle>
-                  <Button variant="outline" size="sm">
-                    <User className="h-4 w-4 mr-2" />
-                    Edit Contact
-                  </Button>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3">
-                        <Mail className="h-5 w-5 text-primary" />
-                        <div>
-                          <Label className="text-sm font-medium text-muted-foreground">Business Email</Label>
-                          <p>{providerDetails?.business_email || profile.email}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center space-x-3">
-                        <Phone className="h-5 w-5 text-primary" />
-                        <div>
-                          <Label className="text-sm font-medium text-muted-foreground">Business Phone</Label>
-                          <p>{providerDetails?.business_phone || 'Not set'}</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="flex items-center space-x-3">
-                        <MapPin className="h-5 w-5 text-primary" />
-                        <div>
-                          <Label className="text-sm font-medium text-muted-foreground">Business Address</Label>
-                          <p>{providerDetails?.business_address || 'Not set'}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Services & Pricing */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Services & Pricing
-                  </CardTitle>
-                  <Button variant="outline" size="sm">
-                    <User className="h-4 w-4 mr-2" />
-                    Edit Pricing
-                  </Button>
-                </CardHeader>
-                <CardContent>
-                  {(() => {
-                    try {
-                      const pricing = providerDetails?.pricing_info ? JSON.parse(providerDetails.pricing_info) : [];
-                      return pricing.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {pricing.map((item: any, index: number) => (
-                            <div key={index} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                              <span className="font-medium">{item.service}</span>
-                              <span className="text-primary font-semibold">{item.price}</span>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-muted-foreground">No pricing information set</p>
-                      );
-                    } catch {
-                      return <p className="text-muted-foreground">No pricing information set</p>;
-                    }
-                  })()}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="portfolio">
-            <PortfolioManager />
-          </TabsContent>
-
-          <TabsContent value="services">
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold">Services & Pricing</h2>
-                <p className="text-muted-foreground">Manage your service offerings</p>
+      {/* Content Sections */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid gap-12">
+          
+          {/* Portfolio Showcase */}
+          {portfolioItems.length > 0 && (
+            <section>
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-4">Our Work</h2>
+                <p className="text-muted-foreground text-lg">See examples of our recent projects</p>
               </div>
-              <Card>
-                <CardContent className="flex flex-col items-center justify-center py-12">
-                  <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Services coming soon</h3>
-                  <p className="text-muted-foreground text-center">
-                    Service management functionality will be available soon.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="reviews">
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-2xl font-bold">Customer Reviews</h2>
-                  <p className="text-muted-foreground">See what your customers are saying</p>
-                </div>
-                {providerDetails?.rating && (
-                  <div className="text-center">
-                    <div className="text-3xl font-bold">{providerDetails.rating}</div>
-                    <div className="flex items-center justify-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < Math.floor(providerDetails.rating)
-                              ? 'text-yellow-500 fill-current'
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {portfolioItems.map((item) => (
+                  <Card key={item.id} className="overflow-hidden group hover:shadow-lg transition-shadow">
+                    <div className="aspect-square overflow-hidden">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      {providerDetails.total_reviews} reviews
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2">{item.title}</h3>
+                      {item.description && (
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Services & Pricing */}
+          <section>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Services & Pricing</h2>
+              <p className="text-muted-foreground text-lg">Professional services tailored to your needs</p>
+            </div>
+            
+            {(() => {
+              try {
+                const pricing = providerDetails?.pricing_info ? JSON.parse(providerDetails.pricing_info) : [];
+                return pricing.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {pricing.map((item: any, index: number) => (
+                      <Card key={index} className="hover:shadow-lg transition-shadow">
+                        <CardContent className="p-6 text-center">
+                          <h3 className="text-xl font-semibold mb-4">{item.service}</h3>
+                          <div className="text-3xl font-bold text-primary mb-4">{item.price}</div>
+                          <Button className="w-full">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            Book Service
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <Card className="text-center p-12">
+                    <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">Services Available</h3>
+                    <p className="text-muted-foreground">Contact us to learn about our services and pricing</p>
+                  </Card>
+                );
+              } catch {
+                return (
+                  <Card className="text-center p-12">
+                    <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">Services Available</h3>
+                    <p className="text-muted-foreground">Contact us to learn about our services and pricing</p>
+                  </Card>
+                );
+              }
+            })()}
+          </section>
+
+          {/* Customer Reviews */}
+          <section>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">What Our Customers Say</h2>
+              <p className="text-muted-foreground text-lg">Real feedback from satisfied clients</p>
+            </div>
+
+            {reviews.length === 0 ? (
+              <Card className="text-center p-12">
+                <MessageSquare className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Building Our Reputation</h3>
+                <p className="text-muted-foreground">We're excited to serve you and earn your review!</p>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {reviews.map((review) => (
+                  <Card key={review.id} className="hover:shadow-lg transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex items-center mb-4">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < review.rating
+                                ? 'text-yellow-500 fill-current'
+                                : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      {review.comment && (
+                        <p className="text-muted-foreground mb-4 italic">"{review.comment}"</p>
+                      )}
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                          <User className="h-4 w-4" />
+                        </div>
+                        <span className="font-medium">{review.reviewer?.name || 'Customer'}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Contact & Hours */}
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Contact Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-2xl">
+                  <Phone className="h-6 w-6 mr-3 text-primary" />
+                  Contact Us
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <Mail className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium">Email</p>
+                    <p className="text-muted-foreground">{providerDetails?.business_email || profile.email}</p>
+                  </div>
+                </div>
+                
+                {providerDetails?.business_phone && (
+                  <div className="flex items-center space-x-4">
+                    <Phone className="h-5 w-5 text-primary" />
+                    <div>
+                      <p className="font-medium">Phone</p>
+                      <p className="text-muted-foreground">{providerDetails.business_phone}</p>
                     </div>
                   </div>
                 )}
-              </div>
-
-              {reviews.length === 0 ? (
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center py-12">
-                    <MessageSquare className="h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No reviews yet</h3>
-                    <p className="text-muted-foreground text-center">
-                      Once customers book and complete services, they'll be able to leave reviews.
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-4">
-                  {reviews.map((review) => (
-                    <Card key={review.id}>
-                      <CardContent className="pt-6">
-                        <div className="flex items-start space-x-4">
-                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                            <User className="h-5 w-5" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-2">
-                              <span className="font-medium">{review.reviewer?.name || 'Anonymous'}</span>
-                              <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`h-3 w-3 ${
-                                      i < review.rating
-                                        ? 'text-yellow-500 fill-current'
-                                        : 'text-gray-300'
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-sm text-muted-foreground">
-                                {new Date(review.created_at).toLocaleDateString()}
-                              </span>
-                            </div>
-                            {review.comment && (
-                              <p className="text-muted-foreground">{review.comment}</p>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="contact">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Contact Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {providerDetails?.business_phone && (
-                    <div className="flex items-center space-x-3">
-                      <Phone className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="font-medium">Phone</p>
-                        <p className="text-muted-foreground">{providerDetails.business_phone}</p>
-                      </div>
+                
+                {providerDetails?.business_address && (
+                  <div className="flex items-center space-x-4">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    <div>
+                      <p className="font-medium">Address</p>
+                      <p className="text-muted-foreground">{providerDetails.business_address}</p>
                     </div>
-                  )}
-                  
-                  {providerDetails?.business_email && (
-                    <div className="flex items-center space-x-3">
-                      <Mail className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="font-medium">Email</p>
-                        <p className="text-muted-foreground">{providerDetails.business_email}</p>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {providerDetails?.business_address && (
-                    <div className="flex items-center space-x-3">
-                      <MapPin className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="font-medium">Address</p>
-                        <p className="text-muted-foreground">{providerDetails.business_address}</p>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                  </div>
+                )}
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Operating Hours</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {formatOperatingHours(providerDetails?.operating_hours) ? (
-                    <div className="space-y-2">
-                      {formatOperatingHours(providerDetails.operating_hours).map((day: any, index: number) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <span className="font-medium">{day.day}</span>
-                          <span className={day.closed ? 'text-muted-foreground' : 'text-foreground'}>
-                            {day.closed ? 'Closed' : `${day.open}-${day.close}`}
-                          </span>
+                {providerDetails?.business_website && (
+                  <div className="flex items-center space-x-4">
+                    <Building className="h-5 w-5 text-primary" />
+                    <div>
+                      <p className="font-medium">Website</p>
+                      <a 
+                        href={providerDetails.business_website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        {providerDetails.business_website}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Operating Hours */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-2xl">
+                  <Clock className="h-6 w-6 mr-3 text-primary" />
+                  Opening Hours
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {(() => {
+                  const hours = formatOperatingHours(providerDetails?.operating_hours);
+                  return hours ? (
+                    <div className="space-y-4">
+                      {Object.entries(hours).map(([day, time]) => (
+                        <div key={day} className="flex justify-between items-center py-2 border-b last:border-b-0">
+                          <span className="font-medium capitalize text-lg">{day}</span>
+                          <span className="text-muted-foreground">{time as string}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center py-8">
-                      <div className="text-center">
-                        <Clock className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                        <p className="text-muted-foreground">No operating hours set</p>
-                      </div>
+                    <div className="text-center py-8">
+                      <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground">
+                        Contact us for our current operating hours
+                      </p>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+                  );
+                })()}
+              </CardContent>
+            </Card>
+          </section>
+        </div>
       </div>
     </div>
   );
