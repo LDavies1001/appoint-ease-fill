@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building, Navigation } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 import { Input } from '@/components/ui/input';
-import heroImage from '@/assets/hero-appointment-scene.jpg';
+import heroImage from '@/assets/hero-beauty-salon.jpg';
 
 const Index = () => {
   const [selectedPanel, setSelectedPanel] = useState<'customer' | 'business' | null>(null);
