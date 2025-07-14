@@ -92,9 +92,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
       
       if (profileError) throw profileError;
+      
+      if (!profileData) {
+        console.log('No profile found for user:', userId);
+        setProfile(null);
+        return;
+      }
 
       let finalProfile: Profile = {
         ...profileData,

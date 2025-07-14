@@ -489,6 +489,23 @@ const Auth = () => {
     );
   }
 
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await signIn(email, password);
+    
+    if (error) {
+      toast({
+        title: "Login failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+    
+    setLoading(false);
+  };
+
   // Customer Signup Form or Login (default)
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -511,7 +528,7 @@ const Auth = () => {
           </div>
 
           <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
-            <form className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
@@ -520,6 +537,8 @@ const Auth = () => {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
                     required
                   />
@@ -534,6 +553,8 @@ const Auth = () => {
                     id="password"
                     type="password"
                     placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="pl-10"
                     required
                   />
@@ -545,8 +566,9 @@ const Auth = () => {
                 variant="hero"
                 size="lg"
                 className="w-full"
+                disabled={loading}
               >
-                Sign In
+                {loading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
 
