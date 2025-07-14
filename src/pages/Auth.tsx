@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, UserCheck, Mail, Lock, Eye, EyeOff, Calendar } from 'lucide-react';
+import { User, UserCheck, Mail, Lock, Eye, EyeOff, Calendar, Building, TrendingUp, Clock, Star, CheckCircle, DollarSign, Users, MapPin } from 'lucide-react';
 import Header from '@/components/ui/header';
 
 const Auth = () => {
@@ -161,10 +161,13 @@ const Auth = () => {
             <span className="text-2xl font-bold text-foreground">FillMyHole</span>
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome back
+            {role === 'provider' ? 'Grow Your Business' : 'Welcome back'}
           </h1>
           <p className="text-muted-foreground">
-            Sign in to manage your appointments and bookings
+            {role === 'provider' 
+              ? 'Join the platform designed to help beauty professionals thrive' 
+              : 'Sign in to manage your appointments and bookings'
+            }
           </p>
         </div>
 
@@ -269,6 +272,103 @@ const Auth = () => {
                     </Button>
                   </div>
                 </div>
+
+                {/* Business Value Proposition - Only shown when provider is selected */}
+                {role === 'provider' && (
+                  <div className="space-y-4 py-4 border-t border-border/40">
+                    <div className="text-center space-y-2">
+                      <div className="flex items-center justify-center space-x-2">
+                        <Building className="h-5 w-5 text-accent" />
+                        <h3 className="text-lg font-semibold text-foreground">Perfect for Your Business</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        Designed specifically for beauticians, stylists, nail technicians, and cleaning professionals
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg">
+                        <DollarSign className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-medium text-foreground text-sm">Turn Cancellations into Cash</h4>
+                          <p className="text-xs text-muted-foreground">
+                            Fill last-minute cancellations with customers actively looking for immediate appointments
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg">
+                        <TrendingUp className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-medium text-foreground text-sm">Increase Revenue by 30%</h4>
+                          <p className="text-xs text-muted-foreground">
+                            Maximize your booking capacity and reduce empty time slots that cost you money
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg">
+                        <Users className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-medium text-foreground text-sm">Reach New Customers</h4>
+                          <p className="text-xs text-muted-foreground">
+                            Connect with customers in your area who need services right now
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg">
+                        <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-medium text-foreground text-sm">Flexible Scheduling</h4>
+                          <p className="text-xs text-muted-foreground">
+                            List availability when it works for you - perfect for independent professionals
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-foreground text-sm">Perfect for:</h4>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-3 w-3 text-accent" />
+                          <span className="text-muted-foreground">Eyelash Technicians</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-3 w-3 text-accent" />
+                          <span className="text-muted-foreground">Hair Stylists</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-3 w-3 text-accent" />
+                          <span className="text-muted-foreground">Nail Technicians</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-3 w-3 text-accent" />
+                          <span className="text-muted-foreground">Aestheticians</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-3 w-3 text-accent" />
+                          <span className="text-muted-foreground">Massage Therapists</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-3 w-3 text-accent" />
+                          <span className="text-muted-foreground">Cleaning Services</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-lg p-3 text-center">
+                      <div className="flex items-center justify-center space-x-2 mb-1">
+                        <Star className="h-4 w-4 text-accent" />
+                        <span className="text-sm font-medium text-foreground">Start Growing Today</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Join hundreds of beauty professionals already earning more with FillMyHole
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
