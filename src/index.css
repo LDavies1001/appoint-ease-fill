@@ -8,43 +8,56 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Soft Grey, Blush Pink, and Cream color scheme */
-    --background: 40 65% 97%; /* Cream #FDF8F2 */
-    --foreground: 0 0% 20%; /* Dark Grey for text */
+    /* Enhanced color scheme for better clarity and first impression */
+    --background: 36 44% 98%; /* Warm white #FDF9F6 */
+    --foreground: 222 15% 15%; /* Rich dark grey for excellent readability */
 
-    --card: 0 0% 91%; /* Soft Grey #E8E8E8 */
-    --card-foreground: 0 0% 20%;
+    --card: 0 0% 100%; /* Pure white for cards */
+    --card-foreground: 222 15% 15%;
 
-    --popover: 0 0% 91%; /* Soft Grey #E8E8E8 */
-    --popover-foreground: 0 0% 20%;
+    --popover: 0 0% 100%; /* Pure white for popovers */
+    --popover-foreground: 222 15% 15%;
 
-    /* Blush Pink as primary */
-    --primary: 0 40% 91%; /* Blush Pink #FAD7D7 */
-    --primary-foreground: 0 0% 20%;
-    --primary-glow: 0 40% 95%;
+    /* Enhanced Blush Pink as primary */
+    --primary: 0 45% 85%; /* Richer Blush Pink #F2C2C2 */
+    --primary-foreground: 222 15% 15%;
+    --primary-glow: 0 45% 92%;
 
-    /* Soft Grey as secondary */
-    --secondary: 0 0% 91%; /* Soft Grey #E8E8E8 */
-    --secondary-foreground: 0 0% 20%;
+    /* Clean light grey as secondary */
+    --secondary: 210 15% 95%; /* Clean light grey #F5F6F7 */
+    --secondary-foreground: 222 15% 15%;
 
-    --muted: 0 0% 95%;
-    --muted-foreground: 0 0% 33%;
+    --muted: 210 15% 95%;
+    --muted-foreground: 215 16% 47%;
 
-    /* Sage Green as accent */
-    --accent: 120 25% 85%; /* Sage Green #D4E8D4 */
-    --accent-foreground: 0 0% 20%;
-    --accent-glow: 120 25% 90%;
+    /* Enhanced Sage Green as accent */
+    --accent: 120 30% 75%; /* Richer Sage Green #C5D9C5 */
+    --accent-foreground: 222 15% 15%;
+    --accent-glow: 120 30% 85%;
 
-    /* Cream as tertiary */
-    --tertiary: 40 65% 97%; /* Cream #FDF8F2 */
-    --tertiary-foreground: 0 0% 20%;
+    /* Soft cream as tertiary */
+    --tertiary: 36 44% 96%; /* Soft cream #FAF5F1 */
+    --tertiary-foreground: 222 15% 15%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 15% 85%;
-    --input: 40 20% 92%;
-    --ring: 120 20% 70%;
+    --border: 210 15% 88%; /* Clearer borders */
+    --input: 0 0% 100%; /* White input backgrounds */
+    --ring: 0 45% 85%; /* Primary color for focus rings */
+
+    /* Gradients for beautiful effects */
+    --gradient-primary: linear-gradient(135deg, hsl(0 45% 85%), hsl(0 45% 92%));
+    --gradient-accent: linear-gradient(135deg, hsl(120 30% 75%), hsl(120 30% 85%));
+    --gradient-bg: linear-gradient(180deg, hsl(36 44% 98%), hsl(36 44% 96%));
+
+    /* Shadows for depth */
+    --shadow-soft: 0 4px 12px hsl(0 0% 0% / 0.08);
+    --shadow-medium: 0 8px 24px hsl(0 0% 0% / 0.12);
+    --shadow-strong: 0 16px 40px hsl(0 0% 0% / 0.16);
+
+    /* Animation timing */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Updated radius for modern feel */
     --radius: 0.75rem; /* 12px for buttons/inputs */
@@ -61,19 +74,20 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode - Background (#121212) */
-    --background: 0 0% 7%; /* #121212 */
-    --foreground: 210 40% 98%;
+    /* Enhanced dark mode colors */
+    --background: 0 0% 7%; /* Deep dark background */
+    --foreground: 210 40% 98%; /* Clean white text */
 
-    --card: 0 0% 10%;
+    --card: 0 0% 10%; /* Dark cards */
     --card-foreground: 210 40% 98%;
 
     --popover: 0 0% 10%;
     --popover-foreground: 210 40% 98%;
 
-    /* Sage Green adapted for dark mode */
-    --primary: 120 25% 50%; /* Darker sage green */
+    /* Blush Pink adapted for dark mode */
+    --primary: 0 45% 65%; /* Richer pink for dark mode */
     --primary-foreground: 210 40% 98%;
+    --primary-glow: 0 45% 75%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -81,12 +95,12 @@ All colors MUST be HSL.
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    /* Muted Lavender for dark mode - #5A4E6E */
-    --accent: 270 20% 37%;
+    /* Sage Green for dark mode */
+    --accent: 120 30% 55%; /* Vibrant sage for dark mode */
     --accent-foreground: 210 40% 98%;
+    --accent-glow: 120 30% 65%;
 
-    /* Sage Green for dark mode tertiary - #7D9D7C */
-    --tertiary: 120 18% 55%;
+    --tertiary: 36 25% 25%; /* Dark cream */
     --tertiary-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -94,7 +108,8 @@ All colors MUST be HSL.
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 120 25% 50%;
+    --ring: 0 45% 65%;
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -112,6 +127,38 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: var(--gradient-bg);
+  }
+}
+
+@layer components {
+  /* Beautiful button enhancements */
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all duration-300;
+    background: var(--gradient-primary);
+  }
+  
+  .btn-accent {
+    @apply bg-accent hover:bg-accent/90 text-accent-foreground shadow-md hover:shadow-lg transition-all duration-300;
+    background: var(--gradient-accent);
+  }
+
+  /* Enhanced card styles */
+  .card-enhanced {
+    @apply bg-card text-card-foreground rounded-lg border backdrop-blur-sm;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+  }
+  
+  .card-enhanced:hover {
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-2px);
+  }
+
+  /* Focus states */
+  .focus-enhanced {
+    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-200;
   }
 }
