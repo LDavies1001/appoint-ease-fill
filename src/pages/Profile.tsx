@@ -93,6 +93,15 @@ const Profile = () => {
   };
 
   const isOwner = user?.id === profile?.user_id;
+  
+  // Debug logging
+  console.log('Edit Debug:', {
+    userId: user?.id,
+    profileUserId: profile?.user_id,
+    isOwner,
+    isEditMode,
+    userRole: profile?.role
+  });
 
   const handleCustomerProfileSubmit = async (data: any) => {
     try {
