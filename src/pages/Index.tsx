@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building, Navigation } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 import { Input } from '@/components/ui/input';
-import heroImage from '@/assets/hero-beauty-salon.jpg';
+import heroImage from '@/assets/hero-lash-extension.jpg';
 
 const Index = () => {
   const [selectedPanel, setSelectedPanel] = useState<'customer' | 'business' | null>(null);
@@ -192,9 +192,9 @@ const Index = () => {
           </div>
 
           {/* Right Side - Hero Image */}
-          <div className="lg:pl-8">
-            <div className="aspect-square bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
-              <img src={heroImage} alt="Professional appointment booking experience" className="w-full h-full object-cover" />
+          <div className="lg:pl-8 flex items-start">
+            <div className="w-full bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative" style={{ height: 'fit-content' }}>
+              <img src={heroImage} alt="Professional eyelash extension service" className="w-full h-auto object-cover" />
             </div>
           </div>
         </div>
