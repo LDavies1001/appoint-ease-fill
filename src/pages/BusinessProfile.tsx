@@ -33,7 +33,8 @@ import {
   ExternalLink,
   Upload,
   Download,
-  Trash2
+  Trash2,
+  Plus
 } from 'lucide-react';
 import Header from '@/components/ui/header';
 
@@ -64,6 +65,7 @@ const BusinessProfile = () => {
   const [updating, setUpdating] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [availableServices, setAvailableServices] = useState<any[]>([]);
+  const [pricingItems, setPricingItems] = useState<{service: string, price: string}[]>([]);
 
   const { user, profile } = useAuth();
   const { toast } = useToast();
@@ -142,16 +144,39 @@ const BusinessProfile = () => {
     }
   };
 
+  const handleEditPricing = () => {
+    setEditingField('pricing_info');
+    // Initialize with existing pricing or empty array
+    const existingPricing = formatPricingInfo(details?.pricing_info) || [];
+    setPricingItems(existingPricing);
+  };
+
+  const addPricingItem = () => {
+    setPricingItems([...pricingItems, { service: '', price: '' }]);
+  };
+
+  const updatePricingItem = (index: number, field: 'service' | 'price', value: string) => {
+    const updated = [...pricingItems];
+    updated[index][field] = value;
+    setPricingItems(updated);
+  };
+
+  const removePricingItem = (index: number) => {
+    setPricingItems(pricingItems.filter((_, i) => i !== index));
+  };
+
   const handleSave = async () => {
     if (!editingField || !details) return;
 
     setUpdating(true);
     try {
-      const updates: any = { [editingField]: editValue };
+      let updates: any = {};
       
-      // Handle special cases for parsed JSON fields
-      if (editingField === 'pricing_info' || editingField === 'operating_hours') {
-        // For now, just save as string - you might want to add JSON validation
+      if (editingField === 'pricing_info') {
+        // Convert pricing items to JSON string
+        const validItems = pricingItems.filter(item => item.service && item.price);
+        updates.pricing_info = JSON.stringify(validItems);
+      } else {
         updates[editingField] = editValue;
       }
 
@@ -165,6 +190,7 @@ const BusinessProfile = () => {
       setDetails(prev => prev ? { ...prev, ...updates } : null);
       setEditingField(null);
       setEditValue('');
+      setPricingItems([]);
 
       toast({
         title: "Profile updated",
@@ -185,6 +211,7 @@ const BusinessProfile = () => {
   const handleCancel = () => {
     setEditingField(null);
     setEditValue('');
+    setPricingItems([]);
   };
 
   const formatOperatingHours = (hoursString: string) => {
@@ -699,7 +726,7 @@ const BusinessProfile = () => {
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={() => handleEdit('pricing_info', details.pricing_info)}
+                      onClick={() => handleEditPricing()}
                       className="h-8 w-8 p-0 hover:bg-primary/10"
                     >
                       <Edit className="h-4 w-4" />
@@ -707,24 +734,57 @@ const BusinessProfile = () => {
                   )}
                 </div>
                 
-                {editingField === 'pricing_info' ? (
-                  <div className="space-y-3">
-                    <Textarea
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      className="min-h-[100px] font-mono text-sm"
-                      placeholder='[{"service": "Service Name", "price": "50"}]'
-                    />
-                    <div className="flex space-x-2">
-                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                        <Save className="h-4 w-4 mr-2" />
-                        Save
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={handleCancel}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+                 {editingField === 'pricing_info' ? (
+                   <div className="space-y-4">
+                     <div className="space-y-3 max-h-64 overflow-y-auto">
+                       {pricingItems.map((item, index) => (
+                         <div key={index} className="flex gap-2 items-start p-3 bg-background/80 rounded-lg border">
+                           <div className="flex-1 space-y-2">
+                             <Input
+                               placeholder="Service name"
+                               value={item.service}
+                               onChange={(e) => updatePricingItem(index, 'service', e.target.value)}
+                               className="text-sm"
+                             />
+                             <Input
+                               placeholder="Price (without £)"
+                               value={item.price}
+                               onChange={(e) => updatePricingItem(index, 'price', e.target.value)}
+                               className="text-sm"
+                             />
+                           </div>
+                           <Button
+                             size="sm"
+                             variant="ghost"
+                             onClick={() => removePricingItem(index)}
+                             className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                           >
+                             <X className="h-4 w-4" />
+                           </Button>
+                         </div>
+                       ))}
+                     </div>
+                     
+                     <Button
+                       size="sm"
+                       variant="outline"
+                       onClick={addPricingItem}
+                       className="w-full"
+                     >
+                       <Plus className="h-4 w-4 mr-2" />
+                       Add Service Price
+                     </Button>
+                     
+                     <div className="flex space-x-2">
+                       <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                         <Save className="h-4 w-4 mr-2" />
+                         Save Pricing
+                       </Button>
+                       <Button size="sm" variant="outline" onClick={handleCancel}>
+                         <X className="h-4 w-4" />
+                       </Button>
+                     </div>
+                   </div>
                 ) : (
                   <div className="space-y-3">
                     {formatPricingInfo(details.pricing_info) ? (
