@@ -26,10 +26,10 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check URL params for business signup
+    // Check URL params for business signup - but show info page, not signup form
     const tab = searchParams.get('tab');
     if (tab === 'business-signup') {
-      setShowBusinessSignup(true);
+      setShowBusinessSignup(false); // Show info page, not signup form
     }
   }, [searchParams]);
 
@@ -360,7 +360,7 @@ const Auth = () => {
                 <h3 className="text-lg font-semibold text-foreground">Ready to grow your business?</h3>
                 <Button
                   onClick={() => {
-                    window.location.href = '/auth?tab=business-signup';
+                    setShowBusinessSignup(true); // Now show the signup form
                   }}
                   variant="hero"
                   size="lg"
