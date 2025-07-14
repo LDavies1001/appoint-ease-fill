@@ -252,7 +252,23 @@ const Profile = () => {
                 <CardTitle>Business Information</CardTitle>
               </CardHeader>
               <CardContent>
-                <BusinessProfileForm mode="edit" />
+                <BusinessProfileForm 
+                  mode="edit" 
+                  existingData={providerDetails ? {
+                    business_name: providerDetails.business_name || '',
+                    business_category: providerDetails.business_category || '',
+                    business_address: providerDetails.business_address || '',
+                    business_phone: providerDetails.business_phone || '',
+                    business_email: providerDetails.business_email || profile.email || '',
+                    business_website: providerDetails.business_website || '',
+                    business_description: providerDetails.business_description || '',
+                    business_logo_url: providerDetails.business_logo_url || '',
+                    operating_hours: providerDetails.operating_hours || '',
+                    social_media_links: providerDetails.social_media_links || {},
+                    profile_visibility: providerDetails.profile_visibility || 'public',
+                    profile_published: providerDetails.profile_published || false,
+                  } : undefined}
+                />
               </CardContent>
             </Card>
           </TabsContent>
