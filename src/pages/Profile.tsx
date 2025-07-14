@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
 import { 
   User, 
@@ -247,30 +248,128 @@ const Profile = () => {
           </TabsList>
 
           <TabsContent value="business-info">
-            <Card>
-              <CardHeader>
-                <CardTitle>Business Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <BusinessProfileForm 
-                  mode="edit" 
-                  existingData={providerDetails ? {
-                    business_name: providerDetails.business_name || '',
-                    business_category: providerDetails.business_category || '',
-                    business_address: providerDetails.business_address || '',
-                    business_phone: providerDetails.business_phone || '',
-                    business_email: providerDetails.business_email || profile.email || '',
-                    business_website: providerDetails.business_website || '',
-                    business_description: providerDetails.business_description || '',
-                    business_logo_url: providerDetails.business_logo_url || '',
-                    operating_hours: providerDetails.operating_hours || '',
-                    social_media_links: providerDetails.social_media_links || {},
-                    profile_visibility: providerDetails.profile_visibility || 'public',
-                    profile_published: providerDetails.profile_published || false,
-                  } : undefined}
-                />
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              {/* Business Overview */}
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Building className="h-5 w-5 mr-2" />
+                    Business Information
+                  </CardTitle>
+                  <Button variant="outline" size="sm">
+                    <User className="h-4 w-4 mr-2" />
+                    Edit Details
+                  </Button>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Business Name</Label>
+                      <p className="text-lg font-semibold">{providerDetails?.business_name || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Business Category</Label>
+                      <p>{providerDetails?.business_category || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Years of Experience</Label>
+                      <p>{providerDetails?.years_experience ? `${providerDetails.years_experience} years` : 'Not set'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Website</Label>
+                      <p>{providerDetails?.business_website || 'Not set'}</p>
+                    </div>
+                  </div>
+                  
+                  {providerDetails?.business_description && (
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Description</Label>
+                      <p className="mt-1">{providerDetails.business_description}</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Contact Information */}
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Phone className="h-5 w-5 mr-2" />
+                    Contact Information
+                  </CardTitle>
+                  <Button variant="outline" size="sm">
+                    <User className="h-4 w-4 mr-2" />
+                    Edit Contact
+                  </Button>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3">
+                        <Mail className="h-5 w-5 text-primary" />
+                        <div>
+                          <Label className="text-sm font-medium text-muted-foreground">Business Email</Label>
+                          <p>{providerDetails?.business_email || profile.email}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3">
+                        <Phone className="h-5 w-5 text-primary" />
+                        <div>
+                          <Label className="text-sm font-medium text-muted-foreground">Business Phone</Label>
+                          <p>{providerDetails?.business_phone || 'Not set'}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex items-center space-x-3">
+                        <MapPin className="h-5 w-5 text-primary" />
+                        <div>
+                          <Label className="text-sm font-medium text-muted-foreground">Business Address</Label>
+                          <p>{providerDetails?.business_address || 'Not set'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Services & Pricing */}
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Calendar className="h-5 w-5 mr-2" />
+                    Services & Pricing
+                  </CardTitle>
+                  <Button variant="outline" size="sm">
+                    <User className="h-4 w-4 mr-2" />
+                    Edit Pricing
+                  </Button>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    try {
+                      const pricing = providerDetails?.pricing_info ? JSON.parse(providerDetails.pricing_info) : [];
+                      return pricing.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {pricing.map((item: any, index: number) => (
+                            <div key={index} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                              <span className="font-medium">{item.service}</span>
+                              <span className="text-primary font-semibold">{item.price}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No pricing information set</p>
+                      );
+                    } catch {
+                      return <p className="text-muted-foreground">No pricing information set</p>;
+                    }
+                  })()}
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="portfolio">
