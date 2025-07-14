@@ -353,50 +353,60 @@ const BusinessProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
       <Header />
       
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-primary/10 via-primary/5 to-accent/10 border-b">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="relative max-w-7xl mx-auto px-6 py-12">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
-            <div className="flex-shrink-0">
-              <Avatar className="h-24 w-24 border-4 border-white shadow-lg">
-                <AvatarImage src={profile?.avatar_url || undefined} />
-                <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-primary to-accent text-white">
-                  {details.business_name?.charAt(0) || 'B'}
-                </AvatarFallback>
-              </Avatar>
+      <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,119,198,0.1),_transparent_50%)]"></div>
+        <div className="relative max-w-6xl mx-auto px-8 py-16">
+          <div className="text-center space-y-6">
+            <div className="flex justify-center mb-8">
+              <div className="relative">
+                <Avatar className="h-32 w-32 border-4 border-primary/20 shadow-2xl ring-4 ring-background/50">
+                  <AvatarImage src={profile?.avatar_url || undefined} />
+                  <AvatarFallback className="text-4xl font-bold bg-gradient-to-br from-primary via-primary/90 to-accent text-white">
+                    {details.business_name?.charAt(0) || 'B'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-background flex items-center justify-center">
+                  <div className="w-3 h-3 bg-white rounded-full"></div>
+                </div>
+              </div>
             </div>
-            <div className="flex-1 space-y-4">
-              <div>
-                <h1 className="text-4xl font-bold text-foreground mb-2">
-                  {details.business_name || 'Business Profile'}
-                </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
-                  {details.business_description || 'Manage your business information and showcase your professional services'}
-                </p>
+            
+            <div className="space-y-4">
+              <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground via-foreground to-primary/80 bg-clip-text text-transparent">
+                {details.business_name || 'Business Hub'}
+              </h1>
+              <p className="text-xl text-muted-foreground/80 leading-relaxed max-w-2xl mx-auto font-medium">
+                {details.business_description || 'Professional business management and services hub'}
+              </p>
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="flex flex-wrap justify-center gap-6 pt-8">
+              <div className="flex items-center space-x-3 bg-card/80 backdrop-blur-md rounded-2xl px-6 py-4 shadow-lg border border-border/50">
+                <Star className="h-6 w-6 text-yellow-500" />
+                <div className="text-left">
+                  <div className="font-bold text-xl">{details.rating || 0}</div>
+                  <div className="text-sm text-muted-foreground">Rating</div>
+                </div>
               </div>
               
-              {/* Quick Stats */}
-              <div className="flex flex-wrap items-center gap-6 pt-4">
-                <div className="flex items-center space-x-2 bg-white/50 rounded-lg px-4 py-2 backdrop-blur-sm">
-                  <Star className="h-5 w-5 text-yellow-500" />
-                  <span className="font-semibold text-lg">{details.rating || 0}</span>
-                  <span className="text-muted-foreground">({details.total_reviews || 0} reviews)</span>
+              <div className="flex items-center space-x-3 bg-card/80 backdrop-blur-md rounded-2xl px-6 py-4 shadow-lg border border-border/50">
+                <Award className="h-6 w-6 text-primary" />
+                <div className="text-left">
+                  <div className="font-bold text-xl">{details.years_experience || 0}</div>
+                  <div className="text-sm text-muted-foreground">Years Exp.</div>
                 </div>
-                
-                <div className="flex items-center space-x-2 bg-white/50 rounded-lg px-4 py-2 backdrop-blur-sm">
-                  <Award className="h-5 w-5 text-primary" />
-                  <span className="font-semibold">{details.years_experience || 0} years</span>
-                  <span className="text-muted-foreground">experience</span>
-                </div>
-                
-                <div className="flex items-center space-x-2 bg-white/50 rounded-lg px-4 py-2 backdrop-blur-sm">
-                  <Users className="h-5 w-5 text-accent" />
-                  <span className="font-semibold">{details.services_offered?.length || 0}</span>
-                  <span className="text-muted-foreground">services</span>
+              </div>
+              
+              <div className="flex items-center space-x-3 bg-card/80 backdrop-blur-md rounded-2xl px-6 py-4 shadow-lg border border-border/50">
+                <Users className="h-6 w-6 text-accent" />
+                <div className="text-left">
+                  <div className="font-bold text-xl">{details.services_offered?.length || 0}</div>
+                  <div className="text-sm text-muted-foreground">Services</div>
                 </div>
               </div>
             </div>
@@ -404,517 +414,530 @@ const BusinessProfile = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        {/* Business Information Section */}
-        <section className="space-y-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-              <Building className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">Business Information</h2>
-              <p className="text-muted-foreground">Core details about your business</p>
-            </div>
-          </div>
+      {/* Hub Dashboard Grid */}
+      <div className="max-w-6xl mx-auto px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Business Name Card */}
-            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Business Name</Label>
-                  {editingField !== 'business_name' && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEdit('business_name', details.business_name)}
-                      className="h-8 w-8 p-0 hover:bg-primary/10"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  )}
+          {/* Main Content Area - Left Columns */}
+          <div className="lg:col-span-2 space-y-8">
+            
+            {/* Business Information Hub Card */}
+            <div className="bg-gradient-to-r from-card via-card/95 to-card/90 rounded-3xl p-8 shadow-xl border border-border/50 backdrop-blur-sm">
+              <div className="flex items-center space-x-4 mb-8">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary via-primary/90 to-accent rounded-2xl flex items-center justify-center shadow-lg">
+                  <Building className="h-7 w-7 text-white" />
                 </div>
-                
-                {editingField === 'business_name' ? (
-                  <div className="space-y-3">
-                    <Input
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      className="text-lg font-medium"
-                      placeholder="Enter business name"
-                    />
-                    <div className="flex space-x-2">
-                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                        <Save className="h-4 w-4 mr-2" />
-                        Save
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={handleCancel}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <p className="text-xl font-semibold text-foreground">{details.business_name || 'Not set'}</p>
-                    <div className="flex items-center text-muted-foreground text-sm">
-                      <Building className="h-4 w-4 mr-2" />
-                      Primary business identifier
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Card>
-
-            {/* Business Website Card */}
-            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Website</Label>
-                  {editingField !== 'business_website' && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEdit('business_website', details.business_website)}
-                      className="h-8 w-8 p-0 hover:bg-primary/10"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  )}
+                <div>
+                  <h2 className="text-3xl font-bold text-foreground">Business Hub</h2>
+                  <p className="text-lg text-muted-foreground/80">Manage your core business information</p>
                 </div>
-                
-                {editingField === 'business_website' ? (
-                  <div className="space-y-3">
-                    <Input
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      className="text-lg"
-                      placeholder="https://your-website.com"
-                    />
-                    <div className="flex space-x-2">
-                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                        <Save className="h-4 w-4 mr-2" />
-                        Save
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={handleCancel}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {details.business_website ? (
-                      <a 
-                        href={details.business_website} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="text-lg font-medium text-primary hover:text-primary/80 transition-colors flex items-center group"
-                      >
-                        {details.business_website}
-                        <ExternalLink className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </a>
-                    ) : (
-                      <p className="text-lg text-muted-foreground">Not set</p>
-                    )}
-                    <div className="flex items-center text-muted-foreground text-sm">
-                      <Globe className="h-4 w-4 mr-2" />
-                      Online presence
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
-
-          {/* Business Description - Full Width */}
-          <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Business Description</Label>
-                {editingField !== 'business_description' && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleEdit('business_description', details.business_description)}
-                    className="h-8 w-8 p-0 hover:bg-primary/10"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                )}
               </div>
               
-              {editingField === 'business_description' ? (
-                <div className="space-y-3">
-                  <Textarea
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="min-h-[120px] text-base leading-relaxed"
-                    placeholder="Describe your business, services, and what makes you unique..."
-                  />
-                  <div className="flex space-x-2">
-                    <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                      <Save className="h-4 w-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={handleCancel}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <p className="text-base leading-relaxed text-foreground">
-                    {details.business_description || 'No description provided yet. Add a compelling description of your business.'}
-                  </p>
-                  <div className="flex items-center text-muted-foreground text-sm">
-                    <FileText className="h-4 w-4 mr-2" />
-                    Tell customers about your business
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-
-          {/* Experience */}
-          <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Years of Experience</Label>
-                {editingField !== 'years_experience' && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleEdit('years_experience', details.years_experience?.toString() || '')}
-                    className="h-8 w-8 p-0 hover:bg-primary/10"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-              
-              {editingField === 'years_experience' ? (
-                <div className="space-y-3">
-                  <Input
-                    type="number"
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="text-lg"
-                    placeholder="0"
-                  />
-                  <div className="flex space-x-2">
-                    <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                      <Save className="h-4 w-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={handleCancel}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-4">
-                    <span className="text-3xl font-bold text-primary">{details.years_experience || 0}</span>
-                    <span className="text-lg text-muted-foreground">years of professional experience</span>
-                  </div>
-                  <div className="flex items-center text-muted-foreground text-sm">
-                    <TrendingUp className="h-4 w-4 mr-2" />
-                    Professional experience level
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-        </section>
-
-        <Separator className="my-8" />
-
-        {/* Services & Pricing Section */}
-        <section className="space-y-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-accent to-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">£</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">Services & Pricing</h2>
-              <p className="text-muted-foreground">What you offer and your pricing structure</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Services Offered */}
-            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Services Offered</Label>
-                  {editingField !== 'services_offered' && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEditServices()}
-                      className="h-8 w-8 p-0 hover:bg-primary/10"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-                
-                {editingField === 'services_offered' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Business Name Card */}
+                <Card className="p-6 border-0 shadow-md bg-background/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
-                      {availableServices.map((service) => (
-                        <div key={service.id} className="flex items-center space-x-3 p-2 hover:bg-background/80 rounded-lg">
-                          <input
-                            type="checkbox"
-                            id={service.id}
-                            checked={editValue.includes(service.id)}
-                            onChange={(e) => handleServiceToggle(service.id, e.target.checked)}
-                            className="rounded border-gray-300 text-primary focus:ring-primary"
-                          />
-                          <label htmlFor={service.id} className="flex-1 text-sm font-medium cursor-pointer">
-                            {service.name}
-                          </label>
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Business Name</Label>
+                      {editingField !== 'business_name' && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleEdit('business_name', details.business_name)}
+                          className="h-8 w-8 p-0 hover:bg-primary/10"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {editingField === 'business_name' ? (
+                      <div className="space-y-3">
+                        <Input
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          className="text-lg font-medium"
+                          placeholder="Enter business name"
+                        />
+                        <div className="flex space-x-2">
+                          <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                            <Save className="h-4 w-4 mr-2" />
+                            Save
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={handleCancel}>
+                            <X className="h-4 w-4" />
+                          </Button>
                         </div>
-                      ))}
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                        <Save className="h-4 w-4 mr-2" />
-                        Save Services
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={handleCancel}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {details.services_offered?.length ? (
-                      <div className="space-y-2">
-                        {details.services_offered.map((serviceId, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-background/80 rounded-lg border">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-2 h-2 bg-primary rounded-full"></div>
-                              <span className="font-medium text-foreground">{getServiceNameById(serviceId)}</span>
-                            </div>
-                            <Badge variant="secondary" className="bg-primary/10 text-primary">
-                              Active
-                            </Badge>
-                          </div>
-                        ))}
                       </div>
                     ) : (
-                      <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
-                        No services configured yet. Set up your services to show what you offer.
-                      </p>
+                      <div className="space-y-2">
+                        <p className="text-xl font-semibold text-foreground">{details.business_name || 'Not set'}</p>
+                        <div className="flex items-center text-muted-foreground text-sm">
+                          <Building className="h-4 w-4 mr-2" />
+                          Primary business identifier
+                        </div>
+                      </div>
                     )}
-                    <div className="flex items-center text-muted-foreground text-sm mt-3">
-                      <Users className="h-4 w-4 mr-2" />
-                      {details.services_offered?.length || 0} service{details.services_offered?.length !== 1 ? 's' : ''} available
-                    </div>
                   </div>
-                )}
-              </div>
-            </Card>
+                </Card>
 
-            {/* Pricing Information */}
-            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Pricing Information</Label>
-                  {editingField !== 'pricing_info' && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEditPricing()}
-                      className="h-8 w-8 p-0 hover:bg-primary/10"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  )}
+                {/* Business Website Card */}
+                <Card className="p-6 border-0 shadow-md bg-background/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Website</Label>
+                      {editingField !== 'business_website' && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleEdit('business_website', details.business_website)}
+                          className="h-8 w-8 p-0 hover:bg-primary/10"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {editingField === 'business_website' ? (
+                      <div className="space-y-3">
+                        <Input
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          className="text-lg"
+                          placeholder="https://your-website.com"
+                        />
+                        <div className="flex space-x-2">
+                          <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                            <Save className="h-4 w-4 mr-2" />
+                            Save
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={handleCancel}>
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {details.business_website ? (
+                          <a 
+                            href={details.business_website} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-lg font-medium text-primary hover:text-primary/80 transition-colors flex items-center group"
+                          >
+                            {details.business_website}
+                            <ExternalLink className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                          </a>
+                        ) : (
+                          <p className="text-lg text-muted-foreground">Not set</p>
+                        )}
+                        <div className="flex items-center text-muted-foreground text-sm">
+                          <Globe className="h-4 w-4 mr-2" />
+                          Online presence
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+
+                {/* Business Description - Full Width */}
+                <Card className="md:col-span-2 p-6 border-0 shadow-md bg-background/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Business Description</Label>
+                      {editingField !== 'business_description' && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleEdit('business_description', details.business_description)}
+                          className="h-8 w-8 p-0 hover:bg-primary/10"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {editingField === 'business_description' ? (
+                      <div className="space-y-3">
+                        <Textarea
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          className="min-h-[120px] text-base leading-relaxed"
+                          placeholder="Describe your business, services, and what makes you unique..."
+                        />
+                        <div className="flex space-x-2">
+                          <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                            <Save className="h-4 w-4 mr-2" />
+                            Save
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={handleCancel}>
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <p className="text-base leading-relaxed text-foreground">
+                          {details.business_description || 'No description provided yet. Add a compelling description of your business.'}
+                        </p>
+                        <div className="flex items-center text-muted-foreground text-sm">
+                          <FileText className="h-4 w-4 mr-2" />
+                          Tell customers about your business
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </div>
+            </div>
+
+            {/* Services & Pricing Hub */}
+            <div className="bg-gradient-to-r from-card via-card/95 to-card/90 rounded-3xl p-8 shadow-xl border border-border/50 backdrop-blur-sm">
+              <div className="flex items-center space-x-4 mb-8">
+                <div className="w-14 h-14 bg-gradient-to-br from-accent via-accent/90 to-primary rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-2xl">£</span>
                 </div>
-                
-                 {editingField === 'pricing_info' ? (
-                   <div className="space-y-4">
-                     <div className="space-y-3 max-h-64 overflow-y-auto">
-                       {pricingItems.map((item, index) => (
-                         <div key={index} className="flex gap-2 items-start p-3 bg-background/80 rounded-lg border">
-                           <div className="flex-1 space-y-2">
-                             <Input
-                               placeholder="Service name"
-                               value={item.service}
-                               onChange={(e) => updatePricingItem(index, 'service', e.target.value)}
-                               className="text-sm"
-                             />
-                             <Input
-                               placeholder="Price (without £)"
-                               value={item.price}
-                               onChange={(e) => updatePricingItem(index, 'price', e.target.value)}
-                               className="text-sm"
-                             />
-                           </div>
-                           <Button
-                             size="sm"
-                             variant="ghost"
-                             onClick={() => removePricingItem(index)}
-                             className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                           >
+                <div>
+                  <h2 className="text-3xl font-bold text-foreground">Services & Pricing</h2>
+                  <p className="text-lg text-muted-foreground/80">What you offer and your pricing structure</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Services Offered */}
+                <Card className="p-6 border-0 shadow-md bg-background/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Services Offered</Label>
+                      {editingField !== 'services_offered' && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleEditServices()}
+                          className="h-8 w-8 p-0 hover:bg-primary/10"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {editingField === 'services_offered' ? (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
+                          {availableServices.map((service) => (
+                            <div key={service.id} className="flex items-center space-x-3 p-2 hover:bg-background/80 rounded-lg">
+                              <input
+                                type="checkbox"
+                                id={service.id}
+                                checked={editValue.includes(service.id)}
+                                onChange={(e) => handleServiceToggle(service.id, e.target.checked)}
+                                className="rounded border-gray-300 text-primary focus:ring-primary"
+                              />
+                              <label htmlFor={service.id} className="flex-1 text-sm font-medium cursor-pointer">
+                                {service.name}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                            <Save className="h-4 w-4 mr-2" />
+                            Save Services
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={handleCancel}>
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {details.services_offered?.length ? (
+                          <div className="space-y-2">
+                            {details.services_offered.map((serviceId, index) => (
+                              <div key={index} className="flex items-center justify-between p-3 bg-background/80 rounded-lg border">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                  <span className="font-medium text-foreground">{getServiceNameById(serviceId)}</span>
+                                </div>
+                                <Badge variant="secondary" className="bg-primary/10 text-primary">
+                                  Active
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
+                            No services configured yet. Set up your services to show what you offer.
+                          </p>
+                        )}
+                        <div className="flex items-center text-muted-foreground text-sm mt-3">
+                          <Users className="h-4 w-4 mr-2" />
+                          {details.services_offered?.length || 0} service{details.services_offered?.length !== 1 ? 's' : ''} available
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+
+                {/* Pricing Information */}
+                <Card className="p-6 border-0 shadow-md bg-background/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Pricing Information</Label>
+                      {editingField !== 'pricing_info' && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleEditPricing()}
+                          className="h-8 w-8 p-0 hover:bg-primary/10"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                     {editingField === 'pricing_info' ? (
+                       <div className="space-y-4">
+                         <div className="space-y-3 max-h-64 overflow-y-auto">
+                           {pricingItems.map((item, index) => (
+                             <div key={index} className="flex gap-2 items-start p-3 bg-background/80 rounded-lg border">
+                               <div className="flex-1 space-y-2">
+                                 <Input
+                                   placeholder="Service name"
+                                   value={item.service}
+                                   onChange={(e) => updatePricingItem(index, 'service', e.target.value)}
+                                   className="text-sm"
+                                 />
+                                 <Input
+                                   placeholder="Price (without £)"
+                                   value={item.price}
+                                   onChange={(e) => updatePricingItem(index, 'price', e.target.value)}
+                                   className="text-sm"
+                                 />
+                               </div>
+                               <Button
+                                 size="sm"
+                                 variant="ghost"
+                                 onClick={() => removePricingItem(index)}
+                                 className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                               >
+                                 <X className="h-4 w-4" />
+                               </Button>
+                             </div>
+                           ))}
+                         </div>
+                         
+                         <Button
+                           size="sm"
+                           variant="outline"
+                           onClick={addPricingItem}
+                           className="w-full"
+                         >
+                           <Plus className="h-4 w-4 mr-2" />
+                           Add Service Price
+                         </Button>
+                         
+                         <div className="flex space-x-2">
+                           <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                             <Save className="h-4 w-4 mr-2" />
+                             Save Pricing
+                           </Button>
+                           <Button size="sm" variant="outline" onClick={handleCancel}>
                              <X className="h-4 w-4" />
                            </Button>
                          </div>
-                       ))}
-                     </div>
-                     
-                     <Button
-                       size="sm"
-                       variant="outline"
-                       onClick={addPricingItem}
-                       className="w-full"
-                     >
-                       <Plus className="h-4 w-4 mr-2" />
-                       Add Service Price
-                     </Button>
-                     
-                     <div className="flex space-x-2">
-                       <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                         <Save className="h-4 w-4 mr-2" />
-                         Save Pricing
-                       </Button>
-                       <Button size="sm" variant="outline" onClick={handleCancel}>
-                         <X className="h-4 w-4" />
-                       </Button>
-                     </div>
-                   </div>
-                ) : (
-                  <div className="space-y-3">
-                    {formatPricingInfo(details.pricing_info) ? (
-                      <div className="space-y-2">
-                        {formatPricingInfo(details.pricing_info).map((item: any, index: number) => (
-                          <div key={index} className="flex items-center justify-between p-4 bg-background/80 rounded-lg border hover:bg-background/90 transition-colors">
-                            <div className="flex items-center space-x-3">
-                               <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                                 <span className="font-bold text-primary">£</span>
-                               </div>
-                              <span className="font-medium text-foreground text-base">{item.service}</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-xl font-bold text-primary">£{item.price}</span>
-                              <p className="text-xs text-muted-foreground">Standard rate</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                       </div>
                     ) : (
-                      <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
-                        No pricing information set. Add your service prices to help customers understand your rates.
-                      </p>
+                      <div className="space-y-3">
+                        {formatPricingInfo(details.pricing_info) ? (
+                          <div className="space-y-2">
+                            {formatPricingInfo(details.pricing_info).map((item: any, index: number) => (
+                              <div key={index} className="flex items-center justify-between p-4 bg-background/80 rounded-lg border hover:bg-background/90 transition-colors">
+                                <div className="flex items-center space-x-3">
+                                   <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                                     <span className="font-bold text-primary">£</span>
+                                   </div>
+                                  <span className="font-medium text-foreground text-base">{item.service}</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-xl font-bold text-primary">£{item.price}</span>
+                                  <p className="text-xs text-muted-foreground">Standard rate</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
+                            No pricing information set. Add your service prices to help customers understand your rates.
+                          </p>
+                        )}
+                        <div className="flex items-center text-muted-foreground text-sm mt-3">
+                          <span className="font-semibold text-lg mr-2">£</span>
+                          Standard pricing for your services
+                        </div>
+                      </div>
                     )}
-                    <div className="flex items-center text-muted-foreground text-sm mt-3">
-                      <span className="font-semibold text-lg mr-2">£</span>
-                      Standard pricing for your services
+                  </div>
+                </Card>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="space-y-8">
+            
+            {/* Quick Actions */}
+            <Card className="p-6 border-0 shadow-xl bg-gradient-to-br from-primary/5 via-card to-accent/5 backdrop-blur-sm">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h3 className="text-xl font-bold text-foreground mb-2">Quick Actions</h3>
+                  <p className="text-muted-foreground text-sm">Manage your business profile</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/onboarding')}
+                    className="w-full h-12 text-base justify-start"
+                  >
+                    <Edit className="h-5 w-5 mr-3" />
+                    Complete Profile Setup
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => navigate('/dashboard')}
+                    className="w-full h-12 text-base justify-start"
+                  >
+                    <Building className="h-5 w-5 mr-3" />
+                    Back to Dashboard
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            {/* Experience Stats */}
+            <Card className="p-6 border-0 shadow-md bg-background/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Experience</Label>
+                  {editingField !== 'years_experience' && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleEdit('years_experience', details.years_experience?.toString() || '')}
+                      className="h-8 w-8 p-0 hover:bg-primary/10"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                
+                {editingField === 'years_experience' ? (
+                  <div className="space-y-3">
+                    <Input
+                      type="number"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="text-lg"
+                      placeholder="0"
+                    />
+                    <div className="flex space-x-2">
+                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                        <Save className="h-4 w-4 mr-2" />
+                        Save
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={handleCancel}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center space-y-3">
+                    <div className="text-center">
+                      <span className="text-4xl font-bold text-primary">{details.years_experience || 0}</span>
+                      <p className="text-muted-foreground">Years Experience</p>
+                    </div>
+                    <div className="flex items-center justify-center text-muted-foreground text-sm">
+                      <TrendingUp className="h-4 w-4 mr-2" />
+                      Professional level
                     </div>
                   </div>
                 )}
               </div>
             </Card>
-          </div>
-        </section>
 
-        <Separator className="my-8" />
-
-        {/* Operating Hours Section */}
-        <section className="space-y-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-              <Clock className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">Operating Hours</h2>
-              <p className="text-muted-foreground">When your business is available</p>
-            </div>
-          </div>
-
-          <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Operating Schedule</Label>
-                {editingField !== 'operating_hours' && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleEdit('operating_hours', details.operating_hours)}
-                    className="h-8 w-8 p-0 hover:bg-primary/10"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-              
-              {editingField === 'operating_hours' ? (
-                <div className="space-y-3">
-                  <Textarea
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="min-h-[120px] font-mono text-sm"
-                    placeholder='[{"day": "Monday", "open": "09:00", "close": "17:00", "closed": false}]'
-                  />
-                  <div className="flex space-x-2">
-                    <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
-                      <Save className="h-4 w-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={handleCancel}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {formatOperatingHours(details.operating_hours) ? (
-                    <div className="grid gap-2">
-                      {formatOperatingHours(details.operating_hours).map((day: any, index: number) => (
-                        <div key={index} className="flex justify-between items-center p-3 rounded-lg border bg-background/50">
-                          <span className="font-medium text-foreground min-w-[80px]">{day.day}</span>
-                          <span className={`font-medium ${day.closed ? 'text-muted-foreground' : 'text-foreground'}`}>
-                            {day.closed ? 'Closed' : `${day.open} - ${day.close}`}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
-                      No operating hours set. Add your business hours to help customers know when you're available.
-                    </p>
-                  )}
-                  <div className="flex items-center text-muted-foreground text-sm">
-                    <Clock className="h-4 w-4 mr-2" />
-                    Weekly business operating schedule
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-        </section>
-
-        <Separator className="my-8" />
-
-        {/* Professional Details Section */}
-        <section className="space-y-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
-              <Shield className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">Professional Details</h2>
-              <p className="text-muted-foreground">Certifications, qualifications, and uploaded documents</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Certifications Text */}
-            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            {/* Operating Hours */}
+            <Card className="p-6 border-0 shadow-md bg-background/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Certifications & Qualifications</Label>
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Operating Hours</Label>
+                  {editingField !== 'operating_hours' && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleEdit('operating_hours', details.operating_hours)}
+                      className="h-8 w-8 p-0 hover:bg-primary/10"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                
+                {editingField === 'operating_hours' ? (
+                  <div className="space-y-3">
+                    <Textarea
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="min-h-[120px] font-mono text-sm"
+                      placeholder='[{"day": "Monday", "open": "09:00", "close": "17:00", "closed": false}]'
+                    />
+                    <div className="flex space-x-2">
+                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                        <Save className="h-4 w-4 mr-2" />
+                        Save
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={handleCancel}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {formatOperatingHours(details.operating_hours) ? (
+                      <div className="space-y-2">
+                        {formatOperatingHours(details.operating_hours).slice(0, 3).map((day: any, index: number) => (
+                          <div key={index} className="flex justify-between items-center text-sm">
+                            <span className="font-medium">{day.day}</span>
+                            <span className={day.closed ? 'text-muted-foreground' : 'text-foreground'}>
+                              {day.closed ? 'Closed' : `${day.open}-${day.close}`}
+                            </span>
+                          </div>
+                        ))}
+                        {formatOperatingHours(details.operating_hours).length > 3 && (
+                          <p className="text-xs text-muted-foreground text-center pt-2">
+                            +{formatOperatingHours(details.operating_hours).length - 3} more days
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground italic text-sm text-center">
+                        No hours set
+                      </p>
+                    )}
+                    <div className="flex items-center justify-center text-muted-foreground text-xs">
+                      <Clock className="h-3 w-3 mr-2" />
+                      Business hours
+                    </div>
+                  </div>
+                )}
+              </div>
+            </Card>
+
+            {/* Certifications */}
+            <Card className="p-6 border-0 shadow-md bg-background/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Certifications</Label>
                   {editingField !== 'certifications' && (
                     <Button
                       size="sm"
@@ -932,8 +955,8 @@ const BusinessProfile = () => {
                     <Textarea
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
-                      className="min-h-[100px]"
-                      placeholder="List your professional certifications, qualifications, and achievements..."
+                      className="min-h-[100px] text-sm"
+                      placeholder="List your certifications..."
                     />
                     <div className="flex space-x-2">
                       <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
@@ -947,113 +970,87 @@ const BusinessProfile = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <p className="text-base leading-relaxed text-foreground">
-                      {details.certifications || 'No certifications listed yet. Add your professional qualifications to build trust with customers.'}
+                    <p className="text-sm text-foreground">
+                      {details.certifications || 'No certifications listed'}
                     </p>
-                    <div className="flex items-center text-muted-foreground text-sm">
-                      <Award className="h-4 w-4 mr-2" />
-                      Professional credentials and achievements
+                    <div className="flex items-center justify-center text-muted-foreground text-xs">
+                      <Shield className="h-3 w-3 mr-2" />
+                      Professional credentials
+                    </div>
+                    
+                    {/* File Upload Section */}
+                    <div className="pt-2 border-t">
+                      <div className="flex items-center justify-between mb-2">
+                        <Label className="text-xs font-semibold text-muted-foreground uppercase">Documents</Label>
+                        <div className="relative">
+                          <input
+                            type="file"
+                            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                            onChange={handleFileUpload}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            disabled={uploadingFile}
+                          />
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={uploadingFile}
+                            className="h-6 px-2 text-xs"
+                          >
+                            {uploadingFile ? (
+                              <div className="animate-spin h-3 w-3 border-2 border-current border-t-transparent rounded-full" />
+                            ) : (
+                              <Upload className="h-3 w-3" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1">
+                        {details.certification_files?.length ? (
+                          details.certification_files.slice(0, 2).map((fileUrl, index) => {
+                            const fileName = fileUrl.split('/').pop()?.split('?')[0] || `Document ${index + 1}`;
+                            const displayName = fileName.split('.')[0].substring(0, 15);
+                            return (
+                              <div key={index} className="flex items-center justify-between text-xs bg-muted/30 rounded p-2">
+                                <span className="truncate flex-1">{displayName}</span>
+                                <div className="flex space-x-1">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => window.open(fileUrl, '_blank')}
+                                    className="h-5 w-5 p-0"
+                                  >
+                                    <Download className="h-2 w-2" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleFileDelete(fileUrl, displayName)}
+                                    className="h-5 w-5 p-0 text-destructive"
+                                  >
+                                    <Trash2 className="h-2 w-2" />
+                                  </Button>
+                                </div>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <p className="text-xs text-muted-foreground text-center py-2">
+                            No documents uploaded
+                          </p>
+                        )}
+                        {details.certification_files?.length && details.certification_files.length > 2 && (
+                          <p className="text-xs text-muted-foreground text-center">
+                            +{details.certification_files.length - 2} more files
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
             </Card>
-
-            {/* Certification Files Upload */}
-            <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Certification Documents</Label>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                      onChange={handleFileUpload}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      disabled={uploadingFile}
-                    />
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={uploadingFile}
-                      className="h-8 px-3"
-                    >
-                      {uploadingFile ? (
-                        <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
-                      ) : (
-                        <Upload className="h-4 w-4 mr-2" />
-                      )}
-                      Upload
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  {details.certification_files?.length ? (
-                    details.certification_files.map((fileUrl, index) => {
-                      const fileName = fileUrl.split('/').pop()?.split('?')[0] || `Document ${index + 1}`;
-                      const displayName = fileName.split('.')[0];
-                      return (
-                        <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border">
-                          <div className="flex items-center space-x-3">
-                            <FileText className="h-4 w-4 text-primary" />
-                            <span className="text-sm font-medium text-foreground truncate max-w-[150px]">
-                              {displayName}
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => window.open(fileUrl, '_blank')}
-                              className="h-7 w-7 p-0"
-                            >
-                              <Download className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleFileDelete(fileUrl, displayName)}
-                              className="h-7 w-7 p-0 text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
-                      No certification documents uploaded yet. Upload PDFs or images of your certifications.
-                    </p>
-                  )}
-                  <div className="flex items-center text-muted-foreground text-xs">
-                    <Shield className="h-3 w-3 mr-2" />
-                    Supported formats: PDF, DOC, DOCX, JPG, PNG (max 10MB)
-                  </div>
-                </div>
-              </div>
-            </Card>
           </div>
-        </section>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 pt-8">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/onboarding')}
-            className="w-full sm:w-auto min-w-[200px] h-12 text-base"
-          >
-            <Edit className="h-5 w-5 mr-2" />
-            Complete Profile Update
-          </Button>
-          <Button 
-            onClick={() => navigate('/dashboard')}
-            className="w-full sm:w-auto min-w-[200px] h-12 text-base"
-          >
-            <Building className="h-5 w-5 mr-2" />
-            Back to Dashboard
-          </Button>
         </div>
       </div>
     </div>
