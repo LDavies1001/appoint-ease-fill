@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/custom-button';
 import { Input } from '@/components/ui/input';
@@ -31,11 +31,14 @@ const Auth = () => {
     // Check URL params for different flows
     const tab = searchParams.get('tab');
     if (tab === 'provider') {
-      setShowBusinessSignup(false); // Show info page, not signup form
+      // Show business info page
+      setShowBusinessSignup(false);
       setShowRoleSelection(false);
+      setSelectedRole(null);
     } else if (tab === 'signup') {
       setShowRoleSelection(true); // Show role selection page
       setShowBusinessSignup(false);
+      setSelectedRole(null);
     }
   }, [searchParams]);
 
@@ -367,7 +370,125 @@ const Auth = () => {
     );
   }
 
-  // Customer Signup Form or Login
+  // Default behavior - show business info page for provider tab, or login/signup for others
+  if (searchParams.get('tab') === 'provider') {
+    // Business Info Page (original provider page)
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <Header />
+        <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center space-x-2 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
+                  <Building className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+              </div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">
+                Grow Your Business
+              </h1>
+              <p className="text-muted-foreground">
+                Join the platform designed to help beauty professionals thrive - Turn empty appointment slots into instant revenue
+              </p>
+            </div>
+
+            <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
+              <div className="space-y-8 py-4">
+                {/* Key Benefits */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[140px]">
+                      <PoundSterling className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-foreground text-sm mb-2">Fill Last-Minute Cancellations</h3>
+                        <p className="text-xs text-muted-foreground">
+                          Connect with customers who need appointments right now
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[140px]">
+                      <TrendingUp className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-foreground text-sm mb-2">Increase Your Revenue</h3>
+                        <p className="text-xs text-muted-foreground">
+                          Maximise your booking capacity and reduce downtime
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[140px]">
+                      <Users className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-foreground text-sm mb-2">Reach New Customers</h3>
+                        <p className="text-xs text-muted-foreground">
+                          Get found by customers in your area looking for services
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[140px]">
+                      <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-foreground text-sm mb-2">Complete Control</h3>
+                        <p className="text-xs text-muted-foreground">
+                          Set your own schedule, prices, and availability to work exactly how you want
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Perfect For */}
+                <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-lg p-5 text-center">
+                  <h3 className="font-semibold text-foreground mb-3">Perfect for:</h3>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="flex items-center justify-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                      <span className="text-foreground">Eyelash Technicians</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                      <span className="text-foreground">Hair Stylists</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                      <span className="text-foreground">Nail Technicians</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                      <span className="text-foreground">Deep Cleans</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div className="text-center space-y-3 pt-4">
+                  <h3 className="text-lg font-semibold text-foreground">Ready to grow your business?</h3>
+                  <Button
+                    onClick={() => {
+                      setSelectedRole('provider');
+                      setShowRoleSelection(false);
+                    }}
+                    variant="hero"
+                    size="lg"
+                    className="px-8"
+                  >
+                    Get Started Today
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    Join hundreds of professionals already using Open-Slot
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Customer Signup Form or Login (default)
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <Header />
@@ -381,31 +502,15 @@ const Auth = () => {
               <span className="text-2xl font-bold text-foreground">Open-Slot</span>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              {selectedRole === 'customer' ? 'Create Your Account' : 'Welcome Back'}
+              Welcome Back
             </h1>
             <p className="text-muted-foreground">
-              {selectedRole === 'customer' ? 'Join thousands of satisfied customers' : 'Sign in to your account'}
+              Sign in to your account
             </p>
           </div>
 
           <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
             <form className="space-y-4">
-              {selectedRole === 'customer' && (
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Enter your full name"
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
@@ -434,154 +539,23 @@ const Auth = () => {
                 </div>
               </div>
 
-              {selectedRole === 'customer' && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="confirm-password"
-                      type="password"
-                      placeholder="Confirm your password"
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
               <Button
                 type="submit"
                 variant="hero"
                 size="lg"
                 className="w-full"
               >
-                {selectedRole === 'customer' ? 'Create Account' : 'Sign In'}
+                Sign In
               </Button>
             </form>
 
             <div className="mt-6 text-center">
-              <button
-                onClick={() => setShowRoleSelection(true)}
-                className="text-sm text-primary hover:text-primary/80 transition-colors"
-              >
-                ← Back to account type selection
-              </button>
-            </div>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Business Info Page (original provider page)
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <Header />
-      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                <Building className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
-            </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              Grow Your Business
-            </h1>
-            <p className="text-muted-foreground">
-              Join the platform designed to help beauty professionals thrive - Turn empty appointment slots into instant revenue
-            </p>
-          </div>
-
-          <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
-            <div className="space-y-8 py-4">
-              {/* Key Benefits */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[140px]">
-                    <PoundSterling className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-foreground text-sm mb-2">Fill Last-Minute Cancellations</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Connect with customers who need appointments right now
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[140px]">
-                    <TrendingUp className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-foreground text-sm mb-2">Increase Your Revenue</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Maximise your booking capacity and reduce downtime
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-4 bg-accent/10 rounded-lg h-[140px]">
-                    <Users className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-foreground text-sm mb-2">Reach New Customers</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Get found by customers in your area looking for services
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg h-[140px]">
-                    <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-foreground text-sm mb-2">Complete Control</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Set your own schedule, prices, and availability to work exactly how you want
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Perfect For */}
-              <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-lg p-5 text-center">
-                <h3 className="font-semibold text-foreground mb-3">Perfect for:</h3>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="flex items-center justify-center space-x-2">
-                    <CheckCircle className="h-4 w-4 text-accent" />
-                    <span className="text-foreground">Eyelash Technicians</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <CheckCircle className="h-4 w-4 text-accent" />
-                    <span className="text-foreground">Hair Stylists</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <CheckCircle className="h-4 w-4 text-accent" />
-                    <span className="text-foreground">Nail Technicians</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <CheckCircle className="h-4 w-4 text-accent" />
-                    <span className="text-foreground">Deep Cleans</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA */}
-              <div className="text-center space-y-3 pt-4">
-                <h3 className="text-lg font-semibold text-foreground">Ready to grow your business?</h3>
-                <Button
-                  onClick={() => {
-                    setSelectedRole('provider');
-                    setShowRoleSelection(false);
-                  }}
-                  variant="hero"
-                  size="lg"
-                  className="px-8"
-                >
-                  Get Started Today
-                </Button>
-                <p className="text-xs text-muted-foreground">
-                  Join hundreds of professionals already using Open-Slot
-                </p>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                Don't have an account?{' '}
+                <Link to="/auth?tab=signup" className="text-primary hover:text-primary/80 transition-colors">
+                  Sign up here
+                </Link>
+              </p>
             </div>
           </Card>
         </div>
