@@ -140,7 +140,7 @@ const Auth = () => {
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                 <Building className="h-5 w-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
             </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Create Your Business Account
@@ -274,7 +274,7 @@ const Auth = () => {
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                 <Building className="h-5 w-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-foreground">FillMyHole</span>
+              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Grow Your Business
@@ -369,7 +369,7 @@ const Auth = () => {
                   Get Started Today
                 </Button>
                 <p className="text-xs text-muted-foreground">
-                  Join hundreds of professionals already using FillMyHole
+                  Join hundreds of professionals already using Open-Slot
                 </p>
               </div>
             </div>

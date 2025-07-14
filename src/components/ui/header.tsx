@@ -22,7 +22,7 @@ const Header = () => {
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
               <Calendar className="h-4 w-4 text-white" />
             </div>
-            <span className="text-xl font-bold text-foreground">FillMyHole</span>
+            <span className="text-xl font-bold text-foreground">Open-Slot</span>
           </Link>
           
           {user && profile ? (

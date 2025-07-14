@@ -340,7 +340,7 @@ const CustomerDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div>
-              <h1 className="text-xl font-bold text-foreground">FillMyHole</h1>
+              <h1 className="text-xl font-bold text-foreground">Open-Slot</h1>
               <p className="text-sm text-muted-foreground">Welcome back, {profile?.name}</p>
             </div>
             <Button
