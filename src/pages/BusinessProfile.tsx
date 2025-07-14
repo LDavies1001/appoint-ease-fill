@@ -693,7 +693,7 @@ const BusinessProfile = () => {
                       </p>
                     )}
                     <div className="flex items-center text-muted-foreground text-sm mt-3">
-                      <DollarSign className="h-4 w-4 mr-2" />
+                      <span className="font-semibold text-lg mr-2">£</span>
                       Standard pricing for your services
                     </div>
                   </div>
