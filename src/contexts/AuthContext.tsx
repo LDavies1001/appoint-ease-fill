@@ -145,15 +145,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     });
 
-    // If signup was successful and we need a provider role, update it
-    if (!error && data.user && role === 'provider') {
+    // If signup was successful, ensure the profile has the correct role
+    if (!error && data.user) {
+      // Wait a moment for the trigger to create the profile
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Update the profile with the correct role and name
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ role: 'provider' })
+        .update({ 
+          role: role,
+          name: fullName || null
+        })
         .eq('user_id', data.user.id);
       
       if (updateError) {
-        console.error('Error updating role:', updateError);
+        console.error('Error updating profile:', updateError);
       }
     }
 
