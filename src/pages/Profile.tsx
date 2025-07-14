@@ -2,7 +2,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import Header from '@/components/ui/header';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -30,7 +31,9 @@ import {
   Globe,
   Instagram,
   Facebook,
-  Twitter
+  Twitter,
+  Save,
+  X
 } from 'lucide-react';
 
 const Profile = () => {
@@ -42,6 +45,7 @@ const Profile = () => {
   const [portfolioItems, setPortfolioItems] = useState<any[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [editData, setEditData] = useState<any>({});
 
   useEffect(() => {
     if (user && profile?.role === 'provider') {
@@ -62,6 +66,7 @@ const Profile = () => {
         .single();
 
       setProviderDetails(details);
+      setEditData(details || {});
 
       // Fetch featured portfolio items
       const { data: portfolio } = await supabase
@@ -108,8 +113,49 @@ const Profile = () => {
   // Function to handle edit button click
   const handleEditToggle = () => {
     console.log('Edit button clicked! Current isEditMode:', isEditMode);
+    if (isEditMode) {
+      // Exiting edit mode - reset data
+      setEditData(providerDetails || {});
+    }
     setIsEditMode(!isEditMode);
     console.log('Edit mode toggled to:', !isEditMode);
+  };
+
+  // Save profile changes
+  const handleSaveProfile = async () => {
+    try {
+      const { error } = await supabase
+        .from('provider_details')
+        .update({
+          business_name: editData.business_name,
+          business_description: editData.business_description,
+          business_address: editData.business_address,
+          business_phone: editData.business_phone,
+          business_email: editData.business_email,
+          operating_hours: editData.operating_hours,
+          social_media_links: editData.social_media_links,
+          certifications: editData.certifications,
+        })
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated successfully.",
+      });
+
+      // Refresh data and exit edit mode
+      await fetchProviderData();
+      setIsEditMode(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleCustomerProfileSubmit = async (data: any) => {
@@ -251,24 +297,38 @@ const Profile = () => {
       {/* Floating Edit Controls for Owner */}
       {isOwner && (
         <div className="fixed top-20 right-4 z-50 space-y-2">
-          <Button
-            onClick={handleEditToggle}
-            variant={isEditMode ? "default" : "outline"}
-            size="sm"
-            className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-elegant"
-          >
-            {isEditMode ? (
-              <>
-                <Eye className="h-4 w-4 mr-2" />
-                Preview
-              </>
-            ) : (
-              <>
-                <Edit3 className="h-4 w-4 mr-2" />
-                Edit Profile
-              </>
-            )}
-          </Button>
+          {isEditMode ? (
+            <>
+              <Button
+                onClick={handleSaveProfile}
+                variant="default"
+                size="sm"
+                className="bg-green-600 hover:bg-green-700 text-white shadow-elegant"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                Save Changes
+              </Button>
+              <Button
+                onClick={handleEditToggle}
+                variant="outline"
+                size="sm"
+                className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-elegant"
+              >
+                <X className="h-4 w-4 mr-2" />
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={handleEditToggle}
+              variant="outline"
+              size="sm"
+              className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-elegant"
+            >
+              <Edit3 className="h-4 w-4 mr-2" />
+              Edit Profile
+            </Button>
+          )}
         </div>
       )}
 
@@ -305,9 +365,18 @@ const Profile = () => {
             {/* Business Title & Actions */}
             <div className="flex-1 text-white">
               <div className="mb-2">
-                <h1 className="text-4xl lg:text-5xl font-bold mb-2 drop-shadow-lg">
-                  {providerDetails?.business_name || profile?.name || 'Your Beautiful Business'}
-                </h1>
+                {isEditMode ? (
+                  <Input
+                    value={editData.business_name || ''}
+                    onChange={(e) => setEditData({...editData, business_name: e.target.value})}
+                    className="text-4xl lg:text-5xl font-bold mb-2 bg-white/20 border-white/30 text-white placeholder:text-white/70"
+                    placeholder="Enter business name"
+                  />
+                ) : (
+                  <h1 className="text-4xl lg:text-5xl font-bold mb-2 drop-shadow-lg">
+                    {providerDetails?.business_name || profile?.name || 'Your Beautiful Business'}
+                  </h1>
+                )}
                 <div className="flex items-center gap-4 mb-4">
                   <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
                     <Building className="h-3 w-3 mr-1" />
@@ -364,13 +433,20 @@ const Profile = () => {
               {/* Business Description */}
               <div>
                 <h4 className="font-semibold text-lg mb-3">Our Story</h4>
-                {providerDetails?.business_description ? (
+                {isEditMode ? (
+                  <Textarea
+                    value={editData.business_description || ''}
+                    onChange={(e) => setEditData({...editData, business_description: e.target.value})}
+                    placeholder="Tell your business story..."
+                    className="min-h-[100px]"
+                  />
+                ) : providerDetails?.business_description ? (
                   <p className="text-muted-foreground leading-relaxed">
                     {providerDetails.business_description}
                   </p>
                 ) : (
                   <p className="text-muted-foreground leading-relaxed italic">
-                    {isEditMode ? "Click to add your business story..." : "Welcome to our business! We're dedicated to providing exceptional service."}
+                    Welcome to our business! We're dedicated to providing exceptional service.
                   </p>
                 )}
               </div>
@@ -380,6 +456,11 @@ const Profile = () => {
                 <h4 className="font-semibold text-lg mb-3 flex items-center">
                   <Globe className="h-4 w-4 mr-2" />
                   Connect With Us
+                  {isEditMode && isOwner && (
+                    <Button variant="ghost" size="sm" className="ml-auto">
+                      <Edit3 className="h-4 w-4" />
+                    </Button>
+                  )}
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   {(() => {
@@ -393,7 +474,27 @@ const Profile = () => {
                     
                     return platforms.map(platform => {
                       const IconComponent = platform.icon;
-                      return socialMedia[platform.key] ? (
+                      const hasAccount = socialMedia[platform.key];
+                      
+                      return isEditMode && isOwner ? (
+                        <div key={platform.key} className="space-y-2">
+                          <div className="flex items-center p-3 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/20">
+                            <IconComponent className={`h-5 w-5 mr-3 ${platform.color}`} />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm mb-1">{platform.name}</p>
+                              <Input
+                                value={socialMedia[platform.key] || ''}
+                                onChange={(e) => {
+                                  const newSocialMedia = { ...socialMedia, [platform.key]: e.target.value };
+                                  setEditData({...editData, social_media_links: newSocialMedia});
+                                }}
+                                placeholder={`@username`}
+                                className="text-xs h-8"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ) : hasAccount ? (
                         <a
                           key={platform.key}
                           href={`https://${platform.key}.com/${socialMedia[platform.key].replace('@', '')}`}
@@ -412,7 +513,7 @@ const Profile = () => {
                           <IconComponent className="h-5 w-5 mr-3 text-muted-foreground" />
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-sm text-muted-foreground">{platform.name}</p>
-                            <p className="text-xs text-muted-foreground">{isEditMode ? "Click to add" : "Not connected"}</p>
+                            <p className="text-xs text-muted-foreground">Not connected</p>
                           </div>
                         </div>
                       );
@@ -427,7 +528,13 @@ const Profile = () => {
                   <Award className="h-4 w-4 mr-2" />
                   Certifications & Specialties
                 </h4>
-                {providerDetails?.certifications ? (
+                {isEditMode ? (
+                  <Input
+                    value={editData.certifications || ''}
+                    onChange={(e) => setEditData({...editData, certifications: e.target.value})}
+                    placeholder="Enter certifications (comma separated)"
+                  />
+                ) : providerDetails?.certifications ? (
                   <div className="flex flex-wrap gap-2">
                     {providerDetails.certifications.split(',').map((cert: string, index: number) => (
                       <Badge key={index} variant="secondary" className="text-sm">
@@ -437,7 +544,7 @@ const Profile = () => {
                   </div>
                 ) : (
                   <p className="text-muted-foreground italic text-sm">
-                    {isEditMode ? "Add your professional certifications..." : "Professional certifications coming soon"}
+                    Professional certifications coming soon
                   </p>
                 )}
               </div>
@@ -514,48 +621,96 @@ const Profile = () => {
               </CardContent>
             </Card>
 
-            {/* Operating Hours */}
-            {providerDetails?.operating_hours && (
+            {/* Operating Hours & Address */}
+            {(providerDetails?.operating_hours || providerDetails?.business_address) && (
               <Card className="card-enhanced">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center text-lg">
                     <Clock className="h-5 w-5 mr-2" />
-                    Opening Hours
+                    Hours & Location
                   </CardTitle>
+                  {isEditMode && isOwner && (
+                    <Button variant="ghost" size="sm">
+                      <Edit3 className="h-4 w-4" />
+                    </Button>
+                  )}
                 </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-2 text-sm">
-                    {(() => {
-                      const hours = formatOperatingHours(providerDetails.operating_hours);
-                      return hours ? Object.entries(hours).map(([day, timeData]) => {
-                        // Handle both string and object formats
-                        let displayTime;
-                        if (typeof timeData === 'string') {
-                          displayTime = timeData;
-                        } else if (typeof timeData === 'object' && timeData !== null) {
-                          const hoursObj = timeData as any;
-                          if (hoursObj.closed) {
-                            displayTime = 'Closed';
-                          } else if (hoursObj.open && hoursObj.close) {
-                            displayTime = `${hoursObj.open} - ${hoursObj.close}`;
-                          } else {
-                            displayTime = 'Contact for hours';
-                          }
-                        } else {
-                          displayTime = 'Contact for hours';
-                        }
-
-                        return (
-                          <div key={day} className="flex justify-between">
-                            <span className="capitalize font-medium">{getDayName(day)}</span>
-                            <span className="text-muted-foreground">{displayTime}</span>
-                          </div>
-                        );
-                      }) : (
-                        <p className="text-muted-foreground italic">Hours available upon request</p>
-                      );
-                    })()}
+                <CardContent className="pt-0 space-y-4">
+                  {/* Address */}
+                  <div className="space-y-2">
+                    <p className="font-medium text-sm flex items-center">
+                      <MapPin className="h-4 w-4 mr-2" />
+                      Address
+                    </p>
+                    {isEditMode ? (
+                      <Input
+                        value={editData.business_address || ''}
+                        onChange={(e) => setEditData({...editData, business_address: e.target.value})}
+                        placeholder="Enter business address"
+                      />
+                    ) : providerDetails?.business_address ? (
+                      <div className="flex items-start p-3 bg-muted/30 rounded-lg">
+                        <MapPin className="h-4 w-4 text-primary mt-1 mr-3 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-sm mb-1">Visit Us</p>
+                          <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">Address not set</p>
+                    )}
                   </div>
+                  
+                  {/* Opening Hours */}
+                  {providerDetails?.operating_hours && (
+                    <div>
+                      <p className="font-medium text-sm mb-3 flex items-center">
+                        <Clock className="h-4 w-4 mr-2" />
+                        Opening Hours
+                      </p>
+                      <div className="space-y-2 text-sm">
+                        {(() => {
+                          const hours = formatOperatingHours(providerDetails.operating_hours);
+                          return hours ? Object.entries(hours).map(([day, timeData]) => {
+                            // Handle both string and object formats
+                            let displayTime;
+                            if (typeof timeData === 'string') {
+                              displayTime = timeData;
+                            } else if (typeof timeData === 'object' && timeData !== null) {
+                              const hoursObj = timeData as any;
+                              if (hoursObj.closed) {
+                                displayTime = 'Closed';
+                              } else if (hoursObj.open && hoursObj.close) {
+                                displayTime = `${hoursObj.open} - ${hoursObj.close}`;
+                              } else {
+                                displayTime = 'Contact for hours';
+                              }
+                            } else {
+                              displayTime = 'Contact for hours';
+                            }
+
+                            return (
+                              <div key={day} className="flex justify-between">
+                                <span className="capitalize font-medium">{getDayName(day)}</span>
+                                <span className="text-muted-foreground">{displayTime}</span>
+                              </div>
+                            );
+                          }) : (
+                            <p className="text-muted-foreground italic">Hours available upon request</p>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {isEditMode && (!providerDetails?.business_address || !providerDetails?.operating_hours) && (
+                    <div className="text-center pt-2">
+                      <Button variant="outline" size="sm">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        {!providerDetails?.business_address ? 'Add Address' : 'Add Hours'}
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -564,7 +719,7 @@ const Profile = () => {
 
         {/* Elegant Tabbed Sections */}
         <Tabs defaultValue="portfolio" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8 bg-white/50 backdrop-blur-sm">
+          <TabsList className="grid w-full grid-cols-3 mb-8 bg-white/50 backdrop-blur-sm">
             <TabsTrigger value="portfolio" className="flex items-center font-medium">
               <Camera className="h-4 w-4 mr-2" />
               Portfolio
@@ -576,10 +731,6 @@ const Profile = () => {
             <TabsTrigger value="reviews" className="flex items-center font-medium">
               <Users className="h-4 w-4 mr-2" />
               Customer Reviews
-            </TabsTrigger>
-            <TabsTrigger value="availability" className="flex items-center font-medium">
-              <Clock className="h-4 w-4 mr-2" />
-              Availability
             </TabsTrigger>
           </TabsList>
 
@@ -780,149 +931,6 @@ const Profile = () => {
             )}
           </TabsContent>
 
-          {/* Availability & Booking */}
-          <TabsContent value="availability" className="space-y-6">
-            <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold mb-4">Book Your Appointment</h3>
-              <p className="text-muted-foreground text-lg">Choose your perfect time slot and let us take care of the rest</p>
-            </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Opening Hours */}
-              <Card className="card-enhanced">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Clock className="h-5 w-5 mr-2" />
-                    Opening Hours
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {providerDetails?.operating_hours ? (
-                    <div className="space-y-3">
-                      {(() => {
-                        const hours = formatOperatingHours(providerDetails.operating_hours);
-                        return hours ? Object.entries(hours).map(([day, timeData]) => {
-                          // Handle both string and object formats
-                          let displayTime;
-                          if (typeof timeData === 'string') {
-                            displayTime = timeData;
-                          } else if (typeof timeData === 'object' && timeData !== null) {
-                            const hoursObj = timeData as any;
-                            if (hoursObj.closed) {
-                              displayTime = 'Closed';
-                            } else if (hoursObj.open && hoursObj.close) {
-                              displayTime = `${hoursObj.open} - ${hoursObj.close}`;
-                            } else {
-                              displayTime = 'Contact for hours';
-                            }
-                          } else {
-                            displayTime = 'Contact for hours';
-                          }
-
-                          return (
-                            <div key={day} className="flex justify-between items-center">
-                              <span className="capitalize font-medium">{getDayName(day)}</span>
-                              <span className="text-muted-foreground">{displayTime}</span>
-                            </div>
-                          );
-                        }) : (
-                          <p className="text-muted-foreground italic">Flexible hours available</p>
-                        );
-                      })()}
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground italic">
-                      {isEditMode ? "Add your operating hours..." : "Hours available by appointment"}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Contact Methods */}
-              <Card className="card-enhanced">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <MessageSquare className="h-5 w-5 mr-2" />
-                    Contact Us
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {providerDetails?.business_phone && (
-                    <Button variant="outline" className="w-full justify-start" size="lg">
-                      <Phone className="h-4 w-4 mr-3" />
-                      {providerDetails.business_phone}
-                    </Button>
-                  )}
-                  
-                  {providerDetails?.business_email && (
-                    <Button variant="outline" className="w-full justify-start" size="lg">
-                      <Mail className="h-4 w-4 mr-3" />
-                      {providerDetails.business_email}
-                    </Button>
-                  )}
-
-                  {(!providerDetails?.business_phone && !providerDetails?.business_email) && (
-                    <p className="text-muted-foreground italic text-center py-8">
-                      {isEditMode ? "Add contact information..." : "Contact details coming soon"}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card className="card-enhanced">
-                <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Book Appointment
-                  </Button>
-                  
-                  <Button variant="outline" size="lg" className="w-full">
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Send Message
-                  </Button>
-                  
-                  <Button variant="outline" size="lg" className="w-full">
-                    <Heart className="h-4 w-4 mr-2" />
-                    Save to Favorites
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Location Info */}
-            {providerDetails?.business_address && (
-              <Card className="card-enhanced">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <MapPin className="h-5 w-5 mr-2" />
-                    Visit Our Location
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-start">
-                    <MapPin className="h-5 w-5 mr-4 text-primary mt-1 flex-shrink-0" />
-                    <div className="flex-1">
-                      <p className="font-medium mb-2">Our Address</p>
-                      <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                        {providerDetails.business_address}
-                      </p>
-                      <Button variant="outline">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        Get Directions
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
         </Tabs>
       </div>
     </div>
