@@ -59,7 +59,7 @@ interface ProviderDetails {
 const BusinessProfile = () => {
   const [details, setDetails] = useState<ProviderDetails | null>(null);
   const [editingField, setEditingField] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState<string>('');
+  const [editValue, setEditValue] = useState<string | string[]>('');
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
@@ -126,6 +126,20 @@ const BusinessProfile = () => {
   const handleEdit = (field: string, currentValue: string) => {
     setEditingField(field);
     setEditValue(currentValue || '');
+  };
+
+  const handleEditServices = () => {
+    setEditingField('services_offered');
+    setEditValue(details?.services_offered || []);
+  };
+
+  const handleServiceToggle = (serviceId: string, checked: boolean) => {
+    const currentServices = Array.isArray(editValue) ? editValue : [];
+    if (checked) {
+      setEditValue([...currentServices, serviceId]);
+    } else {
+      setEditValue(currentServices.filter((id: string) => id !== serviceId));
+    }
   };
 
   const handleSave = async () => {
@@ -604,32 +618,75 @@ const BusinessProfile = () => {
             {/* Services Offered */}
             <Card className="p-6 border-0 shadow-md bg-card/60 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
               <div className="space-y-4">
-                <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Services Offered</Label>
-                <div className="space-y-3">
-                  {details.services_offered?.length ? (
-                    <div className="space-y-2">
-                      {details.services_offered.map((serviceId, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-background/80 rounded-lg border">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-primary rounded-full"></div>
-                            <span className="font-medium text-foreground">{getServiceNameById(serviceId)}</span>
-                          </div>
-                          <Badge variant="secondary" className="bg-primary/10 text-primary">
-                            Active
-                          </Badge>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Services Offered</Label>
+                  {editingField !== 'services_offered' && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleEditServices()}
+                      className="h-8 w-8 p-0 hover:bg-primary/10"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                
+                {editingField === 'services_offered' ? (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
+                      {availableServices.map((service) => (
+                        <div key={service.id} className="flex items-center space-x-3 p-2 hover:bg-background/80 rounded-lg">
+                          <input
+                            type="checkbox"
+                            id={service.id}
+                            checked={editValue.includes(service.id)}
+                            onChange={(e) => handleServiceToggle(service.id, e.target.checked)}
+                            className="rounded border-gray-300 text-primary focus:ring-primary"
+                          />
+                          <label htmlFor={service.id} className="flex-1 text-sm font-medium cursor-pointer">
+                            {service.name}
+                          </label>
                         </div>
                       ))}
                     </div>
-                  ) : (
-                    <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
-                      No services configured yet. Set up your services to show what you offer.
-                    </p>
-                  )}
-                  <div className="flex items-center text-muted-foreground text-sm mt-3">
-                    <Users className="h-4 w-4 mr-2" />
-                    {details.services_offered?.length || 0} service{details.services_offered?.length !== 1 ? 's' : ''} available
+                    <div className="flex space-x-2">
+                      <Button size="sm" onClick={handleSave} disabled={updating} className="flex-1">
+                        <Save className="h-4 w-4 mr-2" />
+                        Save Services
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={handleCancel}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-3">
+                    {details.services_offered?.length ? (
+                      <div className="space-y-2">
+                        {details.services_offered.map((serviceId, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-background/80 rounded-lg border">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-2 h-2 bg-primary rounded-full"></div>
+                              <span className="font-medium text-foreground">{getServiceNameById(serviceId)}</span>
+                            </div>
+                            <Badge variant="secondary" className="bg-primary/10 text-primary">
+                              Active
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground italic p-4 text-center bg-muted/30 rounded-lg">
+                        No services configured yet. Set up your services to show what you offer.
+                      </p>
+                    )}
+                    <div className="flex items-center text-muted-foreground text-sm mt-3">
+                      <Users className="h-4 w-4 mr-2" />
+                      {details.services_offered?.length || 0} service{details.services_offered?.length !== 1 ? 's' : ''} available
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
 
