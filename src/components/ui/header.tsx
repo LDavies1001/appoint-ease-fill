@@ -44,9 +44,9 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="flex items-center">
+                    <Link to="/profile" className="flex items-center">
                       <User className="h-4 w-4 mr-2" />
-                      Dashboard
+                      My Profile
                     </Link>
                   </DropdownMenuItem>
                   {profile.role === 'provider' && (
