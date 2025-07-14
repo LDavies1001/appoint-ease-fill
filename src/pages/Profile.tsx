@@ -561,27 +561,31 @@ const Profile = () => {
             </div>
 
             {/* Address Section */}
-            {providerDetails?.business_address && (
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-xl">
-                    <MapPin className="h-5 w-5 mr-3 text-primary" />
-                    Address
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-start space-x-4">
-                    <MapPin className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <p className="text-lg font-medium mb-2">Business Location</p>
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="flex items-center text-xl">
+                  <MapPin className="h-5 w-5 mr-3 text-primary" />
+                  Address
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-start space-x-4">
+                  <MapPin className="h-5 w-5 text-primary mt-1" />
+                  <div>
+                    <p className="text-lg font-medium mb-2">Business Location</p>
+                    {providerDetails?.business_address ? (
                       <p className="text-muted-foreground leading-relaxed">
                         {providerDetails.business_address}
                       </p>
-                    </div>
+                    ) : (
+                      <p className="text-muted-foreground leading-relaxed italic">
+                        No business address added yet. Update your business profile to add your location.
+                      </p>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
