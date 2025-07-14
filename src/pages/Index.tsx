@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
-import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building } from 'lucide-react';
+import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building, Navigation } from 'lucide-react';
+import { LocationInput } from '@/components/ui/location-input';
 import { Input } from '@/components/ui/input';
 import heroImage from '@/assets/hero-appointment-scene.jpg';
 const Index = () => {
@@ -70,21 +71,20 @@ const Index = () => {
                   </div>
                   
                   <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="First Name" className="pl-10 h-11 text-sm bg-white/80" />
-                      </div>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Last Name" className="pl-10 h-11 text-sm bg-white/80" />
-                      </div>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input placeholder="Your Name" className="pl-10 h-11 text-sm bg-white/80" />
                     </div>
                     
                     <div className="relative">
                       <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input placeholder="Email address" className="pl-10 h-11 text-sm bg-white/80" />
                     </div>
+                    
+                    <LocationInput 
+                      placeholder="Your Location" 
+                      className="h-11 text-sm bg-white/80" 
+                    />
                     
                     <div className="relative">
                       <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -134,10 +134,10 @@ const Index = () => {
                       <Input placeholder="Business Email" className="pl-10 h-11 text-sm bg-white/80" />
                     </div>
                     
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Location" className="pl-10 h-11 text-sm bg-white/80" />
-                    </div>
+                    <LocationInput 
+                      placeholder="Business Location" 
+                      className="h-11 text-sm bg-white/80" 
+                    />
                     
                     <div className="relative">
                       <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
