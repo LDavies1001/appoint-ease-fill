@@ -196,8 +196,13 @@ export const CustomerProfileForm: React.FC<CustomerProfileFormProps> = ({
 
     if (!formData.phone.trim()) {
       newErrors.phone = 'Contact number is required';
-    } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/[\s\-\(\)]/g, ''))) {
-      newErrors.phone = 'Please enter a valid phone number';
+    } else {
+      // More flexible phone validation to accept various formats:
+      // 079, +4479, 79, +44079, etc.
+      const cleanPhone = formData.phone.replace(/[\s\-\(\)]/g, '');
+      if (!/^(\+?44|0)?[0-9]{8,11}$/.test(cleanPhone) && !/^[0-9]{2,4}[0-9]{6,8}$/.test(cleanPhone)) {
+        newErrors.phone = 'Please enter a valid phone number (e.g., 079, +4479, 79, +44079)';
+      }
     }
 
     if (!formData.location.trim()) {
@@ -345,7 +350,7 @@ export const CustomerProfileForm: React.FC<CustomerProfileFormProps> = ({
               <Input
                 id="phone"
                 type="tel"
-                placeholder="Enter your contact number"
+                placeholder="e.g., 079, +4479, 79, +44079"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 className={`pl-10 ${errors.phone ? 'border-destructive' : ''}`}
