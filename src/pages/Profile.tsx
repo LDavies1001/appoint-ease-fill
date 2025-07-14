@@ -205,11 +205,6 @@ const Profile = () => {
                 {providerDetails?.business_name || profile.name || 'Your Business'}
               </h1>
               
-              {providerDetails?.business_description && (
-                <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
-                  {providerDetails.business_description}
-                </p>
-              )}
 
               <div className="flex flex-wrap items-center gap-6 mb-6">
                 {providerDetails?.rating && (
@@ -257,18 +252,90 @@ const Profile = () => {
         {/* Quick Business Overview */}
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">About Our Business</h2>
-          <div className="max-w-3xl mx-auto">
-            {providerDetails?.business_description ? (
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                {providerDetails.business_description}
-              </p>
-            ) : (
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                Welcome to our business! We're dedicated to providing exceptional service and creating memorable experiences for our clients.
-              </p>
-            )}
+          <div className="max-w-4xl mx-auto space-y-8">
+            {/* Business Description */}
+            <div className="text-left">
+              <h3 className="text-xl font-semibold mb-4 flex items-center">
+                <Building className="h-5 w-5 mr-2" />
+                Our Story
+              </h3>
+              {providerDetails?.business_description ? (
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  {providerDetails.business_description}
+                </p>
+              ) : (
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  Welcome to our business! We're dedicated to providing exceptional service and creating memorable experiences for our clients.
+                </p>
+              )}
+            </div>
+
+            {/* Social Media Links */}
+            <div className="text-left">
+              <h3 className="text-xl font-semibold mb-4 flex items-center">
+                <MessageSquare className="h-5 w-5 mr-2" />
+                Follow Us
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {(() => {
+                  const socialMedia = providerDetails?.social_media_links || {};
+                  const platforms = [
+                    { name: 'Instagram', key: 'instagram', icon: '📸' },
+                    { name: 'Facebook', key: 'facebook', icon: '📘' },
+                    { name: 'TikTok', key: 'tiktok', icon: '🎵' },
+                    { name: 'X (Twitter)', key: 'twitter', icon: '🐦' }
+                  ];
+                  
+                  return platforms.map(platform => (
+                    socialMedia[platform.key] ? (
+                      <a 
+                        key={platform.key}
+                        href={`https://${platform.key}.com/${socialMedia[platform.key].replace('@', '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+                      >
+                        <span className="text-2xl mr-3">{platform.icon}</span>
+                        <div>
+                          <p className="font-medium">{platform.name}</p>
+                          <p className="text-sm text-muted-foreground">@{socialMedia[platform.key].replace('@', '')}</p>
+                        </div>
+                      </a>
+                    ) : (
+                      <div key={platform.key} className="flex items-center p-3 bg-muted/50 rounded-lg">
+                        <span className="text-2xl mr-3 opacity-50">{platform.icon}</span>
+                        <div>
+                          <p className="font-medium text-muted-foreground">{platform.name}</p>
+                          <p className="text-sm text-muted-foreground">Not connected</p>
+                        </div>
+                      </div>
+                    )
+                  ));
+                })()}
+              </div>
+            </div>
+
+            {/* Certifications & Specialties */}
+            <div className="text-left">
+              <h3 className="text-xl font-semibold mb-4 flex items-center">
+                <Award className="h-5 w-5 mr-2" />
+                Certifications & Specialties
+              </h3>
+              {providerDetails?.certifications ? (
+                <div className="flex flex-wrap gap-2">
+                  {providerDetails.certifications.split(',').map((cert: string, index: number) => (
+                    <Badge key={index} variant="secondary" className="text-sm">
+                      {cert.trim()}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground">Professional certifications and specialties will be displayed here.</p>
+              )}
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t">
               {providerDetails?.years_experience && (
                 <div className="text-center">
                   <div className="text-3xl font-bold text-primary mb-2">{providerDetails.years_experience}+</div>
