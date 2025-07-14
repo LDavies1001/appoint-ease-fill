@@ -159,11 +159,6 @@ const Index = () => {
                     </div>
                     
                     <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Your Name" className="pl-10 h-11 text-sm bg-white/80" />
-                    </div>
-                    
-                    <div className="relative">
                       <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input placeholder="Business Email" className="pl-10 h-11 text-sm bg-white/80" />
                     </div>
