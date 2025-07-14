@@ -191,38 +191,35 @@ const CustomerDashboard = () => {
 
   const fetchFavouriteBusinesses = async () => {
     try {
-      const { data, error } = await supabase
+      // First get the favourites with provider info
+      const { data: favourites, error: favError } = await supabase
         .from('customer_favourites')
-        .select(`
-          *,
-          provider:profiles!customer_favourites_provider_id_fkey(
-            name, 
-            location,
-            provider_details(
-              business_name,
-              business_email,
-              business_phone,
-              business_category,
-              rating
-            )
-          )
-        `)
+        .select('*, provider:profiles!customer_favourites_provider_id_fkey(name, location)')
         .eq('customer_id', profile?.user_id);
 
-      if (error) throw error;
+      if (favError) throw favError;
 
-      const formattedFavourites = data?.map(fav => ({
-        ...fav,
-        provider: {
-          name: fav.provider?.name || 'Unknown',
-          business_name: fav.provider?.provider_details?.[0]?.business_name || 'Unknown Business',
-          location: fav.provider?.location || 'Unknown Location',
-          rating: fav.provider?.provider_details?.[0]?.rating || 0,
-          business_email: fav.provider?.provider_details?.[0]?.business_email || '',
-          business_phone: fav.provider?.provider_details?.[0]?.business_phone || '',
-          business_category: fav.provider?.provider_details?.[0]?.business_category || ''
-        }
-      })) || [];
+      // Then get provider details for each favourite
+      const formattedFavourites = await Promise.all((favourites || []).map(async (fav) => {
+        const { data: providerDetails } = await supabase
+          .from('provider_details')
+          .select('business_name, business_email, business_phone, business_category, rating')
+          .eq('user_id', fav.provider_id)
+          .single();
+
+        return {
+          ...fav,
+          provider: {
+            name: fav.provider?.name || 'Unknown',
+            business_name: providerDetails?.business_name || 'Unknown Business',
+            location: fav.provider?.location || 'Unknown Location',
+            rating: providerDetails?.rating || 0,
+            business_email: providerDetails?.business_email || '',
+            business_phone: providerDetails?.business_phone || '',
+            business_category: providerDetails?.business_category || ''
+          }
+        };
+      }));
 
       setFavouriteBusinesses(formattedFavourites);
     } catch (error) {
@@ -232,30 +229,33 @@ const CustomerDashboard = () => {
 
   const fetchLocalOffers = async () => {
     try {
-      const { data, error } = await supabase
+      // Get offers with provider info
+      const { data: offers, error: offerError } = await supabase
         .from('local_offers')
-        .select(`
-          *,
-          provider:profiles!local_offers_provider_id_fkey(
-            name,
-            location,
-            provider_details(business_name)
-          )
-        `)
+        .select('*, provider:profiles!local_offers_provider_id_fkey(name, location)')
         .eq('is_active', true)
         .gte('valid_until', new Date().toISOString())
         .order('valid_until', { ascending: true });
 
-      if (error) throw error;
+      if (offerError) throw offerError;
 
-      const formattedOffers = data?.map(offer => ({
-        ...offer,
-        provider: {
-          name: offer.provider?.name || 'Unknown',
-          business_name: offer.provider?.provider_details?.[0]?.business_name || 'Unknown Business',
-          location: offer.provider?.location || 'Unknown Location'
-        }
-      })) || [];
+      // Then get provider details for each offer
+      const formattedOffers = await Promise.all((offers || []).map(async (offer) => {
+        const { data: providerDetails } = await supabase
+          .from('provider_details')
+          .select('business_name')
+          .eq('user_id', offer.provider_id)
+          .single();
+
+        return {
+          ...offer,
+          provider: {
+            name: offer.provider?.name || 'Unknown',
+            business_name: providerDetails?.business_name || 'Unknown Business',
+            location: offer.provider?.location || 'Unknown Location'
+          }
+        };
+      }));
 
       setLocalOffers(formattedOffers);
     } catch (error) {
@@ -358,7 +358,7 @@ const CustomerDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation Tabs */}
-        <div className="flex space-x-1 mb-8">
+        <div className="flex flex-wrap gap-1 mb-8">
           <Button
             variant={activeTab === 'browse' ? 'hero' : 'ghost'}
             onClick={() => setActiveTab('browse')}
@@ -372,6 +372,20 @@ const CustomerDashboard = () => {
           >
             <BookOpen className="h-4 w-4 mr-2" />
             My Bookings
+          </Button>
+          <Button
+            variant={activeTab === 'favourites' ? 'hero' : 'ghost'}
+            onClick={() => setActiveTab('favourites')}
+          >
+            <Heart className="h-4 w-4 mr-2" />
+            Favourites
+          </Button>
+          <Button
+            variant={activeTab === 'offers' ? 'hero' : 'ghost'}
+            onClick={() => setActiveTab('offers')}
+          >
+            <Tag className="h-4 w-4 mr-2" />
+            Local Offers
           </Button>
         </div>
 
@@ -534,6 +548,151 @@ const CustomerDashboard = () => {
                           <User className="h-4 w-4 mr-1" />
                           {booking.service.name}
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
+        )}
+
+        {activeTab === 'favourites' && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-foreground">Favourite Businesses</h2>
+            
+            {favouriteBusinesses.length === 0 ? (
+              <Card className="card-elegant p-8 text-center">
+                <Heart className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">No favourite businesses yet.</p>
+                <Button
+                  variant="hero"
+                  className="mt-4"
+                  onClick={() => setActiveTab('browse')}
+                >
+                  Browse Providers
+                </Button>
+              </Card>
+            ) : (
+              favouriteBusinesses.map((favourite) => (
+                <Card key={favourite.id} className="card-elegant p-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="font-semibold text-foreground">
+                            {favourite.provider.business_name}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {favourite.provider.name}
+                          </p>
+                        </div>
+                        {favourite.provider.rating > 0 && (
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Star className="h-4 w-4 mr-1 fill-current text-yellow-400" />
+                            {favourite.provider.rating.toFixed(1)}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {favourite.provider.location}
+                        </div>
+                        {favourite.provider.business_phone && (
+                          <div className="flex items-center">
+                            <Phone className="h-4 w-4 mr-1" />
+                            {favourite.provider.business_phone}
+                          </div>
+                        )}
+                        {favourite.provider.business_email && (
+                          <div className="flex items-center">
+                            <Mail className="h-4 w-4 mr-1" />
+                            {favourite.provider.business_email}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
+        )}
+
+        {activeTab === 'offers' && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-foreground">Local Offers & Discounts</h2>
+            
+            {localOffers.length === 0 ? (
+              <Card className="card-elegant p-8 text-center">
+                <Tag className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">No local offers available at the moment.</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Check back later for new deals from local providers!
+                </p>
+              </Card>
+            ) : (
+              localOffers.map((offer) => (
+                <Card key={offer.id} className="card-elegant p-4 border-l-4 border-l-accent">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="font-semibold text-foreground flex items-center">
+                            {offer.title}
+                            {offer.discount_percentage && (
+                              <Badge variant="destructive" className="ml-2">
+                                -{offer.discount_percentage}% OFF
+                              </Badge>
+                            )}
+                            {offer.discount_amount && (
+                              <Badge variant="destructive" className="ml-2">
+                                ${offer.discount_amount} OFF
+                              </Badge>
+                            )}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            by {offer.provider.business_name}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          {offer.offer_code && (
+                            <Badge variant="outline" className="font-mono">
+                              {offer.offer_code}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+
+                      {offer.description && (
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {offer.description}
+                        </p>
+                      )}
+
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {offer.provider.location}
+                        </div>
+                        {offer.min_spend && (
+                          <div className="flex items-center">
+                            <Building className="h-4 w-4 mr-1" />
+                            Min spend: ${offer.min_spend}
+                          </div>
+                        )}
+                        <div className="flex items-center">
+                          <Calendar className="h-4 w-4 mr-1" />
+                          Until {formatDate(offer.valid_until)}
+                        </div>
+                        {offer.max_uses && (
+                          <div className="flex items-center">
+                            <User className="h-4 w-4 mr-1" />
+                            {offer.current_uses}/{offer.max_uses} used
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
