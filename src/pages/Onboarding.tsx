@@ -67,7 +67,11 @@ const Onboarding = () => {
       return;
     }
 
-    // Allow access to onboarding for profile updates - don't redirect completed profiles
+    // If profile is complete, redirect to dashboard
+    if (profile.is_profile_complete) {
+      navigate('/dashboard');
+      return;
+    }
 
     // DEBUG: Log profile information
     console.log('Profile data:', profile);
