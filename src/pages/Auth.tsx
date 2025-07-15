@@ -6,8 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, UserCheck, Mail, Lock, Eye, EyeOff, Building, TrendingUp, Clock, CheckCircle, PoundSterling, Users, Search } from 'lucide-react';
-import { LocationInput } from '@/components/ui/location-input';
+import { User, UserCheck, Mail, Lock, Eye, EyeOff, Building, TrendingUp, Clock, CheckCircle, PoundSterling, Users, Search, Phone, Upload, AlertCircle } from 'lucide-react';
 import Header from '@/components/ui/header';
 
 const Auth = () => {
@@ -16,11 +15,14 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [businessName, setBusinessName] = useState('');
+  const [location, setLocation] = useState('');
+  const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showBusinessSignup, setShowBusinessSignup] = useState(false);
   const [showRoleSelection, setShowRoleSelection] = useState(false);
   const [selectedRole, setSelectedRole] = useState<'customer' | 'provider' | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   
   const [searchParams] = useSearchParams();
   const { signIn, signUp, user, profile } = useAuth();
@@ -28,6 +30,17 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Clear form data when switching tabs
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setFullName('');
+    setBusinessName('');
+    setLocation('');
+    setPhone('');
+    setShowPassword(false);
+    setShowSuccessMessage(false);
+    
     // Reset all state when URL changes
     setShowBusinessSignup(false);
     setShowRoleSelection(false);
@@ -53,6 +66,23 @@ const Auth = () => {
     }
   }, [user, profile, navigate]);
 
+  const validatePhone = (phone: string) => {
+    // Basic UK phone number validation
+    const phoneRegex = /^(\+44\s?|0)[0-9]{10}$/;
+    return phoneRegex.test(phone.replace(/\s/g, ''));
+  };
+
+  const getPasswordStrength = () => {
+    if (!password) return 0;
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
+  };
+
   const handleBusinessSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -69,6 +99,33 @@ const Auth = () => {
       toast({
         title: "Full name required",
         description: "Please enter your full name",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!phone.trim()) {
+      toast({
+        title: "Phone number required",
+        description: "Please enter your phone number",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!validatePhone(phone)) {
+      toast({
+        title: "Invalid phone number",
+        description: "Please enter a valid UK phone number",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!location.trim()) {
+      toast({
+        title: "Location required",
+        description: "Please enter your business location",
         variant: "destructive"
       });
       return;
@@ -94,12 +151,13 @@ const Auth = () => {
 
     // Check for password strength requirements
     const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
     const hasNumber = /\d/.test(password);
     
-    if (!hasUppercase || !hasNumber) {
+    if (!hasUppercase || !hasLowercase || !hasNumber) {
       toast({
         title: "Password too weak",
-        description: "Password must contain at least 1 uppercase letter and 1 number",
+        description: "Password must contain uppercase, lowercase, and number",
         variant: "destructive"
       });
       return;
@@ -118,16 +176,7 @@ const Auth = () => {
           variant: "destructive"
         });
       } else {
-        toast({
-          title: "Account created!",
-          description: "Please check your email for verification",
-        });
-        // Clear form
-        setBusinessName('');
-        setFullName('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
+        setShowSuccessMessage(true);
       }
     } catch (error) {
       toast({
@@ -235,6 +284,54 @@ const Auth = () => {
     );
   }
 
+  // Show success message after signup
+  if (showSuccessMessage) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <Header />
+        <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center space-x-2 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
+                  <CheckCircle className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+              </div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">
+                Account Created Successfully!
+              </h1>
+              <p className="text-muted-foreground">
+                Please check your email for verification before logging in
+              </p>
+            </div>
+
+            <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                  <Mail className="h-8 w-8 text-green-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">Check Your Email</h3>
+                <p className="text-sm text-muted-foreground">
+                  We've sent a verification email to <strong>{email}</strong>. 
+                  Please click the link in the email to verify your account before logging in.
+                </p>
+                <Button
+                  onClick={() => navigate('/auth')}
+                  variant="hero"
+                  size="lg"
+                  className="w-full mt-6"
+                >
+                  Go to Login
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Business Signup Form
   if (selectedRole === 'provider') {
     return (
@@ -243,12 +340,12 @@ const Auth = () => {
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
-            <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                <Building className="h-5 w-5 text-white" />
+              <div className="flex items-center justify-center space-x-2 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
+                  <Building className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
               </div>
-              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
-            </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Create Your Business Account
               </h1>
@@ -308,11 +405,37 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">UK format: 07XXX XXXXXX or +44 7XXX XXXXXX</p>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="business-location">Business Location</Label>
-                  <LocationInput 
-                    placeholder="Business Location" 
-                    className="h-11 text-sm bg-white/80" 
-                  />
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="business-location"
+                      type="text"
+                      placeholder="e.g. Wythenshawe, Bolton, Farnworth"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Enter your town or local area</p>
                 </div>
 
                 <div className="space-y-2">
@@ -336,6 +459,28 @@ const Auth = () => {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
+                  {/* Password Requirements */}
+                  <div className="space-y-1 text-xs">
+                    <p className="text-muted-foreground">Password must contain:</p>
+                    <div className="grid grid-cols-2 gap-1">
+                      <div className={`flex items-center space-x-1 ${password.length >= 8 ? 'text-green-600' : 'text-muted-foreground'}`}>
+                        <CheckCircle className="h-3 w-3" />
+                        <span>8+ characters</span>
+                      </div>
+                      <div className={`flex items-center space-x-1 ${/[A-Z]/.test(password) ? 'text-green-600' : 'text-muted-foreground'}`}>
+                        <CheckCircle className="h-3 w-3" />
+                        <span>Uppercase letter</span>
+                      </div>
+                      <div className={`flex items-center space-x-1 ${/[a-z]/.test(password) ? 'text-green-600' : 'text-muted-foreground'}`}>
+                        <CheckCircle className="h-3 w-3" />
+                        <span>Lowercase letter</span>
+                      </div>
+                      <div className={`flex items-center space-x-1 ${/\d/.test(password) ? 'text-green-600' : 'text-muted-foreground'}`}>
+                        <CheckCircle className="h-3 w-3" />
+                        <span>Number</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -351,6 +496,23 @@ const Auth = () => {
                       className="pl-10"
                       required
                     />
+                  </div>
+                </div>
+
+                {/* Certification Upload Option */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Certifications & Awards (Optional)</Label>
+                    <span className="text-xs text-muted-foreground">Upload later</span>
+                  </div>
+                  <div className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-4 text-center">
+                    <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">
+                      Upload your professional certifications and awards to build trust with customers
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      You can add these later in your profile settings
+                    </p>
                   </div>
                 </div>
 
