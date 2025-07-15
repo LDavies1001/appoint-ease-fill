@@ -34,18 +34,33 @@ export const LocationInput: React.FC<LocationInputProps> = ({
           const { latitude, longitude } = position.coords;
           
           // Use reverse geocoding to get readable address
-          // For now, we'll just show coordinates, but you can integrate with a geocoding service
-          const locationString = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`
+          );
           
-          setInputValue(locationString);
-          onChange?.(locationString);
+          if (!response.ok) {
+            throw new Error('Failed to get location details');
+          }
           
-          // TODO: Integrate with a geocoding service like Google Maps or OpenStreetMap
-          // to convert coordinates to readable address
+          const data = await response.json();
+          
+          // Extract town/borough/city from the address
+          const address = data.address || {};
+          const location = address.town || 
+                          address.city || 
+                          address.village || 
+                          address.suburb || 
+                          address.borough || 
+                          address.district || 
+                          data.display_name?.split(',')[0] || 
+                          'Unknown location';
+          
+          setInputValue(location);
+          onChange?.(location);
           
         } catch (error) {
           console.error('Error getting location:', error);
-          alert('Failed to get location details');
+          alert('Failed to get location details. Please enter your location manually.');
         } finally {
           setIsLoading(false);
         }

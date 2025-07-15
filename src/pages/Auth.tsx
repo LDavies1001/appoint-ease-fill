@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { User, UserCheck, Mail, Lock, Eye, EyeOff, Building, TrendingUp, Clock, CheckCircle, PoundSterling, Users, Search, Phone, Upload, AlertCircle } from 'lucide-react';
+import { LocationInput } from '@/components/ui/location-input';
 import Header from '@/components/ui/header';
 
 const Auth = () => {
@@ -423,19 +424,13 @@ const Auth = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="business-location">Business Location</Label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="business-location"
-                      type="text"
-                      placeholder="e.g. Wythenshawe, Bolton, Farnworth"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground">Enter your town or local area</p>
+                  <LocationInput
+                    placeholder="e.g. Wythenshawe, Bolton, Farnworth"
+                    value={location}
+                    onChange={setLocation}
+                    className="h-11"
+                  />
+                  <p className="text-xs text-muted-foreground">Enter your town or use location button to detect automatically</p>
                 </div>
 
                 <div className="space-y-2">
