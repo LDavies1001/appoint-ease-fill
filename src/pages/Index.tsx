@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building, Navigation } from 'lucide-react';
@@ -7,9 +7,74 @@ import { LocationInput } from '@/components/ui/location-input';
 import { Input } from '@/components/ui/input';
 import Header from '@/components/ui/header';
 import heroImage from '@/assets/hero-lash-extension.jpg';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 const Index = () => {
   const [selectedPanel, setSelectedPanel] = useState<'customer' | 'business' | null>(null);
+  const [customerForm, setCustomerForm] = useState({
+    name: '',
+    email: '',
+    location: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [businessForm, setBusinessForm] = useState({
+    businessName: '',
+    email: '',
+    location: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCustomerSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (customerForm.password !== customerForm.confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const { error } = await signUp(customerForm.email, customerForm.password, 'customer', customerForm.name);
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Please check your email to confirm your account");
+        navigate('/auth?message=check-email');
+      }
+    } catch (error) {
+      toast.error("An error occurred during signup");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBusinessSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (businessForm.password !== businessForm.confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const { error } = await signUp(businessForm.email, businessForm.password, 'provider', businessForm.businessName);
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Please check your email to confirm your account");
+        navigate('/auth?message=check-email');
+      }
+    } catch (error) {
+      toast.error("An error occurred during signup");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getMainHeading = () => {
     if (selectedPanel === 'customer') {
@@ -60,7 +125,7 @@ const Index = () => {
                 }`}
                 onClick={() => setSelectedPanel('customer')}
               >
-                <div className="space-y-4">
+                <form onSubmit={handleCustomerSubmit} className="space-y-4">
                   <div className="text-center mb-4">
                     <div className="flex items-center justify-center space-x-2 mb-2">
                       <User className="h-5 w-5 text-primary" />
@@ -73,37 +138,79 @@ const Index = () => {
                   <div className="space-y-3">
                     <div className="relative">
                       <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Your Name" className="pl-10 h-11 text-sm bg-white/80" />
+                      <Input 
+                        placeholder="Your Name" 
+                        className="pl-10 h-11 text-sm bg-white/80"
+                        value={customerForm.name}
+                        onChange={(e) => setCustomerForm({...customerForm, name: e.target.value})}
+                        onClick={(e) => e.stopPropagation()}
+                        required
+                      />
                     </div>
                     
                     <div className="relative">
                       <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Email address" className="pl-10 h-11 text-sm bg-white/80" />
+                      <Input 
+                        type="email"
+                        placeholder="Email address" 
+                        className="pl-10 h-11 text-sm bg-white/80"
+                        value={customerForm.email}
+                        onChange={(e) => setCustomerForm({...customerForm, email: e.target.value})}
+                        onClick={(e) => e.stopPropagation()}
+                        required
+                      />
                     </div>
                     
-                    <LocationInput 
-                      placeholder="Your Location" 
-                      className="h-11 text-sm bg-white/80" 
-                    />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <LocationInput 
+                        placeholder="Your Location" 
+                        className="h-11 text-sm bg-white/80"
+                        value={customerForm.location}
+                        onChange={(value) => setCustomerForm({...customerForm, location: value})}
+                      />
+                    </div>
                     
                     <div className="relative">
                       <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input type="password" placeholder="Password" className="pl-10 h-11 text-sm bg-white/80" />
+                      <Input 
+                        type="password" 
+                        placeholder="Password" 
+                        className="pl-10 h-11 text-sm bg-white/80"
+                        value={customerForm.password}
+                        onChange={(e) => setCustomerForm({...customerForm, password: e.target.value})}
+                        onClick={(e) => e.stopPropagation()}
+                        required
+                      />
                     </div>
                     
                     <div className="relative">
                       <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input type="password" placeholder="Confirm Password" className="pl-10 h-11 text-sm bg-white/80" />
+                      <Input 
+                        type="password" 
+                        placeholder="Confirm Password" 
+                        className="pl-10 h-11 text-sm bg-white/80"
+                        value={customerForm.confirmPassword}
+                        onChange={(e) => setCustomerForm({...customerForm, confirmPassword: e.target.value})}
+                        onClick={(e) => e.stopPropagation()}
+                        required
+                      />
                     </div>
                   </div>
                   
-                  <Link to="/auth?tab=signup" className="block">
-                    <Button className="w-full h-11 text-sm font-medium">
-                      Sign Up as Customer
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                  <Button 
+                    type="submit" 
+                    className="w-full h-11 text-sm font-medium"
+                    disabled={loading}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {loading ? 'Creating Account...' : 'Sign Up as Customer'}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  
+                  <Link to="/auth?tab=signup" className="block text-center text-sm text-muted-foreground hover:text-primary">
+                    Or sign up on the full form →
                   </Link>
-                </div>
+                </form>
               </Card>
 
               {/* Business Sign Up Panel */}
@@ -115,7 +222,7 @@ const Index = () => {
                 }`}
                 onClick={() => setSelectedPanel('business')}
               >
-                <div className="space-y-4">
+                <form onSubmit={handleBusinessSubmit} className="space-y-4">
                   <div className="text-center mb-4">
                     <div className="flex items-center justify-center space-x-2 mb-2">
                       <Building className="h-5 w-5 text-accent" />
@@ -128,37 +235,79 @@ const Index = () => {
                   <div className="space-y-3">
                     <div className="relative">
                       <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Business Name" className="pl-10 h-11 text-sm bg-white/80" />
+                      <Input 
+                        placeholder="Business Name" 
+                        className="pl-10 h-11 text-sm bg-white/80"
+                        value={businessForm.businessName}
+                        onChange={(e) => setBusinessForm({...businessForm, businessName: e.target.value})}
+                        onClick={(e) => e.stopPropagation()}
+                        required
+                      />
                     </div>
                     
                     <div className="relative">
                       <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Business Email" className="pl-10 h-11 text-sm bg-white/80" />
+                      <Input 
+                        type="email"
+                        placeholder="Business Email" 
+                        className="pl-10 h-11 text-sm bg-white/80"
+                        value={businessForm.email}
+                        onChange={(e) => setBusinessForm({...businessForm, email: e.target.value})}
+                        onClick={(e) => e.stopPropagation()}
+                        required
+                      />
                     </div>
                     
-                    <LocationInput 
-                      placeholder="Business Location" 
-                      className="h-11 text-sm bg-white/80" 
-                    />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <LocationInput 
+                        placeholder="Business Location" 
+                        className="h-11 text-sm bg-white/80"
+                        value={businessForm.location}
+                        onChange={(value) => setBusinessForm({...businessForm, location: value})}
+                      />
+                    </div>
                     
                     <div className="relative">
                       <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input type="password" placeholder="Password" className="pl-10 h-11 text-sm bg-white/80" />
+                      <Input 
+                        type="password" 
+                        placeholder="Password" 
+                        className="pl-10 h-11 text-sm bg-white/80"
+                        value={businessForm.password}
+                        onChange={(e) => setBusinessForm({...businessForm, password: e.target.value})}
+                        onClick={(e) => e.stopPropagation()}
+                        required
+                      />
                     </div>
                     
                     <div className="relative">
                       <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input type="password" placeholder="Confirm Password" className="pl-10 h-11 text-sm bg-white/80" />
+                      <Input 
+                        type="password" 
+                        placeholder="Confirm Password" 
+                        className="pl-10 h-11 text-sm bg-white/80"
+                        value={businessForm.confirmPassword}
+                        onChange={(e) => setBusinessForm({...businessForm, confirmPassword: e.target.value})}
+                        onClick={(e) => e.stopPropagation()}
+                        required
+                      />
                     </div>
                   </div>
                   
-                  <Link to="/auth?tab=provider" className="block">
-                    <Button className="w-full h-11 text-sm font-medium bg-accent hover:bg-accent/90 text-accent-foreground">
-                      Register Your Business
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                  <Button 
+                    type="submit"
+                    className="w-full h-11 text-sm font-medium bg-accent hover:bg-accent/90 text-accent-foreground"
+                    disabled={loading}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {loading ? 'Creating Account...' : 'Register Your Business'}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  
+                  <Link to="/auth?tab=provider" className="block text-center text-sm text-muted-foreground hover:text-accent">
+                    Or sign up on the full form →
                   </Link>
-                </div>
+                </form>
               </Card>
             </div>
           </div>
