@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera } from 'lucide-react';
+import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera, ArrowRight } from 'lucide-react';
 import Header from '@/components/ui/header';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 import { CustomerStepper } from '@/components/customer/CustomerStepper';
@@ -535,99 +535,157 @@ const Onboarding = () => {
   const totalSteps = profile.role === 'provider' ? 3 : 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+      </div>
+      
       <Header />
-      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-      <div className="w-full max-w-lg">
-        {/* Only show header and progress for providers */}
-        {profile.role === 'provider' && (
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                <CheckCircle className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
-            </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              {getStepTitle()}
-            </h1>
-            <p className="text-muted-foreground mb-6">
-              {getStepDescription()}
-            </p>
-            <div className="flex justify-center">
-              {Array.from({ length: totalSteps }).map((_, index) => (
-                <div
-                  key={index}
-                  className={`w-3 h-3 rounded-full mx-1 transition-all duration-300 ${
-                    index <= currentStep ? 'bg-primary shadow-sm' : 'bg-muted'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Customer gets clean stepper, Provider gets card wrapper */}
-        {profile.role === 'customer' ? (
-          <div className="space-y-6">
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                  <CheckCircle className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
-              </div>
-            </div>
-            
-            {/* Customer Step-by-Step Profile */}
-            <CustomerStepper
-              initialData={{
-                phone: formData.phone,
-                location: formData.location,
-                bio: formData.bio,
-                privacy_settings: profile.privacy_settings || {
-                  phone_visible: true,
-                  email_visible: false,
-                  location_visible: true
-                },
-                gdpr_consent: profile.gdpr_consent || false,
-                terms_accepted: profile.terms_accepted || false
-              }}
-              onComplete={handleCustomerProfileSubmit}
-              isLoading={loading || uploadingPhoto}
-              userFullName={profile.name || 'Customer'}
-              userEmail={profile.email}
-            />
-          </div>
-          ) : (
-            <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
-          {currentStep === 0 && profile.role === 'provider' && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+      
+      <div className="relative z-10 flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
+        <div className="w-full max-w-2xl animate-fade-in">
+          {/* Only show header and progress for providers */}
+          {profile.role === 'provider' && (
+            <div className="text-center mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="flex items-center justify-center space-x-3 mb-8">
                 <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary via-primary-glow to-accent rounded-2xl flex items-center justify-center shadow-lg animate-scale-in">
+                    <CheckCircle className="h-6 w-6 text-white drop-shadow-sm" />
+                  </div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-primary to-accent rounded-2xl blur opacity-20 animate-pulse"></div>
+                </div>
+                <div>
+                  <span className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                    Open-Slot
+                  </span>
+                  <div className="text-sm text-muted-foreground font-medium tracking-wide">
+                    Business Setup
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent leading-tight">
+                  {getStepTitle()}
+                </h1>
+                <p className="text-xl text-muted-foreground max-w-md mx-auto leading-relaxed">
+                  {getStepDescription()}
+                </p>
+              </div>
+              
+              {/* Enhanced Progress Indicator */}
+              <div className="flex justify-center mt-8">
+                <div className="flex items-center space-x-4">
+                  {Array.from({ length: totalSteps }).map((_, index) => (
+                    <div key={index} className="flex items-center">
+                      <div className="relative">
+                        <div
+                          className={`w-4 h-4 rounded-full transition-all duration-500 ${
+                            index <= currentStep 
+                              ? 'bg-gradient-to-r from-primary to-primary-glow shadow-lg shadow-primary/30 scale-110' 
+                              : 'bg-muted/50 hover:bg-muted'
+                          }`}
+                        />
+                        {index <= currentStep && (
+                          <div className="absolute inset-0 w-4 h-4 rounded-full bg-gradient-to-r from-primary to-primary-glow animate-ping opacity-20"></div>
+                        )}
+                      </div>
+                      {index < totalSteps - 1 && (
+                        <div 
+                          className={`w-12 h-0.5 mx-2 transition-all duration-500 ${
+                            index < currentStep ? 'bg-gradient-to-r from-primary to-primary-glow' : 'bg-muted'
+                          }`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Customer gets clean stepper, Provider gets enhanced card wrapper */}
+          {profile.role === 'customer' ? (
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-3 mb-8">
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary via-primary-glow to-accent rounded-2xl flex items-center justify-center shadow-lg">
+                      <CheckCircle className="h-6 w-6 text-white drop-shadow-sm" />
+                    </div>
+                    <div className="absolute -inset-1 bg-gradient-to-br from-primary to-accent rounded-2xl blur opacity-20 animate-pulse"></div>
+                  </div>
+                  <span className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">Open-Slot</span>
+                </div>
+              </div>
+              
+              {/* Customer Step-by-Step Profile */}
+              <CustomerStepper
+                initialData={{
+                  phone: formData.phone,
+                  location: formData.location,
+                  bio: formData.bio,
+                  privacy_settings: profile.privacy_settings || {
+                    phone_visible: true,
+                    email_visible: false,
+                    location_visible: true
+                  },
+                  gdpr_consent: profile.gdpr_consent || false,
+                  terms_accepted: profile.terms_accepted || false
+                }}
+                onComplete={handleCustomerProfileSubmit}
+                isLoading={loading || uploadingPhoto}
+                userFullName={profile.name || 'Customer'}
+                userEmail={profile.email}
+              />
+            </div>
+          ) : (
+            <Card className="border-0 shadow-2xl bg-card/80 backdrop-blur-xl p-8 relative overflow-hidden animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              {/* Card background effects */}
+              <div className="absolute inset-0 bg-gradient-to-br from-card/50 via-card to-card/50 pointer-events-none"></div>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary-glow to-accent"></div>
+              
+              <div className="relative z-10">
+          {currentStep === 0 && profile.role === 'provider' && (
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              {/* Step indicator */}
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                  1
+                </div>
+                <h2 className="text-xl font-semibold text-foreground">Personal Information</h2>
+              </div>
+
+              <div className="space-y-4">
+                <Label htmlFor="phone" className="text-base font-medium text-foreground">Phone Number</Label>
+                <div className="relative group">
+                  <Phone className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     id="phone"
                     type="tel"
                     placeholder="Enter your phone number"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="pl-10"
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="location">Location *</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-4">
+                <Label htmlFor="location" className="text-base font-medium text-foreground">
+                  Location <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative group">
+                  <MapPin className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     id="location"
                     placeholder="Enter your city or area"
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
-                    className="pl-10 pr-12"
+                    className="pl-12 pr-14 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                     required
                   />
                   <Button
@@ -636,58 +694,59 @@ const Onboarding = () => {
                     size="sm"
                     onClick={detectLocation}
                     disabled={loading}
-                    className="absolute right-1 top-1 h-8 w-8 p-0 hover:bg-primary/10"
+                    className="absolute right-2 top-2 h-8 w-8 p-0 hover:bg-primary/10 rounded-full transition-all duration-200"
                   >
                     <Locate className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="bio">Personal Bio (if independent)</Label>
-                <div className="relative">
-                  <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-4">
+                <Label htmlFor="bio" className="text-base font-medium text-foreground">Personal Bio</Label>
+                <div className="relative group">
+                  <FileText className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Textarea
                     id="bio"
                     placeholder="Tell us a bit about yourself..."
                     value={formData.bio}
                     onChange={(e) => handleInputChange('bio', e.target.value)}
-                    className="pl-10 min-h-[80px]"
+                    className="pl-12 min-h-[100px] text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm resize-none"
                   />
                 </div>
+                <p className="text-sm text-muted-foreground">Optional: Share your professional background or personal touch</p>
               </div>
 
-              <div className="space-y-3">
-                <Label>Profile Photo</Label>
-                <div className="flex items-center space-x-4">
+              <div className="space-y-4">
+                <Label className="text-base font-medium text-foreground">Profile Photo</Label>
+                <div className="flex items-center space-x-6">
                   {formData.profile_photo ? (
-                    <div className="relative">
+                    <div className="relative group animate-scale-in">
                       <img 
                         src={URL.createObjectURL(formData.profile_photo)} 
                         alt="Profile preview" 
-                        className="w-20 h-20 rounded-full object-cover border-2 border-muted"
+                        className="w-24 h-24 rounded-full object-cover border-4 border-primary/20 shadow-lg"
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => setFormData(prev => ({ ...prev, profile_photo: null }))}
-                        className="absolute -top-2 -right-2 h-6 w-6 p-0 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
+                        className="absolute -top-2 -right-2 h-8 w-8 p-0 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200"
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-4 w-4" />
                       </Button>
                     </div>
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-muted-foreground/50">
-                      <Camera className="h-8 w-8 text-muted-foreground" />
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 transition-colors duration-300">
+                      <Camera className="h-10 w-10 text-muted-foreground" />
                     </div>
                   )}
                   <div className="flex-1">
                     <Label 
                       htmlFor="profile_photo" 
-                      className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                      className="cursor-pointer inline-flex items-center justify-center rounded-lg text-base font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary-glow/5 hover:from-primary/10 hover:to-primary-glow/10 text-primary hover:text-primary-glow h-12 px-6 py-2 shadow-sm hover:shadow-md"
                     >
-                      <Upload className="h-4 w-4 mr-2" />
+                      <Upload className="h-5 w-5 mr-3" />
                       Choose Photo
                     </Label>
                     <input
@@ -697,8 +756,8 @@ const Onboarding = () => {
                       onChange={handleProfilePhotoUpload}
                       className="hidden"
                     />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Upload a profile photo (max 5MB)
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Upload a professional profile photo (max 5MB)
                     </p>
                   </div>
                 </div>
@@ -707,121 +766,145 @@ const Onboarding = () => {
           )}
 
           {currentStep === 1 && profile.role === 'provider' && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="business_name">Business Name *</Label>
-                <div className="relative">
-                  <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              {/* Step indicator */}
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                  2
+                </div>
+                <h2 className="text-xl font-semibold text-foreground">Business Information</h2>
+              </div>
+
+              <div className="space-y-4">
+                <Label htmlFor="business_name" className="text-base font-medium text-foreground">
+                  Business Name <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative group">
+                  <Building className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     id="business_name"
                     placeholder="Enter your business name"
                     value={formData.business_name}
                     onChange={(e) => handleInputChange('business_name', e.target.value)}
-                    className="pl-10"
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="business_email">Business Email *</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-4">
+                <Label htmlFor="business_email" className="text-base font-medium text-foreground">
+                  Business Email <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative group">
+                  <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     id="business_email"
                     type="email"
                     placeholder={profile.email || "Enter business email"}
                     value={formData.business_email || profile.email}
                     onChange={(e) => handleInputChange('business_email', e.target.value)}
-                    className="pl-10"
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                     required
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   This will be shown to customers for booking inquiries
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="business_phone">Business Phone Number *</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-4">
+                <Label htmlFor="business_phone" className="text-base font-medium text-foreground">
+                  Business Phone Number <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative group">
+                  <Phone className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     id="business_phone"
                     type="tel"
                     placeholder="Enter business phone number"
                     value={formData.business_phone}
                     onChange={(e) => handleInputChange('business_phone', e.target.value)}
-                    className="pl-10"
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="business_address">Business Address *</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-4">
+                <Label htmlFor="business_address" className="text-base font-medium text-foreground">
+                  Business Address <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative group">
+                  <MapPin className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     id="business_address"
                     placeholder="Enter your business address"
                     value={formData.business_address}
                     onChange={(e) => handleInputChange('business_address', e.target.value)}
-                    className="pl-10"
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <Label>Services Offered *</Label>
-                <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
-                  {services.map((service) => (
-                    <div key={service.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={service.id}
-                        checked={formData.services_offered.includes(service.id)}
-                        onCheckedChange={() => handleServiceToggle(service.id)}
-                      />
-                      <Label
-                        htmlFor={service.id}
-                        className="text-sm font-normal cursor-pointer"
-                      >
-                        {service.name} <span className="text-muted-foreground">({service.category})</span>
-                      </Label>
-                    </div>
-                  ))}
+              <div className="space-y-4">
+                <Label className="text-base font-medium text-foreground">
+                  Services Offered <span className="text-destructive">*</span>
+                </Label>
+                <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg p-4 border border-border/50 backdrop-blur-sm">
+                  <div className="grid grid-cols-1 gap-3 max-h-48 overflow-y-auto">
+                    {services.map((service) => (
+                      <div key={service.id} className="flex items-center space-x-3 p-2 rounded-md hover:bg-background/50 transition-colors">
+                        <Checkbox
+                          id={service.id}
+                          checked={formData.services_offered.includes(service.id)}
+                          onCheckedChange={() => handleServiceToggle(service.id)}
+                          className="border-2 border-primary/30"
+                        />
+                        <Label
+                          htmlFor={service.id}
+                          className="text-sm font-medium cursor-pointer flex-1"
+                        >
+                          {service.name} 
+                          <span className="text-muted-foreground font-normal ml-2">({service.category})</span>
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+                <p className="text-sm text-muted-foreground">Select all services you offer</p>
               </div>
 
-              <div className="space-y-3">
-                <Label>Business Photos</Label>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-4">
+                <Label className="text-base font-medium text-foreground">Business Photos</Label>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-3">
                     {formData.business_photos.map((photo, index) => (
-                      <div key={index} className="relative group">
+                      <div key={index} className="relative group animate-scale-in">
                         <img 
                           src={URL.createObjectURL(photo)} 
                           alt={`Business photo ${index + 1}`}
-                          className="w-full h-20 object-cover rounded-lg border"
+                          className="w-full h-24 object-cover rounded-lg border-2 border-border/50 shadow-sm"
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
                           onClick={() => removeBusinessPhoto(index)}
-                          className="absolute -top-2 -right-2 h-6 w-6 p-0 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute -top-2 -right-2 h-7 w-7 p-0 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg"
                         >
-                          <X className="h-3 w-3" />
+                          <X className="h-4 w-4" />
                         </Button>
                       </div>
                     ))}
                     {formData.business_photos.length < 5 && (
                       <Label 
                         htmlFor="business_photos" 
-                        className="w-full h-20 border-2 border-dashed border-muted-foreground/50 rounded-lg flex items-center justify-center cursor-pointer hover:border-muted-foreground/70 transition-colors"
+                        className="w-full h-24 border-2 border-dashed border-primary/30 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group"
                       >
-                        <Upload className="h-6 w-6 text-muted-foreground" />
+                        <Upload className="h-6 w-6 text-primary/60 group-hover:text-primary transition-colors" />
+                        <span className="text-xs text-muted-foreground mt-1">Add Photo</span>
                       </Label>
                     )}
                   </div>
@@ -833,36 +916,48 @@ const Onboarding = () => {
                     onChange={handleBusinessPhotosUpload}
                     className="hidden"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Upload up to 5 business photos (max 5MB each)
+                  <p className="text-sm text-muted-foreground">
+                    Upload up to 5 business photos to showcase your work (max 5MB each)
                   </p>
                 </div>
               </div>
-
             </div>
           )}
 
           {currentStep === 2 && profile.role === 'provider' && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="business_description">Business Description *</Label>
-                <div className="relative">
-                  <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              {/* Step indicator */}
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                  3
+                </div>
+                <h2 className="text-xl font-semibold text-foreground">Business Details</h2>
+              </div>
+
+              <div className="space-y-4">
+                <Label htmlFor="business_description" className="text-base font-medium text-foreground">
+                  Business Description <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative group">
+                  <FileText className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Textarea
                     id="business_description"
                     placeholder="Describe your business and what makes you unique..."
                     value={formData.business_description}
                     onChange={(e) => handleInputChange('business_description', e.target.value)}
-                    className="pl-10 min-h-[80px]"
+                    className="pl-12 min-h-[120px] text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm resize-none"
                     required
                   />
                 </div>
+                <p className="text-sm text-muted-foreground">Tell customers about your expertise and services</p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="years_experience">Years of Experience *</Label>
-                <div className="relative">
-                  <Star className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-4">
+                <Label htmlFor="years_experience" className="text-base font-medium text-foreground">
+                  Years of Experience <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative group">
+                  <Star className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     id="years_experience"
                     type="number"
@@ -870,51 +965,56 @@ const Onboarding = () => {
                     placeholder="Years"
                     value={formData.years_experience}
                     onChange={(e) => handleInputChange('years_experience', e.target.value)}
-                    className="pl-10"
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="business_website">Business Website</Label>
-                <div className="relative">
-                  <Globe className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-4">
+                <Label htmlFor="business_website" className="text-base font-medium text-foreground">Business Website</Label>
+                <div className="relative group">
+                  <Globe className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Input
                     id="business_website"
                     placeholder="https://www.yourbusiness.com"
                     value={formData.business_website}
                     onChange={(e) => handleInputChange('business_website', e.target.value)}
-                    className="pl-10"
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                   />
                 </div>
+                <p className="text-sm text-muted-foreground">Optional: Add your website for more credibility</p>
               </div>
 
-              <div className="space-y-3">
-                <Label>Operating Hours</Label>
-                <div className="space-y-2">
+              <div className="space-y-4">
+                <Label className="text-base font-medium text-foreground">Operating Hours</Label>
+                <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg p-4 border border-border/50 backdrop-blur-sm space-y-3">
                   {formData.operating_hours.map((dayHours, index) => (
-                    <div key={dayHours.day} className="flex items-center space-x-2 text-sm">
-                      <div className="w-20 font-medium">{dayHours.day}</div>
-                      <Checkbox
-                        checked={!dayHours.closed}
-                        onCheckedChange={(checked) => handleOperatingHoursChange(index, 'closed', !checked)}
-                      />
-                      <div className="flex items-center space-x-1">
+                    <div key={dayHours.day} className="flex items-center justify-between p-3 bg-background/30 rounded-lg">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-20 font-medium text-foreground">{dayHours.day}</div>
+                        <Checkbox
+                          checked={!dayHours.closed}
+                          onCheckedChange={(checked) => handleOperatingHoursChange(index, 'closed', !checked)}
+                          className="border-2 border-primary/30"
+                        />
+                        <span className="text-sm text-muted-foreground">Open</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
                         <Input
                           type="time"
                           value={dayHours.open}
                           onChange={(e) => handleOperatingHoursChange(index, 'open', e.target.value)}
                           disabled={dayHours.closed}
-                          className="w-24"
+                          className="w-28 h-9 text-sm"
                         />
-                        <span>to</span>
+                        <span className="text-muted-foreground">to</span>
                         <Input
                           type="time"
                           value={dayHours.close}
                           onChange={(e) => handleOperatingHoursChange(index, 'close', e.target.value)}
                           disabled={dayHours.closed}
-                          className="w-24"
+                          className="w-28 h-9 text-sm"
                         />
                       </div>
                     </div>
@@ -922,105 +1022,127 @@ const Onboarding = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label>Standard Price List</Label>
+                  <Label className="text-base font-medium text-foreground">Standard Price List</Label>
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={addPriceItem}
+                    className="border-primary/30 text-primary hover:bg-primary/10"
                   >
+                    <DollarSign className="h-4 w-4 mr-2" />
                     Add Item
                   </Button>
                 </div>
-                <div className="space-y-2">
+                <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg p-4 border border-border/50 backdrop-blur-sm space-y-3">
                   {formData.pricing_info.map((item, index) => (
-                    <div key={index} className="flex items-center space-x-2">
+                    <div key={index} className="flex items-center space-x-3 p-3 bg-background/30 rounded-lg">
                       <Input
-                        placeholder="Service/Item"
+                        placeholder="Service/Item name"
                         value={item.service}
                         onChange={(e) => updatePriceItem(index, 'service', e.target.value)}
-                        className="flex-1"
+                        className="flex-1 h-10 border-border/50"
                       />
-                      <Input
-                        placeholder="Price"
-                        value={item.price}
-                        onChange={(e) => updatePriceItem(index, 'price', e.target.value)}
-                        className="w-24"
-                      />
+                      <div className="relative">
+                        <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="0.00"
+                          value={item.price}
+                          onChange={(e) => updatePriceItem(index, 'price', e.target.value)}
+                          className="w-28 h-10 pl-9 border-border/50"
+                        />
+                      </div>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => removePriceItem(index)}
-                        className="text-destructive hover:text-destructive"
+                        className="h-10 w-10 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
-                        ×
+                        <X className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
                   {formData.pricing_info.length === 0 && (
-                    <p className="text-sm text-muted-foreground">Click "Add Item" to create your price list</p>
+                    <div className="text-center py-8">
+                      <DollarSign className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
+                      <p className="text-sm text-muted-foreground">Click "Add Item" to create your price list</p>
+                    </div>
                   )}
                 </div>
+                <p className="text-sm text-muted-foreground">Optional: Set standard prices for your services</p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="certifications">Certifications & Qualifications</Label>
-                <div className="relative">
-                  <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-4">
+                <Label htmlFor="certifications" className="text-base font-medium text-foreground">Certifications & Qualifications</Label>
+                <div className="relative group">
+                  <FileText className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                   <Textarea
                     id="certifications"
                     placeholder="List your certifications, qualifications, or training..."
                     value={formData.certifications}
                     onChange={(e) => handleInputChange('certifications', e.target.value)}
-                    className="pl-10 min-h-[60px]"
+                    className="pl-12 min-h-[100px] text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm resize-none"
                   />
                 </div>
+                <p className="text-sm text-muted-foreground">Optional: Add credentials to build trust with customers</p>
               </div>
             </div>
           )}
 
-          {/* Navigation - Only show for providers */}
+          {/* Enhanced Navigation - Only show for providers */}
           {profile.role === 'provider' && (
-            <div className="flex justify-between mt-6">
-              {currentStep > 0 && (
+            <div className="flex justify-between items-center mt-8 pt-6 border-t border-border/20">
+              {currentStep > 0 ? (
                 <Button
                   variant="outline"
                   onClick={() => setCurrentStep(prev => prev - 1)}
                   disabled={loading || uploadingPhoto}
+                  className="border-2 border-border/50 hover:border-primary/50 transition-all duration-300"
                 >
+                  <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
                   Back
                 </Button>
+              ) : (
+                <div></div>
               )}
+              
               <Button
                 variant="hero"
                 onClick={handleNext}
                 disabled={loading || uploadingPhoto || !validateStep()}
-                className="ml-auto"
+                className="min-w-[140px] h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 {loading || uploadingPhoto ? (
-                  uploadingPhoto ? "Uploading photos..." : "Saving..."
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                    {uploadingPhoto ? "Uploading..." : "Saving..."}
+                  </div>
                 ) : (
                   <>
                     {currentStep === 2 ? (
                       <>
-                        <CheckCircle className="w-4 h-4 mr-2" />
+                        <CheckCircle className="w-5 h-5 mr-2" />
                         Complete Profile
                       </>
                     ) : (
-                      "Continue"
+                      <>
+                        Continue
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
                     )}
                   </>
                 )}
               </Button>
             </div>
           )}
+              </div>
             </Card>
           )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
