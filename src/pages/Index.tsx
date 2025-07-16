@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Users, Star, ArrowRight, Sparkles, Clock, Shield, Search, MapPin, User, Building, Navigation } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 import { Input } from '@/components/ui/input';
+import Header from '@/components/ui/header';
 import heroImage from '@/assets/hero-lash-extension.jpg';
 
 const Index = () => {
@@ -29,36 +30,7 @@ const Index = () => {
   };
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="bg-white border-b border-border/40 sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
-                <Calendar className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-xl font-bold text-foreground">Open-Slot</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link to="/auth?tab=provider">
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                  For Your Business
-                </Button>
-              </Link>
-              <Link to="/auth">
-                <Button variant="outline" size="sm">
-                  Log In
-                </Button>
-              </Link>
-              <Link to="/auth?tab=signup">
-                <Button variant="default" size="sm">
-                  Sign Up
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
