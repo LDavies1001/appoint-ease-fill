@@ -49,7 +49,11 @@ const Auth = () => {
     
     // Check URL params for different flows
     const tab = searchParams.get('tab');
-    if (tab === 'provider') {
+    const message = searchParams.get('message');
+    
+    if (message === 'check-email') {
+      setShowSuccessMessage(true);
+    } else if (tab === 'provider') {
       // Show business info page - no state changes needed
     } else if (tab === 'signup') {
       setShowRoleSelection(true); // Show role selection page
