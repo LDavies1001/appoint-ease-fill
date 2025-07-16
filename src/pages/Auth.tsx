@@ -167,7 +167,8 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const role = selectedRole === 'provider' ? 'provider' : 'customer';
+      // Business signup is always for providers
+      const role = 'provider';
       const { error } = await signUp(email, password, role, fullName);
       
       if (error) {
