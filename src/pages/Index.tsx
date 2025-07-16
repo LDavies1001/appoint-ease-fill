@@ -44,7 +44,7 @@ const Index = () => {
         toast.error(error.message);
       } else {
         toast.success("Please check your email to confirm your account");
-        navigate('/auth?message=check-email');
+        navigate('/email-confirmation');
       }
     } catch (error) {
       toast.error("An error occurred during signup");
@@ -67,7 +67,7 @@ const Index = () => {
         toast.error(error.message);
       } else {
         toast.success("Please check your email to confirm your account");
-        navigate('/auth?message=check-email');
+        navigate('/email-confirmation');
       }
     } catch (error) {
       toast.error("An error occurred during signup");

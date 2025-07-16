@@ -10,6 +10,7 @@ import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import BusinessProfile from "./pages/BusinessProfile";
 import CreateBusinessProfile from "./pages/CreateBusinessProfile";
+import EmailConfirmation from "./pages/EmailConfirmation";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/business-profile" element={<BusinessProfile />} />
             <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
+            <Route path="/email-confirmation" element={<EmailConfirmation />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
