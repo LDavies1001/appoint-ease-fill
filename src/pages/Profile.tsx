@@ -50,6 +50,7 @@ const Profile = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState<any>({});
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   
   // Use route protection to handle auth state and redirects
   useRouteProtection();
@@ -131,7 +132,8 @@ const Profile = () => {
   // Save profile changes
   const handleSaveProfile = async () => {
     try {
-      const { error } = await supabase
+      // Update provider details
+      const { error: providerError } = await supabase
         .from('provider_details')
         .update({
           business_name: editData.business_name,
@@ -147,7 +149,19 @@ const Profile = () => {
         })
         .eq('user_id', user?.id);
 
-      if (error) throw error;
+      if (providerError) throw providerError;
+
+      // Update avatar in profiles table if changed
+      if (avatarPreview) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({
+            avatar_url: avatarPreview,
+          })
+          .eq('user_id', user?.id);
+
+        if (profileError) throw profileError;
+      }
 
       toast({
         title: "Profile updated",
@@ -157,6 +171,7 @@ const Profile = () => {
       // Refresh data and exit edit mode
       await fetchProviderData();
       setIsEditMode(false);
+      setAvatarPreview(null);
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
@@ -369,6 +384,33 @@ const Profile = () => {
                   onUpload={(url) => setEditData({...editData, business_logo_url: url})}
                   bucket="business-photos"
                   folder="logos"
+                  className="absolute -top-2 -right-2 rounded-full w-8 h-8 p-0"
+                >
+                  <Button size="sm" className="rounded-full w-8 h-8 p-0">
+                    <Camera className="h-4 w-4" />
+                  </Button>
+                </PhotoUpload>
+              )}
+            </div>
+
+            {/* Profile Avatar */}
+            <div className="relative ml-4">
+              {avatarPreview || profile?.avatar_url ? (
+                <img
+                  src={avatarPreview || profile?.avatar_url || ''}
+                  alt="Profile Picture"
+                  className="w-24 h-24 rounded-full object-cover shadow-elegant border-4 border-white"
+                />
+              ) : (
+                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-elegant border-4 border-white">
+                  <User className="h-12 w-12 text-primary" />
+                </div>
+              )}
+              {isEditMode && (
+                <PhotoUpload
+                  onUpload={(url) => setAvatarPreview(url)}
+                  bucket="profile-photos"
+                  folder="avatars"
                   className="absolute -top-2 -right-2 rounded-full w-8 h-8 p-0"
                 >
                   <Button size="sm" className="rounded-full w-8 h-8 p-0">
