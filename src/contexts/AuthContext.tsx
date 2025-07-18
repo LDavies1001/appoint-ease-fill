@@ -111,6 +111,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ) : undefined
       };
 
+      // If profile data is missing, try to get it from user metadata as fallback
+      if (user) {
+        const userMetadata = user.user_metadata || {};
+        finalProfile = {
+          ...finalProfile,
+          name: finalProfile.name || userMetadata.full_name || null,
+          phone: finalProfile.phone || userMetadata.phone || null,
+          location: finalProfile.location || userMetadata.location || null
+        };
+      }
+
       // If user is a provider, also fetch business details
       if (profileData.role === 'provider') {
         const { data: businessData, error: businessError } = await supabase
