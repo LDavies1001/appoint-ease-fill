@@ -60,11 +60,6 @@ export const PhotoUpload = ({
         .getPublicUrl(filePath);
 
       onUpload(publicUrl);
-      
-      toast({
-        title: "Upload successful",
-        description: "Your file has been uploaded successfully.",
-      });
     } catch (error: any) {
       console.error('Upload error:', error);
       toast({
