@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { MapPin, Navigation, Loader2 } from 'lucide-react';
+import { MapPin, Navigation, Loader2, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LocationInputProps {
@@ -9,6 +9,13 @@ interface LocationInputProps {
   className?: string;
   value?: string;
   onChange?: (value: string) => void;
+}
+
+interface LocationSuggestion {
+  display_name: string;
+  address: any;
+  lat: string;
+  lon: string;
 }
 
 export const LocationInput: React.FC<LocationInputProps> = ({
@@ -19,6 +26,11 @@ export const LocationInput: React.FC<LocationInputProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState(value || '');
+  const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -117,22 +129,118 @@ export const LocationInput: React.FC<LocationInputProps> = ({
     );
   };
 
+  // Search for locations based on input
+  const searchLocations = async (query: string) => {
+    if (query.length < 3) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    try {
+      // Search specifically in UK for better postcode/locality results
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=gb&addressdetails=1&limit=5`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        const filteredSuggestions = data.map((item: any) => ({
+          display_name: item.display_name,
+          address: item.address || {},
+          lat: item.lat,
+          lon: item.lon
+        }));
+        
+        setSuggestions(filteredSuggestions);
+        setShowSuggestions(filteredSuggestions.length > 0);
+      }
+    } catch (error) {
+      console.error('Error searching locations:', error);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  // Handle input changes with debouncing
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (inputValue.trim()) {
+        searchLocations(inputValue);
+      } else {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [inputValue]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
+          inputRef.current && !inputRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
     onChange?.(newValue);
   };
 
+  const handleSuggestionClick = (suggestion: LocationSuggestion) => {
+    // Extract the most specific locality from the suggestion
+    const address = suggestion.address;
+    const location = address.suburb ||
+                    address.neighbourhood ||
+                    address.village ||
+                    address.hamlet ||
+                    address.town ||
+                    address.district ||
+                    address.borough ||
+                    address.city_district ||
+                    address.city ||
+                    suggestion.display_name?.split(',')[0] ||
+                    'Unknown location';
+    
+    setInputValue(location);
+    onChange?.(location);
+    setShowSuggestions(false);
+  };
+
   return (
     <div className="relative">
-      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
       <Input
+        ref={inputRef}
         type="text"
         placeholder={placeholder}
         value={inputValue}
         onChange={handleInputChange}
-        className={cn("pl-10 pr-12", className)}
+        onFocus={() => {
+          if (suggestions.length > 0) {
+            setShowSuggestions(true);
+          }
+        }}
+        className={cn("pl-10 pr-20", className)}
       />
+      
+      {/* Search loading indicator */}
+      {searchLoading && (
+        <div className="absolute right-12 top-3 h-4 w-4">
+          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+        </div>
+      )}
+      
+      {/* Current location button */}
       <Button
         type="button"
         variant="ghost"
@@ -148,6 +256,41 @@ export const LocationInput: React.FC<LocationInputProps> = ({
           <Navigation className="h-4 w-4 text-primary" />
         )}
       </Button>
+
+      {/* Suggestions dropdown */}
+      {showSuggestions && suggestions.length > 0 && (
+        <div 
+          ref={dropdownRef}
+          className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+        >
+          {suggestions.map((suggestion, index) => {
+            const address = suggestion.address;
+            const locality = address.suburb ||
+                           address.neighbourhood ||
+                           address.village ||
+                           address.hamlet ||
+                           address.town ||
+                           address.district ||
+                           address.borough ||
+                           address.city_district ||
+                           address.city ||
+                           suggestion.display_name?.split(',')[0];
+            
+            const fullAddress = suggestion.display_name;
+            
+            return (
+              <div
+                key={index}
+                className="px-4 py-3 hover:bg-muted cursor-pointer border-b border-border last:border-b-0"
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                <div className="font-medium text-foreground">{locality}</div>
+                <div className="text-sm text-muted-foreground truncate">{fullAddress}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
