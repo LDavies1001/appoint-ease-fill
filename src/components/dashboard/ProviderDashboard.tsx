@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { AddRoleCard } from '@/components/ui/role-switcher';
+import LibraryTab from './LibraryTab';
+import ProfileTab from './ProfileTab';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import ServiceManager from '@/components/business/ServiceManager';
@@ -23,7 +25,8 @@ import {
   Upload,
   X,
   Wrench,
-  Zap
+  Zap,
+  Image
 } from 'lucide-react';
 import BulkSlotCreator from './BulkSlotCreator';
 
@@ -448,6 +451,20 @@ const ProviderDashboard = () => {
             <BookOpen className="h-4 w-4 mr-2" />
             Bookings
           </Button>
+          <Button
+            variant={activeTab === 'library' ? 'hero' : 'ghost'}
+            onClick={() => setActiveTab('library')}
+          >
+            <Image className="h-4 w-4 mr-2" />
+            Library
+          </Button>
+          <Button
+            variant={activeTab === 'profile' ? 'hero' : 'ghost'}
+            onClick={() => setActiveTab('profile')}
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            Profile
+          </Button>
         </div>
 
         {activeTab === 'slots' && (
@@ -808,6 +825,10 @@ const ProviderDashboard = () => {
             )}
           </div>
         )}
+
+        {activeTab === 'library' && <LibraryTab />}
+
+        {activeTab === 'profile' && <ProfileTab />}
       </div>
     </div>
   );
