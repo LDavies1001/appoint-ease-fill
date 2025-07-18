@@ -380,47 +380,19 @@ const Onboarding = () => {
   };
 
   const validateStep = () => {
-    console.log('=== VALIDATION DEBUG ===');
-    console.log('Current step:', currentStep);
-    console.log('Profile role:', profile?.role);
-    console.log('Form data:', {
-      location: formData.location,
-      business_name: formData.business_name,
-      business_email: formData.business_email,
-      business_phone: formData.business_phone,
-      business_address: formData.business_address,
-      services_offered: formData.services_offered,
-      business_description: formData.business_description,
-      years_experience: formData.years_experience
-    });
-
     if (currentStep === 0) {
-      const isValid = formData.location.trim();
-      console.log('Step 0 validation (location):', isValid);
-      return isValid;
+      return formData.location.trim();
     }
     if (currentStep === 1 && profile?.role === 'provider') {
-      const isValid = formData.business_name.trim() && 
+      return formData.business_name.trim() && 
              formData.business_email.trim() && 
              formData.business_phone.trim() && 
              formData.business_address.trim() && 
              formData.services_offered.length > 0;
-      console.log('Step 1 validation (provider):', isValid);
-      console.log('- business_name:', !!formData.business_name.trim());
-      console.log('- business_email:', !!formData.business_email.trim());
-      console.log('- business_phone:', !!formData.business_phone.trim());
-      console.log('- business_address:', !!formData.business_address.trim());
-      console.log('- services_offered:', formData.services_offered.length > 0);
-      return isValid;
     }
     if (currentStep === 2 && profile?.role === 'provider') {
-      const isValid = formData.business_description.trim() && formData.years_experience.trim();
-      console.log('Step 2 validation (provider):', isValid);
-      console.log('- business_description:', !!formData.business_description.trim());
-      console.log('- years_experience:', !!formData.years_experience.trim());
-      return isValid;
+      return formData.business_description.trim() && formData.years_experience.trim();
     }
-    console.log('Default validation (true)');
     return true;
   };
 
