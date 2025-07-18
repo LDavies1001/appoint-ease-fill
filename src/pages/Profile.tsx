@@ -393,32 +393,6 @@ const Profile = () => {
               )}
             </div>
 
-            {/* Business Logo */}
-            <div className="relative">
-              {providerDetails?.business_logo_url ? (
-                <img
-                  src={providerDetails.business_logo_url}
-                  alt="Business Logo"
-                  className="w-32 h-32 rounded-2xl object-cover shadow-elegant border-4 border-white"
-                />
-              ) : (
-                <div className="w-32 h-32 bg-white rounded-2xl flex items-center justify-center shadow-elegant border-4 border-white">
-                  <Building className="h-16 w-16 text-primary" />
-                </div>
-              )}
-              {isEditMode && (
-                <PhotoUpload
-                  onUpload={(url) => setEditData({...editData, business_logo_url: url})}
-                  bucket="business-photos"
-                  folder="logos"
-                  className="absolute -top-2 -right-2 rounded-full w-8 h-8 p-0"
-                >
-                  <Button size="sm" className="rounded-full w-8 h-8 p-0">
-                    <Camera className="h-4 w-4" />
-                  </Button>
-                </PhotoUpload>
-              )}
-            </div>
 
 
             {/* Business Title & Actions */}
