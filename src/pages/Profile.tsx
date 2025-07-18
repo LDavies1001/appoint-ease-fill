@@ -831,10 +831,14 @@ const Profile = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                { name: 'Classic Lash Extensions', price: 'from $120', duration: '2-3 hours', description: 'Natural-looking individual lash extensions for everyday elegance' },
-                { name: 'Volume Lash Extensions', price: 'from $180', duration: '3-4 hours', description: 'Dramatic volume with lightweight, fan-shaped lash extensions' },
-                { name: 'Lash Lift & Tint', price: 'from $80', duration: '1-1.5 hours', description: 'Natural enhancement of your existing lashes with curl and color' },
-                { name: 'Brow Shaping & Tint', price: 'from $60', duration: '45-60 minutes', description: 'Professional brow styling to frame your face perfectly' }
+                { name: 'Classic Individual Lashes', price: '$120 - $150', duration: '2-2.5 hours', description: 'One extension per natural lash for a natural, everyday look' },
+                { name: 'Hybrid Lashes', price: '$140 - $170', duration: '2.5-3 hours', description: 'Mix of classic and volume techniques for textured fullness' },
+                { name: 'Volume Lashes', price: '$160 - $190', duration: '3-3.5 hours', description: 'Multiple lightweight extensions per lash for dramatic volume' },
+                { name: 'Mega Volume Lashes', price: '$180 - $220', duration: '3.5-4 hours', description: 'Maximum drama with ultra-fine extensions for full glam' },
+                { name: 'Lash Lift & Tint', price: '$75 - $95', duration: '1-1.5 hours', description: 'Natural curl and tint enhancement for your existing lashes' },
+                { name: 'Brow Lamination & Tint', price: '$85 - $105', duration: '1-1.5 hours', description: 'Smooth, styled brows with lasting shape and color' },
+                { name: '2-Week Refill', price: '$60 - $80', duration: '1-1.5 hours', description: 'Maintain your lash extensions with professional touch-ups' },
+                { name: '3-Week Refill', price: '$80 - $100', duration: '1.5-2 hours', description: 'Restore fullness and refresh your lash look' }
               ].map((service, index) => (
                 <Card key={index} className="card-enhanced">
                   <CardContent className="p-6">
