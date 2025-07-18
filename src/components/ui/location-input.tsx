@@ -33,30 +33,54 @@ export const LocationInput: React.FC<LocationInputProps> = ({
         try {
           const { latitude, longitude } = position.coords;
           
-          // Use reverse geocoding to get readable address
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`
-          );
+          // Try multiple zoom levels to get the most specific location
+          let location = null;
+          const zoomLevels = [18, 16, 14, 12]; // Start with highest detail
           
-          if (!response.ok) {
-            throw new Error('Failed to get location details');
+          for (const zoom of zoomLevels) {
+            try {
+              const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=${zoom}&addressdetails=1`
+              );
+              
+              if (!response.ok) continue;
+              
+              const data = await response.json();
+              const address = data.address || {};
+              
+              // Extract the most specific locality from the address
+              location = address.suburb ||           // Prioritize suburb (like Baguley, Farnworth)
+                        address.neighbourhood ||    // Neighbourhood names
+                        address.village ||          // Village names 
+                        address.hamlet ||           // Small settlements
+                        address.town ||             // Town names
+                        address.district ||         // District names
+                        address.borough ||          // Borough names
+                        address.city_district ||    // City district
+                        address.residential ||      // Residential area
+                        null;
+              
+              // If we found a specific locality, use it
+              if (location && location !== 'Manchester' && location !== 'Greater Manchester') {
+                console.log(`Found specific location: ${location} at zoom ${zoom}`);
+                break;
+              }
+            } catch (err) {
+              console.error(`Failed at zoom ${zoom}:`, err);
+              continue;
+            }
           }
           
-          const data = await response.json();
-          
-          // Extract the most specific locality from the address
-          const address = data.address || {};
-          const location = address.suburb ||           // Prioritize suburb (like Farnworth, Hazel Grove)
-                          address.village ||          // Village names 
-                          address.town ||             // Town names
-                          address.district ||         // District names
-                          address.borough ||          // Borough names
-                          address.city_district ||    // City district
-                          address.neighbourhood ||    // Neighbourhood names
-                          address.hamlet ||           // Small settlements
-                          address.city ||             // Fallback to city
-                          data.display_name?.split(',')[0] || 
-                          'Unknown location';
+          // If no specific locality found, fall back to city but warn user
+          if (!location) {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`
+            );
+            const data = await response.json();
+            const address = data.address || {};
+            location = address.city || address.town || 'Unknown location';
+            console.log('Falling back to city level:', location);
+          }
           
           setInputValue(location);
           onChange?.(location);
