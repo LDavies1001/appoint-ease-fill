@@ -93,15 +93,6 @@ const GeneralImages: React.FC<GeneralImagesProps> = ({ images, onRefresh, onDele
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-foreground">General Images</h3>
         <div className="flex gap-2">
-          {selectedBucket && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSelectedBucket(null)}
-            >
-              ← Back to Categories
-            </Button>
-          )}
           <Input
             type="file"
             multiple
@@ -117,79 +108,79 @@ const GeneralImages: React.FC<GeneralImagesProps> = ({ images, onRefresh, onDele
             disabled={uploading}
           >
             <Upload className="h-4 w-4 mr-2" />
-            General Upload
+            {uploading ? 'Uploading...' : 'Add'}
           </Button>
         </div>
       </div>
       
-      {!selectedBucket ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Object.entries(imagesByBucket).map(([bucketName, bucketImages]) => (
-            <Card 
-              key={bucketName} 
-              className="card-elegant p-4 hover-scale cursor-pointer" 
-              onClick={() => setSelectedBucket(bucketName)}
-            >
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <h4 className="font-medium text-foreground truncate">{bucketName}</h4>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Object.entries(imagesByBucket).map(([bucketName, bucketImages]) => (
+          <Card key={bucketName} className="card-elegant p-4 hover-scale">
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <h4 className="font-medium text-foreground truncate">{bucketName}</h4>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => window.open(bucketImages[0]?.url, '_blank')}
+                  className="text-xs p-1 h-auto"
+                  disabled={bucketImages.length === 0}
+                >
+                  <Eye className="h-3 w-3" />
+                </Button>
+              </div>
+              
+              <div className="aspect-[4/3] bg-muted/20 rounded-lg overflow-hidden relative">
+                {bucketImages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+                    <Image className="h-8 w-8 mb-2" />
+                    <p className="text-sm text-center">No photos yet</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-1 h-full">
+                      {bucketImages.slice(0, 4).map((image, index) => (
+                        <div key={`${bucketName}-${image.name}-${index}`} className="overflow-hidden rounded">
+                          <img
+                            src={image.url}
+                            alt={image.name}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
+                            onClick={() => window.open(image.url, '_blank')}
+                          />
+                        </div>
+                      ))}
+                      {bucketImages.length > 4 && (
+                        <div className="bg-muted/40 flex items-center justify-center text-muted-foreground text-sm">
+                          +{bucketImages.length - 4} more
+                        </div>
+                      )}
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="bg-black/60 text-white px-3 py-1 rounded-lg text-sm font-medium">
+                        {bucketName}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+              
+              <div className="flex justify-between items-center text-sm text-muted-foreground">
+                <span>{bucketImages.length} photo{bucketImages.length !== 1 ? 's' : ''}</span>
+                {bucketImages.length > 0 && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedBucket(bucketName);
-                    }}
+                    onClick={() => window.open(bucketImages[0].url, '_blank')}
                     className="text-xs p-1 h-auto"
                   >
-                    <Eye className="h-3 w-3" />
+                    View All
                   </Button>
-                </div>
-                
-                <div className="aspect-[4/3] bg-muted/20 rounded-lg overflow-hidden">
-                  <div className="grid grid-cols-2 gap-1 h-full">
-                    {bucketImages.slice(0, 4).map((image, index) => (
-                      <div key={`${bucketName}-${image.name}-${index}`} className="overflow-hidden rounded">
-                        <img
-                          src={image.url}
-                          alt={image.name}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
-                        />
-                      </div>
-                    ))}
-                    {bucketImages.length > 4 && (
-                      <div className="bg-muted/40 flex items-center justify-center text-muted-foreground text-sm">
-                        +{bucketImages.length - 4} more
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="flex justify-between items-center text-sm text-muted-foreground">
-                  <span>{bucketImages.length} image{bucketImages.length !== 1 ? 's' : ''}</span>
-                  <span className="text-xs">Click to view all</span>
-                </div>
+                )}
               </div>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <h4 className="text-lg font-medium text-foreground">{selectedBucket}</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {images
-              .filter(image => formatBucketName(image.bucket) === selectedBucket)
-              .map((image, index) => (
-                <ImageCard
-                  key={`${image.bucket}-${image.name}-${index}`}
-                  image={image}
-                  onDelete={onDeleteImage}
-                  showBucket={false}
-                />
-              ))}
-          </div>
-        </div>
-      )}
+            </div>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
