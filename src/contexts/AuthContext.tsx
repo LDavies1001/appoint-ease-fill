@@ -2,10 +2,20 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
+interface UserRole {
+  id: string;
+  user_id: string;
+  role: 'customer' | 'provider';
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 interface Profile {
   id: string;
   user_id: string;
   role: 'customer' | 'provider';
+  active_role: 'customer' | 'provider';
   email: string;
   name: string | null;
   phone: string | null;
@@ -28,11 +38,15 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
+  userRoles: UserRole[];
+  availableRoles: ('customer' | 'provider')[];
   loading: boolean;
   signUp: (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
+  switchRole: (role: 'customer' | 'provider') => Promise<{ error: any }>;
+  addRole: (role: 'customer' | 'provider', businessName?: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -49,7 +63,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const availableRoles = userRoles.filter(role => role.is_active).map(role => role.role);
 
   useEffect(() => {
     // Set up auth state listener
@@ -88,6 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserProfile = async (userId: string) => {
     try {
+      // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
@@ -99,8 +117,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!profileData) {
         console.log('No profile found for user:', userId);
         setProfile(null);
+        setUserRoles([]);
         return;
       }
+
+      // Fetch user roles
+      const { data: rolesData, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('is_active', true);
+      
+      if (rolesError) throw rolesError;
+      
+      setUserRoles(rolesData || []);
 
       let finalProfile: Profile = {
         ...profileData,
@@ -122,8 +152,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
       }
 
-      // If user is a provider, also fetch business details
-      if (profileData.role === 'provider') {
+      // If user has provider role, also fetch business details
+      const hasProviderRole = rolesData?.some(role => role.role === 'provider');
+      if (hasProviderRole) {
         const { data: businessData, error: businessError } = await supabase
           .from('provider_details')
           .select('business_name')
@@ -231,15 +262,77 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
+  const switchRole = async (role: 'customer' | 'provider') => {
+    if (!user || !profile) return { error: new Error('No user logged in') };
+    
+    // Check if user has this role
+    const hasRole = userRoles.some(userRole => userRole.role === role);
+    if (!hasRole) {
+      return { error: new Error('User does not have this role') };
+    }
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ active_role: role })
+      .eq('user_id', user.id);
+
+    if (!error) {
+      setProfile(prev => prev ? { ...prev, active_role: role } : null);
+    }
+
+    return { error };
+  };
+
+  const addRole = async (role: 'customer' | 'provider', businessName?: string) => {
+    if (!user) return { error: new Error('No user logged in') };
+    
+    // Check if user already has this role
+    const hasRole = userRoles.some(userRole => userRole.role === role);
+    if (hasRole) {
+      return { error: new Error('User already has this role') };
+    }
+
+    // Add the role to user_roles table
+    const { error: roleError } = await supabase
+      .from('user_roles')
+      .insert({
+        user_id: user.id,
+        role: role
+      });
+
+    if (roleError) return { error: roleError };
+
+    // If adding provider role and business name provided, create provider_details
+    if (role === 'provider' && businessName) {
+      const { error: providerError } = await supabase
+        .from('provider_details')
+        .upsert({
+          user_id: user.id,
+          business_name: businessName
+        });
+      
+      if (providerError) return { error: providerError };
+    }
+
+    // Refresh user data
+    await fetchUserProfile(user.id);
+    
+    return { error: null };
+  };
+
   const value = {
     user,
     session,
     profile,
+    userRoles,
+    availableRoles,
     loading,
     signUp,
     signIn,
     signOut,
-    updateProfile
+    updateProfile,
+    switchRole,
+    addRole
   };
 
   return (

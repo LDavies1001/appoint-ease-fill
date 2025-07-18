@@ -346,6 +346,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active_role: Database["public"]["Enums"]["user_role"]
           avatar_url: string | null
           bio: string | null
           consent_date: string | null
@@ -364,6 +365,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          active_role: Database["public"]["Enums"]["user_role"]
           avatar_url?: string | null
           bio?: string | null
           consent_date?: string | null
@@ -382,6 +384,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          active_role?: Database["public"]["Enums"]["user_role"]
           avatar_url?: string | null
           bio?: string | null
           consent_date?: string | null
@@ -635,6 +638,33 @@ export type Database = {
           id?: string
           name?: string
           typical_duration?: number | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

@@ -30,7 +30,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      {profile.role === 'customer' ? (
+      {profile.active_role === 'customer' ? (
         <CustomerDashboard />
       ) : (
         <ProviderDashboard />

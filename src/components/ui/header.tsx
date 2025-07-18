@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
 import { Calendar, ChevronDown, User, Settings, LogOut, Building } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { RoleSwitcher } from '@/components/ui/role-switcher';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +28,7 @@ const Header = () => {
           
           {user && profile ? (
             <div className="flex items-center space-x-4">
+              <RoleSwitcher />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="flex items-center space-x-2">
@@ -34,7 +36,7 @@ const Header = () => {
                       <User className="h-4 w-4" />
                     </div>
                     <span className="text-sm font-medium">
-                      {profile.role === 'provider' 
+                      {profile.active_role === 'provider' 
                         ? (profile.business_name || profile.name || profile.email)
                         : (profile.name || profile.email)
                       }
@@ -45,7 +47,7 @@ const Header = () => {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="flex items-center">
-                      {profile.role === 'provider' ? (
+                      {profile.active_role === 'provider' ? (
                         <>
                           <Building className="h-4 w-4 mr-2" />
                           My Profile & Business
@@ -58,7 +60,7 @@ const Header = () => {
                       )}
                     </Link>
                   </DropdownMenuItem>
-                  {profile.role === 'provider' && (
+                  {profile.active_role === 'provider' && (
                     <DropdownMenuItem asChild>
                       <Link to="/profile" className="flex items-center">
                         <Settings className="h-4 w-4 mr-2" />
