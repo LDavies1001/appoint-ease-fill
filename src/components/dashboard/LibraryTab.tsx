@@ -11,12 +11,22 @@ interface UploadedImage {
   name: string;
   url: string;
   bucket: string;
+  folder?: string;
+  serviceName?: string;
   size?: number;
   created_at?: string;
 }
 
+interface ServiceFolder {
+  name: string;
+  path: string;
+  images: UploadedImage[];
+}
+
 const LibraryTab = () => {
   const [images, setImages] = useState<UploadedImage[]>([]);
+  const [serviceFolders, setServiceFolders] = useState<ServiceFolder[]>([]);
+  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const { profile } = useAuth();
@@ -24,6 +34,7 @@ const LibraryTab = () => {
 
   useEffect(() => {
     fetchUserImages();
+    fetchServiceFolders();
   }, []);
 
   const fetchUserImages = async () => {
@@ -80,7 +91,75 @@ const LibraryTab = () => {
     }
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const fetchServiceFolders = async () => {
+    if (!profile?.user_id) return;
+    
+    try {
+      // Get service folders from portfolio bucket
+      const { data: serviceFolders, error } = await supabase.storage
+        .from('portfolio')
+        .list(`${profile.user_id}/services`, {
+          limit: 100,
+          offset: 0
+        });
+
+      if (error) {
+        console.error('Error fetching service folders:', error);
+        return;
+      }
+
+      if (serviceFolders) {
+        const folders: ServiceFolder[] = [];
+        
+        for (const folder of serviceFolders) {
+          if (folder.name !== '.emptyFolderPlaceholder') {
+            // Get images in this service folder
+            const { data: folderFiles, error: folderError } = await supabase.storage
+              .from('portfolio')
+              .list(`${profile.user_id}/services/${folder.name}`, {
+                limit: 100,
+                offset: 0
+              });
+
+            if (folderError) {
+              console.error(`Error fetching files from ${folder.name}:`, folderError);
+              continue;
+            }
+
+            const folderImages: UploadedImage[] = (folderFiles || [])
+              .filter(file => file.name !== '.emptyFolderPlaceholder')
+              .map(file => {
+                const { data: { publicUrl } } = supabase.storage
+                  .from('portfolio')
+                  .getPublicUrl(`${profile.user_id}/services/${folder.name}/${file.name}`);
+                
+                return {
+                  name: file.name,
+                  url: publicUrl,
+                  bucket: 'portfolio',
+                  folder: folder.name,
+                  serviceName: folder.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                  size: file.metadata?.size,
+                  created_at: file.created_at
+                };
+              });
+
+            folders.push({
+              name: folder.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+              path: folder.name,
+              images: folderImages
+            });
+          }
+        }
+        
+        setServiceFolders(folders);
+      }
+    } catch (error) {
+      console.error('Error fetching service folders:', error);
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, targetFolder?: string) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
@@ -98,7 +177,13 @@ const LibraryTab = () => {
 
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${profile?.user_id}/${fileName}`;
+        
+        let filePath: string;
+        if (targetFolder) {
+          filePath = `${profile?.user_id}/services/${targetFolder}/${fileName}`;
+        } else {
+          filePath = `${profile?.user_id}/${fileName}`;
+        }
 
         const { error: uploadError } = await supabase.storage
           .from('portfolio')
@@ -119,6 +204,7 @@ const LibraryTab = () => {
       });
       
       fetchUserImages();
+      fetchServiceFolders();
     } catch (error: any) {
       toast({
         title: "Error uploading images",
@@ -129,6 +215,7 @@ const LibraryTab = () => {
       setUploading(false);
     }
   };
+
 
   const handleDeleteImage = async (image: UploadedImage) => {
     try {
@@ -145,6 +232,7 @@ const LibraryTab = () => {
       });
       
       fetchUserImages();
+      fetchServiceFolders();
     } catch (error: any) {
       toast({
         title: "Error deleting image",
@@ -174,18 +262,18 @@ const LibraryTab = () => {
             type="file"
             multiple
             accept="image/*"
-            onChange={handleImageUpload}
+            onChange={(e) => handleImageUpload(e)}
             className="hidden"
-            id="image-upload"
+            id="general-upload"
             disabled={uploading}
           />
           <Button
-            variant="hero"
-            onClick={() => document.getElementById('image-upload')?.click()}
+            variant="outline"
+            onClick={() => document.getElementById('general-upload')?.click()}
             disabled={uploading}
           >
             <Upload className="h-4 w-4 mr-2" />
-            {uploading ? 'Uploading...' : 'Upload Images'}
+            General Upload
           </Button>
         </div>
       </div>
@@ -194,54 +282,121 @@ const LibraryTab = () => {
         <div className="flex justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
-      ) : images.length === 0 ? (
-        <Card className="card-elegant p-8 text-center">
-          <Image className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground mb-4">No images uploaded yet</p>
-          <Button
-            variant="outline"
-            onClick={() => document.getElementById('image-upload')?.click()}
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Upload Your First Image
-          </Button>
-        </Card>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {images.map((image, index) => (
-            <Card key={`${image.bucket}-${image.name}-${index}`} className="card-elegant overflow-hidden">
-              <div className="aspect-square overflow-hidden">
-                <img
-                  src={image.url}
-                  alt={image.name}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
-                />
+        <div className="space-y-6">
+          {/* Service Folders */}
+          {serviceFolders.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-foreground">Service Portfolios</h3>
+              {serviceFolders.map((folder) => (
+                <Card key={folder.path} className="card-elegant p-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="font-medium text-foreground">{folder.name}</h4>
+                    <div className="flex gap-2">
+                      <Input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, folder.path)}
+                        className="hidden"
+                        id={`upload-${folder.path}`}
+                        disabled={uploading}
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => document.getElementById(`upload-${folder.path}`)?.click()}
+                        disabled={uploading}
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        {uploading ? 'Uploading...' : 'Add Photos'}
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {folder.images.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Image className="h-8 w-8 mx-auto mb-2" />
+                      <p>No photos yet for this service</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                      {folder.images.map((image, index) => (
+                        <div key={`${folder.path}-${image.name}-${index}`} className="aspect-square overflow-hidden rounded border">
+                          <img
+                            src={image.url}
+                            alt={image.name}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
+                            onClick={() => window.open(image.url, '_blank')}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* General Images */}
+          {images.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-foreground">General Images</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {images.map((image, index) => (
+                  <Card key={`${image.bucket}-${image.name}-${index}`} className="card-elegant overflow-hidden">
+                    <div className="aspect-square overflow-hidden">
+                      <img
+                        src={image.url}
+                        alt={image.name}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+                      />
+                    </div>
+                    <div className="p-3">
+                      <p className="text-xs font-medium text-foreground truncate">{image.name}</p>
+                      <p className="text-xs text-muted-foreground">{formatBucketName(image.bucket)}</p>
+                      <p className="text-xs text-muted-foreground">{formatFileSize(image.size)}</p>
+                      <div className="flex gap-1 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => window.open(image.url, '_blank')}
+                          className="flex-1"
+                        >
+                          <Eye className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteImage(image)}
+                          className="flex-1 text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
               </div>
-              <div className="p-3">
-                <p className="text-xs font-medium text-foreground truncate">{image.name}</p>
-                <p className="text-xs text-muted-foreground">{formatBucketName(image.bucket)}</p>
-                <p className="text-xs text-muted-foreground">{formatFileSize(image.size)}</p>
-                <div className="flex gap-1 mt-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => window.open(image.url, '_blank')}
-                    className="flex-1"
-                  >
-                    <Eye className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDeleteImage(image)}
-                    className="flex-1 text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
+            </div>
+          )}
+
+          {serviceFolders.length === 0 && images.length === 0 && (
+            <Card className="card-elegant p-8 text-center">
+              <Image className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground mb-4">No images uploaded yet</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                Create services to automatically get organized photo folders, or upload general images
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => document.getElementById('general-upload')?.click()}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Upload Your First Image
+              </Button>
             </Card>
-          ))}
+          )}
         </div>
       )}
     </div>

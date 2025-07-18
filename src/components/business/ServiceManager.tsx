@@ -84,7 +84,7 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
     }
 
     try {
-      const { error } = await supabase
+      const { data: serviceData, error } = await supabase
         .from('provider_services')
         .insert({
           provider_id: profile?.user_id,
@@ -92,12 +92,27 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
           description: formData.description.trim() || null,
           base_price: formData.base_price ? parseFloat(formData.base_price) : null,
           duration_minutes: formData.duration_minutes
-        });
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
+      // Create a folder for this service in the portfolio bucket
+      if (serviceData && profile?.user_id) {
+        const serviceFolderName = formData.service_name.trim().replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+        const folderPath = `${profile.user_id}/services/${serviceFolderName}/.emptyFolderPlaceholder`;
+        
+        // Create an empty placeholder file to ensure the folder exists
+        const emptyFile = new Blob([''], { type: 'text/plain' });
+        await supabase.storage
+          .from('portfolio')
+          .upload(folderPath, emptyFile);
+      }
+
       toast({
-        title: "Service added successfully!"
+        title: "Service added successfully!",
+        description: "A photo folder has been created for this service"
       });
 
       setFormData({
