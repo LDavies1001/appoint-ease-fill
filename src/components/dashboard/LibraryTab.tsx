@@ -411,37 +411,73 @@ const LibraryTab = () => {
           {images.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-foreground">General Images</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {images.map((image, index) => (
-                  <Card key={`${image.bucket}-${image.name}-${index}`} className="card-elegant overflow-hidden">
-                    <div className="aspect-square overflow-hidden">
-                      <img
-                        src={image.url}
-                        alt={image.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
-                      />
-                    </div>
-                    <div className="p-3">
-                      <p className="text-xs font-medium text-foreground truncate">{image.name}</p>
-                      <p className="text-xs text-muted-foreground">{formatBucketName(image.bucket)}</p>
-                      <p className="text-xs text-muted-foreground">{formatFileSize(image.size)}</p>
-                      <div className="flex gap-1 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Group images by bucket and create tiles */}
+                {Object.entries(
+                  images.reduce((acc, image) => {
+                    const bucketName = formatBucketName(image.bucket);
+                    if (!acc[bucketName]) acc[bucketName] = [];
+                    acc[bucketName].push(image);
+                    return acc;
+                  }, {} as Record<string, UploadedImage[]>)
+                ).map(([bucketName, bucketImages]) => (
+                  <Card key={bucketName} className="card-elegant p-4 hover-scale">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-medium text-foreground truncate">{bucketName}</h4>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => window.open(image.url, '_blank')}
-                          className="flex-1"
+                          onClick={() => {
+                            // View all images logic
+                            window.open(bucketImages[0].url, '_blank');
+                          }}
+                          className="text-xs p-1 h-auto"
                         >
                           <Eye className="h-3 w-3" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteImage(image)}
-                          className="flex-1 text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
+                      </div>
+                      
+                      <div className="aspect-[4/3] bg-muted/20 rounded-lg overflow-hidden">
+                        <div className="grid grid-cols-2 gap-1 h-full">
+                          {bucketImages.slice(0, 4).map((image, index) => (
+                            <div key={`${bucketName}-${image.name}-${index}`} className="overflow-hidden rounded">
+                              <img
+                                src={image.url}
+                                alt={image.name}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
+                                onClick={() => window.open(image.url, '_blank')}
+                              />
+                            </div>
+                          ))}
+                          {bucketImages.length > 4 && (
+                            <div className="bg-muted/40 flex items-center justify-center text-muted-foreground text-sm">
+                              +{bucketImages.length - 4} more
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center text-sm text-muted-foreground">
+                        <span>{bucketImages.length} image{bucketImages.length !== 1 ? 's' : ''}</span>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => window.open(bucketImages[0].url, '_blank')}
+                            className="text-xs p-1 h-auto"
+                          >
+                            View All
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteImage(bucketImages[0])}
+                            className="text-xs p-1 h-auto text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </Card>
