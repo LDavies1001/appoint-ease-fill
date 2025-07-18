@@ -17,7 +17,8 @@ export const RoleSwitcher = () => {
   const [businessName, setBusinessName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!profile || availableRoles.length <= 1) {
+  // Always show the component if user is logged in
+  if (!profile) {
     return null;
   }
 
@@ -65,44 +66,54 @@ export const RoleSwitcher = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="flex items-center gap-2" disabled={isLoading}>
-            {getCurrentRoleIcon()}
-            {getCurrentRoleLabel()}
-            <ChevronDown className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {availableRoles.map((role) => (
-            <DropdownMenuItem
-              key={role}
-              onClick={() => handleSwitchRole(role)}
-              className="flex items-center gap-2"
-            >
-              {role === 'customer' ? <Users className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
-              <span className="capitalize">{role}</span>
-              {profile.active_role === role && (
-                <Badge variant="secondary" className="ml-auto">Active</Badge>
-              )}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {/* Current Role Display */}
+      <div className="flex items-center gap-2 px-3 py-1 bg-muted/50 rounded-md">
+        {getCurrentRoleIcon()}
+        <span className="text-sm font-medium">{getCurrentRoleLabel()}</span>
+      </div>
 
-      {availableRoles.length === 1 && (
+      {/* Role Switcher - only show if user has multiple roles */}
+      {availableRoles.length > 1 ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" disabled={isLoading}>
+              Switch Role
+              <ChevronDown className="h-4 w-4 ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {availableRoles.map((role) => (
+              <DropdownMenuItem
+                key={role}
+                onClick={() => handleSwitchRole(role)}
+                className="flex items-center gap-2"
+              >
+                {role === 'customer' ? <Users className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
+                <span className="capitalize">{role}</span>
+                {profile.active_role === role && (
+                  <Badge variant="secondary" className="ml-auto">Active</Badge>
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        /* Add Role Button - show if user only has one role */
         <Dialog open={isAddRoleDialogOpen} onOpenChange={setIsAddRoleDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              Add Role
+              Add {availableRoles[0] === 'customer' ? 'Provider' : 'Customer'} Role
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Add New Role</DialogTitle>
+              <DialogTitle>Add {availableRoles[0] === 'customer' ? 'Provider' : 'Customer'} Role</DialogTitle>
               <DialogDescription>
-                Add a {availableRoles[0] === 'customer' ? 'provider' : 'customer'} role to your account.
+                {availableRoles[0] === 'customer' 
+                  ? 'Start offering services and grow your business by adding a provider role.'
+                  : 'Book services from other providers by adding a customer role.'
+                }
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
