@@ -629,6 +629,168 @@ const Profile = () => {
             </CardContent>
           </Card>
 
+          {/* Elegant Tabbed Sections */}
+          <div className="lg:col-span-3 mt-8">
+            <Tabs defaultValue="portfolio" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-8 bg-white/50 backdrop-blur-sm">
+                <TabsTrigger value="portfolio" className="flex items-center font-medium">
+                  <Camera className="h-4 w-4 mr-2" />
+                  Portfolio
+                </TabsTrigger>
+                <TabsTrigger value="services" className="flex items-center font-medium">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Services & Pricing
+                </TabsTrigger>
+                <TabsTrigger value="reviews" className="flex items-center font-medium">
+                  <Users className="h-4 w-4 mr-2" />
+                  Customer Reviews
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Portfolio Gallery */}
+              <TabsContent value="portfolio" className="space-y-6">
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold mb-4">Our Portfolio</h3>
+                  <p className="text-muted-foreground text-lg">Discover our latest work and creative achievements</p>
+                </div>
+                
+                {portfolioItems.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {portfolioItems.map((item) => (
+                      <Card key={item.id} className="card-enhanced group overflow-hidden">
+                        <div className="relative overflow-hidden">
+                          <img
+                            src={item.image_url}
+                            alt={item.title}
+                            className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+                        </div>
+                        <CardContent className="p-6">
+                          <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
+                          <p className="text-muted-foreground text-sm mb-4">{item.description}</p>
+                          <div className="flex items-center justify-between">
+                            <Badge variant="secondary" className="text-xs">
+                              {item.category}
+                            </Badge>
+                            <Button variant="ghost" size="sm">
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Camera className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h4 className="text-xl font-semibold mb-2">No Portfolio Items Yet</h4>
+                    <p className="text-muted-foreground mb-6">Start showcasing your beautiful work!</p>
+                    {isOwner && (
+                      <Button>
+                        <Camera className="h-4 w-4 mr-2" />
+                        Add Portfolio Item
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </TabsContent>
+
+              {/* Services & Pricing */}
+              <TabsContent value="services" className="space-y-6">
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold mb-4">Services & Pricing</h3>
+                  <p className="text-muted-foreground text-lg">Professional services tailored to your needs</p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    { name: 'Classic Lash Extensions', price: 'from $120', duration: '2-3 hours', description: 'Natural-looking individual lash extensions for everyday elegance' },
+                    { name: 'Volume Lash Extensions', price: 'from $180', duration: '3-4 hours', description: 'Dramatic volume with lightweight, fan-shaped lash extensions' },
+                    { name: 'Lash Lift & Tint', price: 'from $80', duration: '1-1.5 hours', description: 'Natural enhancement of your existing lashes with curl and color' },
+                    { name: 'Brow Shaping & Tint', price: 'from $60', duration: '45-60 minutes', description: 'Professional brow styling to frame your face perfectly' }
+                  ].map((service, index) => (
+                    <Card key={index} className="card-enhanced">
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <h4 className="font-semibold text-lg">{service.name}</h4>
+                          <Badge className="bg-primary/10 text-primary">{service.price}</Badge>
+                        </div>
+                        <p className="text-muted-foreground text-sm mb-4">{service.description}</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Clock className="h-4 w-4 mr-2" />
+                            {service.duration}
+                          </div>
+                          <Button size="sm">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            Book Now
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              {/* Customer Reviews */}
+              <TabsContent value="reviews" className="space-y-6">
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold mb-4">Customer Reviews</h3>
+                  <p className="text-muted-foreground text-lg">See what our valued clients have to say</p>
+                </div>
+                
+                {reviews.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {reviews.map((review) => (
+                      <Card key={review.id} className="card-enhanced">
+                        <CardContent className="p-6">
+                          <div className="flex items-center mb-4">
+                            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                              <User className="h-6 w-6 text-primary" />
+                            </div>
+                            <div className="flex-1">
+                              <h5 className="font-semibold">{review.reviewer?.name || 'Anonymous'}</h5>
+                              <div className="flex items-center">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`h-4 w-4 ${
+                                      i < review.rating
+                                        ? 'text-yellow-500 fill-current'
+                                        : 'text-gray-300'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground text-sm leading-relaxed">
+                            "{review.review_text}"
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-4">
+                            {new Date(review.created_at).toLocaleDateString()}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Star className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h4 className="text-xl font-semibold mb-2">No Reviews Yet</h4>
+                    <p className="text-muted-foreground mb-6">Be the first to share your experience!</p>
+                    <Button>
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Leave a Review
+                    </Button>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          </div>
+
           {/* Stats & Quick Info */}
           <div className="space-y-6">
             {/* Rating & Reviews */}
@@ -795,221 +957,6 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Elegant Tabbed Sections */}
-        <Tabs defaultValue="portfolio" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8 bg-white/50 backdrop-blur-sm">
-            <TabsTrigger value="portfolio" className="flex items-center font-medium">
-              <Camera className="h-4 w-4 mr-2" />
-              Portfolio
-            </TabsTrigger>
-            <TabsTrigger value="services" className="flex items-center font-medium">
-              <Calendar className="h-4 w-4 mr-2" />
-              Services & Pricing
-            </TabsTrigger>
-            <TabsTrigger value="reviews" className="flex items-center font-medium">
-              <Users className="h-4 w-4 mr-2" />
-              Customer Reviews
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Portfolio Gallery */}
-          <TabsContent value="portfolio" className="space-y-6">
-            <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold mb-4">Our Portfolio</h3>
-              <p className="text-muted-foreground text-lg">Discover our latest work and creative achievements</p>
-            </div>
-            
-            {portfolioItems.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {portfolioItems.map((item) => (
-                  <Card key={item.id} className="overflow-hidden group hover:shadow-elegant transition-all duration-300 card-enhanced">
-                    <div className="aspect-square overflow-hidden relative">
-                      <img
-                        src={item.image_url}
-                        alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      {item.featured && (
-                        <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
-                          Featured
-                        </Badge>
-                      )}
-                    </div>
-                    <CardContent className="p-6">
-                      <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
-                      {item.description && (
-                        <p className="text-muted-foreground leading-relaxed">{item.description}</p>
-                      )}
-                      {item.category && (
-                        <Badge variant="outline" className="mt-3">
-                          {item.category}
-                        </Badge>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <Card className="text-center p-16 card-enhanced">
-                <Camera className="h-20 w-20 text-muted-foreground mx-auto mb-6" />
-                <h4 className="text-2xl font-semibold mb-4">Portfolio Gallery Coming Soon</h4>
-                <p className="text-muted-foreground text-lg max-w-md mx-auto">
-                  We're curating our most beautiful work to showcase here. Check back soon to see our stunning portfolio!
-                </p>
-                {isEditMode && isOwner && (
-                  <Button className="mt-6" variant="outline">
-                    <Camera className="h-4 w-4 mr-2" />
-                    Add Portfolio Items
-                  </Button>
-                )}
-              </Card>
-            )}
-          </TabsContent>
-
-          {/* Services & Pricing */}
-          <TabsContent value="services" className="space-y-6">
-            <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold mb-4">Services & Pricing</h3>
-              <p className="text-muted-foreground text-lg">Professional services designed to exceed your expectations</p>
-            </div>
-            
-            {(() => {
-              try {
-                const pricing = providerDetails?.pricing_info ? JSON.parse(providerDetails.pricing_info) : [];
-                return pricing.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {pricing.map((item: any, index: number) => (
-                      <Card key={index} className="hover:shadow-elegant transition-all duration-300 card-enhanced relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/20 to-transparent rounded-bl-3xl"></div>
-                        <CardContent className="p-8 relative">
-                          <h4 className="text-xl font-semibold mb-4 text-center">{item.service}</h4>
-                          <div className="text-center mb-6">
-                            <div className="text-3xl font-bold text-primary mb-2">{item.price}</div>
-                            {item.duration && (
-                              <p className="text-sm text-muted-foreground">{item.duration} minutes</p>
-                            )}
-                          </div>
-                          {item.description && (
-                            <p className="text-muted-foreground text-center mb-6 leading-relaxed">
-                              {item.description}
-                            </p>
-                          )}
-                          <Button className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70" size="lg">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            Book Now
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <Card className="text-center p-16 card-enhanced">
-                    <Calendar className="h-20 w-20 text-muted-foreground mx-auto mb-6" />
-                    <h4 className="text-2xl font-semibold mb-4">Service Menu Coming Soon</h4>
-                    <p className="text-muted-foreground text-lg max-w-md mx-auto mb-6">
-                      We're crafting the perfect service experience for you. Contact us directly for current offerings and bespoke pricing.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <Button variant="outline" size="lg">
-                        <Phone className="h-4 w-4 mr-2" />
-                        Call For Pricing
-                      </Button>
-                      <Button variant="outline" size="lg">
-                        <MessageSquare className="h-4 w-4 mr-2" />
-                        Send Message
-                      </Button>
-                    </div>
-                    {isEditMode && isOwner && (
-                      <Button className="mt-6" variant="default">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Add Services
-                      </Button>
-                    )}
-                  </Card>
-                );
-              } catch {
-                return (
-                  <Card className="text-center p-16 card-enhanced">
-                    <Calendar className="h-20 w-20 text-muted-foreground mx-auto mb-6" />
-                    <h4 className="text-2xl font-semibold mb-4">Service Menu Coming Soon</h4>
-                    <p className="text-muted-foreground">We're updating our service offerings. Please contact us for current pricing.</p>
-                  </Card>
-                );
-              }
-            })()}
-          </TabsContent>
-
-          {/* Customer Reviews */}
-          <TabsContent value="reviews" className="space-y-6">
-            <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold mb-4">Customer Love</h3>
-              <p className="text-muted-foreground text-lg">Real experiences from our cherished clients</p>
-            </div>
-            
-            {reviews.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {reviews.map((review) => (
-                  <Card key={review.id} className="hover:shadow-elegant transition-all duration-300 card-enhanced">
-                    <CardContent className="p-8">
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex space-x-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-5 w-5 ${
-                                i < review.rating
-                                  ? 'text-yellow-500 fill-current'
-                                  : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-2xl font-bold text-primary">{review.rating}.0</span>
-                      </div>
-                      
-                      {review.comment && (
-                        <blockquote className="text-lg text-foreground mb-6 leading-relaxed">
-                          "{review.comment}"
-                        </blockquote>
-                      )}
-                      
-                      <div className="flex items-center">
-                        <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mr-4">
-                          <User className="h-6 w-6 text-white" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-lg">
-                            {review.reviewer?.name || 'Valued Customer'}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {new Date(review.created_at).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <Card className="text-center p-16 card-enhanced">
-                <Users className="h-20 w-20 text-muted-foreground mx-auto mb-6" />
-                <h4 className="text-2xl font-semibold mb-4">Building Our Reputation</h4>
-                <p className="text-muted-foreground text-lg max-w-lg mx-auto mb-6">
-                  We're just getting started and excited to serve our first customers. Your feedback will help us grow and improve our services.
-                </p>
-                <Button variant="outline" size="lg">
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Be Our First Review
-                </Button>
-              </Card>
-            )}
-          </TabsContent>
-
-        </Tabs>
       </div>
     </div>
   );
