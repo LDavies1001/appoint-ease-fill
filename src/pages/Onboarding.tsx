@@ -10,10 +10,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera, ArrowRight } from 'lucide-react';
+import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera, ArrowRight, Copy } from 'lucide-react';
 import Header from '@/components/ui/header';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 import { CustomerStepper } from '@/components/customer/CustomerStepper';
+import { LocationInput } from '@/components/ui/location-input';
 
 interface Service {
   id: string;
@@ -85,7 +86,9 @@ const Onboarding = () => {
       ...prev,
       phone: profile.phone || '',
       location: profile.location || '',
-      bio: profile.bio || ''
+      bio: profile.bio || '',
+      // Auto-populate business name from user metadata if it exists
+      business_name: prev.business_name || (user?.user_metadata?.business_name) || ''
     }));
 
     // Fetch existing provider details if user is a provider
@@ -113,6 +116,10 @@ const Onboarding = () => {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSameAsPersonalPhone = () => {
+    setFormData(prev => ({ ...prev, business_phone: prev.phone }));
   };
 
   const fetchProviderDetails = async () => {
@@ -831,23 +838,33 @@ const Onboarding = () => {
                     required
                   />
                 </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="same-as-personal"
+                    checked={formData.business_phone === formData.phone && formData.phone !== ''}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        handleSameAsPersonalPhone();
+                      }
+                    }}
+                  />
+                  <Label htmlFor="same-as-personal" className="text-sm text-muted-foreground cursor-pointer flex items-center">
+                    <Copy className="h-4 w-4 mr-1" />
+                    Same as personal phone number
+                  </Label>
+                </div>
               </div>
 
               <div className="space-y-4">
                 <Label htmlFor="business_address" className="text-base font-medium text-foreground">
                   Business Address <span className="text-destructive">*</span>
                 </Label>
-                <div className="relative group">
-                  <MapPin className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                  <Input
-                    id="business_address"
-                    placeholder="Enter your business address"
-                    value={formData.business_address}
-                    onChange={(e) => handleInputChange('business_address', e.target.value)}
-                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
-                    required
-                  />
-                </div>
+                <LocationInput
+                  placeholder="Enter your business address"
+                  value={formData.business_address}
+                  onChange={(value) => handleInputChange('business_address', value)}
+                  className="h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
+                />
               </div>
 
               <div className="space-y-4">
