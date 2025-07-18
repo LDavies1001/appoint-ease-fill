@@ -151,9 +151,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // If signup was successful, ensure the profile has the correct data
     if (!error && data.user) {
       // Wait a moment for the trigger to create the profile
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Update the profile with the collected information
+      // Fetch the newly created profile to get the latest data
+      await fetchUserProfile(data.user.id);
+      
+      // Update the profile with any additional information that might not have been saved by the trigger
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ 
@@ -166,6 +169,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (updateError) {
         console.error('Error updating profile:', updateError);
+      } else {
+        // Refresh the profile data after update
+        await fetchUserProfile(data.user.id);
       }
 
       // If it's a provider, also create provider_details record

@@ -77,8 +77,10 @@ const Onboarding = () => {
     console.log('Profile data:', profile);
     console.log('User role:', profile.role);
     console.log('Current step:', currentStep);
+    console.log('Phone from profile:', profile.phone);
+    console.log('Location from profile:', profile.location);
 
-    // Pre-fill form with existing data
+    // Pre-fill form with existing data from profile
     setFormData(prev => ({
       ...prev,
       phone: profile.phone || '',
