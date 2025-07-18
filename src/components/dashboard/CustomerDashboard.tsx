@@ -35,17 +35,28 @@ interface AvailableSlot {
   end_time: string;
   duration: number;
   price: number;
+  discount_price?: number;
   notes: string;
+  image_url?: string;
+  custom_service_name?: string;
   provider: {
     name: string;
     business_name: string;
     location: string;
     rating: number;
+    business_email: string;
+    business_phone: string;
+    business_description: string;
   };
   service: {
     name: string;
     category: string;
   };
+  provider_service?: {
+    service_name: string;
+    description?: string;
+    base_price?: number;
+  } | null;
 }
 
 interface Booking {
@@ -123,7 +134,8 @@ const CustomerDashboard = () => {
         .select(`
           *,
           provider:profiles!availability_slots_provider_id_fkey(name, location),
-          service:services(name, category)
+          service:services(name, category),
+          provider_service:provider_services(service_name, description, base_price)
         `)
         .eq('is_booked', false)
         .gte('date', new Date().toISOString().split('T')[0])
@@ -132,19 +144,33 @@ const CustomerDashboard = () => {
 
       if (error) throw error;
 
-      const formattedSlots = data?.map(slot => ({
-        ...slot,
-        provider: {
-          name: slot.provider?.name || 'Unknown',
-          business_name: slot.provider?.name || 'Unknown Business',
-          location: slot.provider?.location || 'Unknown Location',
-          rating: 0
-        },
-        service: {
-          name: slot.service?.name || 'Unknown Service',
-          category: slot.service?.category || 'Unknown'
-        }
-      })) || [];
+      // Also fetch provider details and business info for each slot
+      const formattedSlots = await Promise.all((data || []).map(async (slot) => {
+        // Get provider business details
+        const { data: providerDetails } = await supabase
+          .from('provider_details')
+          .select('business_name, business_email, business_phone, rating, business_description')
+          .eq('user_id', slot.provider_id)
+          .single();
+
+        return {
+          ...slot,
+          provider: {
+            name: slot.provider?.name || 'Unknown',
+            business_name: providerDetails?.business_name || slot.provider?.name || 'Unknown Business',
+            location: slot.provider?.location || 'Unknown Location',
+            rating: providerDetails?.rating || 0,
+            business_email: providerDetails?.business_email || '',
+            business_phone: providerDetails?.business_phone || '',
+            business_description: providerDetails?.business_description || ''
+          },
+          service: {
+            name: slot.service?.name || slot.custom_service_name || 'Unknown Service',
+            category: slot.service?.category || 'Unknown'
+          },
+          provider_service: slot.provider_service || null
+        };
+      }));
 
       setAvailableSlots(formattedSlots);
     } catch (error) {
@@ -157,6 +183,7 @@ const CustomerDashboard = () => {
       setLoading(false);
     }
   };
+
 
   const fetchMyBookings = async () => {
     try {
@@ -436,17 +463,33 @@ const CustomerDashboard = () => {
                 </Card>
               ) : (
                 filteredSlots.map((slot) => (
-                  <Card key={slot.id} className="card-elegant p-4 hover:shadow-accent transition-smooth">
+                  <Card key={slot.id} className="card-elegant p-6 hover:shadow-accent transition-smooth">
+                    {/* Slot Image */}
+                    {slot.image_url && (
+                      <div className="mb-4 rounded-lg overflow-hidden">
+                        <img 
+                          src={slot.image_url} 
+                          alt={slot.service.name}
+                          className="w-full h-48 object-cover"
+                        />
+                      </div>
+                    )}
+                    
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-start justify-between mb-3">
                           <div>
-                            <h3 className="font-semibold text-foreground">
+                            <h3 className="font-semibold text-lg text-foreground">
                               {slot.provider.business_name}
                             </h3>
                             <p className="text-sm text-muted-foreground">
                               {slot.provider.name}
                             </p>
+                            {slot.provider.business_description && (
+                              <p className="text-sm text-muted-foreground mt-1 italic">
+                                {slot.provider.business_description}
+                              </p>
+                            )}
                           </div>
                           <div className="text-right">
                             <Badge variant="secondary" className="mb-1">
@@ -461,37 +504,109 @@ const CustomerDashboard = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-muted-foreground mb-3">
+                        {/* Service Details */}
+                        {slot.provider_service && (
+                          <div className="bg-muted/30 rounded-lg p-3 mb-4">
+                            <h4 className="font-medium text-sm text-foreground mb-1">
+                              Service: {slot.provider_service.service_name}
+                            </h4>
+                            {slot.provider_service.description && (
+                              <p className="text-sm text-muted-foreground">
+                                {slot.provider_service.description}
+                              </p>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Date, Time, Location, Price Grid */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-muted-foreground mb-4">
                           <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            {formatDate(slot.date)}
+                            <Calendar className="h-4 w-4 mr-2" />
+                            <div>
+                              <div className="font-medium text-foreground">
+                                {formatDate(slot.date)}
+                              </div>
+                              <div className="text-xs">
+                                {slot.duration} minutes
+                              </div>
+                            </div>
                           </div>
                           <div className="flex items-center">
-                            <Clock className="h-4 w-4 mr-1" />
-                            {formatTime(slot.start_time)}
+                            <Clock className="h-4 w-4 mr-2" />
+                            <div>
+                              <div className="font-medium text-foreground">
+                                {formatTime(slot.start_time)}
+                              </div>
+                              <div className="text-xs">
+                                Ends {formatTime(slot.end_time)}
+                              </div>
+                            </div>
                           </div>
                           <div className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-1" />
-                            {slot.provider.location}
+                            <MapPin className="h-4 w-4 mr-2" />
+                            <div>
+                              <div className="font-medium text-foreground">
+                                {slot.provider.location}
+                              </div>
+                              {slot.provider.business_phone && (
+                                <div className="text-xs flex items-center mt-1">
+                                  <Phone className="h-3 w-3 mr-1" />
+                                  {slot.provider.business_phone}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <div className="font-medium text-foreground">
-                            {slot.price ? `$${slot.price}` : 'Price TBD'}
+                          <div className="flex items-center">
+                            <div>
+                              <div className="font-semibold text-lg text-foreground">
+                                {slot.discount_price ? (
+                                  <div>
+                                    <span className="line-through text-muted-foreground text-sm">
+                                      £{slot.price}
+                                    </span>
+                                    <span className="text-accent ml-2">
+                                      £{slot.discount_price}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  `£${slot.price || 'TBD'}`
+                                )}
+                              </div>
+                              {slot.discount_price && (
+                                <div className="text-xs text-accent font-medium">
+                                  Save £{slot.price - slot.discount_price}!
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
 
+                        {/* Contact Information */}
+                        {slot.provider.business_email && (
+                          <div className="flex items-center text-sm text-muted-foreground mb-3">
+                            <Mail className="h-4 w-4 mr-2" />
+                            {slot.provider.business_email}
+                          </div>
+                        )}
+
+                        {/* Special Notes */}
                         {slot.notes && (
-                          <p className="text-sm text-muted-foreground mb-3">
-                            {slot.notes}
-                          </p>
+                          <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 mb-4">
+                            <h5 className="font-medium text-sm text-foreground mb-1">Special Notes:</h5>
+                            <p className="text-sm text-muted-foreground">
+                              {slot.notes}
+                            </p>
+                          </div>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex justify-end">
+                    <div className="flex justify-end pt-4 border-t border-border">
                       <Button
                         variant="accent"
-                        size="sm"
+                        size="lg"
                         onClick={() => handleBookSlot(slot)}
+                        className="min-w-32"
                       >
                         Book Now
                       </Button>
