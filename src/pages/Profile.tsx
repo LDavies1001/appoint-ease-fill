@@ -445,10 +445,334 @@ const Profile = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
-        {/* Business Overview Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {/* About Card */}
-          <Card className="lg:col-span-2 card-enhanced">
+        {/* Elegant Tabbed Sections */}
+        <Tabs defaultValue="about" className="w-full mb-12">
+          <TabsList className="grid w-full grid-cols-4 mb-8 bg-white/50 backdrop-blur-sm">
+            <TabsTrigger value="about" className="flex items-center font-medium">
+              <Building className="h-4 w-4 mr-2" />
+              About
+            </TabsTrigger>
+            <TabsTrigger value="portfolio" className="flex items-center font-medium">
+              <Camera className="h-4 w-4 mr-2" />
+              Portfolio
+            </TabsTrigger>
+            <TabsTrigger value="services" className="flex items-center font-medium">
+              <Calendar className="h-4 w-4 mr-2" />
+              Services & Pricing
+            </TabsTrigger>
+            <TabsTrigger value="reviews" className="flex items-center font-medium">
+              <Users className="h-4 w-4 mr-2" />
+              Customer Reviews
+            </TabsTrigger>
+          </TabsList>
+
+          {/* About Tab Content */}
+          <TabsContent value="about" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* About Card */}
+              <Card className="lg:col-span-2 card-enhanced">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center text-2xl">
+                      <Building className="h-6 w-6 mr-3 text-primary" />
+                      About Our Business
+                    </CardTitle>
+                    {isEditMode && isOwner && (
+                      <Button variant="ghost" size="sm">
+                        <Edit3 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Business Description */}
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3">Our Story</h4>
+                    {isEditMode ? (
+                      <Textarea
+                        value={editData.business_description || ''}
+                        onChange={(e) => setEditData({...editData, business_description: e.target.value})}
+                        placeholder="Tell your business story..."
+                        className="min-h-[100px]"
+                      />
+                    ) : providerDetails?.business_description ? (
+                      <p className="text-muted-foreground leading-relaxed">
+                        {providerDetails.business_description}
+                      </p>
+                    ) : (
+                      <p className="text-muted-foreground leading-relaxed italic">
+                        Welcome to our business! We're dedicated to providing exceptional service.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Social Media */}
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 flex items-center">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Connect With Us
+                      {isEditMode && isOwner && (
+                        <Button variant="ghost" size="sm" className="ml-auto">
+                          <Edit3 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {(() => {
+                        const socialMedia = providerDetails?.social_media_links || {};
+                        const platforms = [
+                          { name: 'Instagram', key: 'instagram', icon: Instagram, color: 'text-pink-600' },
+                          { name: 'Facebook', key: 'facebook', icon: Facebook, color: 'text-blue-600' },
+                          { name: 'TikTok', key: 'tiktok', icon: Camera, color: 'text-black' },
+                          { name: 'Twitter', key: 'twitter', icon: Twitter, color: 'text-blue-400' }
+                        ];
+                        
+                        return platforms.map(platform => {
+                          const IconComponent = platform.icon;
+                          const hasAccount = socialMedia[platform.key];
+                          
+                          return isEditMode && isOwner ? (
+                            <div key={platform.key} className="space-y-2">
+                              <div className="flex items-center p-3 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/20">
+                                <IconComponent className={`h-5 w-5 mr-3 ${platform.color}`} />
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-medium text-sm mb-1">{platform.name}</p>
+                                  <Input
+                                    value={socialMedia[platform.key] || ''}
+                                    onChange={(e) => {
+                                      const newSocialMedia = { ...socialMedia, [platform.key]: e.target.value };
+                                      setEditData({...editData, social_media_links: newSocialMedia});
+                                    }}
+                                    placeholder={`@username`}
+                                    className="text-xs h-8"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ) : hasAccount ? (
+                            <a
+                              key={platform.key}
+                              href={`https://${platform.key}.com/${socialMedia[platform.key].replace('@', '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center p-3 bg-muted rounded-lg hover:bg-muted/80 transition-all group"
+                            >
+                              <IconComponent className={`h-5 w-5 mr-3 ${platform.color}`} />
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-sm">{platform.name}</p>
+                                <p className="text-xs text-muted-foreground truncate">@{socialMedia[platform.key].replace('@', '')}</p>
+                              </div>
+                            </a>
+                          ) : (
+                            <div key={platform.key} className="flex items-center p-3 bg-muted/30 rounded-lg">
+                              <IconComponent className="h-5 w-5 mr-3 text-muted-foreground" />
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-sm text-muted-foreground">{platform.name}</p>
+                                <p className="text-xs text-muted-foreground">Not connected</p>
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  </div>
+
+                  {/* Certifications */}
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 flex items-center">
+                      <Award className="h-4 w-4 mr-2" />
+                      Certifications & Specialties
+                      {isEditMode && isOwner && (
+                        <DocumentUpload
+                          onUpload={(urls) => {
+                            const currentFiles = editData.certification_files || [];
+                            setEditData({...editData, certification_files: [...currentFiles, ...urls]});
+                          }}
+                          bucket="certifications"
+                          folder="documents"
+                          className="ml-auto"
+                        >
+                          <Button variant="ghost" size="sm">
+                            <Upload className="h-4 w-4 mr-1" />
+                            Upload
+                          </Button>
+                        </DocumentUpload>
+                      )}
+                    </h4>
+                    
+                    {isEditMode ? (
+                      <div className="space-y-4">
+                        <Input
+                          value={editData.certifications || ''}
+                          onChange={(e) => setEditData({...editData, certifications: e.target.value})}
+                          placeholder="Enter certifications (comma separated)"
+                        />
+                        
+                        {/* Display uploaded certification files */}
+                        {editData.certification_files && editData.certification_files.length > 0 && (
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">Uploaded Documents:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {editData.certification_files.map((fileUrl: string, index: number) => (
+                                <div key={index} className="flex items-center p-2 bg-muted rounded-lg text-sm">
+                                  <FileText className="h-4 w-4 mr-2" />
+                                  <span className="truncate max-w-[200px]">Document {index + 1}</span>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => {
+                                      const newFiles = editData.certification_files.filter((_: string, i: number) => i !== index);
+                                      setEditData({...editData, certification_files: newFiles});
+                                    }}
+                                    className="ml-2 h-6 w-6 p-0"
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : providerDetails?.certifications ? (
+                      <div className="flex flex-wrap gap-2">
+                        {providerDetails.certifications.split(',').map((cert: string, index: number) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {cert.trim()}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground text-sm italic">
+                        Professional certifications coming soon
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Stats & Quick Info */}
+              <div className="space-y-6">
+                {/* Rating & Reviews */}
+                <Card className="card-enhanced">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex items-center justify-center mb-4">
+                      <Star className="h-8 w-8 text-yellow-500 fill-current mr-2" />
+                      <span className="text-3xl font-bold">
+                        {providerDetails?.rating ? providerDetails.rating.toFixed(1) : '5.0'}
+                      </span>
+                    </div>
+                    <p className="text-muted-foreground mb-2">
+                      {providerDetails?.total_reviews || 0} customer reviews
+                    </p>
+                    <div className="flex justify-center space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < Math.floor(providerDetails?.rating || 5)
+                              ? 'text-yellow-500 fill-current'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Experience & Location */}
+                <Card className="card-enhanced">
+                  <CardContent className="p-6 space-y-4">
+                    {providerDetails?.years_experience && (
+                      <div className="text-center pb-4 border-b">
+                        <div className="text-2xl font-bold text-primary mb-1">
+                          {providerDetails.years_experience}+ Years
+                        </div>
+                        <p className="text-sm text-muted-foreground">Professional Experience</p>
+                      </div>
+                    )}
+                    
+                    {providerDetails?.business_address && (
+                      <div className="flex items-start">
+                        <MapPin className="h-5 w-5 text-primary mt-1 mr-3 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-sm mb-1">Location</p>
+                          <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {providerDetails?.business_phone && (
+                      <div className="flex items-start">
+                        <Phone className="h-5 w-5 text-primary mt-1 mr-3 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-sm mb-1">Contact</p>
+                          <p className="text-sm text-muted-foreground">{providerDetails.business_phone}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {providerDetails?.business_email && (
+                      <div className="flex items-start">
+                        <Mail className="h-5 w-5 text-primary mt-1 mr-3 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-sm mb-1">Email</p>
+                          <p className="text-sm text-muted-foreground">{providerDetails.business_email}</p>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Operating Hours */}
+                {providerDetails?.operating_hours && (
+                  <Card className="card-enhanced">
+                    <CardHeader>
+                      <CardTitle className="flex items-center text-lg">
+                        <Clock className="h-5 w-5 mr-2 text-primary" />
+                        Operating Hours
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 pt-0">
+                      <div className="space-y-3">
+                        {(() => {
+                          const hours = formatOperatingHours(providerDetails.operating_hours);
+                          if (!hours) return null;
+                          
+                          return Array.isArray(hours) 
+                            ? hours.map((day: any, index: number) => (
+                                <div key={index} className="flex justify-between items-center text-sm">
+                                  <span className="font-medium">{getDayName(day.day || index)}</span>
+                                  <span className={`${day.closed ? 'text-muted-foreground' : 'text-primary'}`}>
+                                    {day.closed ? 'Closed' : `${day.open} - ${day.close}`}
+                                  </span>
+                                </div>
+                              ))
+                            : Object.entries(hours).map(([dayKey, dayData]: [string, any]) => (
+                                <div key={dayKey} className="flex justify-between items-center text-sm">
+                                  <span className="font-medium">{getDayName(dayKey)}</span>
+                                  <span className={`${dayData.closed ? 'text-muted-foreground' : 'text-primary'}`}>
+                                    {dayData.closed ? 'Closed' : `${dayData.open} - ${dayData.close}`}
+                                  </span>
+                                </div>
+                              ));
+                        })()}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+                
+                {isEditMode && (!providerDetails?.business_address || !providerDetails?.operating_hours) && (
+                  <div className="text-center pt-2">
+                    <Button variant="outline" size="sm">
+                      <MapPin className="h-4 w-4 mr-2" />
+                      {!providerDetails?.business_address ? 'Add Address' : 'Add Hours'}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center text-2xl">
@@ -956,6 +1280,7 @@ const Profile = () => {
             )}
           </div>
         </div>
+        </Tabs>
 
       </div>
     </div>
