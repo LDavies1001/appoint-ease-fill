@@ -47,7 +47,7 @@ const Onboarding = () => {
     instagram_url: '',
     tiktok_url: '',
     years_experience: '',
-    pricing_info: [] as { service: string; price: string }[],
+    pricing_info: [] as { service: string; price: string; duration: string }[],
     operating_hours: [
       { day: 'Monday', open: '09:00', close: '17:00', closed: false },
       { day: 'Tuesday', open: '09:00', close: '17:00', closed: false },
@@ -66,7 +66,20 @@ const Onboarding = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [showImageLibrary, setShowImageLibrary] = useState(false);
   const [isFormRestored, setIsFormRestored] = useState(false);
+  
+  // Stock images for library selection
+  const stockImages = [
+    { url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400", alt: "Beauty salon interior" },
+    { url: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400", alt: "Nail salon workspace" },
+    { url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400", alt: "Lash extension tools" },
+    { url: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400", alt: "Makeup and beauty products" },
+    { url: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400", alt: "Professional beauty setup" },
+    { url: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400", alt: "Spa treatment room" },
+    { url: "https://images.unsplash.com/photo-1559599101-f09722fb4948?w=400", alt: "Clean beauty workspace" },
+    { url: "https://images.unsplash.com/photo-1583011650044-70187253ec5d?w=400", alt: "Professional nail station" }
+  ];
   
   const { user, profile, updateProfile } = useAuth();
   const { toast } = useToast();
@@ -232,7 +245,7 @@ const Onboarding = () => {
   const addPriceItem = () => {
     setFormData(prev => ({
       ...prev,
-      pricing_info: [...prev.pricing_info, { service: '', price: '' }]
+      pricing_info: [...prev.pricing_info, { service: '', price: '', duration: '60' }]
     }));
   };
 
@@ -243,7 +256,7 @@ const Onboarding = () => {
     }));
   };
 
-  const updatePriceItem = (index: number, field: 'service' | 'price', value: string) => {
+  const updatePriceItem = (index: number, field: 'service' | 'price' | 'duration', value: string) => {
     setFormData(prev => ({
       ...prev,
       pricing_info: prev.pricing_info.map((item, i) => 
@@ -305,6 +318,42 @@ const Onboarding = () => {
       ...prev,
       certification_files: [...prev.certification_files, ...validFiles].slice(0, 10) // Max 10 files
     }));
+  };
+
+  const handleSelectStockImage = async (image: { url: string; alt: string }) => {
+    if (formData.business_photos.length >= 5) {
+      toast({
+        title: "Maximum photos reached",
+        description: "You can only upload up to 5 business photos",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Fetch the image and convert to File object
+      const response = await fetch(image.url);
+      const blob = await response.blob();
+      const file = new File([blob], `stock-image-${Date.now()}.jpg`, { type: 'image/jpeg' });
+      
+      setFormData(prev => ({
+        ...prev,
+        business_photos: [...prev.business_photos, file]
+      }));
+      
+      setShowImageLibrary(false);
+      
+      toast({
+        title: "Image added successfully!",
+        description: "Stock image has been added to your business photos"
+      });
+    } catch (error) {
+      toast({
+        title: "Error adding image",
+        description: "Failed to add the selected stock image",
+        variant: "destructive"
+      });
+    }
   };
 
   const removeCertificationFile = (index: number) => {
@@ -1062,15 +1111,74 @@ const Onboarding = () => {
                         </div>
                       ))}
                       {formData.business_photos.length < 5 && (
-                        <Label 
-                          htmlFor="business_photos" 
-                          className="w-full h-24 border-2 border-dashed border-primary/30 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group"
-                        >
-                          <Upload className="h-6 w-6 text-primary/60 group-hover:text-primary transition-colors" />
-                          <span className="text-xs text-muted-foreground mt-1">Add Photo</span>
-                        </Label>
+                        <div className="space-y-2">
+                          <Label 
+                            htmlFor="business_photos" 
+                            className="w-full h-20 border-2 border-dashed border-primary/30 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group"
+                          >
+                            <Upload className="h-5 w-5 text-primary/60 group-hover:text-primary transition-colors" />
+                            <span className="text-xs text-muted-foreground mt-1">Upload</span>
+                          </Label>
+                          
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowImageLibrary(true)}
+                            className="w-full h-8 text-xs border-border/50 hover:border-primary/50"
+                          >
+                            <Camera className="h-3 w-3 mr-1" />
+                            Library
+                          </Button>
+                        </div>
                       )}
                     </div>
+                    
+                    {/* Image Library Modal */}
+                    {showImageLibrary && (
+                      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                        <div className="bg-background rounded-lg border border-border max-w-4xl w-full max-h-[80vh] overflow-hidden">
+                          <div className="p-6">
+                            <div className="flex justify-between items-center mb-4">
+                              <h3 className="text-lg font-semibold">Select from Image Library</h3>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setShowImageLibrary(false)}
+                                className="h-8 w-8 p-0"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-96 overflow-y-auto">
+                              {stockImages.map((image, index) => (
+                                <div
+                                  key={index}
+                                  className="relative group cursor-pointer rounded-lg overflow-hidden border-2 border-border/50 hover:border-primary/50 transition-all"
+                                  onClick={() => handleSelectStockImage(image)}
+                                >
+                                  <img
+                                    src={image.url}
+                                    alt={image.alt}
+                                    className="w-full h-24 object-cover"
+                                  />
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                                    <div className="bg-primary text-primary-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <CheckCircle className="h-4 w-4" />
+                                    </div>
+                                  </div>
+                                  <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {image.alt}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
                     <input
                       id="business_photos"
                       type="file"
@@ -1080,7 +1188,7 @@ const Onboarding = () => {
                       className="hidden"
                     />
                     <p className="text-sm text-muted-foreground">
-                      Upload up to 5 business photos to showcase your work (max 5MB each)
+                      Upload up to 5 business photos or select from our stock library (max 5MB each)
                     </p>
                   </div>
                 )}
@@ -1250,22 +1358,42 @@ const Onboarding = () => {
                     Add Item
                   </Button>
                 </div>
+                
+                {/* Column Headers */}
+                {formData.pricing_info.length > 0 && (
+                  <div className="grid grid-cols-12 gap-3 px-3 mb-2">
+                    <Label className="col-span-5 text-xs text-muted-foreground">Service Name</Label>
+                    <Label className="col-span-3 text-xs text-muted-foreground">Price (£)</Label>
+                    <Label className="col-span-3 text-xs text-muted-foreground">Duration (min)</Label>
+                    <div className="col-span-1"></div>
+                  </div>
+                )}
+                
                 <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg p-4 border border-border/50 backdrop-blur-sm space-y-3">
                   {formData.pricing_info.map((item, index) => (
-                    <div key={index} className="flex items-center space-x-3 p-3 bg-background/30 rounded-lg">
+                    <div key={index} className="grid grid-cols-12 gap-3 p-3 bg-background/30 rounded-lg">
                       <Input
                         placeholder="Service/Item name"
                         value={item.service}
                         onChange={(e) => updatePriceItem(index, 'service', e.target.value)}
-                        className="flex-1 h-10 border-border/50"
+                        className="col-span-5 h-10 border-border/50"
                       />
-                      <div className="relative">
+                      <div className="col-span-3 relative">
                         <PoundSterling className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                           placeholder="0.00"
                           value={item.price}
                           onChange={(e) => updatePriceItem(index, 'price', e.target.value)}
-                          className="w-28 h-10 pl-9 border-border/50"
+                          className="h-10 pl-9 border-border/50"
+                        />
+                      </div>
+                      <div className="col-span-3 relative">
+                        <Clock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="60"
+                          value={item.duration}
+                          onChange={(e) => updatePriceItem(index, 'duration', e.target.value)}
+                          className="h-10 pl-9 border-border/50"
                         />
                       </div>
                       <Button
@@ -1273,7 +1401,7 @@ const Onboarding = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => removePriceItem(index)}
-                        className="h-10 w-10 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="col-span-1 h-10 w-10 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
                         <X className="h-4 w-4" />
                       </Button>
