@@ -372,11 +372,11 @@ const Profile = () => {
                 <img
                   src={avatarPreview || profile?.avatar_url || ''}
                   alt="Profile Picture"
-                  className="w-24 h-24 rounded-full object-cover shadow-elegant border-4 border-white"
+                  className="w-32 h-32 rounded-full object-cover shadow-elegant border-4 border-white"
                 />
               ) : (
-                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-elegant border-4 border-white">
-                  <User className="h-12 w-12 text-primary" />
+                <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-elegant border-4 border-white">
+                  <User className="h-16 w-16 text-primary" />
                 </div>
               )}
               {isEditMode && (
