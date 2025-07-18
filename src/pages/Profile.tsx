@@ -393,8 +393,6 @@ const Profile = () => {
               )}
             </div>
 
-
-
             {/* Business Title & Actions */}
             <div className="flex-1 text-white">
               <div className="mb-2">
@@ -773,515 +771,149 @@ const Profile = () => {
               </div>
             </div>
           </TabsContent>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center text-2xl">
-                  <Building className="h-6 w-6 mr-3 text-primary" />
-                  About Our Business
-                </CardTitle>
-                {isEditMode && isOwner && (
-                  <Button variant="ghost" size="sm">
-                    <Edit3 className="h-4 w-4" />
+
+          {/* Portfolio Gallery */}
+          <TabsContent value="portfolio" className="space-y-6">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-4">Our Portfolio</h3>
+              <p className="text-muted-foreground text-lg">Discover our latest work and creative achievements</p>
+            </div>
+            
+            {portfolioItems.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {portfolioItems.map((item) => (
+                  <Card key={item.id} className="card-enhanced group overflow-hidden">
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+                    </div>
+                    <CardContent className="p-6">
+                      <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
+                      <p className="text-muted-foreground text-sm mb-4">{item.description}</p>
+                      <div className="flex items-center justify-between">
+                        <Badge variant="secondary" className="text-xs">
+                          {item.category}
+                        </Badge>
+                        <Button variant="ghost" size="sm">
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Camera className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h4 className="text-xl font-semibold mb-2">No Portfolio Items Yet</h4>
+                <p className="text-muted-foreground mb-6">Start showcasing your beautiful work!</p>
+                {isOwner && (
+                  <Button>
+                    <Camera className="h-4 w-4 mr-2" />
+                    Add Portfolio Item
                   </Button>
                 )}
               </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Business Description */}
-              <div>
-                <h4 className="font-semibold text-lg mb-3">Our Story</h4>
-                {isEditMode ? (
-                  <Textarea
-                    value={editData.business_description || ''}
-                    onChange={(e) => setEditData({...editData, business_description: e.target.value})}
-                    placeholder="Tell your business story..."
-                    className="min-h-[100px]"
-                  />
-                ) : providerDetails?.business_description ? (
-                  <p className="text-muted-foreground leading-relaxed">
-                    {providerDetails.business_description}
-                  </p>
-                ) : (
-                  <p className="text-muted-foreground leading-relaxed italic">
-                    Welcome to our business! We're dedicated to providing exceptional service.
-                  </p>
-                )}
-              </div>
-
-              {/* Social Media */}
-              <div>
-                <h4 className="font-semibold text-lg mb-3 flex items-center">
-                  <Globe className="h-4 w-4 mr-2" />
-                  Connect With Us
-                  {isEditMode && isOwner && (
-                    <Button variant="ghost" size="sm" className="ml-auto">
-                      <Edit3 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </h4>
-                <div className="grid grid-cols-2 gap-3">
-                  {(() => {
-                    const socialMedia = providerDetails?.social_media_links || {};
-                    const platforms = [
-                      { name: 'Instagram', key: 'instagram', icon: Instagram, color: 'text-pink-600' },
-                      { name: 'Facebook', key: 'facebook', icon: Facebook, color: 'text-blue-600' },
-                      { name: 'TikTok', key: 'tiktok', icon: Camera, color: 'text-black' },
-                      { name: 'Twitter', key: 'twitter', icon: Twitter, color: 'text-blue-400' }
-                    ];
-                    
-                    return platforms.map(platform => {
-                      const IconComponent = platform.icon;
-                      const hasAccount = socialMedia[platform.key];
-                      
-                      return isEditMode && isOwner ? (
-                        <div key={platform.key} className="space-y-2">
-                          <div className="flex items-center p-3 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/20">
-                            <IconComponent className={`h-5 w-5 mr-3 ${platform.color}`} />
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-sm mb-1">{platform.name}</p>
-                              <Input
-                                value={socialMedia[platform.key] || ''}
-                                onChange={(e) => {
-                                  const newSocialMedia = { ...socialMedia, [platform.key]: e.target.value };
-                                  setEditData({...editData, social_media_links: newSocialMedia});
-                                }}
-                                placeholder={`@username`}
-                                className="text-xs h-8"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ) : hasAccount ? (
-                        <a
-                          key={platform.key}
-                          href={`https://${platform.key}.com/${socialMedia[platform.key].replace('@', '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center p-3 bg-muted rounded-lg hover:bg-muted/80 transition-all group"
-                        >
-                          <IconComponent className={`h-5 w-5 mr-3 ${platform.color}`} />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm">{platform.name}</p>
-                            <p className="text-xs text-muted-foreground truncate">@{socialMedia[platform.key].replace('@', '')}</p>
-                          </div>
-                        </a>
-                      ) : (
-                        <div key={platform.key} className="flex items-center p-3 bg-muted/30 rounded-lg">
-                          <IconComponent className="h-5 w-5 mr-3 text-muted-foreground" />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm text-muted-foreground">{platform.name}</p>
-                            <p className="text-xs text-muted-foreground">Not connected</p>
-                          </div>
-                        </div>
-                      );
-                    });
-                  })()}
-                </div>
-              </div>
-
-              {/* Certifications */}
-              <div>
-                <h4 className="font-semibold text-lg mb-3 flex items-center">
-                  <Award className="h-4 w-4 mr-2" />
-                  Certifications & Specialties
-                  {isEditMode && isOwner && (
-                    <DocumentUpload
-                      onUpload={(urls) => {
-                        const currentFiles = editData.certification_files || [];
-                        setEditData({...editData, certification_files: [...currentFiles, ...urls]});
-                      }}
-                      bucket="certifications"
-                      folder="documents"
-                      className="ml-auto"
-                    >
-                      <Button variant="ghost" size="sm">
-                        <Upload className="h-4 w-4 mr-1" />
-                        Upload
-                      </Button>
-                    </DocumentUpload>
-                  )}
-                </h4>
-                
-                {isEditMode ? (
-                  <div className="space-y-4">
-                    <Input
-                      value={editData.certifications || ''}
-                      onChange={(e) => setEditData({...editData, certifications: e.target.value})}
-                      placeholder="Enter certifications (comma separated)"
-                    />
-                    
-                    {/* Display uploaded certification files */}
-                    {editData.certification_files && editData.certification_files.length > 0 && (
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">Uploaded Documents:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {editData.certification_files.map((fileUrl: string, index: number) => (
-                            <div key={index} className="flex items-center p-2 bg-muted rounded-lg text-sm">
-                              <FileText className="h-4 w-4 mr-2" />
-                              <span className="truncate max-w-[200px]">Document {index + 1}</span>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-6 w-6 p-0 ml-2"
-                                onClick={() => {
-                                  const newFiles = editData.certification_files.filter((_, i: number) => i !== index);
-                                  setEditData({...editData, certification_files: newFiles});
-                                }}
-                              >
-                                <X className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ) : providerDetails?.certifications ? (
-                  <div className="flex flex-wrap gap-2">
-                    {providerDetails.certifications.split(',').map((cert: string, index: number) => (
-                      <Badge key={index} variant="secondary" className="text-sm">
-                        {cert.trim()}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground italic text-sm">
-                    Professional certifications coming soon
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Elegant Tabbed Sections */}
-          <div className="lg:col-span-3 mt-8">
-            <Tabs defaultValue="portfolio" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8 bg-white/50 backdrop-blur-sm">
-                <TabsTrigger value="portfolio" className="flex items-center font-medium">
-                  <Camera className="h-4 w-4 mr-2" />
-                  Portfolio
-                </TabsTrigger>
-                <TabsTrigger value="services" className="flex items-center font-medium">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Services & Pricing
-                </TabsTrigger>
-                <TabsTrigger value="reviews" className="flex items-center font-medium">
-                  <Users className="h-4 w-4 mr-2" />
-                  Customer Reviews
-                </TabsTrigger>
-              </TabsList>
-
-              {/* Portfolio Gallery */}
-              <TabsContent value="portfolio" className="space-y-6">
-                <div className="text-center mb-8">
-                  <h3 className="text-3xl font-bold mb-4">Our Portfolio</h3>
-                  <p className="text-muted-foreground text-lg">Discover our latest work and creative achievements</p>
-                </div>
-                
-                {portfolioItems.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {portfolioItems.map((item) => (
-                      <Card key={item.id} className="card-enhanced group overflow-hidden">
-                        <div className="relative overflow-hidden">
-                          <img
-                            src={item.image_url}
-                            alt={item.title}
-                            className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
-                        </div>
-                        <CardContent className="p-6">
-                          <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
-                          <p className="text-muted-foreground text-sm mb-4">{item.description}</p>
-                          <div className="flex items-center justify-between">
-                            <Badge variant="secondary" className="text-xs">
-                              {item.category}
-                            </Badge>
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Details
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <Camera className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h4 className="text-xl font-semibold mb-2">No Portfolio Items Yet</h4>
-                    <p className="text-muted-foreground mb-6">Start showcasing your beautiful work!</p>
-                    {isOwner && (
-                      <Button>
-                        <Camera className="h-4 w-4 mr-2" />
-                        Add Portfolio Item
-                      </Button>
-                    )}
-                  </div>
-                )}
-              </TabsContent>
-
-              {/* Services & Pricing */}
-              <TabsContent value="services" className="space-y-6">
-                <div className="text-center mb-8">
-                  <h3 className="text-3xl font-bold mb-4">Services & Pricing</h3>
-                  <p className="text-muted-foreground text-lg">Professional services tailored to your needs</p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {[
-                    { name: 'Classic Lash Extensions', price: 'from $120', duration: '2-3 hours', description: 'Natural-looking individual lash extensions for everyday elegance' },
-                    { name: 'Volume Lash Extensions', price: 'from $180', duration: '3-4 hours', description: 'Dramatic volume with lightweight, fan-shaped lash extensions' },
-                    { name: 'Lash Lift & Tint', price: 'from $80', duration: '1-1.5 hours', description: 'Natural enhancement of your existing lashes with curl and color' },
-                    { name: 'Brow Shaping & Tint', price: 'from $60', duration: '45-60 minutes', description: 'Professional brow styling to frame your face perfectly' }
-                  ].map((service, index) => (
-                    <Card key={index} className="card-enhanced">
-                      <CardContent className="p-6">
-                        <div className="flex justify-between items-start mb-4">
-                          <h4 className="font-semibold text-lg">{service.name}</h4>
-                          <Badge className="bg-primary/10 text-primary">{service.price}</Badge>
-                        </div>
-                        <p className="text-muted-foreground text-sm mb-4">{service.description}</p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Clock className="h-4 w-4 mr-2" />
-                            {service.duration}
-                          </div>
-                          <Button size="sm">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            Book Now
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-
-              {/* Customer Reviews */}
-              <TabsContent value="reviews" className="space-y-6">
-                <div className="text-center mb-8">
-                  <h3 className="text-3xl font-bold mb-4">Customer Reviews</h3>
-                  <p className="text-muted-foreground text-lg">See what our valued clients have to say</p>
-                </div>
-                
-                {reviews.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {reviews.map((review) => (
-                      <Card key={review.id} className="card-enhanced">
-                        <CardContent className="p-6">
-                          <div className="flex items-center mb-4">
-                            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-                              <User className="h-6 w-6 text-primary" />
-                            </div>
-                            <div className="flex-1">
-                              <h5 className="font-semibold">{review.reviewer?.name || 'Anonymous'}</h5>
-                              <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`h-4 w-4 ${
-                                      i < review.rating
-                                        ? 'text-yellow-500 fill-current'
-                                        : 'text-gray-300'
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                          <p className="text-muted-foreground text-sm leading-relaxed">
-                            "{review.review_text}"
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-4">
-                            {new Date(review.created_at).toLocaleDateString()}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <Star className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h4 className="text-xl font-semibold mb-2">No Reviews Yet</h4>
-                    <p className="text-muted-foreground mb-6">Be the first to share your experience!</p>
-                    <Button>
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      Leave a Review
-                    </Button>
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
-          </div>
-
-          {/* Stats & Quick Info */}
-          <div className="space-y-6">
-            {/* Rating & Reviews */}
-            <Card className="card-enhanced">
-              <CardContent className="p-6 text-center">
-                <div className="flex items-center justify-center mb-4">
-                  <Star className="h-8 w-8 text-yellow-500 fill-current mr-2" />
-                  <span className="text-3xl font-bold">
-                    {providerDetails?.rating ? providerDetails.rating.toFixed(1) : '5.0'}
-                  </span>
-                </div>
-                <p className="text-muted-foreground mb-2">
-                  {providerDetails?.total_reviews || 0} customer reviews
-                </p>
-                <div className="flex justify-center space-x-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < Math.floor(providerDetails?.rating || 5)
-                          ? 'text-yellow-500 fill-current'
-                          : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Experience & Location */}
-            <Card className="card-enhanced">
-              <CardContent className="p-6 space-y-4">
-                {providerDetails?.years_experience && (
-                  <div className="text-center pb-4 border-b">
-                    <div className="text-2xl font-bold text-primary mb-1">
-                      {providerDetails.years_experience}+ Years
-                    </div>
-                    <p className="text-sm text-muted-foreground">Professional Experience</p>
-                  </div>
-                )}
-                
-                {providerDetails?.business_address && (
-                  <div className="flex items-start">
-                    <MapPin className="h-5 w-5 text-primary mt-1 mr-3 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-sm mb-1">Location</p>
-                      <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
-                    </div>
-                  </div>
-                )}
-
-                {(providerDetails?.business_phone || providerDetails?.business_email) && (
-                  <div className="space-y-3 pt-4 border-t">
-                    {providerDetails.business_phone && (
-                      <div className="flex items-center">
-                        <Phone className="h-4 w-4 text-primary mr-3" />
-                        <span className="text-sm">{providerDetails.business_phone}</span>
-                      </div>
-                    )}
-                    {providerDetails.business_email && (
-                      <div className="flex items-center">
-                        <Mail className="h-4 w-4 text-primary mr-3" />
-                        <span className="text-sm">{providerDetails.business_email}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Operating Hours & Address */}
-            {(providerDetails?.operating_hours || providerDetails?.business_address) && (
-              <Card className="card-enhanced">
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center text-lg">
-                    <Clock className="h-5 w-5 mr-2" />
-                    Hours & Location
-                  </CardTitle>
-                  {isEditMode && isOwner && (
-                    <Button variant="ghost" size="sm">
-                      <Edit3 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </CardHeader>
-                <CardContent className="pt-0 space-y-4">
-                  {/* Address */}
-                  <div className="space-y-2">
-                    <p className="font-medium text-sm flex items-center">
-                      <MapPin className="h-4 w-4 mr-2" />
-                      Address
-                    </p>
-                    {isEditMode ? (
-                      <Input
-                        value={editData.business_address || ''}
-                        onChange={(e) => setEditData({...editData, business_address: e.target.value})}
-                        placeholder="Enter business address"
-                      />
-                    ) : providerDetails?.business_address ? (
-                      <div className="flex items-start p-3 bg-muted/30 rounded-lg">
-                        <MapPin className="h-4 w-4 text-primary mt-1 mr-3 flex-shrink-0" />
-                        <div>
-                          <p className="font-medium text-sm mb-1">Visit Us</p>
-                          <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-sm text-muted-foreground italic">Address not set</p>
-                    )}
-                  </div>
-                  
-                  {/* Opening Hours */}
-                  {providerDetails?.operating_hours && (
-                    <div>
-                      <p className="font-medium text-sm mb-3 flex items-center">
-                        <Clock className="h-4 w-4 mr-2" />
-                        Opening Hours
-                      </p>
-                      <div className="space-y-2 text-sm">
-                        {(() => {
-                          const hours = formatOperatingHours(providerDetails.operating_hours);
-                          return hours ? Object.entries(hours).map(([day, timeData]) => {
-                            // Handle both string and object formats
-                            let displayTime;
-                            if (typeof timeData === 'string') {
-                              displayTime = timeData;
-                            } else if (typeof timeData === 'object' && timeData !== null) {
-                              const hoursObj = timeData as any;
-                              if (hoursObj.closed) {
-                                displayTime = 'Closed';
-                              } else if (hoursObj.open && hoursObj.close) {
-                                displayTime = `${hoursObj.open} - ${hoursObj.close}`;
-                              } else {
-                                displayTime = 'Contact for hours';
-                              }
-                            } else {
-                              displayTime = 'Contact for hours';
-                            }
-
-                            return (
-                              <div key={day} className="flex justify-between">
-                                <span className="capitalize font-medium">{getDayName(day)}</span>
-                                <span className="text-muted-foreground">{displayTime}</span>
-                              </div>
-                            );
-                          }) : (
-                            <p className="text-muted-foreground italic">Hours available upon request</p>
-                          );
-                        })()}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {isEditMode && (!providerDetails?.business_address || !providerDetails?.operating_hours) && (
-                    <div className="text-center pt-2">
-                      <Button variant="outline" size="sm">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        {!providerDetails?.business_address ? 'Add Address' : 'Add Hours'}
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
             )}
-          </div>
-        </div>
-        </Tabs>
+          </TabsContent>
 
+          {/* Services & Pricing */}
+          <TabsContent value="services" className="space-y-6">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-4">Services & Pricing</h3>
+              <p className="text-muted-foreground text-lg">Professional services tailored to your needs</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                { name: 'Classic Lash Extensions', price: 'from $120', duration: '2-3 hours', description: 'Natural-looking individual lash extensions for everyday elegance' },
+                { name: 'Volume Lash Extensions', price: 'from $180', duration: '3-4 hours', description: 'Dramatic volume with lightweight, fan-shaped lash extensions' },
+                { name: 'Lash Lift & Tint', price: 'from $80', duration: '1-1.5 hours', description: 'Natural enhancement of your existing lashes with curl and color' },
+                { name: 'Brow Shaping & Tint', price: 'from $60', duration: '45-60 minutes', description: 'Professional brow styling to frame your face perfectly' }
+              ].map((service, index) => (
+                <Card key={index} className="card-enhanced">
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <h4 className="font-semibold text-lg">{service.name}</h4>
+                      <Badge className="bg-primary/10 text-primary">{service.price}</Badge>
+                    </div>
+                    <p className="text-muted-foreground text-sm mb-4">{service.description}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <Clock className="h-4 w-4 mr-2" />
+                        {service.duration}
+                      </div>
+                      <Button size="sm">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Book Now
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* Customer Reviews */}
+          <TabsContent value="reviews" className="space-y-6">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-4">Customer Reviews</h3>
+              <p className="text-muted-foreground text-lg">See what our valued clients have to say</p>
+            </div>
+            
+            {reviews.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {reviews.map((review) => (
+                  <Card key={review.id} className="card-enhanced">
+                    <CardContent className="p-6">
+                      <div className="flex items-center mb-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                          <User className="h-6 w-6 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <h5 className="font-semibold">{review.reviewer?.name || 'Anonymous'}</h5>
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-4 w-4 ${
+                                  i < review.rating
+                                    ? 'text-yellow-500 fill-current'
+                                    : 'text-gray-300'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        "{review.review_text}"
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-4">
+                        {new Date(review.created_at).toLocaleDateString()}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Star className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h4 className="text-xl font-semibold mb-2">No Reviews Yet</h4>
+                <p className="text-muted-foreground mb-6">Be the first to share your experience!</p>
+                <Button>
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Leave a Review
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
