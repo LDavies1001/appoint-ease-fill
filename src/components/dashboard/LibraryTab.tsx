@@ -331,53 +331,79 @@ const LibraryTab = () => {
           {serviceFolders.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-foreground">Service Portfolios</h3>
-              {serviceFolders.map((folder) => (
-                <Card key={folder.path} className="card-elegant p-4">
-                  <div className="flex justify-between items-center mb-4">
-                    <h4 className="font-medium text-foreground">{folder.name}</h4>
-                    <div className="flex gap-2">
-                      <Input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, folder.path)}
-                        className="hidden"
-                        id={`upload-${folder.path}`}
-                        disabled={uploading}
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => document.getElementById(`upload-${folder.path}`)?.click()}
-                        disabled={uploading}
-                      >
-                        <Upload className="h-4 w-4 mr-2" />
-                        {uploading ? 'Uploading...' : 'Add Photos'}
-                      </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {serviceFolders.map((folder) => (
+                  <Card key={folder.path} className="card-elegant p-4 hover-scale">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-medium text-foreground truncate">{folder.name}</h4>
+                        <Input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, folder.path)}
+                          className="hidden"
+                          id={`upload-${folder.path}`}
+                          disabled={uploading}
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => document.getElementById(`upload-${folder.path}`)?.click()}
+                          disabled={uploading}
+                        >
+                          <Upload className="h-4 w-4 mr-2" />
+                          {uploading ? 'Uploading...' : 'Add'}
+                        </Button>
+                      </div>
+                      
+                      <div className="aspect-[4/3] bg-muted/20 rounded-lg overflow-hidden">
+                        {folder.images.length === 0 ? (
+                          <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+                            <Image className="h-8 w-8 mb-2" />
+                            <p className="text-sm text-center">No photos yet</p>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-2 gap-1 h-full">
+                            {folder.images.slice(0, 4).map((image, index) => (
+                              <div key={`${folder.path}-${image.name}-${index}`} className="overflow-hidden rounded">
+                                <img
+                                  src={image.url}
+                                  alt={image.name}
+                                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
+                                  onClick={() => window.open(image.url, '_blank')}
+                                />
+                              </div>
+                            ))}
+                            {folder.images.length > 4 && (
+                              <div className="bg-muted/40 flex items-center justify-center text-muted-foreground text-sm">
+                                +{folder.images.length - 4} more
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex justify-between items-center text-sm text-muted-foreground">
+                        <span>{folder.images.length} photo{folder.images.length !== 1 ? 's' : ''}</span>
+                        {folder.images.length > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              // View all images logic could go here
+                              window.open(folder.images[0].url, '_blank');
+                            }}
+                            className="text-xs p-1 h-auto"
+                          >
+                            View All
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  
-                  {folder.images.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <Image className="h-8 w-8 mx-auto mb-2" />
-                      <p>No photos yet for this service</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                      {folder.images.map((image, index) => (
-                        <div key={`${folder.path}-${image.name}-${index}`} className="aspect-square overflow-hidden rounded border">
-                          <img
-                            src={image.url}
-                            alt={image.name}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
-                            onClick={() => window.open(image.url, '_blank')}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </Card>
-              ))}
+                  </Card>
+                ))}
+              </div>
             </div>
           )}
 
