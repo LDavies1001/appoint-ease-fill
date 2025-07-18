@@ -642,7 +642,7 @@ const Onboarding = () => {
               provider_id: user!.id,
               service_name: item.service.trim(),
               base_price: parseFloat(item.price) || null,
-              duration_minutes: 60, // Default duration
+              duration_minutes: parseInt(item.duration) || 60, // Use duration from form
               is_active: true
             }));
 
@@ -1111,7 +1111,7 @@ const Onboarding = () => {
                         </div>
                       ))}
                       {formData.business_photos.length < 5 && (
-                        <div className="space-y-2">
+                        <div className="w-full space-y-2">
                           <Label 
                             htmlFor="business_photos" 
                             className="w-full h-20 border-2 border-dashed border-primary/30 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group"
@@ -1125,14 +1125,14 @@ const Onboarding = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => setShowImageLibrary(true)}
-                            className="w-full h-8 text-xs border-border/50 hover:border-primary/50"
+                            className="w-full h-8 text-xs border-border/50 hover:border-primary/50 bg-background hover:bg-muted"
                           >
                             <Camera className="h-3 w-3 mr-1" />
-                            Library
+                            📸 Select from Library
                           </Button>
                         </div>
-                      )}
-                    </div>
+                       )}
+                     </div>
                     
                     {/* Image Library Modal */}
                     {showImageLibrary && (
