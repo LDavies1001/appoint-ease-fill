@@ -46,11 +46,17 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="flex items-center">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/profile" className="flex items-center">
                       {profile.active_role === 'provider' ? (
                         <>
                           <Building className="h-4 w-4 mr-2" />
-                          My Profile & Business
+                          Business Profile
                         </>
                       ) : (
                         <>
