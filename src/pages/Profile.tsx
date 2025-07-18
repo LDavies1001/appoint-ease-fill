@@ -37,7 +37,8 @@ import {
   Save,
   X,
   Upload,
-  FileText
+  FileText,
+  PoundSterling
 } from 'lucide-react';
 
 const Profile = () => {
@@ -466,7 +467,7 @@ const Profile = () => {
               Portfolio
             </TabsTrigger>
             <TabsTrigger value="services" className="flex items-center font-medium">
-              <Calendar className="h-4 w-4 mr-2" />
+              <PoundSterling className="h-4 w-4 mr-2" />
               Services & Pricing
             </TabsTrigger>
             <TabsTrigger value="reviews" className="flex items-center font-medium">
@@ -849,7 +850,7 @@ const Profile = () => {
                       <div className="flex justify-between items-start mb-4">
                         <h4 className="font-semibold text-lg">{service.service_name}</h4>
                         <Badge className="bg-primary/10 text-primary">
-                          ${service.base_price}
+                          £{service.base_price}
                         </Badge>
                       </div>
                       <p className="text-muted-foreground text-sm mb-4">
