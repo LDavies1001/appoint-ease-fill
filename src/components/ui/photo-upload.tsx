@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { Upload, Camera, X, Loader2 } from 'lucide-react';
 
 interface PhotoUploadProps {
@@ -26,10 +27,16 @@ export const PhotoUpload = ({
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const uploadFile = async (file: File) => {
     try {
       setUploading(true);
+
+      // Check if user is authenticated
+      if (!user) {
+        throw new Error('You must be logged in to upload files');
+      }
 
       // Check file size
       if (file.size > maxSize * 1024 * 1024) {
@@ -38,7 +45,8 @@ export const PhotoUpload = ({
 
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-      const filePath = folder ? `${folder}/${fileName}` : fileName;
+      // Include user ID in path for RLS policies: {user_id}/{folder}/{filename}
+      const filePath = folder ? `${user.id}/${folder}/${fileName}` : `${user.id}/${fileName}`;
 
       const { data, error } = await supabase.storage
         .from(bucket)
@@ -135,10 +143,17 @@ export const DocumentUpload = ({
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const uploadFiles = async (files: FileList) => {
     try {
       setUploading(true);
+
+      // Check if user is authenticated
+      if (!user) {
+        throw new Error('You must be logged in to upload files');
+      }
+
       const uploadPromises = [];
       const uploadedUrls = [];
 
@@ -152,7 +167,8 @@ export const DocumentUpload = ({
 
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-        const filePath = folder ? `${folder}/${fileName}` : fileName;
+        // Include user ID in path for RLS policies: {user_id}/{folder}/{filename}
+        const filePath = folder ? `${user.id}/${folder}/${fileName}` : `${user.id}/${fileName}`;
 
         const uploadPromise = supabase.storage
           .from(bucket)
