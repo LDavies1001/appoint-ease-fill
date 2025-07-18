@@ -68,9 +68,9 @@ const Header = () => {
                   </DropdownMenuItem>
                   {profile.active_role === 'provider' && (
                     <DropdownMenuItem asChild>
-                      <Link to="/profile" className="flex items-center">
+                      <Link to="/business-profile" className="flex items-center">
                         <Settings className="h-4 w-4 mr-2" />
-                        MyAdmin
+                        Business Settings
                       </Link>
                     </DropdownMenuItem>
                   )}

@@ -435,18 +435,27 @@ const Profile = () => {
               </div>
               
               <div className="flex flex-wrap gap-3">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-elegant">
-                  <Calendar className="h-5 w-5 mr-2" />
-                  Book Appointment
-                </Button>
-                <Button variant="outline" size="lg" className="border-white/80 text-white hover:bg-white/20 bg-black/20 backdrop-blur-sm font-semibold">
-                  <Heart className="h-5 w-5 mr-2" />
-                  Save to Favorites
-                </Button>
-                <Button variant="outline" size="lg" className="border-white/80 text-white hover:bg-white/20 bg-black/20 backdrop-blur-sm font-semibold">
-                  <MessageSquare className="h-5 w-5 mr-2" />
-                  Send Message
-                </Button>
+                {!isEditMode && (
+                  <>
+                    <Button 
+                      size="lg" 
+                      className="bg-white text-primary hover:bg-white/90 shadow-elegant"
+                      onClick={() => navigate('/dashboard')}
+                    >
+                      <Calendar className="h-5 w-5 mr-2" />
+                      View Dashboard
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="border-white/80 text-white hover:bg-white/20 bg-black/20 backdrop-blur-sm font-semibold"
+                      onClick={() => navigate(`/portfolio/${user?.id}`)}
+                    >
+                      <Eye className="h-5 w-5 mr-2" />
+                      View Public Profile
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -861,9 +870,12 @@ const Profile = () => {
                           <Clock className="h-4 w-4 mr-2" />
                           {service.duration_minutes ? `${service.duration_minutes} min` : 'Contact for duration'}
                         </div>
-                        <Button size="sm">
+                        <Button 
+                          size="sm"
+                          onClick={() => navigate('/dashboard')}
+                        >
                           <Calendar className="h-4 w-4 mr-2" />
-                          Book Now
+                          Manage Service
                         </Button>
                       </div>
                     </CardContent>

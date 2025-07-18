@@ -12,6 +12,7 @@ import BusinessProfile from "./pages/BusinessProfile";
 import CreateBusinessProfile from "./pages/CreateBusinessProfile";
 import Profile from "./pages/Profile";
 import PublicPortfolio from "./pages/PublicPortfolio";
+import ProviderBooking from "./pages/ProviderBooking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
+            <Route path="/provider/:providerId/book" element={<ProviderBooking />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -262,7 +262,14 @@ const PublicPortfolio = () => {
               </div>
               
               <div className="text-center md:text-right">
-                <Button size="lg" className="mb-4">
+                <Button 
+                  size="lg" 
+                  className="mb-4"
+                  onClick={() => {
+                    // Redirect to provider's availability or booking page
+                    window.location.href = `/provider/${providerId}/book`;
+                  }}
+                >
                   Book Appointment
                 </Button>
                 {providerDetails?.operating_hours && (
