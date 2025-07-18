@@ -158,11 +158,12 @@ const Auth = () => {
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
     const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
     
-    if (!hasUppercase || !hasLowercase || !hasNumber) {
+    if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecialChar) {
       toast({
         title: "Password too weak",
-        description: "Password must contain uppercase, lowercase, and number",
+        description: "Password must contain uppercase, lowercase, number, and special character",
         variant: "destructive"
       });
       return;
@@ -416,25 +417,24 @@ const Auth = () => {
                     <Input
                       id="phone"
                       type="tel"
-                      placeholder="Enter your phone number"
+                      placeholder="07123456789"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className="pl-10"
                       required
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">UK format: 07XXX XXXXXX or +44 7XXX XXXXXX</p>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="business-location">Business Location</Label>
                   <LocationInput
-                    placeholder="e.g. Wythenshawe, Bolton, Farnworth"
+                    placeholder="Enter your postcode"
                     value={location}
                     onChange={setLocation}
                     className="h-11"
                   />
-                  <p className="text-xs text-muted-foreground">Enter your town or use location button to detect automatically</p>
+                  <p className="text-xs text-muted-foreground">Enter your postcode or use location button to detect automatically</p>
                 </div>
 
                 <div className="space-y-2">
@@ -478,6 +478,10 @@ const Auth = () => {
                         <CheckCircle className="h-3 w-3" />
                         <span>Number</span>
                       </div>
+                      <div className={`flex items-center space-x-1 ${/[^A-Za-z0-9]/.test(password) ? 'text-green-600' : 'text-muted-foreground'}`}>
+                        <CheckCircle className="h-3 w-3" />
+                        <span>Special character</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -500,10 +504,7 @@ const Auth = () => {
 
                 {/* Certification Upload Option */}
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>Certifications & Awards (Optional)</Label>
-                    <span className="text-xs text-muted-foreground">Upload later</span>
-                  </div>
+                  <Label>Certifications & Awards (Optional)</Label>
                   <div className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-4 text-center">
                     <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">
