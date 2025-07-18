@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera, ArrowRight, Copy } from 'lucide-react';
@@ -59,10 +60,53 @@ const Onboarding = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [isFormRestored, setIsFormRestored] = useState(false);
   
   const { user, profile, updateProfile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  
+  // Use route protection to handle auth state and redirects
+  useRouteProtection();
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    if (isFormRestored && user) {
+      const formDataToSave = {
+        ...formData,
+        profile_photo: null, // Don't save files to localStorage
+        business_photos: [] // Don't save files to localStorage
+      };
+      localStorage.setItem(`onboarding_form_${user.id}`, JSON.stringify(formDataToSave));
+      localStorage.setItem(`onboarding_step_${user.id}`, currentStep.toString());
+    }
+  }, [formData, currentStep, user, isFormRestored]);
+
+  // Restore form data from localStorage on component mount
+  useEffect(() => {
+    if (user && !isFormRestored) {
+      const savedFormData = localStorage.getItem(`onboarding_form_${user.id}`);
+      const savedStep = localStorage.getItem(`onboarding_step_${user.id}`);
+      
+      if (savedFormData) {
+        try {
+          const parsedData = JSON.parse(savedFormData);
+          setFormData(prev => ({ ...prev, ...parsedData }));
+        } catch (error) {
+          console.error('Error parsing saved form data:', error);
+        }
+      }
+      
+      if (savedStep) {
+        const stepNumber = parseInt(savedStep, 10);
+        if (!isNaN(stepNumber) && stepNumber >= 0 && stepNumber <= 2) {
+          setCurrentStep(stepNumber);
+        }
+      }
+      
+      setIsFormRestored(true);
+    }
+  }, [user, isFormRestored]);
 
   useEffect(() => {
     if (!user || !profile) {
@@ -535,6 +579,12 @@ const Onboarding = () => {
             }
           }
         }
+      }
+
+      // Clear saved form data after successful completion
+      if (user) {
+        localStorage.removeItem(`onboarding_form_${user.id}`);
+        localStorage.removeItem(`onboarding_step_${user.id}`);
       }
 
       toast({

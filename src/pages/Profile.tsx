@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -49,6 +50,9 @@ const Profile = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState<any>({});
+  
+  // Use route protection to handle auth state and redirects
+  useRouteProtection();
 
   useEffect(() => {
     if (user && profile?.role === 'provider') {
