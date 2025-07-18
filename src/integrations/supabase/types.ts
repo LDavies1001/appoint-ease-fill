@@ -416,7 +416,9 @@ export type Database = {
           certifications: string | null
           created_at: string
           emergency_available: boolean | null
+          facebook_url: string | null
           id: string
+          instagram_url: string | null
           insurance_info: string | null
           operating_hours: string | null
           pricing_info: string | null
@@ -426,6 +428,7 @@ export type Database = {
           service_area: string | null
           services_offered: string[] | null
           social_media_links: Json | null
+          tiktok_url: string | null
           total_reviews: number | null
           updated_at: string
           user_id: string
@@ -445,7 +448,9 @@ export type Database = {
           certifications?: string | null
           created_at?: string
           emergency_available?: boolean | null
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
           insurance_info?: string | null
           operating_hours?: string | null
           pricing_info?: string | null
@@ -455,6 +460,7 @@ export type Database = {
           service_area?: string | null
           services_offered?: string[] | null
           social_media_links?: Json | null
+          tiktok_url?: string | null
           total_reviews?: number | null
           updated_at?: string
           user_id: string
@@ -474,7 +480,9 @@ export type Database = {
           certifications?: string | null
           created_at?: string
           emergency_available?: boolean | null
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
           insurance_info?: string | null
           operating_hours?: string | null
           pricing_info?: string | null
@@ -484,6 +492,7 @@ export type Database = {
           service_area?: string | null
           services_offered?: string[] | null
           social_media_links?: Json | null
+          tiktok_url?: string | null
           total_reviews?: number | null
           updated_at?: string
           user_id?: string

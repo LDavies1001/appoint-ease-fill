@@ -11,7 +11,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, DollarSign, Mail, Globe, Star, Locate, Upload, X, Camera, ArrowRight, Copy } from 'lucide-react';
+import { User, Building, MapPin, Phone, FileText, CheckCircle, Clock, PoundSterling, Mail, Globe, Star, Locate, Upload, X, Camera, ArrowRight, Copy, Facebook, Instagram } from 'lucide-react';
+import { SiTiktok } from '@icons-pack/react-simple-icons';
 import Header from '@/components/ui/header';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 import { CustomerStepper } from '@/components/customer/CustomerStepper';
@@ -41,6 +42,9 @@ const Onboarding = () => {
     business_photos: [] as File[],
     // Business Details
     business_website: '',
+    facebook_url: '',
+    instagram_url: '',
+    tiktok_url: '',
     years_experience: '',
     pricing_info: [] as { service: string; price: string }[],
     operating_hours: [
@@ -54,6 +58,7 @@ const Onboarding = () => {
     ],
     // Additional Business Info
     certifications: '',
+    certification_files: [] as File[],
     is_private_address: false,
     upload_photos_later: false
   });
@@ -191,6 +196,9 @@ const Onboarding = () => {
           business_description: data.business_description || '',
           services_offered: data.services_offered || [],
           business_website: data.business_website || '',
+          facebook_url: data.facebook_url || '',
+          instagram_url: data.instagram_url || '',
+          tiktok_url: data.tiktok_url || '',
           years_experience: data.years_experience?.toString() || '',
           pricing_info: data.pricing_info ? JSON.parse(data.pricing_info) : [],
           operating_hours: data.operating_hours ? JSON.parse(data.operating_hours) : prev.operating_hours,
@@ -275,6 +283,33 @@ const Onboarding = () => {
     setFormData(prev => ({
       ...prev,
       business_photos: [...prev.business_photos, ...validFiles].slice(0, 5) // Max 5 photos
+    }));
+  };
+
+  const handleCertificationFilesUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    const validFiles = files.filter(file => {
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        toast({
+          title: "File too large",
+          description: `${file.name} is over 10MB and was skipped`,
+          variant: "destructive"
+        });
+        return false;
+      }
+      return true;
+    });
+    
+    setFormData(prev => ({
+      ...prev,
+      certification_files: [...prev.certification_files, ...validFiles].slice(0, 10) // Max 10 files
+    }));
+  };
+
+  const removeCertificationFile = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      certification_files: prev.certification_files.filter((_, i) => i !== index)
     }));
   };
 
@@ -508,6 +543,24 @@ const Onboarding = () => {
 
       // If provider, create provider details
       if (profile?.role === 'provider') {
+        // Upload certification files to storage first
+        const certificationUrls: string[] = [];
+        if (formData.certification_files.length > 0) {
+          for (const file of formData.certification_files) {
+            try {
+              const certUrl = await uploadPhotoToStorage(file, 'certifications', user.id);
+              certificationUrls.push(certUrl);
+            } catch (error) {
+              console.error('Error uploading certification file:', error);
+              toast({
+                title: "Upload Warning",
+                description: `Failed to upload ${file.name}. Continuing without this file.`,
+                variant: "destructive"
+              });
+            }
+          }
+        }
+
         const { error: providerError } = await supabase
           .from('provider_details')
           .upsert({
@@ -519,10 +572,14 @@ const Onboarding = () => {
             business_description: formData.business_description,
             services_offered: formData.services_offered,
             business_website: formData.business_website,
+            facebook_url: formData.facebook_url,
+            instagram_url: formData.instagram_url,
+            tiktok_url: formData.tiktok_url,
             years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
             pricing_info: JSON.stringify(formData.pricing_info),
             operating_hours: JSON.stringify(formData.operating_hours),
-            certifications: formData.certifications
+            certifications: formData.certifications,
+            certification_files: certificationUrls
           });
 
         if (providerError) throw providerError;
@@ -1099,6 +1156,49 @@ const Onboarding = () => {
                 <p className="text-sm text-muted-foreground">Optional: Add your website for more credibility</p>
               </div>
 
+              {/* Social Media Links */}
+              <div className="space-y-4">
+                <Label className="text-base font-medium text-foreground">Social Media Links</Label>
+                
+                {/* Facebook */}
+                <div className="relative group">
+                  <Facebook className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Input
+                    id="facebook_url"
+                    placeholder="https://facebook.com/yourbusiness"
+                    value={formData.facebook_url}
+                    onChange={(e) => handleInputChange('facebook_url', e.target.value)}
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
+                  />
+                </div>
+
+                {/* Instagram */}
+                <div className="relative group">
+                  <Instagram className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Input
+                    id="instagram_url"
+                    placeholder="https://instagram.com/yourbusiness"
+                    value={formData.instagram_url}
+                    onChange={(e) => handleInputChange('instagram_url', e.target.value)}
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
+                  />
+                </div>
+
+                {/* TikTok */}
+                <div className="relative group">
+                  <SiTiktok className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Input
+                    id="tiktok_url"
+                    placeholder="https://tiktok.com/@yourbusiness"
+                    value={formData.tiktok_url}
+                    onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
+                    className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
+                  />
+                </div>
+                
+                <p className="text-sm text-muted-foreground">Optional: Connect your social media to build trust</p>
+              </div>
+
               <div className="space-y-4">
                 <Label className="text-base font-medium text-foreground">Operating Hours</Label>
                 <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg p-4 border border-border/50 backdrop-blur-sm space-y-3">
@@ -1145,7 +1245,7 @@ const Onboarding = () => {
                     onClick={addPriceItem}
                     className="border-primary/30 text-primary hover:bg-primary/10"
                   >
-                    <DollarSign className="h-4 w-4 mr-2" />
+                    <PoundSterling className="h-4 w-4 mr-2" />
                     Add Item
                   </Button>
                 </div>
@@ -1159,7 +1259,7 @@ const Onboarding = () => {
                         className="flex-1 h-10 border-border/50"
                       />
                       <div className="relative">
-                        <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <PoundSterling className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                           placeholder="0.00"
                           value={item.price}
@@ -1180,7 +1280,7 @@ const Onboarding = () => {
                   ))}
                   {formData.pricing_info.length === 0 && (
                     <div className="text-center py-8">
-                      <DollarSign className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
+                      <PoundSterling className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
                       <p className="text-sm text-muted-foreground">Click "Add Item" to create your price list</p>
                     </div>
                   )}
@@ -1189,18 +1289,61 @@ const Onboarding = () => {
               </div>
 
               <div className="space-y-4">
-                <Label htmlFor="certifications" className="text-base font-medium text-foreground">Certifications & Qualifications</Label>
-                <div className="relative group">
-                  <FileText className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                  <Textarea
-                    id="certifications"
-                    placeholder="List your certifications, qualifications, or training..."
-                    value={formData.certifications}
-                    onChange={(e) => handleInputChange('certifications', e.target.value)}
-                    className="pl-12 min-h-[100px] text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm resize-none"
-                  />
+                <Label className="text-base font-medium text-foreground">Certifications & Qualifications</Label>
+                
+                {/* File Upload Area */}
+                <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg p-6 border-2 border-dashed border-border/50 backdrop-blur-sm">
+                  <div className="text-center">
+                    <Upload className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
+                    <Label 
+                      htmlFor="certification_files" 
+                      className="cursor-pointer inline-flex items-center justify-center px-6 py-3 border border-primary/30 text-primary hover:bg-primary/10 rounded-lg font-medium transition-all duration-300"
+                    >
+                      <FileText className="h-4 w-4 mr-2" />
+                      Upload Certification Files
+                    </Label>
+                    <input
+                      id="certification_files"
+                      type="file"
+                      multiple
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.txt"
+                      onChange={handleCertificationFilesUpload}
+                      className="hidden"
+                    />
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Upload certificates, diplomas, or qualification documents (PDF, DOC, images)
+                    </p>
+                  </div>
+                  
+                  {/* Display uploaded files */}
+                  {formData.certification_files.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <p className="text-sm font-medium text-foreground">Uploaded Files:</p>
+                      {formData.certification_files.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-background/30 rounded-lg">
+                          <div className="flex items-center space-x-2">
+                            <FileText className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm text-foreground">{file.name}</span>
+                            <span className="text-xs text-muted-foreground">
+                              ({(file.size / 1024 / 1024).toFixed(1)} MB)
+                            </span>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeCertificationFile(index)}
+                            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <p className="text-sm text-muted-foreground">Optional: Add credentials to build trust with customers</p>
+                
+                <p className="text-sm text-muted-foreground">Optional: Upload your certifications and qualifications to build trust with customers</p>
               </div>
             </div>
           )}
