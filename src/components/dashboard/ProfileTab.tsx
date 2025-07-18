@@ -304,7 +304,7 @@ const ProfileTab = () => {
               {profileData.avatar_url && (
                 <img
                   src={profileData.avatar_url}
-                  alt="Profile"
+                  alt="Profile Picture"
                   className="w-10 h-10 rounded-full object-cover"
                 />
               )}
