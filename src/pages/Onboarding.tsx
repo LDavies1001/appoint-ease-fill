@@ -53,7 +53,8 @@ const Onboarding = () => {
     ],
     // Additional Business Info
     certifications: '',
-    is_private_address: false
+    is_private_address: false,
+    upload_photos_later: false
   });
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
@@ -912,48 +913,73 @@ const Onboarding = () => {
 
               <div className="space-y-4">
                 <Label className="text-base font-medium text-foreground">Business Photos</Label>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-3">
-                    {formData.business_photos.map((photo, index) => (
-                      <div key={index} className="relative group animate-scale-in">
-                        <img 
-                          src={URL.createObjectURL(photo)} 
-                          alt={`Business photo ${index + 1}`}
-                          className="w-full h-24 object-cover rounded-lg border-2 border-border/50 shadow-sm"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeBusinessPhoto(index)}
-                          className="absolute -top-2 -right-2 h-7 w-7 p-0 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                    {formData.business_photos.length < 5 && (
-                      <Label 
-                        htmlFor="business_photos" 
-                        className="w-full h-24 border-2 border-dashed border-primary/30 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group"
-                      >
-                        <Upload className="h-6 w-6 text-primary/60 group-hover:text-primary transition-colors" />
-                        <span className="text-xs text-muted-foreground mt-1">Add Photo</span>
-                      </Label>
-                    )}
-                  </div>
-                  <input
-                    id="business_photos"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleBusinessPhotosUpload}
-                    className="hidden"
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="upload-later"
+                    checked={formData.upload_photos_later}
+                    onCheckedChange={(checked) => setFormData(prev => ({ 
+                      ...prev, 
+                      upload_photos_later: !!checked,
+                      business_photos: checked ? [] : prev.business_photos // Clear photos if choosing to upload later
+                    }))}
                   />
-                  <p className="text-sm text-muted-foreground">
-                    Upload up to 5 business photos to showcase your work (max 5MB each)
-                  </p>
+                  <Label htmlFor="upload-later" className="text-sm text-muted-foreground cursor-pointer">
+                    I'll upload business photos later
+                  </Label>
                 </div>
+
+                {!formData.upload_photos_later && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-3">
+                      {formData.business_photos.map((photo, index) => (
+                        <div key={index} className="relative group animate-scale-in">
+                          <img 
+                            src={URL.createObjectURL(photo)} 
+                            alt={`Business photo ${index + 1}`}
+                            className="w-full h-24 object-cover rounded-lg border-2 border-border/50 shadow-sm"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeBusinessPhoto(index)}
+                            className="absolute -top-2 -right-2 h-7 w-7 p-0 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                      {formData.business_photos.length < 5 && (
+                        <Label 
+                          htmlFor="business_photos" 
+                          className="w-full h-24 border-2 border-dashed border-primary/30 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group"
+                        >
+                          <Upload className="h-6 w-6 text-primary/60 group-hover:text-primary transition-colors" />
+                          <span className="text-xs text-muted-foreground mt-1">Add Photo</span>
+                        </Label>
+                      )}
+                    </div>
+                    <input
+                      id="business_photos"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleBusinessPhotosUpload}
+                      className="hidden"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Upload up to 5 business photos to showcase your work (max 5MB each)
+                    </p>
+                  </div>
+                )}
+
+                {formData.upload_photos_later && (
+                  <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg border border-border/30">
+                    <Camera className="h-4 w-4 inline mr-1" />
+                    You can upload business photos later from your dashboard to showcase your work.
+                  </p>
+                )}
               </div>
             </div>
           )}
