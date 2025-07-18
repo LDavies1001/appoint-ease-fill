@@ -173,7 +173,7 @@ const Auth = () => {
 
     try {
       const role = selectedRole === 'provider' ? 'provider' : 'customer';
-      const { error } = await signUp(email, password, role, fullName);
+      const { error } = await signUp(email, password, role, fullName, phone, location, businessName);
       
       if (error) {
         toast({

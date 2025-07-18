@@ -29,7 +29,7 @@ interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
-  signUp: (email: string, password: string, role: 'customer' | 'provider', fullName?: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
@@ -130,7 +130,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, password: string, role: 'customer' | 'provider', fullName?: string) => {
+  const signUp = async (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
@@ -140,27 +140,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         emailRedirectTo: redirectUrl,
         data: {
           full_name: fullName || '',
-          role: role
+          role: role,
+          phone: phone || '',
+          location: location || '',
+          business_name: businessName || ''
         }
       }
     });
 
-    // If signup was successful, ensure the profile has the correct role
+    // If signup was successful, ensure the profile has the correct data
     if (!error && data.user) {
       // Wait a moment for the trigger to create the profile
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Update the profile with the correct role and name
+      // Update the profile with the collected information
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ 
           role: role,
-          name: fullName || null
+          name: fullName || null,
+          phone: phone || null,
+          location: location || null
         })
         .eq('user_id', data.user.id);
       
       if (updateError) {
         console.error('Error updating profile:', updateError);
+      }
+
+      // If it's a provider, also create provider_details record
+      if (role === 'provider' && businessName) {
+        const { error: providerError } = await supabase
+          .from('provider_details')
+          .insert({
+            user_id: data.user.id,
+            business_name: businessName,
+            business_phone: phone || null
+          });
+        
+        if (providerError) {
+          console.error('Error creating provider details:', providerError);
+        }
       }
     }
 
