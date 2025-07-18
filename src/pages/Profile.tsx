@@ -47,6 +47,7 @@ const Profile = () => {
   const [providerDetails, setProviderDetails] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
   const [portfolioItems, setPortfolioItems] = useState<any[]>([]);
+  const [providerServices, setProviderServices] = useState<any[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState<any>({});
@@ -85,6 +86,16 @@ const Profile = () => {
         .limit(6);
 
       setPortfolioItems(portfolio || []);
+
+      // Fetch provider services
+      const { data: services } = await supabase
+        .from('provider_services')
+        .select('*')
+        .eq('provider_id', user?.id)
+        .eq('is_active', true)
+        .order('created_at', { ascending: true });
+
+      setProviderServices(services || []);
 
       // Fetch recent reviews
       const { data: reviewsData } = await supabase
@@ -829,38 +840,48 @@ const Profile = () => {
               <p className="text-muted-foreground text-lg">Professional services tailored to your needs</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                { name: 'Classic Individual Lashes', price: '$120 - $150', duration: '2-2.5 hours', description: 'One extension per natural lash for a natural, everyday look' },
-                { name: 'Hybrid Lashes', price: '$140 - $170', duration: '2.5-3 hours', description: 'Mix of classic and volume techniques for textured fullness' },
-                { name: 'Volume Lashes', price: '$160 - $190', duration: '3-3.5 hours', description: 'Multiple lightweight extensions per lash for dramatic volume' },
-                { name: 'Mega Volume Lashes', price: '$180 - $220', duration: '3.5-4 hours', description: 'Maximum drama with ultra-fine extensions for full glam' },
-                { name: 'Lash Lift & Tint', price: '$75 - $95', duration: '1-1.5 hours', description: 'Natural curl and tint enhancement for your existing lashes' },
-                { name: 'Brow Lamination & Tint', price: '$85 - $105', duration: '1-1.5 hours', description: 'Smooth, styled brows with lasting shape and color' },
-                { name: '2-Week Refill', price: '$60 - $80', duration: '1-1.5 hours', description: 'Maintain your lash extensions with professional touch-ups' },
-                { name: '3-Week Refill', price: '$80 - $100', duration: '1.5-2 hours', description: 'Restore fullness and refresh your lash look' }
-              ].map((service, index) => (
-                <Card key={index} className="card-enhanced">
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <h4 className="font-semibold text-lg">{service.name}</h4>
-                      <Badge className="bg-primary/10 text-primary">{service.price}</Badge>
-                    </div>
-                    <p className="text-muted-foreground text-sm mb-4">{service.description}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4 mr-2" />
-                        {service.duration}
+            
+            {providerServices.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {providerServices.map((service) => (
+                  <Card key={service.id} className="card-enhanced">
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <h4 className="font-semibold text-lg">{service.service_name}</h4>
+                        <Badge className="bg-primary/10 text-primary">
+                          ${service.base_price}
+                        </Badge>
                       </div>
-                      <Button size="sm">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Book Now
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                      <p className="text-muted-foreground text-sm mb-4">
+                        {service.description || 'Professional service tailored to your needs'}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Clock className="h-4 w-4 mr-2" />
+                          {service.duration_minutes ? `${service.duration_minutes} min` : 'Contact for duration'}
+                        </div>
+                        <Button size="sm">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Book Now
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h4 className="text-xl font-semibold mb-2">No Services Listed Yet</h4>
+                <p className="text-muted-foreground mb-6">Add your services to showcase your offerings!</p>
+                {isOwner && (
+                  <Button>
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Add Services
+                  </Button>
+                )}
+              </div>
+            )}
           </TabsContent>
 
           {/* Customer Reviews */}
