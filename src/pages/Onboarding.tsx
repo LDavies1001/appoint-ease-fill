@@ -52,7 +52,8 @@ const Onboarding = () => {
       { day: 'Sunday', open: '09:00', close: '17:00', closed: true }
     ],
     // Additional Business Info
-    certifications: ''
+    certifications: '',
+    is_private_address: false
   });
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
@@ -865,6 +866,20 @@ const Onboarding = () => {
                   onChange={(value) => handleInputChange('business_address', value)}
                   className="h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                 />
+                <div className="flex items-start space-x-2">
+                  <Checkbox
+                    id="private-address"
+                    checked={formData.is_private_address}
+                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_private_address: !!checked }))}
+                  />
+                  <Label htmlFor="private-address" className="text-sm text-muted-foreground cursor-pointer leading-relaxed">
+                    This is a private business address (my home)
+                  </Label>
+                </div>
+                <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg border border-border/30">
+                  <MapPin className="h-4 w-4 inline mr-1" />
+                  Your full address will not be visible on your profile. Only your general area will be shown to customers for privacy.
+                </p>
               </div>
 
               <div className="space-y-4">
