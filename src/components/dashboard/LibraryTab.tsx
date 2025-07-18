@@ -161,6 +161,7 @@ const LibraryTab = () => {
   };
 
   const formatBucketName = (bucket: string) => {
+    if (bucket === 'profile-photos') return 'Profile Pictures';
     return bucket.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
