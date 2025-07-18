@@ -133,6 +133,8 @@ const Onboarding = () => {
       phone: profile.phone || '',
       location: profile.location || '',
       bio: profile.bio || '',
+      // Initialize business email with profile email if empty
+      business_email: prev.business_email || profile.email || '',
       // Auto-populate business name from user metadata if it exists
       business_name: prev.business_name || (user?.user_metadata?.business_name) || ''
     }));
@@ -384,20 +386,11 @@ const Onboarding = () => {
       return formData.location.trim();
     }
     if (currentStep === 1 && profile?.role === 'provider') {
-      console.log('DETAILED DEBUG - Step 1 validation:');
-      console.log('business_name:', `"${formData.business_name}"`, 'valid:', !!formData.business_name.trim());
-      console.log('business_email:', `"${formData.business_email}"`, 'valid:', !!formData.business_email.trim());
-      console.log('business_phone:', `"${formData.business_phone}"`, 'valid:', !!formData.business_phone.trim());
-      console.log('business_address:', `"${formData.business_address}"`, 'valid:', !!formData.business_address.trim());
-      console.log('services_offered:', formData.services_offered, 'valid:', formData.services_offered.length > 0);
-      
-      const isValid = formData.business_name.trim() && 
+      return formData.business_name.trim() && 
              formData.business_email.trim() && 
              formData.business_phone.trim() && 
              formData.business_address.trim() && 
              formData.services_offered.length > 0;
-      console.log('Final validation result:', isValid);
-      return isValid;
     }
     if (currentStep === 2 && profile?.role === 'provider') {
       return formData.business_description.trim() && formData.years_experience.trim();
@@ -871,8 +864,8 @@ const Onboarding = () => {
                   <Input
                     id="business_email"
                     type="email"
-                    placeholder={profile.email || "Enter business email"}
-                    value={formData.business_email || profile.email}
+                    placeholder="Enter business email"
+                    value={formData.business_email}
                     onChange={(e) => handleInputChange('business_email', e.target.value)}
                     className="pl-12 h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
                     required
