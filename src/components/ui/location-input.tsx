@@ -44,14 +44,17 @@ export const LocationInput: React.FC<LocationInputProps> = ({
           
           const data = await response.json();
           
-          // Extract town/borough/city from the address
+          // Extract the most specific locality from the address
           const address = data.address || {};
-          const location = address.town || 
-                          address.city || 
-                          address.village || 
-                          address.suburb || 
-                          address.borough || 
-                          address.district || 
+          const location = address.suburb ||           // Prioritize suburb (like Farnworth, Hazel Grove)
+                          address.village ||          // Village names 
+                          address.town ||             // Town names
+                          address.district ||         // District names
+                          address.borough ||          // Borough names
+                          address.city_district ||    // City district
+                          address.neighbourhood ||    // Neighbourhood names
+                          address.hamlet ||           // Small settlements
+                          address.city ||             // Fallback to city
                           data.display_name?.split(',')[0] || 
                           'Unknown location';
           
