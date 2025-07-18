@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import BusinessProfile from "./pages/BusinessProfile";
 import CreateBusinessProfile from "./pages/CreateBusinessProfile";
 import Profile from "./pages/Profile";
+import PublicPortfolio from "./pages/PublicPortfolio";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/business-profile" element={<BusinessProfile />} />
             <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
