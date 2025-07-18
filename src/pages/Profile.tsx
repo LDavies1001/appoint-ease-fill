@@ -393,32 +393,6 @@ const Profile = () => {
               )}
             </div>
 
-            {/* Profile Avatar */}
-            <div className="relative ml-4">
-              {avatarPreview || profile?.avatar_url ? (
-                <img
-                  src={avatarPreview || profile?.avatar_url || ''}
-                  alt="Profile Picture"
-                  className="w-24 h-24 rounded-full object-cover shadow-elegant border-4 border-white"
-                />
-              ) : (
-                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-elegant border-4 border-white">
-                  <User className="h-12 w-12 text-primary" />
-                </div>
-              )}
-              {isEditMode && (
-                <PhotoUpload
-                  onUpload={(url) => setAvatarPreview(url)}
-                  bucket="profile-photos"
-                  folder="avatars"
-                  className="absolute -top-2 -right-2 rounded-full w-8 h-8 p-0"
-                >
-                  <Button size="sm" className="rounded-full w-8 h-8 p-0">
-                    <Camera className="h-4 w-4" />
-                  </Button>
-                </PhotoUpload>
-              )}
-            </div>
 
             {/* Business Title & Actions */}
             <div className="flex-1 text-white">
