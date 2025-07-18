@@ -308,9 +308,14 @@ export type Database = {
           featured: boolean | null
           id: string
           image_url: string
+          is_public: boolean | null
           provider_id: string
+          public_slug: string | null
+          tags: string[] | null
+          template_type: string | null
           title: string
           updated_at: string
+          view_count: number | null
         }
         Insert: {
           category?: string | null
@@ -319,9 +324,14 @@ export type Database = {
           featured?: boolean | null
           id?: string
           image_url: string
+          is_public?: boolean | null
           provider_id: string
+          public_slug?: string | null
+          tags?: string[] | null
+          template_type?: string | null
           title: string
           updated_at?: string
+          view_count?: number | null
         }
         Update: {
           category?: string | null
@@ -330,9 +340,14 @@ export type Database = {
           featured?: boolean | null
           id?: string
           image_url?: string
+          is_public?: boolean | null
           provider_id?: string
+          public_slug?: string | null
+          tags?: string[] | null
+          template_type?: string | null
           title?: string
           updated_at?: string
+          view_count?: number | null
         }
         Relationships: [
           {
@@ -673,7 +688,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_portfolio_slug: {
+        Args: { title: string; provider_id: string }
+        Returns: string
+      }
     }
     Enums: {
       business_category_type:
