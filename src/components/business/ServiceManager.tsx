@@ -250,8 +250,7 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
                 <Input
                   id="duration_minutes"
                   type="number"
-                  min="15"
-                  step="15"
+                  min="1"
                   value={formData.duration_minutes}
                   onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: parseInt(e.target.value) }))}
                 />
@@ -423,8 +422,7 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ service, onSave, onCa
           <Input
             id="edit_duration_minutes"
             type="number"
-            min="15"
-            step="15"
+            min="1"
             value={formData.duration_minutes}
             onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: parseInt(e.target.value) }))}
           />
