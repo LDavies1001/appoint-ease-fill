@@ -35,6 +35,7 @@ const LibraryTab = () => {
   useEffect(() => {
     fetchUserImages();
     fetchServiceFolders();
+    createFoldersForExistingServices();
   }, []);
 
   const fetchUserImages = async () => {
@@ -156,6 +157,48 @@ const LibraryTab = () => {
       }
     } catch (error) {
       console.error('Error fetching service folders:', error);
+    }
+  };
+
+  const createFoldersForExistingServices = async () => {
+    if (!profile?.user_id) return;
+    
+    try {
+      // Get all provider services
+      const { data: services, error } = await supabase
+        .from('provider_services')
+        .select('service_name')
+        .eq('provider_id', profile.user_id);
+
+      if (error) {
+        console.error('Error fetching services:', error);
+        return;
+      }
+
+      if (services) {
+        for (const service of services) {
+          const serviceFolderName = service.service_name.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+          const folderPath = `${profile.user_id}/services/${serviceFolderName}/.emptyFolderPlaceholder`;
+          
+          // Check if folder already exists
+          const { data: existingFiles } = await supabase.storage
+            .from('portfolio')
+            .list(`${profile.user_id}/services/${serviceFolderName}`, {
+              limit: 1,
+              offset: 0
+            });
+
+          // Create folder if it doesn't exist
+          if (!existingFiles || existingFiles.length === 0) {
+            const emptyFile = new Blob([''], { type: 'text/plain' });
+            await supabase.storage
+              .from('portfolio')
+              .upload(folderPath, emptyFile);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error creating folders for existing services:', error);
     }
   };
 
