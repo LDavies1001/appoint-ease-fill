@@ -9,6 +9,7 @@ interface LocationInputProps {
   className?: string;
   value?: string;
   onChange?: (value: string) => void;
+  autoDetect?: boolean;
 }
 
 interface LocationSuggestion {
@@ -22,13 +23,15 @@ export const LocationInput: React.FC<LocationInputProps> = ({
   placeholder = "Enter location",
   className,
   value,
-  onChange
+  onChange,
+  autoDetect = false
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState(value || '');
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [hasAutoDetected, setHasAutoDetected] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -189,6 +192,14 @@ export const LocationInput: React.FC<LocationInputProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Auto-detect location on mount if enabled
+  useEffect(() => {
+    if (autoDetect && !hasAutoDetected && !inputValue) {
+      setHasAutoDetected(true);
+      getCurrentLocation();
+    }
+  }, [autoDetect, hasAutoDetected, inputValue]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;

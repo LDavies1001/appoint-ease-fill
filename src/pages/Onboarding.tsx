@@ -866,6 +866,7 @@ const Onboarding = () => {
                   value={formData.business_address}
                   onChange={(value) => handleInputChange('business_address', value)}
                   className="h-12 text-base border-2 border-border/50 focus:border-primary/50 transition-all duration-300 bg-background/50 backdrop-blur-sm"
+                  autoDetect={true}
                 />
                 <div className="flex items-start space-x-2">
                   <Checkbox
