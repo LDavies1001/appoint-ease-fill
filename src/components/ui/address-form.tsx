@@ -58,9 +58,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   className
 }) => {
   const [detecting, setDetecting] = useState(false);
-  const [houseNumbers, setHouseNumbers] = useState<string[]>([]);
-  const [streetName, setStreetName] = useState<string>('');
-  const [isLocationDetected, setIsLocationDetected] = useState(false);
   const { toast } = useToast();
 
   const handleFieldChange = (field: keyof AddressData, fieldValue: string | boolean) => {
@@ -78,12 +75,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
   const detectLocation = async () => {
     if (!navigator.geolocation) {
-      toast({
-        title: "Geolocation not supported",
-        description: "Your browser doesn't support location detection",
-        variant: "destructive"
-      });
-      return;
+      return; // Fail silently, user can enter manually
     }
 
     setDetecting(true);
@@ -103,80 +95,34 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           const data = await response.json();
           const address = data.address || {};
           
-          // Extract street name and set up house number options
-          const detectedStreetName = address.road || address.street || '';
-          setStreetName(detectedStreetName);
-          setIsLocationDetected(true);
-          
-          // Generate house number options (typical range for UK streets)
-          const currentHouseNumber = address.house_number;
-          const houseNumberOptions: string[] = [];
-          
-          if (currentHouseNumber) {
-            const baseNumber = parseInt(currentHouseNumber);
-            if (!isNaN(baseNumber)) {
-              // Generate a range around the detected number
-              for (let i = Math.max(1, baseNumber - 10); i <= baseNumber + 10; i++) {
-                houseNumberOptions.push(i.toString());
-              }
-            }
-          } else {
-            // Default range if no house number detected
-            for (let i = 1; i <= 50; i++) {
-              houseNumberOptions.push(i.toString());
-            }
-          }
-          
-          setHouseNumbers(houseNumberOptions);
+          // Extract address components
+          const currentHouseNumber = address.house_number || '';
+          const streetName = address.road || address.street || '';
           
           // Map the response to our address structure
           const detectedAddress: AddressData = {
-            address_line_1: currentHouseNumber || '', // Will be selected from dropdown
-            address_line_2: detectedStreetName, // Street name goes to line 2
+            address_line_1: currentHouseNumber,
+            address_line_2: streetName,
             town_city: address.suburb || address.neighbourhood || address.city || address.town || address.village || address.hamlet || '',
             county: address.county || address.state_district || address.state || '',
             postcode: address.postcode || '',
-            country: value.country || 'United Kingdom', // Keep existing or default
+            country: address.country || 'United Kingdom',
             is_public: value.is_public // Preserve existing privacy setting
           };
           
           onChange(detectedAddress);
           
-          toast({
-            title: "Location detected! ✅",
-            description: `Found ${detectedAddress.town_city}. Please verify your postcode and select house number.`,
-            duration: 6000
-          });
-          
         } catch (error) {
+          // Fail silently - user can enter manually
           console.error('Error reverse geocoding:', error);
-          toast({
-            title: "Location detection failed",
-            description: "Could not determine your address. Please enter manually.",
-            variant: "destructive"
-          });
         } finally {
           setDetecting(false);
         }
       },
       (error) => {
+        // Fail silently - user can enter manually
         console.error('Geolocation error:', error);
         setDetecting(false);
-        
-        let message = "Could not access your location";
-        if (error.code === error.PERMISSION_DENIED) {
-          message = "Location access denied. Please enable location permissions";
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          message = "Location information unavailable";
-        } else if (error.code === error.TIMEOUT) {
-          message = "Location request timed out";
-        }
-        
-        toast({
-          title: "Location detection failed",
-          description: message,
-          variant: "destructive"
-        });
       },
       {
         enableHighAccuracy: true,
@@ -226,43 +172,20 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         {/* Address Line 1 - House Number */}
         <div className="md:col-span-2">
           <Label htmlFor="address_line_1" className="text-sm font-medium text-accent">
-            {isLocationDetected ? 'House Number' : 'Address Line 1'} <span className="text-destructive">*</span>
+            Address Line 1 <span className="text-destructive">*</span>
           </Label>
-          {isLocationDetected && (
-            <p className="text-sm text-blue-600 mt-1 mb-2 font-medium">
-              📍 Location detected! Please select your house number below:
-            </p>
-          )}
           <div className="relative mt-1">
-            {isLocationDetected && houseNumbers.length > 0 ? (
-              <Select value={value.address_line_1} onValueChange={(val) => handleFieldChange('address_line_1', val)}>
-                <SelectTrigger className={cn(
-                  "transition-all duration-200 focus:border-accent focus:ring-accent border-2",
-                  errors.address_line_1 ? 'border-destructive' : 'border-blue-300 bg-blue-50/50'
-                )}>
-                  <SelectValue placeholder="👆 Click here to select your house number" />
-                </SelectTrigger>
-                <SelectContent className="bg-background border-accent/20 max-h-[200px] z-50">
-                  {houseNumbers.map((number) => (
-                    <SelectItem key={number} value={number} className="cursor-pointer hover:bg-accent/10">
-                      {number}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : (
-              <Input
-                id="address_line_1"
-                value={value.address_line_1}
-                onChange={(e) => handleFieldChange('address_line_1', e.target.value)}
-                placeholder="123 High Street"
-                autoComplete="address-line1"
-                className={cn(
-                  "transition-all duration-200 focus:border-accent focus:ring-accent",
-                  errors.address_line_1 ? 'border-destructive' : ''
-                )}
-              />
-            )}
+            <Input
+              id="address_line_1"
+              value={value.address_line_1}
+              onChange={(e) => handleFieldChange('address_line_1', e.target.value)}
+              placeholder="123 High Street"
+              autoComplete="address-line1"
+              className={cn(
+                "transition-all duration-200 focus:border-accent focus:ring-accent",
+                errors.address_line_1 ? 'border-destructive' : ''
+              )}
+            />
             {value.address_line_1 && isFieldValid('address_line_1') && !errors.address_line_1 && (
               <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
             )}
@@ -278,26 +201,25 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         {/* Address Line 2 - Street Name */}
         <div className="md:col-span-2">
           <Label htmlFor="address_line_2" className="text-sm font-medium text-accent">
-            {isLocationDetected ? 'Street Name' : 'Address Line 2'} 
-            {isLocationDetected ? <span className="text-destructive">*</span> : <span className="text-muted-foreground">(Optional)</span>}
+            Address Line 2 <span className="text-muted-foreground">(Optional)</span>
           </Label>
           <div className="relative mt-1">
             <Input
               id="address_line_2"
               value={value.address_line_2}
               onChange={(e) => handleFieldChange('address_line_2', e.target.value)}
-              placeholder={isLocationDetected ? "Street name" : "Apartment, suite, unit, building, floor, etc."}
+              placeholder="Apartment, suite, unit, building, floor, etc."
               autoComplete="address-line2"
               className={cn(
                 "transition-all duration-200 focus:border-accent focus:ring-accent",
-                isLocationDetected && errors.address_line_2 ? 'border-destructive' : ''
+                errors.address_line_2 ? 'border-destructive' : ''
               )}
             />
-            {isLocationDetected && value.address_line_2 && !errors.address_line_2 && (
+            {value.address_line_2 && !errors.address_line_2 && (
               <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
             )}
           </div>
-          {isLocationDetected && errors.address_line_2 && (
+          {errors.address_line_2 && (
             <p className="text-sm text-destructive mt-1 flex items-center">
               <AlertCircle className="h-4 w-4 mr-1" />
               {errors.address_line_2}
@@ -383,11 +305,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           <Label htmlFor="postcode" className="text-sm font-medium text-accent">
             Postcode <span className="text-destructive">*</span>
           </Label>
-          {isLocationDetected && (
-            <p className="text-sm text-amber-600 mt-1 mb-2 font-medium">
-              ⚠️ Please verify your postcode - location detection may show a general area code
-            </p>
-          )}
           <div className="relative mt-1">
             <Input
               id="postcode"
@@ -397,7 +314,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               autoComplete="postal-code"
               className={cn(
                 "transition-all duration-200 focus:border-accent focus:ring-accent",
-                isLocationDetected ? 'border-amber-300 bg-amber-50/50' : '',
                 errors.postcode ? 'border-destructive' : ''
               )}
             />
