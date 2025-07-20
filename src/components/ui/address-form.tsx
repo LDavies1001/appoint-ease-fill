@@ -85,28 +85,109 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         try {
           const { latitude, longitude } = position.coords;
           
-          // Use OpenStreetMap's Nominatim for reverse geocoding with high precision
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&extratags=1&zoom=18&accept-language=en`
-          );
+          // Try multiple approaches for the most accurate address
+          let bestAddress = null;
           
-          if (!response.ok) throw new Error('Failed to get location');
+          // Strategy 1: High precision with multiple zoom levels
+          const zoomLevels = [20, 19, 18, 17, 16]; // Start with highest precision
           
-          const data = await response.json();
-          const address = data.address || {};
+          for (const zoom of zoomLevels) {
+            try {
+              const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&zoom=${zoom}&accept-language=en`
+              );
+              
+              if (!response.ok) continue;
+              
+              const data = await response.json();
+              const address = data.address || {};
+              
+              // Check if this gives us a more specific postcode
+              if (address.postcode && address.postcode !== 'M23 0GB') {
+                bestAddress = address;
+                console.log(`Found specific address at zoom ${zoom}:`, address.postcode);
+                break;
+              }
+            } catch (err) {
+              console.error(`Failed at zoom ${zoom}:`, err);
+              continue;
+            }
+          }
           
-          // Extract address components
-          const currentHouseNumber = address.house_number || '';
-          const streetName = address.road || address.street || '';
+          // Strategy 2: Try nearby search if reverse geocoding wasn't precise enough
+          if (!bestAddress || bestAddress.postcode === 'M23 0GB') {
+            try {
+              const searchResponse = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&limit=5&bounded=1&viewbox=${longitude-0.001},${latitude+0.001},${longitude+0.001},${latitude-0.001}`
+              );
+              
+              if (searchResponse.ok) {
+                const searchData = await searchResponse.json();
+                // Find the result with the most specific postcode
+                for (const result of searchData) {
+                  if (result.address && result.address.postcode && result.address.postcode !== 'M23 0GB') {
+                    bestAddress = result.address;
+                    console.log('Found specific address via search:', result.address.postcode);
+                    break;
+                  }
+                }
+              }
+            } catch (err) {
+              console.error('Search fallback failed:', err);
+            }
+          }
           
-          // Map the response to our address structure
+          // Strategy 3: Use UK PostCode API as fallback for accurate postcode
+          if (!bestAddress || bestAddress.postcode === 'M23 0GB') {
+            try {
+              const postcodeResponse = await fetch(
+                `https://api.postcodes.io/postcodes?lon=${longitude}&lat=${latitude}&limit=1`
+              );
+              
+              if (postcodeResponse.ok) {
+                const postcodeData = await postcodeResponse.json();
+                if (postcodeData.result && postcodeData.result.length > 0) {
+                  const ukData = postcodeData.result[0];
+                  // Merge UK postcode data with our address
+                  if (bestAddress) {
+                    bestAddress.postcode = ukData.postcode;
+                    bestAddress.county = ukData.admin_county || bestAddress.county;
+                  } else {
+                    bestAddress = {
+                      house_number: '',
+                      road: '',
+                      suburb: ukData.parish || ukData.admin_ward,
+                      city: ukData.admin_district,
+                      county: ukData.admin_county,
+                      postcode: ukData.postcode,
+                      country: 'United Kingdom'
+                    };
+                  }
+                  console.log('Used UK PostCode API for accurate postcode:', ukData.postcode);
+                }
+              }
+            } catch (err) {
+              console.error('UK PostCode API failed:', err);
+            }
+          }
+          
+          // Fall back to original data if no better address found
+          if (!bestAddress) {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&zoom=18&accept-language=en`
+            );
+            const data = await response.json();
+            bestAddress = data.address || {};
+          }
+          
+          // Map the best address to our structure
           const detectedAddress: AddressData = {
-            address_line_1: currentHouseNumber,
-            address_line_2: streetName,
-            town_city: address.suburb || address.neighbourhood || address.city || address.town || address.village || address.hamlet || '',
-            county: address.county || address.state_district || address.state || '',
-            postcode: address.postcode || '',
-            country: address.country || 'United Kingdom',
+            address_line_1: bestAddress.house_number || '',
+            address_line_2: bestAddress.road || bestAddress.street || '',
+            town_city: bestAddress.suburb || bestAddress.neighbourhood || bestAddress.city || bestAddress.town || bestAddress.village || bestAddress.hamlet || '',
+            county: bestAddress.county || bestAddress.state_district || bestAddress.state || '',
+            postcode: bestAddress.postcode || '',
+            country: bestAddress.country || 'United Kingdom',
             is_public: value.is_public // Preserve existing privacy setting
           };
           
@@ -126,7 +207,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       },
       {
         enableHighAccuracy: true,
-        timeout: 10000,
+        timeout: 15000, // Increased timeout for multiple API calls
         maximumAge: 300000
       }
     );
