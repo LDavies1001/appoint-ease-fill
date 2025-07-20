@@ -419,30 +419,27 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-accent/5 py-12">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4">
-            {mode === 'create' ? 'Create Your Business Profile' : 'Edit Business Profile'}
+          <h1 className="text-4xl font-bold text-accent mb-4">
+            Complete Your Profile
           </h1>
           <p className="text-xl text-muted-foreground">
-            {mode === 'create' 
-              ? 'Set up your professional presence to attract customers'
-              : 'Update your business information and settings'
-            }
+            Set up your professional presence to attract customers
           </p>
         </div>
 
-        <Card className="p-8">
+        <Card className="p-8 shadow-lg border-accent/20">
           <form className="space-y-8">
             {/* Business Logo Section */}
             <div className="text-center space-y-4">
-              <Label className="text-lg font-semibold">Business Logo</Label>
+              <Label className="text-lg font-semibold text-accent">Upload your business logo</Label>
               <div className="flex justify-center">
                 <div className="relative">
-                  <Avatar className="h-32 w-32 border-4 border-border">
+                  <Avatar className="h-32 w-32 border-4 border-accent/30">
                     <AvatarImage src={formData.business_logo_url} />
-                    <AvatarFallback className="text-4xl bg-gradient-to-br from-primary to-accent text-white">
+                    <AvatarFallback className="text-4xl bg-gradient-to-br from-accent to-accent/80 text-white">
                       {formData.business_name.charAt(0) || 'B'}
                     </AvatarFallback>
                   </Avatar>
@@ -459,7 +456,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                         type="button"
                         size="sm"
                         disabled={uploadingLogo}
-                        className="h-10 w-10 rounded-full"
+                        className="h-10 w-10 rounded-full bg-accent hover:bg-accent/90"
                       >
                         {uploadingLogo ? (
                           <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
@@ -479,16 +476,22 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <Label htmlFor="business_name" className="text-sm font-semibold">
+                <Label htmlFor="business_name" className="text-sm font-semibold text-accent">
                   Business Name <span className="text-destructive">*</span>
                 </Label>
-                <Input
-                  id="business_name"
-                  value={formData.business_name}
-                  onChange={(e) => handleInputChange('business_name', e.target.value)}
-                  placeholder="Enter your business name"
-                  className={errors.business_name ? 'border-destructive' : ''}
-                />
+                <div className="relative">
+                  <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+                  <Input
+                    id="business_name"
+                    value={formData.business_name}
+                    onChange={(e) => handleInputChange('business_name', e.target.value)}
+                    placeholder="Enter your business name"
+                    className={`pl-10 transition-all duration-200 focus:border-accent focus:ring-accent ${errors.business_name ? 'border-destructive' : ''}`}
+                  />
+                  {formData.business_name && !errors.business_name && (
+                    <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+                  )}
+                </div>
                 {errors.business_name && (
                   <p className="text-sm text-destructive mt-1 flex items-center">
                     <AlertCircle className="h-4 w-4 mr-1" />
@@ -498,14 +501,14 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="business_category" className="text-sm font-semibold">
+                <Label htmlFor="business_category" className="text-sm font-semibold text-accent">
                   Business Category <span className="text-destructive">*</span>
                 </Label>
                 <Select 
                   value={formData.business_category} 
                   onValueChange={(value) => handleInputChange('business_category', value)}
                 >
-                  <SelectTrigger className={errors.business_category ? 'border-destructive' : ''}>
+                  <SelectTrigger className={`transition-all duration-200 focus:border-accent focus:ring-accent ${errors.business_category ? 'border-destructive' : ''}`}>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -516,6 +519,11 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                     ))}
                   </SelectContent>
                 </Select>
+                {formData.business_category && !errors.business_category && (
+                  <div className="mt-1">
+                    <CheckCircle className="h-4 w-4 text-accent" />
+                  </div>
+                )}
                 {errors.business_category && (
                   <p className="text-sm text-destructive mt-1 flex items-center">
                     <AlertCircle className="h-4 w-4 mr-1" />
@@ -525,16 +533,22 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="business_phone" className="text-sm font-semibold">
+                <Label htmlFor="business_phone" className="text-sm font-semibold text-accent">
                   Contact Number <span className="text-destructive">*</span>
                 </Label>
-                <Input
-                  id="business_phone"
-                  value={formData.business_phone}
-                  onChange={(e) => handleInputChange('business_phone', e.target.value)}
-                  placeholder="+44 123 456 7890"
-                  className={errors.business_phone ? 'border-destructive' : ''}
-                />
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+                  <Input
+                    id="business_phone"
+                    value={formData.business_phone}
+                    onChange={(e) => handleInputChange('business_phone', e.target.value)}
+                    placeholder="+44 123 456 7890"
+                    className={`pl-10 transition-all duration-200 focus:border-accent focus:ring-accent ${errors.business_phone ? 'border-destructive' : ''}`}
+                  />
+                  {formData.business_phone && !errors.business_phone && (
+                    <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+                  )}
+                </div>
                 {errors.business_phone && (
                   <p className="text-sm text-destructive mt-1 flex items-center">
                     <AlertCircle className="h-4 w-4 mr-1" />
@@ -544,17 +558,23 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="business_email" className="text-sm font-semibold">
+                <Label htmlFor="business_email" className="text-sm font-semibold text-accent">
                   Email Address <span className="text-destructive">*</span>
                 </Label>
-                <Input
-                  id="business_email"
-                  type="email"
-                  value={formData.business_email}
-                  onChange={(e) => handleInputChange('business_email', e.target.value)}
-                  placeholder="business@example.com"
-                  className={errors.business_email ? 'border-destructive' : ''}
-                />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+                  <Input
+                    id="business_email"
+                    type="email"
+                    value={formData.business_email}
+                    onChange={(e) => handleInputChange('business_email', e.target.value)}
+                    placeholder="business@example.com"
+                    className={`pl-10 transition-all duration-200 focus:border-accent focus:ring-accent ${errors.business_email ? 'border-destructive' : ''}`}
+                  />
+                  {formData.business_email && !errors.business_email && (
+                    <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+                  )}
+                </div>
                 {errors.business_email && (
                   <p className="text-sm text-destructive mt-1 flex items-center">
                     <AlertCircle className="h-4 w-4 mr-1" />
@@ -564,30 +584,43 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="business_website" className="text-sm font-semibold">
+                <Label htmlFor="business_website" className="text-sm font-semibold text-accent">
                   Website (Optional)
                 </Label>
-                <Input
-                  id="business_website"
-                  value={formData.business_website}
-                  onChange={(e) => handleInputChange('business_website', e.target.value)}
-                  placeholder="https://your-website.com"
-                />
+                <div className="relative">
+                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+                  <Input
+                    id="business_website"
+                    value={formData.business_website}
+                    onChange={(e) => handleInputChange('business_website', e.target.value)}
+                    placeholder="https://your-website.com"
+                    className="pl-10 transition-all duration-200 focus:border-accent focus:ring-accent"
+                  />
+                  {formData.business_website && (
+                    <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Business Address */}
             <div>
-              <Label htmlFor="business_address" className="text-sm font-semibold">
+              <Label htmlFor="business_address" className="text-sm font-semibold text-accent">
                 Business Address <span className="text-destructive">*</span>
               </Label>
-              <Textarea
-                id="business_address"
-                value={formData.business_address}
-                onChange={(e) => handleInputChange('business_address', e.target.value)}
-                placeholder="Enter your full business address"
-                className={`min-h-[80px] ${errors.business_address ? 'border-destructive' : ''}`}
-              />
+              <div className="relative">
+                <MapPin className="absolute left-3 top-3 h-4 w-4 text-accent" />
+                <Textarea
+                  id="business_address"
+                  value={formData.business_address}
+                  onChange={(e) => handleInputChange('business_address', e.target.value)}
+                  placeholder="Enter your full business address"
+                  className={`min-h-[80px] pl-10 transition-all duration-200 focus:border-accent focus:ring-accent ${errors.business_address ? 'border-destructive' : ''}`}
+                />
+                {formData.business_address && !errors.business_address && (
+                  <CheckCircle className="absolute right-3 top-3 h-4 w-4 text-accent" />
+                )}
+              </div>
               {errors.business_address && (
                 <p className="text-sm text-destructive mt-1 flex items-center">
                   <AlertCircle className="h-4 w-4 mr-1" />
@@ -624,17 +657,18 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 
             {/* Operating Hours */}
             <div>
-              <Label className="text-sm font-semibold mb-4 block">
+              <Label className="text-sm font-semibold mb-4 block text-accent">
                 Opening Hours <span className="text-destructive">*</span>
               </Label>
               <div className="space-y-3">
                 {operatingHours.map((day, index) => (
-                  <div key={day.day} className="flex items-center space-x-4 p-3 bg-muted/30 rounded-lg">
-                    <div className="w-20 font-medium">{day.day}</div>
+                  <div key={day.day} className="flex items-center space-x-4 p-3 bg-muted/30 rounded-lg border border-accent/20">
+                    <div className="w-20 font-medium text-accent">{day.day}</div>
                     <div className="flex items-center space-x-2">
                       <Switch
                         checked={!day.closed}
                         onCheckedChange={(checked) => handleOperatingHoursChange(index, 'closed', !checked)}
+                        className="data-[state=checked]:bg-accent"
                       />
                       <span className="text-sm">{day.closed ? 'Closed' : 'Open'}</span>
                     </div>
@@ -644,14 +678,14 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                           type="time"
                           value={day.open}
                           onChange={(e) => handleOperatingHoursChange(index, 'open', e.target.value)}
-                          className="w-32"
+                          className="w-32 focus:border-accent focus:ring-accent"
                         />
-                        <span>to</span>
+                        <span className="text-accent font-medium">to</span>
                         <Input
                           type="time"
                           value={day.close}
                           onChange={(e) => handleOperatingHoursChange(index, 'close', e.target.value)}
-                          className="w-32"
+                          className="w-32 focus:border-accent focus:ring-accent"
                         />
                       </>
                     )}
@@ -662,7 +696,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 
             {/* Social Media Links */}
             <div>
-              <Label className="text-sm font-semibold mb-4 block">Social Media Links (Optional)</Label>
+              <Label className="text-sm font-semibold mb-4 block text-accent">Social Media Links (Optional)</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center space-x-3">
                   <Facebook className="h-5 w-5 text-blue-600" />
@@ -700,9 +734,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
             </div>
 
             {/* Profile Visibility */}
-            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border border-accent/20">
               <div className="space-y-1">
-                <Label className="text-sm font-semibold">Profile Visibility</Label>
+                <Label className="text-sm font-semibold text-accent">Profile Visibility</Label>
                 <p className="text-sm text-muted-foreground">
                   Control who can view your business profile
                 </p>
@@ -714,11 +748,12 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                     onCheckedChange={(checked) => 
                       handleInputChange('profile_visibility', checked ? 'public' : 'private')
                     }
+                    className="data-[state=checked]:bg-accent"
                   />
                   <span className="text-sm font-medium">
                     {formData.profile_visibility === 'public' ? (
                       <>
-                        <Eye className="h-4 w-4 inline mr-1 text-green-500" />
+                        <Eye className="h-4 w-4 inline mr-1 text-accent" />
                         Public
                       </>
                     ) : (
@@ -738,7 +773,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 type="button"
                 variant="outline"
                 onClick={() => setShowPreview(true)}
-                className="flex-1"
+                className="flex-1 border-accent hover:bg-accent hover:text-white transition-all duration-200"
               >
                 <Eye className="h-4 w-4 mr-2" />
                 Preview Profile
@@ -748,7 +783,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 variant="outline"
                 onClick={() => handleSubmit(false)}
                 disabled={loading}
-                className="flex-1"
+                className="flex-1 border-accent hover:bg-accent hover:text-white transition-all duration-200"
               >
                 <Save className="h-4 w-4 mr-2" />
                 Save as Draft
@@ -757,10 +792,10 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 type="button"
                 onClick={() => handleSubmit(true)}
                 disabled={loading}
-                className="flex-1 bg-green-600 hover:bg-green-700"
+                className="flex-1 bg-accent hover:bg-accent/90 text-white transition-all duration-200"
               >
                 <CheckCircle className="h-4 w-4 mr-2" />
-                Publish Profile
+                Create My Free Business Account
               </Button>
             </div>
           </form>
