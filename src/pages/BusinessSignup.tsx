@@ -199,7 +199,7 @@ const BusinessSignup = () => {
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-accent to-accent-glow rounded-xl flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-2xl font-bold text-foreground">Open-Slot</span>
@@ -224,7 +224,7 @@ const BusinessSignup = () => {
                 </p>
                 <Button
                   onClick={() => navigate('/auth')}
-                  variant="hero"
+                  variant="accent"
                   size="lg"
                   className="w-full mt-6"
                 >
@@ -249,7 +249,7 @@ const BusinessSignup = () => {
             {/* Left column - Inspirational content (hidden on mobile) */}
             <div className="hidden lg:flex flex-col justify-center space-y-8 pl-8">
               <div className="space-y-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary-glow rounded-2xl flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-2xl flex items-center justify-center">
                   <Building className="h-8 w-8 text-white" />
                 </div>
                 
@@ -295,7 +295,7 @@ const BusinessSignup = () => {
                   </div>
                 </div>
 
-                <blockquote className="border-l-4 border-primary pl-6 italic text-muted-foreground">
+                <blockquote className="border-l-4 border-accent pl-6 italic text-muted-foreground">
                   "Since joining OpenSlot, I've filled 80% of my cancellations with new customers. 
                   It's been amazing for my business growth."
                   <footer className="text-sm font-medium text-foreground mt-2">
@@ -310,7 +310,7 @@ const BusinessSignup = () => {
               {/* Header for mobile */}
               <div className="text-center lg:text-left mb-8 lg:hidden">
                 <div className="flex items-center justify-center space-x-2 mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-accent to-accent-glow rounded-xl flex items-center justify-center">
                     <Building className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-2xl font-bold text-foreground">OpenSlot</span>
@@ -341,7 +341,7 @@ const BusinessSignup = () => {
                         placeholder="Enter your business name"
                         value={businessName}
                         onChange={(e) => setBusinessName(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-primary transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
                         required
                       />
                       {businessName && isFieldValid('businessName', businessName) && (
@@ -363,7 +363,7 @@ const BusinessSignup = () => {
                         placeholder="Enter your full name"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-primary transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
                         required
                       />
                       {fullName && isFieldValid('fullName', fullName) && (
@@ -385,7 +385,7 @@ const BusinessSignup = () => {
                         placeholder="Enter your business email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-primary transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
                         required
                       />
                       {email && isFieldValid('email', email) && (
@@ -407,7 +407,7 @@ const BusinessSignup = () => {
                         placeholder="07123456789"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-primary transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
                         required
                       />
                       {phone && isFieldValid('phone', phone) && (
@@ -428,7 +428,7 @@ const BusinessSignup = () => {
                         placeholder="Enter your business postcode"
                         value={location}
                         onChange={setLocation}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-primary transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
                       />
                       {location && isFieldValid('location', location) && (
                         <div className="absolute right-3 top-3 text-green-600 z-20">
@@ -450,7 +450,7 @@ const BusinessSignup = () => {
                         placeholder="Create a password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 pr-12 h-12 rounded-xl border-border/50 focus:border-primary transition-colors"
+                        className="pl-10 pr-12 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
                         required
                       />
                       <button
@@ -472,9 +472,9 @@ const BusinessSignup = () => {
                           {[...Array(5)].map((_, i) => (
                             <div
                               key={i}
-                              className={`h-1.5 flex-1 rounded-full transition-colors ${
-                                i < getPasswordStrength() ? 'bg-gradient-to-r from-primary to-primary-glow' : 'bg-muted'
-                              }`}
+                               className={`h-1.5 flex-1 rounded-full transition-colors ${
+                                 i < getPasswordStrength() ? 'bg-gradient-to-r from-accent to-accent-glow' : 'bg-muted'
+                               }`}
                             />
                           ))}
                         </div>
@@ -496,7 +496,7 @@ const BusinessSignup = () => {
                         placeholder="Confirm your password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-primary transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
                         required
                       />
                       {confirmPassword && isFieldValid('confirmPassword', confirmPassword) && (
@@ -511,7 +511,7 @@ const BusinessSignup = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    variant="hero"
+                    variant="accent"
                     size="lg"
                     className="w-full mt-8 h-12 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                   >
