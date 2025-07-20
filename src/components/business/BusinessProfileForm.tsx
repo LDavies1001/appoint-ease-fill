@@ -47,6 +47,10 @@ interface BusinessProfileData {
     saturday: { open: string; close: string; closed: boolean };
     sunday: { open: string; close: string; closed: boolean };
   };
+  certifications: string;
+  dbs_checked: boolean;
+  additional_checks: string;
+  certification_files: string[];
 }
 
 interface BusinessProfileFormProps {
@@ -68,8 +72,8 @@ const STEPS = [
     description: "What you provide"
   },
   {
-    title: "Connect Socials",
-    description: "Social media links"
+    title: "Credentials & Socials",
+    description: "Certifications & links"
   },
   {
     title: "Business Summary",
@@ -141,7 +145,11 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
           business_address: parseAddressData(parsed.business_address),
           business_description: parsed.business_description || '',
           business_logo_url: parsed.business_logo_url || '',
-          operating_hours: parsed.operating_hours || getDefaultOperatingHours()
+          operating_hours: parsed.operating_hours || getDefaultOperatingHours(),
+          certifications: parsed.certifications || '',
+          dbs_checked: parsed.dbs_checked || false,
+          additional_checks: parsed.additional_checks || '',
+          certification_files: parsed.certification_files || []
         };
       } catch (e) {
         console.warn('Could not parse saved form data:', e);
@@ -156,7 +164,11 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       business_address: parseAddressData(existingData?.business_address),
       business_description: existingData?.business_description || '',
       business_logo_url: existingData?.business_logo_url || '',
-      operating_hours: getDefaultOperatingHours()
+      operating_hours: getDefaultOperatingHours(),
+      certifications: '',
+      dbs_checked: false,
+      additional_checks: '',
+      certification_files: []
     };
   };
 
@@ -182,6 +194,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   }, [currentStep]);
   const [loading, setLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingCertifications, setUploadingCertifications] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { user, profile } = useAuth();
@@ -257,7 +270,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (field: keyof BusinessProfileData, value: string | string[] | AddressData) => {
+  const handleInputChange = (field: keyof BusinessProfileData, value: string | string[] | AddressData | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -320,6 +333,67 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
     }
   };
 
+  const handleCertificationUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingCertifications(true);
+    try {
+      const uploadedUrls: string[] = [];
+      
+      for (const file of Array.from(files)) {
+        if (file.size > 5 * 1024 * 1024) {
+          toast({
+            title: "File too large",
+            description: `${file.name} is over 5MB. Please choose a smaller file.`,
+            variant: "destructive"
+          });
+          continue;
+        }
+
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user?.id}/certifications/${Date.now()}-${file.name}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('certifications')
+          .upload(fileName, file);
+          
+        if (uploadError) {
+          console.error('Error uploading file:', uploadError);
+          continue;
+        }
+        
+        const { data } = supabase.storage
+          .from('certifications')
+          .getPublicUrl(fileName);
+
+        uploadedUrls.push(data.publicUrl);
+      }
+
+      if (uploadedUrls.length > 0) {
+        setFormData(prev => ({ 
+          ...prev, 
+          certification_files: [...prev.certification_files, ...uploadedUrls] 
+        }));
+        
+        toast({
+          title: "Files uploaded successfully",
+          description: `${uploadedUrls.length} certification file(s) uploaded`
+        });
+      }
+    } catch (error) {
+      console.error('Error uploading certifications:', error);
+      toast({
+        title: "Upload failed",
+        description: "Could not upload some files. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingCertifications(false);
+      event.target.value = '';
+    }
+  };
+
   const handleNext = () => {
     if (validateCurrentStep()) {
       if (currentStep < 4) {
@@ -371,8 +445,11 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         business_description: formData.business_description,
         operating_hours: formatOperatingHours(formData.operating_hours),
         business_logo_url: formData.business_logo_url,
+        certifications: formData.certifications,
+        certification_files: formData.certification_files,
         user_id: user?.id,
-        profile_published: true
+        profile_published: true,
+        insurance_info: formData.dbs_checked ? 'DBS Checked' : null
       };
 
       if (mode === 'create') {
@@ -592,6 +669,128 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         return (
           <div className="space-y-6 animate-fade-in">
             <SocialMediaConnector />
+            {/* Certifications & Awards Section */}
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-2xl font-bold text-accent">Certifications & Awards</h3>
+                <p className="text-muted-foreground">
+                  Upload your certificates, awards, and qualifications to build customer trust
+                </p>
+              </div>
+              
+              <div className="grid gap-6">
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold">Upload Certifications</Label>
+                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-accent/50 transition-colors">
+                    <Upload className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Drag and drop files here, or click to browse
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      PDF, JPEG, PNG (max 5MB each)
+                    </p>
+                    <input
+                      type="file"
+                      multiple
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={handleCertificationUpload}
+                      disabled={uploadingCertifications}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    {uploadingCertifications && (
+                      <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
+                        <div className="animate-spin h-8 w-8 border-2 border-accent border-t-transparent rounded-full" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Display uploaded files */}
+                {formData.certification_files.length > 0 && (
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-accent">Uploaded Files:</Label>
+                    <div className="space-y-2">
+                      {formData.certification_files.map((fileUrl, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-accent/5 rounded border">
+                          <span className="text-sm truncate">File {index + 1}</span>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setFormData(prev => ({
+                                ...prev,
+                                certification_files: prev.certification_files.filter((_, i) => i !== index)
+                              }));
+                            }}
+                            className="text-xs"
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-3">
+                  <Label htmlFor="certifications" className="text-base font-semibold">
+                    Certification Details (Optional)
+                  </Label>
+                  <Textarea
+                    id="certifications"
+                    value={formData.certifications}
+                    onChange={(e) => handleInputChange('certifications', e.target.value)}
+                    placeholder="List your certifications, qualifications, and training..."
+                    className="min-h-24"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* DBS Check Section */}
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-2xl font-bold text-accent">Background Checks</h3>
+                <p className="text-muted-foreground">
+                  Let customers know about your security clearances
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3 p-4 border border-muted rounded-lg">
+                  <input
+                    type="checkbox"
+                    id="dbs_checked"
+                    checked={formData.dbs_checked}
+                    onChange={(e) => handleInputChange('dbs_checked', e.target.checked)}
+                    className="h-5 w-5 text-accent focus:ring-accent border-gray-300 rounded"
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor="dbs_checked" className="text-base font-medium cursor-pointer">
+                      DBS (Disclosure and Barring Service) Checked
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      I have a valid DBS certificate for working with customers
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label htmlFor="additional_checks" className="text-base font-semibold">
+                    Additional Security Clearances (Optional)
+                  </Label>
+                  <Textarea
+                    id="additional_checks"
+                    value={formData.additional_checks}
+                    onChange={(e) => handleInputChange('additional_checks', e.target.value)}
+                    placeholder="List any other background checks, insurance, or security clearances..."
+                    className="min-h-20"
+                  />
+                </div>
+              </div>
+            </div>
+
           </div>
         );
 
@@ -659,10 +858,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 </Button>
               </div>
               
-              {/* Debug info */}
-              <div className="text-xs text-gray-500 mb-2">
-                Debug: {JSON.stringify(formData.operating_hours).substring(0, 100)}...
-              </div>
               
               <div className="space-y-3">
                 {formData.operating_hours && Object.entries(formData.operating_hours).map(([day, hours]) => {
