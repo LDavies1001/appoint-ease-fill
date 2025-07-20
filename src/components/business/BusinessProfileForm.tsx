@@ -145,7 +145,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
           business_address: parseAddressData(parsed.business_address),
           business_description: parsed.business_description || '',
           business_logo_url: parsed.business_logo_url || '',
-          operating_hours: parsed.operating_hours || getDefaultOperatingHours(),
+          operating_hours: (parsed.operating_hours && typeof parsed.operating_hours === 'object') ? parsed.operating_hours : getDefaultOperatingHours(),
           certifications: parsed.certifications || '',
           dbs_checked: parsed.dbs_checked || false,
           additional_checks: parsed.additional_checks || '',
