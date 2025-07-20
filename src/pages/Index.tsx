@@ -67,7 +67,7 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <Link to="/auth?tab=signup" className="block mt-auto">
+                  <Link to="/signup/customer" className="block mt-auto">
                     <Button variant="hero" className="w-full px-8 py-4 text-lg font-medium">
                       <User className="mr-2 h-5 w-5" />
                       Sign Up as Customer
@@ -111,7 +111,7 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <Link to="/auth?tab=provider" className="block mt-auto">
+                  <Link to="/signup/business" className="block mt-auto">
                     <Button variant="accent" className="w-full px-8 py-4 text-lg font-medium">
                       <Building className="mr-2 h-5 w-5" />
                       Join as Business
