@@ -34,7 +34,12 @@ export const useRouteProtection = () => {
       if (location.pathname === '/auth') {
         // Check if profile is incomplete
         if (!profile.is_profile_complete) {
-          navigate('/onboarding');
+          // Redirect based on user role
+          if (profile.role === 'provider') {
+            navigate('/create-business-profile');
+          } else {
+            navigate('/onboarding');
+          }
         } else {
           // Restore last route or go to dashboard
           const lastRoute = localStorage.getItem('lastRoute');
@@ -47,16 +52,21 @@ export const useRouteProtection = () => {
         return;
       }
 
-      // If profile is incomplete and not on onboarding, redirect to onboarding
-      if (!profile.is_profile_complete && location.pathname !== '/onboarding') {
-        navigate('/onboarding');
-        return;
+      // If profile is incomplete and not on the appropriate onboarding page, redirect
+      if (!profile.is_profile_complete) {
+        if (profile.role === 'provider' && location.pathname !== '/create-business-profile') {
+          navigate('/create-business-profile');
+          return;
+        } else if (profile.role === 'customer' && location.pathname !== '/onboarding') {
+          navigate('/onboarding');
+          return;
+        }
       }
 
-      // If profile is complete and on onboarding, redirect to dashboard or last route
-      if (profile.is_profile_complete && location.pathname === '/onboarding') {
+      // If profile is complete and on onboarding pages, redirect to dashboard or last route
+      if (profile.is_profile_complete && ['/onboarding', '/create-business-profile'].includes(location.pathname)) {
         const lastRoute = localStorage.getItem('lastRoute');
-        if (lastRoute && lastRoute !== '/auth' && lastRoute !== '/onboarding') {
+        if (lastRoute && !['/auth', '/onboarding', '/create-business-profile'].includes(lastRoute)) {
           navigate(lastRoute);
         } else {
           navigate('/dashboard');
