@@ -138,7 +138,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       business_address: parseAddressData(existingData?.business_address),
       business_description: existingData?.business_description || '',
       business_logo_url: existingData?.business_logo_url || '',
-      operating_hours: existingData?.operating_hours || ''
+      operating_hours: existingData?.operating_hours || 'Monday-Friday: 9:00 AM - 5:00 PM'
     };
   };
 
@@ -576,49 +576,49 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
-                <Label htmlFor="business_description" className="text-base font-semibold text-accent mb-4 block">
-                  Business Description (Optional)
-                </Label>
-                <Textarea
-                  id="business_description"
-                  value={formData.business_description}
-                  onChange={(e) => handleInputChange('business_description', e.target.value)}
-                  placeholder="Describe your business, services, experience, or what makes you unique..."
-                  className="min-h-[140px] text-base border-2 border-accent/30 focus:border-accent focus:ring-accent/20 focus:ring-4 transition-all duration-300"
-                  maxLength={300}
-                />
-                <div className="flex justify-between items-center mt-3">
-                  <p className="text-sm text-muted-foreground">
-                    Help customers understand what makes your business special
-                  </p>
-                  <p className="text-sm text-muted-foreground font-medium">
-                    {formData.business_description.length}/300
-                  </p>
-                </div>
+            {/* Business Description */}
+            <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+              <Label htmlFor="business_description" className="text-base font-semibold text-accent mb-4 block">
+                Business Description (Optional)
+              </Label>
+              <Textarea
+                id="business_description"
+                value={formData.business_description}
+                onChange={(e) => handleInputChange('business_description', e.target.value)}
+                placeholder="Describe your business, services, experience, or what makes you unique..."
+                className="min-h-[140px] text-base border-2 border-accent/30 focus:border-accent focus:ring-accent/20 focus:ring-4 transition-all duration-300"
+                maxLength={300}
+              />
+              <div className="flex justify-between items-center mt-3">
+                <p className="text-sm text-muted-foreground">
+                  Help customers understand what makes your business special
+                </p>
+                <p className="text-sm text-muted-foreground font-medium">
+                  {formData.business_description.length}/300
+                </p>
               </div>
+            </div>
 
-              <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
-                <Label htmlFor="operating_hours" className="text-base font-semibold text-accent mb-4 block">
-                  Opening Hours (Optional)
-                </Label>
-                <Textarea
-                  id="operating_hours"
-                  value={formData.operating_hours}
-                  onChange={(e) => handleInputChange('operating_hours', e.target.value)}
-                  placeholder="e.g. Mon-Fri: 9:00 AM - 6:00 PM&#10;Saturday: 10:00 AM - 4:00 PM&#10;Sunday: Closed"
-                  className="min-h-[140px] text-base border-2 border-accent/30 focus:border-accent focus:ring-accent/20 focus:ring-4 transition-all duration-300"
-                  maxLength={200}
-                />
-                <div className="flex justify-between items-center mt-3">
-                  <p className="text-sm text-muted-foreground">
-                    Let customers know when you're available
-                  </p>
-                  <p className="text-sm text-muted-foreground font-medium">
-                    {formData.operating_hours.length}/200
-                  </p>
-                </div>
+            {/* Opening Hours */}
+            <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+              <Label htmlFor="operating_hours" className="text-base font-semibold text-accent mb-4 block">
+                Opening Hours (Optional)
+              </Label>
+              <Textarea
+                id="operating_hours"
+                value={formData.operating_hours}
+                onChange={(e) => handleInputChange('operating_hours', e.target.value)}
+                placeholder="Monday-Friday: 9:00 AM - 5:00 PM&#10;Saturday: 10:00 AM - 4:00 PM&#10;Sunday: Closed"
+                className="min-h-[120px] text-base border-2 border-accent/30 focus:border-accent focus:ring-accent/20 focus:ring-4 transition-all duration-300 font-mono"
+                maxLength={200}
+              />
+              <div className="flex justify-between items-center mt-3">
+                <p className="text-sm text-muted-foreground">
+                  List your opening hours (one per line)
+                </p>
+                <p className="text-sm text-muted-foreground font-medium">
+                  {formData.operating_hours.length}/200
+                </p>
               </div>
             </div>
 
