@@ -38,7 +38,15 @@ interface BusinessProfileData {
   business_address: AddressData;
   business_description: string;
   business_logo_url: string;
-  operating_hours: string;
+  operating_hours: {
+    monday: { open: string; close: string; closed: boolean };
+    tuesday: { open: string; close: string; closed: boolean };
+    wednesday: { open: string; close: string; closed: boolean };
+    thursday: { open: string; close: string; closed: boolean };
+    friday: { open: string; close: string; closed: boolean };
+    saturday: { open: string; close: string; closed: boolean };
+    sunday: { open: string; close: string; closed: boolean };
+  };
 }
 
 interface BusinessProfileFormProps {
@@ -110,6 +118,16 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   };
 
   // Initialize form data with persistence
+  const getDefaultOperatingHours = () => ({
+    monday: { open: '09:00', close: '17:00', closed: false },
+    tuesday: { open: '09:00', close: '17:00', closed: false },
+    wednesday: { open: '09:00', close: '17:00', closed: false },
+    thursday: { open: '09:00', close: '17:00', closed: false },
+    friday: { open: '09:00', close: '17:00', closed: false },
+    saturday: { open: '09:00', close: '17:00', closed: true },
+    sunday: { open: '09:00', close: '17:00', closed: true }
+  });
+
   const initializeFormData = (): BusinessProfileData => {
     // Try to get saved data from sessionStorage first
     const savedData = sessionStorage.getItem('business-profile-form-data');
@@ -123,7 +141,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
           business_address: parseAddressData(parsed.business_address),
           business_description: parsed.business_description || '',
           business_logo_url: parsed.business_logo_url || '',
-          operating_hours: parsed.operating_hours || ''
+          operating_hours: parsed.operating_hours || getDefaultOperatingHours()
         };
       } catch (e) {
         console.warn('Could not parse saved form data:', e);
@@ -138,7 +156,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       business_address: parseAddressData(existingData?.business_address),
       business_description: existingData?.business_description || '',
       business_logo_url: existingData?.business_logo_url || '',
-      operating_hours: existingData?.operating_hours || 'Monday-Friday: 9:00 AM - 5:00 PM'
+      operating_hours: getDefaultOperatingHours()
     };
   };
 
@@ -329,6 +347,20 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         formData.business_address.postcode
       ].filter(Boolean).join(', ');
 
+      // Convert operating hours object to string format for database
+      const formatOperatingHours = (hours: BusinessProfileData['operating_hours']): string => {
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        
+        return days.map((day, index) => {
+          const dayData = hours[day as keyof typeof hours];
+          if (dayData.closed) {
+            return `${dayNames[index]}: Closed`;
+          }
+          return `${dayNames[index]}: ${dayData.open} - ${dayData.close}`;
+        }).join('\n');
+      };
+
       const submitData = {
         business_name: formData.business_name,
         business_category: formData.business_categories[0] || null, // Primary category
@@ -337,7 +369,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         business_address: addressString,
         is_address_public: formData.business_address.is_public, // Store privacy setting
         business_description: formData.business_description,
-        operating_hours: formData.operating_hours,
+        operating_hours: formatOperatingHours(formData.operating_hours),
         business_logo_url: formData.business_logo_url,
         user_id: user?.id,
         profile_published: true
@@ -601,23 +633,83 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 
             {/* Opening Hours */}
             <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
-              <Label htmlFor="operating_hours" className="text-base font-semibold text-accent mb-4 block">
-                Opening Hours (Optional)
-              </Label>
-              <Textarea
-                id="operating_hours"
-                value={formData.operating_hours}
-                onChange={(e) => handleInputChange('operating_hours', e.target.value)}
-                placeholder="Monday-Friday: 9:00 AM - 5:00 PM&#10;Saturday: 10:00 AM - 4:00 PM&#10;Sunday: Closed"
-                className="min-h-[120px] text-base border-2 border-accent/30 focus:border-accent focus:ring-accent/20 focus:ring-4 transition-all duration-300 font-mono"
-                maxLength={200}
-              />
-              <div className="flex justify-between items-center mt-3">
+              <div className="flex justify-between items-center mb-4">
+                <Label className="text-base font-semibold text-accent">
+                  Opening Hours (Optional)
+                </Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const defaultHours = getDefaultOperatingHours();
+                    setFormData(prev => ({ ...prev, operating_hours: defaultHours }));
+                  }}
+                  className="text-xs"
+                >
+                  Clear All
+                </Button>
+              </div>
+              
+              <div className="space-y-3">
+                {Object.entries(formData.operating_hours).map(([day, hours]) => {
+                  const dayName = day.charAt(0).toUpperCase() + day.slice(1);
+                  return (
+                    <div key={day} className="flex items-center justify-between p-3 bg-white/60 rounded-lg border border-accent/20">
+                      <div className="flex items-center space-x-3">
+                        <span className="w-20 text-sm font-medium text-accent">{dayName}</span>
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            checked={!hours.closed}
+                            onChange={(e) => {
+                              const newHours = { ...formData.operating_hours };
+                              newHours[day as keyof typeof newHours].closed = !e.target.checked;
+                              setFormData(prev => ({ ...prev, operating_hours: newHours }));
+                            }}
+                            className="rounded border-accent/30"
+                          />
+                          <span className="text-sm text-muted-foreground">Open</span>
+                        </label>
+                      </div>
+                      
+                      {!hours.closed && (
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="time"
+                            value={hours.open}
+                            onChange={(e) => {
+                              const newHours = { ...formData.operating_hours };
+                              newHours[day as keyof typeof newHours].open = e.target.value;
+                              setFormData(prev => ({ ...prev, operating_hours: newHours }));
+                            }}
+                            className="px-2 py-1 text-sm border border-accent/30 rounded focus:border-accent focus:ring-1 focus:ring-accent/20"
+                          />
+                          <span className="text-sm text-muted-foreground">to</span>
+                          <input
+                            type="time"
+                            value={hours.close}
+                            onChange={(e) => {
+                              const newHours = { ...formData.operating_hours };
+                              newHours[day as keyof typeof newHours].close = e.target.value;
+                              setFormData(prev => ({ ...prev, operating_hours: newHours }));
+                            }}
+                            className="px-2 py-1 text-sm border border-accent/30 rounded focus:border-accent focus:ring-1 focus:ring-accent/20"
+                          />
+                        </div>
+                      )}
+                      
+                      {hours.closed && (
+                        <span className="text-sm text-muted-foreground italic">Closed</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              
+              <div className="mt-3">
                 <p className="text-sm text-muted-foreground">
-                  List your opening hours (one per line)
-                </p>
-                <p className="text-sm text-muted-foreground font-medium">
-                  {formData.operating_hours.length}/200
+                  Set your opening and closing times for each day. Uncheck 'Open' for days you're closed.
                 </p>
               </div>
             </div>
