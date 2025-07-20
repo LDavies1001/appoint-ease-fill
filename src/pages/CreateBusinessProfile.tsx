@@ -47,7 +47,8 @@ const CreateBusinessProfile = () => {
             town_city: '',
             county: '',
             postcode: '',
-            country: 'United Kingdom'
+            country: 'United Kingdom',
+            is_public: false // Default to private for safety
           };
         }
         
@@ -59,7 +60,8 @@ const CreateBusinessProfile = () => {
           town_city: '',
           county: '',
           postcode: '',
-          country: 'United Kingdom'
+          country: 'United Kingdom',
+          is_public: false // Default to private for safety
         };
       };
 
@@ -95,7 +97,8 @@ const CreateBusinessProfile = () => {
           town_city: '',
           county: '',
           postcode: '',
-          country: 'United Kingdom'
+          country: 'United Kingdom',
+          is_public: false // Default to private for safety
         },
         business_categories: []
       };

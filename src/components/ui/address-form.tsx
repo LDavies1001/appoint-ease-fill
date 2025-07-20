@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Locate, CheckCircle, AlertCircle } from 'lucide-react';
+import { MapPin, Locate, CheckCircle, AlertCircle, Eye, EyeOff, Home } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -14,6 +15,7 @@ export interface AddressData {
   county: string;
   postcode: string;
   country: string;
+  is_public: boolean; // Whether customers can see the full address
 }
 
 interface AddressFormProps {
@@ -58,7 +60,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   const [detecting, setDetecting] = useState(false);
   const { toast } = useToast();
 
-  const handleFieldChange = (field: keyof AddressData, fieldValue: string) => {
+  const handleFieldChange = (field: keyof AddressData, fieldValue: string | boolean) => {
     onChange({
       ...value,
       [field]: fieldValue
@@ -108,7 +110,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             town_city: address.city || address.town || address.village || address.hamlet || '',
             county: address.county || address.state_district || address.state || '',
             postcode: address.postcode || '',
-            country: value.country || 'United Kingdom' // Keep existing or default
+            country: value.country || 'United Kingdom', // Keep existing or default
+            is_public: value.is_public // Preserve existing privacy setting
           };
           
           onChange(detectedAddress);
@@ -158,10 +161,13 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
   const isFieldValid = (field: keyof AddressData): boolean => {
     const fieldValue = value[field];
+    if (field === 'is_public') {
+      return true; // Boolean field is always valid
+    }
     if (!fieldValue) return false;
     
     if (field === 'postcode' && value.country === 'United Kingdom') {
-      return validateUKPostcode(fieldValue);
+      return validateUKPostcode(fieldValue as string);
     }
     
     return true;
@@ -365,6 +371,50 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                 {errors.country}
               </p>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* Privacy Settings */}
+      <div className="border-t border-accent/20 pt-6 mt-6">
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Home className="h-5 w-5 text-accent" />
+            <h4 className="text-lg font-semibold text-accent">Address Privacy</h4>
+          </div>
+          
+          <div className="bg-muted/30 border border-accent/20 rounded-lg p-4">
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="is_public"
+                checked={value.is_public}
+                onCheckedChange={(checked) => handleFieldChange('is_public', checked as boolean)}
+                className="mt-1"
+              />
+              <div className="flex-1">
+                <Label htmlFor="is_public" className="text-sm font-medium cursor-pointer flex items-center">
+                  {value.is_public ? (
+                    <Eye className="h-4 w-4 mr-2 text-accent" />
+                  ) : (
+                    <EyeOff className="h-4 w-4 mr-2 text-orange-500" />
+                  )}
+                  Allow customers to see my full business address
+                </Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {value.is_public ? (
+                    <>
+                      <span className="text-accent font-medium">Public:</span> Customers will see your full address when booking appointments. 
+                      Recommended for commercial premises or businesses that welcome walk-ins.
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-orange-600 font-medium">Private:</span> Only your general area (town/city) will be visible to customers. 
+                      Full address will be shared after booking confirmation. Perfect for home-based businesses.
+                    </>
+                  )}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

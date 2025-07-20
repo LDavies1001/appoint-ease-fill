@@ -78,7 +78,8 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         town_city: '',
         county: '',
         postcode: '',
-        country: 'United Kingdom'
+        country: 'United Kingdom',
+        is_public: false // Default to private for safety
       };
     }
     
@@ -90,7 +91,8 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         town_city: '',
         county: '',
         postcode: '',
-        country: 'United Kingdom'
+        country: 'United Kingdom',
+        is_public: false // Default to private for safety
       };
     }
     
@@ -101,7 +103,8 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       town_city: addressData.town_city || '',
       county: addressData.county || '',
       postcode: addressData.postcode || '',
-      country: addressData.country || 'United Kingdom'
+      country: addressData.country || 'United Kingdom',
+      is_public: addressData.is_public ?? false // Default to private for safety
     };
   };
 
