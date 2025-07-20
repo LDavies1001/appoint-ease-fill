@@ -28,23 +28,58 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Call to Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/auth?tab=signup">
-                <Button className="w-full sm:w-auto px-8 py-4 text-lg font-medium">
-                  <User className="mr-2 h-5 w-5" />
-                  Sign Up as Customer
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              
-              <Link to="/auth?tab=provider">
-                <Button variant="hero" className="w-full sm:w-auto px-8 py-4 text-lg font-medium">
-                  <Building className="mr-2 h-5 w-5" />
-                  Join as Business
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+            {/* Sign Up Sections */}
+            <div className="space-y-8">
+              {/* Customer Section */}
+              <div className="bg-card rounded-2xl p-8 border border-border/40">
+                <div className="text-center mb-6">
+                  <User className="h-12 w-12 text-primary mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-foreground mb-2">For Customers</h3>
+                  <p className="text-muted-foreground">Book last-minute appointments instantly</p>
+                </div>
+                <Link to="/auth?tab=signup" className="block">
+                  <Button className="w-full px-8 py-4 text-lg font-medium">
+                    <User className="mr-2 h-5 w-5" />
+                    Sign Up as Customer
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Business Section */}
+              <div className="bg-card rounded-2xl p-8 border border-border/40">
+                <div className="text-center mb-6">
+                  <Building className="h-12 w-12 text-accent mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-foreground mb-2">For Businesses</h3>
+                  <p className="text-muted-foreground">Fill empty slots and maximize revenue</p>
+                </div>
+                <Link to="/auth?tab=provider" className="block">
+                  <Button variant="accent" className="w-full px-8 py-4 text-lg font-medium">
+                    <Building className="mr-2 h-5 w-5" />
+                    Join as Business
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Both Section */}
+              <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8 border border-border/40">
+                <div className="text-center">
+                  <div className="flex justify-center items-center gap-2 mb-4">
+                    <User className="h-8 w-8 text-primary" />
+                    <span className="text-2xl font-bold text-muted-foreground">+</span>
+                    <Building className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">Are You Both?</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Sign up as a business and you'll automatically get customer functionality too. 
+                    Easily switch between managing your business and booking services for yourself.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Perfect for business owners who also want to book services from other providers.
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Feature Highlights */}
