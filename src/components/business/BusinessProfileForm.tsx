@@ -299,6 +299,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         services_offered: formData.business_categories,
         business_phone: formData.business_phone,
         business_address: addressString,
+        is_address_public: formData.business_address.is_public, // Store privacy setting
         business_description: formData.business_description,
         business_logo_url: formData.business_logo_url,
         user_id: user?.id,

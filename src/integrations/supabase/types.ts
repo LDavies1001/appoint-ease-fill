@@ -438,6 +438,7 @@ export type Database = {
           id: string
           instagram_url: string | null
           insurance_info: string | null
+          is_address_public: boolean | null
           operating_hours: string | null
           pricing_info: string | null
           profile_published: boolean | null
@@ -470,6 +471,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           insurance_info?: string | null
+          is_address_public?: boolean | null
           operating_hours?: string | null
           pricing_info?: string | null
           profile_published?: boolean | null
@@ -502,6 +504,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           insurance_info?: string | null
+          is_address_public?: boolean | null
           operating_hours?: string | null
           pricing_info?: string | null
           profile_published?: boolean | null
