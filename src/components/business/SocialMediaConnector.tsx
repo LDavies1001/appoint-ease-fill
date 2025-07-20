@@ -73,26 +73,6 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
     description: "We'll only display your public handle and profile link.",
     placeholder: '@username',
     urlTemplate: 'https://tiktok.com/'
-  },
-  {
-    id: 'twitter',
-    name: 'X (Twitter)',
-    icon: Twitter,
-    color: 'bg-black',
-    hoverColor: 'hover:bg-gray-800',
-    description: "We'll only display your public handle and profile link.",
-    placeholder: '@username',
-    urlTemplate: 'https://x.com/'
-  },
-  {
-    id: 'youtube',
-    name: 'YouTube',
-    icon: Youtube,
-    color: 'bg-red-600',
-    hoverColor: 'hover:bg-red-700',
-    description: "We'll only display your public channel and profile link.",
-    placeholder: 'channel-name',
-    urlTemplate: 'https://youtube.com/'
   }
 ];
 
