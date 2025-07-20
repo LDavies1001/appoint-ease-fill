@@ -291,18 +291,19 @@ export const SocialMediaConnector: React.FC = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          Connect Your Socials
-          <span className="text-2xl">📱</span>
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Connect your social media accounts to display them on your public profile page.
+    <div className="space-y-6 animate-fade-in">
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-4 shadow-lg">
+          <div className="text-3xl">📱</div>
+        </div>
+        <h3 className="text-3xl font-bold text-accent">Connect Your Socials</h3>
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          Link your social media accounts to showcase your work and build trust with customers. This step is completely optional.
         </p>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2">
+      </div>
+
+      <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+        <div className="grid gap-6 md:grid-cols-2">
           {SOCIAL_PLATFORMS.map((platform) => {
             const connected = isConnected(platform.id);
             const connection = getConnection(platform.id);
@@ -313,21 +314,21 @@ export const SocialMediaConnector: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={cn(
-                      "p-2 rounded-lg",
+                      "p-2 rounded-lg w-10 h-10 flex items-center justify-center",
                       platform.color
                     )}>
-                      <Icon className="h-5 w-5 text-white" />
+                      <Icon className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <p className="font-medium">{platform.name}</p>
+                      <p className="font-medium text-sm">{platform.name}</p>
                       <div className="flex items-center gap-2">
                         {connected ? (
-                          <Badge variant="secondary" className="text-green-700 bg-green-100">
+                          <Badge variant="secondary" className="text-green-700 bg-green-100 text-xs px-2 py-0.5">
                             <Check className="h-3 w-3 mr-1" />
                             Connected
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="text-gray-600">
+                          <Badge variant="outline" className="text-gray-600 text-xs px-2 py-0.5">
                             <X className="h-3 w-3 mr-1" />
                             Not connected
                           </Badge>
@@ -337,16 +338,17 @@ export const SocialMediaConnector: React.FC = () => {
                   </div>
 
                   {connected && connection ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
-                              variant="outline"
+                              variant="ghost"
                               size="sm"
+                              className="h-8 w-8 p-0 hover:bg-accent/10"
                               onClick={() => window.open(connection.profile_url, '_blank')}
                             >
-                              <ExternalLink className="h-4 w-4" />
+                              <ExternalLink className="h-3 w-3" />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
@@ -356,37 +358,37 @@ export const SocialMediaConnector: React.FC = () => {
                       </TooltipProvider>
                       
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
+                        className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={() => handleDisconnect(connection)}
-                        className="text-destructive hover:text-destructive"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
                   ) : (
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="flex gap-2">
+                          <div className="flex gap-1">
                             <Button
                               size="sm"
                               onClick={() => handleOAuthConnect(platform)}
                               className={cn(
-                                "transition-all duration-200",
+                                "transition-all duration-200 h-8 px-3 text-xs",
                                 platform.color,
                                 platform.hoverColor,
                                 "text-white border-0"
                               )}
                             >
-                              <Plus className="h-4 w-4 mr-1" />
+                              <Plus className="h-3 w-3 mr-1" />
                               Connect
                             </Button>
                             <Button
-                              variant="outline"
+                              variant="ghost"
                               size="sm"
                               onClick={() => setShowManualEntry(prev => ({ ...prev, [platform.id]: true }))}
-                              className="text-xs"
+                              className="h-8 px-2 text-xs text-muted-foreground hover:text-accent"
                             >
                               Manual
                             </Button>
@@ -402,7 +404,7 @@ export const SocialMediaConnector: React.FC = () => {
 
                 {/* Connected account details */}
                 {connected && connection && (
-                  <div className="ml-11 p-3 bg-muted/50 rounded-lg">
+                  <div className="ml-13 p-3 bg-white/50 rounded-lg border border-accent/10">
                     <p className="text-sm font-medium">@{connection.handle}</p>
                     <p className="text-xs text-muted-foreground">{connection.profile_url}</p>
                   </div>
@@ -410,8 +412,8 @@ export const SocialMediaConnector: React.FC = () => {
 
                 {/* Manual entry form */}
                 {showManualEntry[platform.id] && !connected && (
-                  <div className="ml-11 space-y-3 p-3 border rounded-lg">
-                    <Label htmlFor={`${platform.id}-handle`} className="text-sm font-medium">
+                  <div className="ml-13 space-y-3 p-3 border border-accent/20 rounded-lg bg-white/30">
+                    <Label htmlFor={`${platform.id}-handle`} className="text-sm font-medium text-accent">
                       {platform.name} Handle
                     </Label>
                     <Input
@@ -422,23 +424,25 @@ export const SocialMediaConnector: React.FC = () => {
                         ...prev, 
                         [platform.id]: e.target.value 
                       }))}
-                      className="text-sm"
+                      className="text-sm h-9"
                     />
                     <div className="flex gap-2">
                       <Button
                         size="sm"
                         onClick={() => handleManualConnect(platform)}
                         disabled={!manualEntry[platform.id]?.trim()}
+                        className="h-8 px-3 text-xs bg-accent hover:bg-accent/90"
                       >
                         Connect
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => setShowManualEntry(prev => ({ 
                           ...prev, 
                           [platform.id]: false 
                         }))}
+                        className="h-8 px-3 text-xs"
                       >
                         Cancel
                       </Button>
@@ -450,15 +454,21 @@ export const SocialMediaConnector: React.FC = () => {
           })}
         </div>
 
-        <Separator />
-
-        <div className="text-center text-sm text-muted-foreground">
-          <p className="flex items-center justify-center gap-2">
-            🛡️ <strong>Privacy:</strong> We only display your public handle and profile link. 
-            We never post on your behalf.
-          </p>
+        <div className="mt-6 pt-4 border-t border-accent/20">
+          <div className="text-center text-sm text-muted-foreground">
+            <p className="flex items-center justify-center gap-2">
+              🛡️ <strong>Privacy:</strong> We only display your public handle and profile link. 
+              We never post on your behalf.
+            </p>
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground">
+          You can always add or remove social accounts later from your dashboard
+        </p>
+      </div>
+    </div>
   );
 };
