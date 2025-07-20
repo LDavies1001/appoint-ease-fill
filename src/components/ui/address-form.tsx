@@ -143,8 +143,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           onChange(detectedAddress);
           
           toast({
-            title: "Location detected",
-            description: "Please select your house number from the dropdown and verify the street name"
+            title: "Location detected! ✅",
+            description: `Found ${detectedAddress.town_city}. Please select your house number and verify details.`,
+            duration: 5000
           });
           
         } catch (error) {
@@ -227,18 +228,23 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           <Label htmlFor="address_line_1" className="text-sm font-medium text-accent">
             {isLocationDetected ? 'House Number' : 'Address Line 1'} <span className="text-destructive">*</span>
           </Label>
+          {isLocationDetected && (
+            <p className="text-sm text-blue-600 mt-1 mb-2 font-medium">
+              📍 Location detected! Please select your house number below:
+            </p>
+          )}
           <div className="relative mt-1">
             {isLocationDetected && houseNumbers.length > 0 ? (
               <Select value={value.address_line_1} onValueChange={(val) => handleFieldChange('address_line_1', val)}>
                 <SelectTrigger className={cn(
-                  "transition-all duration-200 focus:border-accent focus:ring-accent",
-                  errors.address_line_1 ? 'border-destructive' : ''
+                  "transition-all duration-200 focus:border-accent focus:ring-accent border-2",
+                  errors.address_line_1 ? 'border-destructive' : 'border-blue-300 bg-blue-50/50'
                 )}>
-                  <SelectValue placeholder="Select house number" />
+                  <SelectValue placeholder="👆 Click here to select your house number" />
                 </SelectTrigger>
-                <SelectContent className="bg-background border-accent/20 max-h-[200px]">
+                <SelectContent className="bg-background border-accent/20 max-h-[200px] z-50">
                   {houseNumbers.map((number) => (
-                    <SelectItem key={number} value={number}>
+                    <SelectItem key={number} value={number} className="cursor-pointer hover:bg-accent/10">
                       {number}
                     </SelectItem>
                   ))}

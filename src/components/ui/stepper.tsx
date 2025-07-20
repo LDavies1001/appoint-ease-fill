@@ -22,7 +22,7 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, className 
           const isUpcoming = stepNumber > currentStep;
 
           return (
-            <React.Fragment key={index}>
+            <div key={index} className="flex items-center">
               <div className="flex flex-col items-center">
                 {/* Step Circle */}
                 <div
@@ -77,7 +77,7 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, className 
                   />
                 </div>
               )}
-            </React.Fragment>
+            </div>
           );
         })}
       </div>
