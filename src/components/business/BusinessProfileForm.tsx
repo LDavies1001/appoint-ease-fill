@@ -452,6 +452,10 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         insurance_info: formData.dbs_checked ? 'DBS Checked' : null
       };
 
+      console.log('Submitting provider details:', submitData);
+      console.log('User ID:', user?.id);
+      console.log('Mode:', mode);
+
       if (mode === 'create') {
         const { error } = await supabase
           .from('provider_details')
