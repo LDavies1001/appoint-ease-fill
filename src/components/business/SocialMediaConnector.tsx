@@ -108,7 +108,31 @@ export const SocialMediaConnector: React.FC = () => {
     if (user?.id) {
       fetchConnections();
     }
-  }, [user?.id]);
+
+    // Check for OAuth callback success/error
+    const urlParams = new URLSearchParams(window.location.search);
+    const platform = urlParams.get('platform');
+    const status = urlParams.get('status');
+    const error = urlParams.get('error');
+
+    if (platform && status === 'success') {
+      toast({
+        title: `${platform.charAt(0).toUpperCase() + platform.slice(1)} connected!`,
+        description: `Your ${platform} profile will now appear on your public page.`
+      });
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+      fetchConnections();
+    } else if (error) {
+      toast({
+        title: "Connection failed",
+        description: decodeURIComponent(error),
+        variant: "destructive"
+      });
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [user?.id, toast]);
 
   const fetchConnections = async () => {
     try {
@@ -141,12 +165,43 @@ export const SocialMediaConnector: React.FC = () => {
   };
 
   const handleOAuthConnect = async (platform: SocialPlatform) => {
-    // For now, show manual entry as OAuth requires API keys
-    setShowManualEntry(prev => ({ ...prev, [platform.id]: true }));
-    toast({
-      title: "Manual entry mode",
-      description: "OAuth integration coming soon. Please enter your details manually for now."
-    });
+    try {
+      // Call our OAuth init function
+      const response = await supabase.functions.invoke('social-oauth-init', {
+        body: {
+          platform: platform.id,
+          userId: user?.id,
+          redirectUrl: window.location.origin + '/create-business-profile'
+        }
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      const { authUrl } = response.data;
+      
+      // Open OAuth popup or redirect
+      if (authUrl) {
+        window.location.href = authUrl;
+      } else {
+        // Fallback to manual entry if OAuth not configured
+        setShowManualEntry(prev => ({ ...prev, [platform.id]: true }));
+        toast({
+          title: "Manual entry mode",
+          description: `OAuth for ${platform.name} is not configured. Please enter your details manually.`
+        });
+      }
+    } catch (error) {
+      console.error('OAuth initialization error:', error);
+      // Fallback to manual entry
+      setShowManualEntry(prev => ({ ...prev, [platform.id]: true }));
+      toast({
+        title: "Connection method",
+        description: "Please enter your social media details manually.",
+        variant: "default"
+      });
+    }
   };
 
   const handleManualConnect = async (platform: SocialPlatform) => {
@@ -313,18 +368,29 @@ export const SocialMediaConnector: React.FC = () => {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleOAuthConnect(platform)}
-                            className={cn(
-                              "transition-all duration-200",
-                              platform.hoverColor
-                            )}
-                          >
-                            <Plus className="h-4 w-4 mr-1" />
-                            Connect
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => handleOAuthConnect(platform)}
+                              className={cn(
+                                "transition-all duration-200",
+                                platform.color,
+                                platform.hoverColor,
+                                "text-white border-0"
+                              )}
+                            >
+                              <Plus className="h-4 w-4 mr-1" />
+                              Connect
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setShowManualEntry(prev => ({ ...prev, [platform.id]: true }))}
+                              className="text-xs"
+                            >
+                              Manual
+                            </Button>
+                          </div>
                         </TooltipTrigger>
                         <TooltipContent>
                           {platform.description}
