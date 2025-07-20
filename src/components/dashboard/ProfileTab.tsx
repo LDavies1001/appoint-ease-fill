@@ -110,6 +110,7 @@ const ProfileTab = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadingCertifications, setUploadingCertifications] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const { profile } = useAuth();
   const { toast } = useToast();
 
@@ -143,7 +144,7 @@ const ProfileTab = () => {
         .from('profiles')
         .select('name, phone, location, bio, avatar_url')
         .eq('user_id', profile.user_id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
@@ -158,6 +159,11 @@ const ProfileTab = () => {
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
+      toast({
+        title: "Error loading profile data",
+        description: "Could not load your profile information",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
@@ -171,9 +177,9 @@ const ProfileTab = () => {
         .from('provider_details')
         .select('*')
         .eq('user_id', profile.user_id)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         throw error;
       }
 
