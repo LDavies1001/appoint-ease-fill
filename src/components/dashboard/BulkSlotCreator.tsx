@@ -292,21 +292,23 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
   };
 
   return (
-    <Card className="card-elegant p-6">
-      <div className="flex items-center justify-between mb-6">
+    <Card className="card-elegant p-8 border-primary/10">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h3 className="text-lg font-semibold">Bulk Create Slots</h3>
-          <p className="text-sm text-muted-foreground">Create multiple availability slots efficiently</p>
+          <h3 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            Bulk Create Slots
+          </h3>
+          <p className="text-muted-foreground mt-1">Create multiple availability slots efficiently across multiple dates</p>
         </div>
-        <Button variant="ghost" size="sm" onClick={onCancel}>
+        <Button variant="ghost" size="sm" onClick={onCancel} className="hover:bg-destructive/10">
           <X className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Service Selection */}
-        <div className="space-y-2">
-          <Label>Service *</Label>
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">Service *</Label>
           {providerServices.length > 0 ? (
             <Select value={selectedService} onValueChange={handleServiceChange}>
               <SelectTrigger>
@@ -330,8 +332,8 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
         </div>
 
         {/* Date Selection */}
-        <div className="space-y-4">
-          <Label>Date Selection *</Label>
+        <div className="space-y-6">
+          <Label className="text-sm font-medium">Date Selection *</Label>
           
           {/* Date Range Picker */}
           <div className="flex flex-wrap gap-2">
@@ -523,33 +525,36 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
         </div>
 
         {/* Pricing */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Price *</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">Price *</Label>
             <div className="relative">
               <PoundSterling className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 type="number"
                 step="0.01"
-                placeholder="0.00"
+                min="0"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="pl-10"
+                placeholder="25.00"
+                className="pl-10 h-11"
+                required
               />
             </div>
           </div>
-
-          <div className="space-y-2">
-            <Label>Discounted Price (optional)</Label>
+          
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">Discounted Price (optional)</Label>
             <div className="relative">
               <PoundSterling className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 type="number"
                 step="0.01"
-                placeholder="0.00"
+                min="0"
                 value={discountPrice}
                 onChange={(e) => setDiscountPrice(e.target.value)}
-                className="pl-10"
+                placeholder="20.00"
+                className="pl-10 h-11"
               />
             </div>
           </div>

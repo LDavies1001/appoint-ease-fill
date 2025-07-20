@@ -15,7 +15,8 @@ import {
   Save, 
   X,
   Clock,
-  PoundSterling
+  PoundSterling,
+  Wrench
 } from 'lucide-react';
 
 interface ProviderService {
@@ -195,14 +196,18 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-xl font-semibold">Your Services</h3>
-          <p className="text-muted-foreground">Manage your service offerings and pricing</p>
+          <h3 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            Your Services
+          </h3>
+          <p className="text-muted-foreground mt-1">
+            Manage your service offerings and pricing structure
+          </p>
         </div>
         {!showAddForm && (
-          <Button onClick={() => setShowAddForm(true)}>
+          <Button onClick={() => setShowAddForm(true)} variant="hero" className="shadow-elegant">
             <Plus className="h-4 w-4 mr-2" />
             Add Service
           </Button>
@@ -211,29 +216,33 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
 
       {/* Add Service Form */}
       {showAddForm && (
-        <Card className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h4 className="text-lg font-semibold">Add New Service</h4>
-            <Button variant="ghost" size="sm" onClick={() => setShowAddForm(false)}>
+        <Card className="card-elegant p-8 border-primary/10">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h4 className="text-2xl font-bold text-foreground">Add New Service</h4>
+              <p className="text-muted-foreground mt-1">Create a new service offering for your business</p>
+            </div>
+            <Button variant="ghost" size="sm" onClick={() => setShowAddForm(false)} className="hover:bg-destructive/10">
               <X className="h-4 w-4" />
             </Button>
           </div>
 
-          <form onSubmit={handleAddService} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="service_name">Service Name *</Label>
+          <form onSubmit={handleAddService} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-3">
+                <Label htmlFor="service_name" className="text-sm font-medium">Service Name *</Label>
                 <Input
                   id="service_name"
                   value={formData.service_name}
                   onChange={(e) => setFormData(prev => ({ ...prev, service_name: e.target.value }))}
                   placeholder="e.g., Classic Lash Extensions"
+                  className="h-11"
                   required
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="base_price">Base Price (£)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="base_price" className="text-sm font-medium">Base Price (£)</Label>
                 <Input
                   id="base_price"
                   type="number"
@@ -242,34 +251,37 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
                   value={formData.base_price}
                   onChange={(e) => setFormData(prev => ({ ...prev, base_price: e.target.value }))}
                   placeholder="25.00"
+                  className="h-11"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="duration_minutes">Duration (minutes)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="duration_minutes" className="text-sm font-medium">Duration (minutes)</Label>
                 <Input
                   id="duration_minutes"
                   type="number"
                   min="1"
                   value={formData.duration_minutes}
                   onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: parseInt(e.target.value) }))}
+                  className="h-11"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description (optional)</Label>
+            <div className="space-y-3">
+              <Label htmlFor="description" className="text-sm font-medium">Description (optional)</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Brief description of this service..."
-                rows={3}
+                placeholder="Brief description of this service and what it includes..."
+                rows={4}
+                className="resize-none"
               />
             </div>
 
-            <div className="flex space-x-2">
-              <Button type="submit">
+            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border">
+              <Button type="submit" variant="hero" className="shadow-elegant">
                 <Save className="h-4 w-4 mr-2" />
                 Add Service
               </Button>
@@ -284,16 +296,20 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
       {/* Services List */}
       <div className="space-y-4">
         {services.length === 0 ? (
-          <Card className="p-8 text-center">
-            <p className="text-muted-foreground mb-4">No services added yet</p>
-            <Button onClick={() => setShowAddForm(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Your First Service
-            </Button>
+          <Card className="card-elegant p-12 text-center">
+            <div className="max-w-md mx-auto">
+              <Wrench className="h-16 w-16 mx-auto mb-4 text-muted-foreground/50" />
+              <h3 className="text-xl font-semibold mb-2">No services added yet</h3>
+              <p className="text-muted-foreground mb-6">Start by adding your first service to begin accepting bookings</p>
+              <Button onClick={() => setShowAddForm(true)} variant="hero" className="shadow-elegant">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Your First Service
+              </Button>
+            </div>
           </Card>
         ) : (
           services.map((service) => (
-            <Card key={service.id} className="p-6">
+            <Card key={service.id} className="card-elegant p-6 hover:shadow-accent transition-smooth">
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">

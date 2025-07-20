@@ -367,130 +367,126 @@ const ProviderDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5">
-      {/* Header */}
-      <header className="bg-card border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div>
-              <h1 className="text-xl font-bold text-foreground">Business Dashboard</h1>
-              <p className="text-sm text-muted-foreground">Welcome back, {profile?.name}</p>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={signOut}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Sign Out
-            </Button>
-          </div>
-        </div>
-      </header>
+    <div className="space-y-8">
+      {/* Add Role Card */}
+      <AddRoleCard />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Add Role Card */}
-        <div className="mb-6">
-          <AddRoleCard />
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="card-elegant p-6">
-            <div className="flex items-center">
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
+          <div className="flex items-center">
+            <div className="p-3 rounded-full bg-primary/10">
               <Calendar className="h-8 w-8 text-primary" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Today's Slots</p>
-                <p className="text-2xl font-bold text-foreground">{todaysSlots.length}</p>
-              </div>
             </div>
-          </Card>
-          
-          <Card className="card-elegant p-6">
-            <div className="flex items-center">
+            <div className="ml-4">
+              <p className="text-sm font-medium text-muted-foreground">Today's Slots</p>
+              <p className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">{todaysSlots.length}</p>
+            </div>
+          </div>
+        </Card>
+        
+        <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
+          <div className="flex items-center">
+            <div className="p-3 rounded-full bg-accent/10">
               <BookOpen className="h-8 w-8 text-accent" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Upcoming Bookings</p>
-                <p className="text-2xl font-bold text-foreground">{upcomingBookings.length}</p>
-              </div>
             </div>
-          </Card>
-          
-          <Card className="card-elegant p-6">
-            <div className="flex items-center">
+            <div className="ml-4">
+              <p className="text-sm font-medium text-muted-foreground">Upcoming Bookings</p>
+              <p className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">{upcomingBookings.length}</p>
+            </div>
+          </div>
+        </Card>
+        
+        <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
+          <div className="flex items-center">
+            <div className="p-3 rounded-full bg-primary/10">
               <Users className="h-8 w-8 text-primary" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Slots</p>
-                <p className="text-2xl font-bold text-foreground">{mySlots.length}</p>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-muted-foreground">Total Slots</p>
+              <p className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">{mySlots.length}</p>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant={activeTab === 'slots' ? 'hero' : 'ghost'}
+          onClick={() => setActiveTab('slots')}
+          className="flex-1 min-w-fit"
+        >
+          <Calendar className="h-4 w-4 mr-2" />
+          My Slots
+        </Button>
+        <Button
+          variant={activeTab === 'services' ? 'hero' : 'ghost'}
+          onClick={() => setActiveTab('services')}
+          className="flex-1 min-w-fit"
+        >
+          <Wrench className="h-4 w-4 mr-2" />
+          Services
+        </Button>
+        <Button
+          variant={activeTab === 'bookings' ? 'hero' : 'ghost'}
+          onClick={() => setActiveTab('bookings')}
+          className="flex-1 min-w-fit"
+        >
+          <BookOpen className="h-4 w-4 mr-2" />
+          Bookings
+        </Button>
+        <Button
+          variant={activeTab === 'library' ? 'hero' : 'ghost'}
+          onClick={() => setActiveTab('library')}
+          className="flex-1 min-w-fit"
+        >
+          <Image className="h-4 w-4 mr-2" />
+          Library
+        </Button>
+        <Button
+          variant={activeTab === 'profile' ? 'hero' : 'ghost'}
+          onClick={() => setActiveTab('profile')}
+          className="flex-1 min-w-fit"
+        >
+          <Settings className="h-4 w-4 mr-2" />
+          Profile
+        </Button>
+      </div>
+
+      {activeTab === 'slots' && (
+        <div className="space-y-8">
+          {/* Header Section */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                Manage Availability
+              </h2>
+              <p className="text-muted-foreground mt-1">
+                Create and manage your available appointment slots
+              </p>
+            </div>
+            {!showAddSlot && !showBulkCreator && (
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowBulkCreator(true)}
+                  className="border-primary/20 hover:border-primary"
+                >
+                  <Zap className="h-4 w-4 mr-2" />
+                  Bulk Create
+                </Button>
+                <Button
+                  variant="hero"
+                  onClick={() => setShowAddSlot(true)}
+                  className="shadow-elegant"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Slot
+                </Button>
               </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className="flex space-x-1 mb-8">
-          <Button
-            variant={activeTab === 'slots' ? 'hero' : 'ghost'}
-            onClick={() => setActiveTab('slots')}
-          >
-            <Calendar className="h-4 w-4 mr-2" />
-            My Slots
-          </Button>
-          <Button
-            variant={activeTab === 'services' ? 'hero' : 'ghost'}
-            onClick={() => setActiveTab('services')}
-          >
-            <Wrench className="h-4 w-4 mr-2" />
-            Services
-          </Button>
-          <Button
-            variant={activeTab === 'bookings' ? 'hero' : 'ghost'}
-            onClick={() => setActiveTab('bookings')}
-          >
-            <BookOpen className="h-4 w-4 mr-2" />
-            Bookings
-          </Button>
-          <Button
-            variant={activeTab === 'library' ? 'hero' : 'ghost'}
-            onClick={() => setActiveTab('library')}
-          >
-            <Image className="h-4 w-4 mr-2" />
-            Library
-          </Button>
-          <Button
-            variant={activeTab === 'profile' ? 'hero' : 'ghost'}
-            onClick={() => setActiveTab('profile')}
-          >
-            <Settings className="h-4 w-4 mr-2" />
-            Profile
-          </Button>
-        </div>
-
-        {activeTab === 'slots' && (
-          <div className="space-y-6">
-            {/* Add Slot Button */}
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-foreground">Manage Availability</h2>
-              {!showAddSlot && !showBulkCreator && (
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowBulkCreator(true)}
-                  >
-                    <Zap className="h-4 w-4 mr-2" />
-                    Bulk Create
-                  </Button>
-                  <Button
-                    variant="hero"
-                    onClick={() => setShowAddSlot(true)}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Slot
-                  </Button>
-                </div>
-              )}
-            </div>
+            )}
+          </div>
 
             {/* Add Slot Form */}
             {showAddSlot && (
@@ -826,10 +822,9 @@ const ProviderDashboard = () => {
           </div>
         )}
 
-        {activeTab === 'library' && <LibraryTab />}
+      {activeTab === 'library' && <LibraryTab />}
 
-        {activeTab === 'profile' && <ProfileTab />}
-      </div>
+      {activeTab === 'profile' && <ProfileTab />}
     </div>
   );
 };
