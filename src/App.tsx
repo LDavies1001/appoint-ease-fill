@@ -11,6 +11,7 @@ import BusinessSignup from "./pages/BusinessSignup";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import BusinessProfile from "./pages/BusinessProfile";
+import NewBusinessProfile from "./pages/NewBusinessProfile";
 import CreateBusinessProfile from "./pages/CreateBusinessProfile";
 import Profile from "./pages/Profile";
 import PublicPortfolio from "./pages/PublicPortfolio";
@@ -33,7 +34,7 @@ const App = () => (
             <Route path="/signup/business" element={<BusinessSignup />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/business-profile" element={<BusinessProfile />} />
+            <Route path="/business-profile" element={<NewBusinessProfile />} />
             <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
