@@ -30,10 +30,10 @@ All colors MUST be HSL.
     --muted: 210 15% 95%;
     --muted-foreground: 215 16% 47%;
 
-    /* Enhanced Brand Green as accent */
-    --accent: 142 76% 36%; /* Vibrant brand green #22c55e */
-    --accent-foreground: 0 0% 100%;
-    --accent-glow: 142 76% 46%;
+    /* Enhanced Sage Green as accent */
+    --accent: 120 30% 75%; /* Richer Sage Green #C5D9C5 */
+    --accent-foreground: 222 15% 15%;
+    --accent-glow: 120 30% 85%;
 
     /* Soft cream as tertiary */
     --tertiary: 36 44% 96%; /* Soft cream #FAF5F1 */
@@ -48,7 +48,7 @@ All colors MUST be HSL.
 
     /* Gradients for beautiful effects */
     --gradient-primary: linear-gradient(135deg, hsl(0 45% 85%), hsl(0 45% 92%));
-    --gradient-accent: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 46%));
+    --gradient-accent: linear-gradient(135deg, hsl(120 30% 75%), hsl(120 30% 85%));
     --gradient-bg: linear-gradient(180deg, hsl(36 44% 98%), hsl(36 44% 96%));
 
     /* Shadows for depth */
@@ -95,10 +95,10 @@ All colors MUST be HSL.
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    /* Brand Green for dark mode */
-    --accent: 142 76% 46%; /* Vibrant brand green for dark mode #16a34a */
-    --accent-foreground: 0 0% 100%;
-    --accent-glow: 142 76% 56%;
+    /* Sage Green for dark mode */
+    --accent: 120 30% 55%; /* Vibrant sage for dark mode */
+    --accent-foreground: 210 40% 98%;
+    --accent-glow: 120 30% 65%;
 
     --tertiary: 36 25% 25%; /* Dark cream */
     --tertiary-foreground: 210 40% 98%;
