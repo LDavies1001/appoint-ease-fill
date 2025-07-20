@@ -18,10 +18,10 @@ All colors MUST be HSL.
     --popover: 0 0% 100%; /* Pure white for popovers */
     --popover-foreground: 222 15% 15%;
 
-    /* Enhanced Blush Pink as primary */
-    --primary: 0 45% 85%; /* Richer Blush Pink #F2C2C2 */
-    --primary-foreground: 222 15% 15%;
-    --primary-glow: 0 45% 92%;
+    /* Enhanced Green as primary */
+    --primary: 120 30% 45%; /* Rich Green #5B8A5B */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 120 30% 55%;
 
     /* Clean light grey as secondary */
     --secondary: 210 15% 95%; /* Clean light grey #F5F6F7 */
@@ -30,10 +30,10 @@ All colors MUST be HSL.
     --muted: 210 15% 95%;
     --muted-foreground: 215 16% 47%;
 
-    /* Enhanced Sage Green as accent */
-    --accent: 120 30% 75%; /* Richer Sage Green #C5D9C5 */
+    /* Enhanced Blush Pink as accent */
+    --accent: 0 45% 75%; /* Blush Pink as accent #F2C2C2 */
     --accent-foreground: 222 15% 15%;
-    --accent-glow: 120 30% 85%;
+    --accent-glow: 0 45% 85%;
 
     /* Soft cream as tertiary */
     --tertiary: 36 44% 96%; /* Soft cream #FAF5F1 */
@@ -47,8 +47,8 @@ All colors MUST be HSL.
     --ring: 0 45% 85%; /* Primary color for focus rings */
 
     /* Gradients for beautiful effects */
-    --gradient-primary: linear-gradient(135deg, hsl(0 45% 85%), hsl(0 45% 92%));
-    --gradient-accent: linear-gradient(135deg, hsl(120 30% 75%), hsl(120 30% 85%));
+    --gradient-primary: linear-gradient(135deg, hsl(120 30% 45%), hsl(120 30% 55%));
+    --gradient-accent: linear-gradient(135deg, hsl(0 45% 75%), hsl(0 45% 85%));
     --gradient-bg: linear-gradient(180deg, hsl(36 44% 98%), hsl(36 44% 96%));
 
     /* Shadows for depth */
@@ -84,10 +84,10 @@ All colors MUST be HSL.
     --popover: 0 0% 10%;
     --popover-foreground: 210 40% 98%;
 
-    /* Blush Pink adapted for dark mode */
-    --primary: 0 45% 65%; /* Richer pink for dark mode */
-    --primary-foreground: 210 40% 98%;
-    --primary-glow: 0 45% 75%;
+    /* Green adapted for dark mode */
+    --primary: 120 30% 55%; /* Richer green for dark mode */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 120 30% 65%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -95,10 +95,10 @@ All colors MUST be HSL.
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    /* Sage Green for dark mode */
-    --accent: 120 30% 55%; /* Vibrant sage for dark mode */
+    /* Blush Pink for dark mode */
+    --accent: 0 45% 65%; /* Pink accent for dark mode */
     --accent-foreground: 210 40% 98%;
-    --accent-glow: 120 30% 65%;
+    --accent-glow: 0 45% 75%;
 
     --tertiary: 36 25% 25%; /* Dark cream */
     --tertiary-foreground: 210 40% 98%;
