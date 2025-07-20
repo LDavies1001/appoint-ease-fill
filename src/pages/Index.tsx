@@ -31,9 +31,9 @@ const Index = () => {
             {/* Sign Up Sections */}
             <div className="space-y-6">
               {/* Customer and Business Side by Side */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-6 items-stretch">
                 {/* Customer Section */}
-                <div className="bg-card rounded-2xl p-8 border border-border/40">
+                <div className="bg-card rounded-2xl p-8 border border-border/40 flex flex-col h-full">
                   <div className="text-center mb-6">
                     <User className="h-12 w-12 text-primary mx-auto mb-4" />
                     <h3 className="text-2xl font-bold text-foreground mb-2">For Customers</h3>
@@ -67,7 +67,7 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <Link to="/auth?tab=signup" className="block">
+                  <Link to="/auth?tab=signup" className="block mt-auto">
                     <Button className="w-full px-8 py-4 text-lg font-medium">
                       <User className="mr-2 h-5 w-5" />
                       Sign Up as Customer
@@ -77,7 +77,7 @@ const Index = () => {
                 </div>
 
                 {/* Business Section */}
-                <div className="bg-card rounded-2xl p-8 border border-border/40">
+                <div className="bg-card rounded-2xl p-8 border border-border/40 flex flex-col h-full">
                   <div className="text-center mb-6">
                     <Building className="h-12 w-12 text-accent mx-auto mb-4" />
                     <h3 className="text-2xl font-bold text-foreground mb-2">For Businesses</h3>
@@ -111,7 +111,7 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <Link to="/auth?tab=provider" className="block">
+                  <Link to="/auth?tab=provider" className="block mt-auto">
                     <Button variant="accent" className="w-full px-8 py-4 text-lg font-medium">
                       <Building className="mr-2 h-5 w-5" />
                       Join as Business
