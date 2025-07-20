@@ -144,8 +144,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           
           toast({
             title: "Location detected! ✅",
-            description: `Found ${detectedAddress.town_city}. Please select your house number and verify details.`,
-            duration: 5000
+            description: `Found ${detectedAddress.town_city}. Please verify your postcode and select house number.`,
+            duration: 6000
           });
           
         } catch (error) {
@@ -383,15 +383,21 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           <Label htmlFor="postcode" className="text-sm font-medium text-accent">
             Postcode <span className="text-destructive">*</span>
           </Label>
+          {isLocationDetected && (
+            <p className="text-sm text-amber-600 mt-1 mb-2 font-medium">
+              ⚠️ Please verify your postcode - location detection may show a general area code
+            </p>
+          )}
           <div className="relative mt-1">
             <Input
               id="postcode"
               value={value.postcode}
               onChange={(e) => handleFieldChange('postcode', e.target.value.toUpperCase())}
-              placeholder="SW1A 1AA"
+              placeholder="M23 9NY"
               autoComplete="postal-code"
               className={cn(
                 "transition-all duration-200 focus:border-accent focus:ring-accent",
+                isLocationDetected ? 'border-amber-300 bg-amber-50/50' : '',
                 errors.postcode ? 'border-destructive' : ''
               )}
             />
