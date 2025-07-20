@@ -39,10 +39,34 @@ const CreateBusinessProfile = () => {
       }
       
       // Prepare initial data from signup information
+      const parseLocationToAddress = (location?: string) => {
+        if (!location) {
+          return {
+            address_line_1: '',
+            address_line_2: '',
+            town_city: '',
+            county: '',
+            postcode: '',
+            country: 'United Kingdom'
+          };
+        }
+        
+        // Try to parse the location string into address components
+        // For now, put the whole location in address_line_1 as fallback
+        return {
+          address_line_1: location,
+          address_line_2: '',
+          town_city: '',
+          county: '',
+          postcode: '',
+          country: 'United Kingdom'
+        };
+      };
+
       const signupData = {
         business_name: user?.user_metadata?.business_name || profile?.business_name || '',
         business_phone: profile?.phone || user?.user_metadata?.phone || '',
-        business_address: profile?.location || user?.user_metadata?.location || '',
+        business_address: parseLocationToAddress(profile?.location || user?.user_metadata?.location),
         business_categories: []
       };
 
@@ -65,7 +89,14 @@ const CreateBusinessProfile = () => {
       const fallbackData = {
         business_name: user?.user_metadata?.business_name || profile?.business_name || '',
         business_phone: profile?.phone || user?.user_metadata?.phone || '',
-        business_address: profile?.location || user?.user_metadata?.location || '',
+        business_address: {
+          address_line_1: profile?.location || user?.user_metadata?.location || '',
+          address_line_2: '',
+          town_city: '',
+          county: '',
+          postcode: '',
+          country: 'United Kingdom'
+        },
         business_categories: []
       };
       setExistingProfile(fallbackData);

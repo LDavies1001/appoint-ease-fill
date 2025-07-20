@@ -11,16 +11,15 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Stepper } from '@/components/ui/stepper';
 import { CategorySelector } from '@/components/ui/category-selector';
+import { AddressForm, AddressData } from '@/components/ui/address-form';
 import { 
   Building, 
-  MapPin, 
   Phone, 
   Upload,
   CheckCircle,
   AlertCircle,
   ArrowLeft,
-  ArrowRight,
-  Locate
+  ArrowRight
 } from 'lucide-react';
 
 interface BusinessCategory {
@@ -34,7 +33,7 @@ interface BusinessProfileData {
   business_name: string;
   business_categories: string[];
   business_phone: string;
-  business_address: string;
+  business_address: AddressData;
   business_description: string;
   business_logo_url: string;
 }
@@ -43,6 +42,7 @@ interface BusinessProfileFormProps {
   mode: 'create' | 'edit';
   existingData?: Partial<BusinessProfileData & {
     services_offered?: string[];
+    business_address?: string | AddressData; // Support both legacy string and new structured address
   }>;
   onSuccess?: () => void;
 }
@@ -68,11 +68,48 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   onSuccess 
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  
+  // Helper function to parse address data
+  const parseAddressData = (addressData?: string | AddressData): AddressData => {
+    if (!addressData) {
+      return {
+        address_line_1: '',
+        address_line_2: '',
+        town_city: '',
+        county: '',
+        postcode: '',
+        country: 'United Kingdom'
+      };
+    }
+    
+    if (typeof addressData === 'string') {
+      // Legacy format - try to parse or return as address_line_1
+      return {
+        address_line_1: addressData,
+        address_line_2: '',
+        town_city: '',
+        county: '',
+        postcode: '',
+        country: 'United Kingdom'
+      };
+    }
+    
+    // Already structured address data
+    return {
+      address_line_1: addressData.address_line_1 || '',
+      address_line_2: addressData.address_line_2 || '',
+      town_city: addressData.town_city || '',
+      county: addressData.county || '',
+      postcode: addressData.postcode || '',
+      country: addressData.country || 'United Kingdom'
+    };
+  };
+
   const [formData, setFormData] = useState<BusinessProfileData>({
     business_name: existingData?.business_name || '',
     business_categories: existingData?.business_categories || existingData?.services_offered || [],
     business_phone: existingData?.business_phone || '',
-    business_address: existingData?.business_address || '',
+    business_address: parseAddressData(existingData?.business_address),
     business_description: existingData?.business_description || '',
     business_logo_url: existingData?.business_logo_url || ''
   });
@@ -80,7 +117,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   const [categories, setCategories] = useState<BusinessCategory[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
-  const [detectingLocation, setDetectingLocation] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { user, profile } = useAuth();
@@ -95,7 +131,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         business_name: existingData.business_name || '',
         business_categories: existingData.business_categories || existingData.services_offered || [],
         business_phone: existingData.business_phone || '',
-        business_address: existingData.business_address || '',
+        business_address: parseAddressData(existingData.business_address),
         business_description: existingData.business_description || '',
         business_logo_url: existingData.business_logo_url || ''
       }));
@@ -116,85 +152,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
     }
   };
 
-  const detectLocation = async () => {
-    if (!navigator.geolocation) {
-      toast({
-        title: "Geolocation not supported",
-        description: "Your browser doesn't support location detection",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setDetectingLocation(true);
-    
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
-          );
-          
-          if (!response.ok) throw new Error('Failed to get location');
-          
-          const data = await response.json();
-          
-          const { road, house_number, city, town, village, county, state, postcode, country } = data.address || {};
-          const locationString = [
-            house_number && road ? `${house_number} ${road}` : road,
-            city || town || village,
-            county || state,
-            postcode,
-            country
-          ].filter(Boolean).join(', ');
-          
-          setFormData(prev => ({ ...prev, business_address: locationString || `${latitude}, ${longitude}` }));
-          
-          toast({
-            title: "Location detected",
-            description: `Set to: ${locationString}`
-          });
-          
-        } catch (error) {
-          console.error('Error reverse geocoding:', error);
-          toast({
-            title: "Location detection failed",
-            description: "Could not determine your address",
-            variant: "destructive"
-          });
-        } finally {
-          setDetectingLocation(false);
-        }
-      },
-      (error) => {
-        console.error('Geolocation error:', error);
-        setDetectingLocation(false);
-        
-        let message = "Could not access your location";
-        if (error.code === error.PERMISSION_DENIED) {
-          message = "Location access denied. Please enable location permissions";
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          message = "Location information unavailable";
-        } else if (error.code === error.TIMEOUT) {
-          message = "Location request timed out";
-        }
-        
-        toast({
-          title: "Location detection failed",
-          description: message,
-          variant: "destructive"
-        });
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000
-      }
-    );
-  };
-
   const validateCurrentStep = (): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -205,8 +162,29 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       if (!formData.business_phone.trim()) {
         newErrors.business_phone = 'Phone number is required';
       }
-      if (!formData.business_address.trim()) {
-        newErrors.business_address = 'Business address is required';
+      
+      // Validate address fields
+      const address = formData.business_address;
+      if (!address.address_line_1.trim()) {
+        newErrors.address_line_1 = 'Address line 1 is required';
+      }
+      if (!address.town_city.trim()) {
+        newErrors.town_city = 'Town/City is required';
+      }
+      if (!address.county.trim()) {
+        newErrors.county = 'County is required';
+      }
+      if (!address.postcode.trim()) {
+        newErrors.postcode = 'Postcode is required';
+      } else if (address.country === 'United Kingdom') {
+        // Validate UK postcode format
+        const ukPostcodeRegex = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$/i;
+        if (!ukPostcodeRegex.test(address.postcode.replace(/\s/g, ''))) {
+          newErrors.postcode = 'Please enter a valid UK postcode';
+        }
+      }
+      if (!address.country.trim()) {
+        newErrors.country = 'Country is required';
       }
     }
 
@@ -220,7 +198,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (field: keyof BusinessProfileData, value: string | string[]) => {
+  const handleInputChange = (field: keyof BusinessProfileData, value: string | string[] | AddressData) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -302,12 +280,22 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      // Convert structured address to string for database storage
+      const addressString = [
+        formData.business_address.address_line_1,
+        formData.business_address.address_line_2,
+        formData.business_address.town_city,
+        formData.business_address.county,
+        formData.business_address.postcode,
+        formData.business_address.country
+      ].filter(Boolean).join(', ');
+
       const submitData = {
         business_name: formData.business_name,
         business_category: formData.business_categories[0] || null, // Primary category
         services_offered: formData.business_categories,
         business_phone: formData.business_phone,
-        business_address: formData.business_address,
+        business_address: addressString,
         business_description: formData.business_description,
         business_logo_url: formData.business_logo_url,
         user_id: user?.id,
@@ -456,41 +444,17 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
             </div>
 
             {/* Business Address */}
-            <div>
-              <Label htmlFor="business_address" className="text-sm font-semibold text-accent">
-                Business Address <span className="text-destructive">*</span>
-              </Label>
-              <div className="relative mt-2">
-                <MapPin className="absolute left-3 top-3 h-4 w-4 text-accent" />
-                <Textarea
-                  id="business_address"
-                  value={formData.business_address}
-                  onChange={(e) => handleInputChange('business_address', e.target.value)}
-                  placeholder="Enter your full business address"
-                  className={`min-h-[80px] pl-10 pr-12 transition-all duration-200 focus:border-accent focus:ring-accent ${errors.business_address ? 'border-destructive' : ''}`}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={detectLocation}
-                  disabled={detectingLocation}
-                  className="absolute right-2 top-2 h-8 w-8 p-0 hover:bg-accent/10"
-                  title="Detect current location"
-                >
-                  <Locate className={`h-4 w-4 ${detectingLocation ? 'animate-spin' : ''}`} />
-                </Button>
-                {formData.business_address && !errors.business_address && (
-                  <CheckCircle className="absolute right-12 top-3 h-4 w-4 text-accent" />
-                )}
-              </div>
-              {errors.business_address && (
-                <p className="text-sm text-destructive mt-1 flex items-center">
-                  <AlertCircle className="h-4 w-4 mr-1" />
-                  {errors.business_address}
-                </p>
-              )}
-            </div>
+            <AddressForm
+              value={formData.business_address}
+              onChange={(address) => handleInputChange('business_address', address)}
+              errors={{
+                address_line_1: errors.address_line_1,
+                town_city: errors.town_city,
+                county: errors.county,
+                postcode: errors.postcode,
+                country: errors.country
+              }}
+            />
           </div>
         );
 
