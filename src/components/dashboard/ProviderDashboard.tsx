@@ -208,9 +208,8 @@ const ProviderDashboard = () => {
   const handleAddSlot = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate either provider service or custom service name is provided
-    if ((!slotForm.provider_service_id && !slotForm.custom_service_name) || 
-        !slotForm.date || !slotForm.start_time || !slotForm.price) {
+    // Validate service selection and required fields
+    if (!slotForm.provider_service_id || !slotForm.date || !slotForm.start_time || !slotForm.price) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive"
@@ -234,12 +233,8 @@ const ProviderDashboard = () => {
         notes: slotForm.notes
       };
 
-      // Add either provider_service_id or custom_service_name
-      if (slotForm.provider_service_id) {
-        insertData.provider_service_id = slotForm.provider_service_id;
-      } else if (slotForm.custom_service_name) {
-        insertData.custom_service_name = slotForm.custom_service_name;
-      }
+      // Add provider service
+      insertData.provider_service_id = slotForm.provider_service_id;
       
       const { error } = await supabase
         .from('availability_slots')
@@ -507,46 +502,32 @@ const ProviderDashboard = () => {
                 {/* Service Selection */}
                 <div className="space-y-3">
                   <Label htmlFor="service" className="text-sm font-medium">Service *</Label>
-                  {providerServices.length > 0 ? (
-                    <Select 
-                      value={slotForm.provider_service_id} 
-                      onValueChange={(value) => {
-                        setSlotForm(prev => ({ ...prev, provider_service_id: value, custom_service_name: "" }));
-                        // Auto-fill price and duration from provider service
-                        const selectedService = providerServices.find(s => s.id === value);
-                        if (selectedService) {
-                          setSlotForm(prev => ({ 
-                            ...prev, 
-                            price: selectedService.base_price?.toString() || "",
-                            duration: selectedService.duration_minutes
-                          }));
-                        }
-                      }}
-                    >
-                      <SelectTrigger className="h-11">
-                        <SelectValue placeholder="Select a service from your offerings" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {providerServices.map((service) => (
-                          <SelectItem key={service.id} value={service.id}>
-                            {service.service_name} {service.base_price && `(£${service.base_price})`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <Input
-                      placeholder="Enter service name (e.g., Classic Lash Extensions)"
-                      value={slotForm.custom_service_name}
-                      onChange={(e) => setSlotForm(prev => ({ 
-                        ...prev, 
-                        custom_service_name: e.target.value,
-                        provider_service_id: ""
-                      }))}
-                      className="h-11"
-                      required
-                    />
-                  )}
+                  <Select 
+                    value={slotForm.provider_service_id} 
+                    onValueChange={(value) => {
+                      setSlotForm(prev => ({ ...prev, provider_service_id: value, custom_service_name: "" }));
+                      // Auto-fill price and duration from provider service
+                      const selectedService = providerServices.find(s => s.id === value);
+                      if (selectedService) {
+                        setSlotForm(prev => ({ 
+                          ...prev, 
+                          price: selectedService.base_price?.toString() || "",
+                          duration: selectedService.duration_minutes
+                        }));
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="h-11">
+                      <SelectValue placeholder={providerServices.length > 0 ? "Select a service from your offerings" : "No services found - please add services first"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {providerServices.map((service) => (
+                        <SelectItem key={service.id} value={service.id}>
+                          {service.service_name} {service.base_price && `(£${service.base_price})`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {providerServices.length === 0 && (
                     <p className="text-sm text-muted-foreground bg-accent/10 p-3 rounded-lg border border-accent/20">
                       💡 You can type any service name here, or add predefined services in the Services tab for easier management.

@@ -221,9 +221,9 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
       return;
     }
 
-    if (!selectedService && !customServiceName.trim()) {
+    if (!selectedService) {
       toast({
-        title: "Please select a service or enter a custom service name",
+        title: "Please select a service",
         variant: "destructive"
       });
       return;
@@ -258,11 +258,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
             image_url: imageUrl || null
           };
 
-          if (selectedService) {
-            slotData.provider_service_id = selectedService;
-          } else {
-            slotData.custom_service_name = customServiceName.trim();
-          }
+          slotData.provider_service_id = selectedService;
 
           slotsToCreate.push(slotData);
         }
@@ -309,26 +305,18 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
         {/* Service Selection */}
         <div className="space-y-3">
           <Label className="text-sm font-medium">Service *</Label>
-          {providerServices.length > 0 ? (
-            <Select value={selectedService} onValueChange={handleServiceChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a service" />
-              </SelectTrigger>
-              <SelectContent>
-                {providerServices.map((service) => (
-                  <SelectItem key={service.id} value={service.id}>
-                    {service.service_name} {service.base_price && `(£${service.base_price})`}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            <Input
-              placeholder="Enter service name"
-              value={customServiceName}
-              onChange={(e) => setCustomServiceName(e.target.value)}
-            />
-          )}
+          <Select value={selectedService} onValueChange={handleServiceChange}>
+            <SelectTrigger>
+              <SelectValue placeholder={providerServices.length > 0 ? "Select a service" : "No services found - please add services first"} />
+            </SelectTrigger>
+            <SelectContent>
+              {providerServices.map((service) => (
+                <SelectItem key={service.id} value={service.id}>
+                  {service.service_name} {service.base_price && `(£${service.base_price})`}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Date Selection */}
