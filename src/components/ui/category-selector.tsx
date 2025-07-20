@@ -83,7 +83,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
               className={cn(
                 "h-auto p-4 justify-start text-left transition-all duration-200 hover:scale-[1.02]",
                 {
-                  "bg-accent/10 border-accent text-accent hover:bg-accent/20 shadow-lg ring-2 ring-accent/30": isSelected,
+                  "bg-accent border-accent text-white hover:bg-accent/90 shadow-lg": isSelected,
                   "opacity-50 cursor-not-allowed": isDisabled,
                   "hover:border-accent/50": !isSelected && !isDisabled,
                 }
@@ -93,7 +93,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                 <div className={cn(
                   "p-2 rounded-lg transition-colors duration-200",
                   {
-                    "bg-accent text-white": isSelected,
+                    "bg-white/20 text-white": isSelected,
                     "bg-muted text-muted-foreground": !isSelected,
                   }
                 )}>
@@ -101,14 +101,12 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-sm">{category.name}</h4>
-                    {isSelected && (
-                      <CheckCircle className="h-4 w-4 text-accent flex-shrink-0" />
-                    )}
-                  </div>
+                  <h4 className="font-medium text-sm">{category.name}</h4>
                   {category.description && (
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                    <p className={cn(
+                      "text-xs mt-1 line-clamp-2",
+                      isSelected ? "text-white/80" : "text-muted-foreground"
+                    )}>
                       {category.description}
                     </p>
                   )}
