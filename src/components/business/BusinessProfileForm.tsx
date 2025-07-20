@@ -73,7 +73,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   existingData, 
   onSuccess 
 }) => {
-  const [currentStep, setCurrentStep] = useState(1);
+  
   
   // Helper function to parse address data
   const parseAddressData = (addressData?: string | AddressData): AddressData => {
@@ -108,16 +108,57 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
     };
   };
 
-  const [formData, setFormData] = useState<BusinessProfileData>({
-    business_name: existingData?.business_name || '',
-    business_categories: existingData?.business_categories || existingData?.services_offered || [],
-    business_phone: existingData?.business_phone || '',
-    business_address: parseAddressData(existingData?.business_address),
-    business_description: existingData?.business_description || '',
-    business_logo_url: existingData?.business_logo_url || ''
-  });
+  // Initialize form data with persistence
+  const initializeFormData = (): BusinessProfileData => {
+    // Try to get saved data from sessionStorage first
+    const savedData = sessionStorage.getItem('business-profile-form-data');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        return {
+          business_name: parsed.business_name || '',
+          business_categories: parsed.business_categories || [],
+          business_phone: parsed.business_phone || '',
+          business_address: parseAddressData(parsed.business_address),
+          business_description: parsed.business_description || '',
+          business_logo_url: parsed.business_logo_url || ''
+        };
+      } catch (e) {
+        console.warn('Could not parse saved form data:', e);
+      }
+    }
+    
+    // Fallback to existing data or defaults
+    return {
+      business_name: existingData?.business_name || '',
+      business_categories: existingData?.business_categories || existingData?.services_offered || [],
+      business_phone: existingData?.business_phone || '',
+      business_address: parseAddressData(existingData?.business_address),
+      business_description: existingData?.business_description || '',
+      business_logo_url: existingData?.business_logo_url || ''
+    };
+  };
 
+  const [formData, setFormData] = useState<BusinessProfileData>(initializeFormData());
+
+  
   const [categories, setCategories] = useState<BusinessCategory[]>([]);
+  
+  // Persist form data whenever it changes
+  useEffect(() => {
+    sessionStorage.setItem('business-profile-form-data', JSON.stringify(formData));
+  }, [formData]);
+  
+  // Initialize and persist current step
+  const [currentStep, setCurrentStep] = useState(() => {
+    const savedStep = sessionStorage.getItem('business-profile-current-step');
+    return savedStep ? parseInt(savedStep, 10) : 1;
+  });
+  
+  // Persist current step whenever it changes
+  useEffect(() => {
+    sessionStorage.setItem('business-profile-current-step', currentStep.toString());
+  }, [currentStep]);
   const [loading, setLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -318,6 +359,10 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         .from('profiles')
         .update({ is_profile_complete: true })
         .eq('user_id', user?.id);
+
+      // Clear saved form data on successful submission
+      sessionStorage.removeItem('business-profile-form-data');
+      sessionStorage.removeItem('business-profile-current-step');
 
       toast({
         title: "Profile created successfully!",
