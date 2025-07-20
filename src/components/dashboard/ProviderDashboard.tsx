@@ -488,192 +488,234 @@ const ProviderDashboard = () => {
             )}
           </div>
 
-            {/* Add Slot Form */}
-            {showAddSlot && (
-              <Card className="card-elegant p-6">
-                <h3 className="text-lg font-semibold mb-4">Add New Slot</h3>
-                <form onSubmit={handleAddSlot} className="space-y-4">
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     <div className="space-y-2">
-                       <Label htmlFor="service">Service *</Label>
-                       {providerServices.length > 0 ? (
-                         <Select 
-                           value={slotForm.provider_service_id} 
-                           onValueChange={(value) => {
-                             setSlotForm(prev => ({ ...prev, provider_service_id: value, custom_service_name: '' }));
-                             // Auto-fill price and duration from provider service
-                             const selectedService = providerServices.find(s => s.id === value);
-                             if (selectedService) {
-                               setSlotForm(prev => ({ 
-                                 ...prev, 
-                                 price: selectedService.base_price?.toString() || '',
-                                 duration: selectedService.duration_minutes
-                               }));
-                             }
-                           }}
-                         >
-                           <SelectTrigger>
-                             <SelectValue placeholder="Select a service" />
-                           </SelectTrigger>
-                           <SelectContent>
-                             {providerServices.map((service) => (
-                               <SelectItem key={service.id} value={service.id}>
-                                 {service.service_name} {service.base_price && `(£${service.base_price})`}
-                               </SelectItem>
-                             ))}
-                           </SelectContent>
-                         </Select>
-                       ) : (
-                         <Input
-                           placeholder="Enter service name (e.g., Classic Lash Extensions)"
-                           value={slotForm.custom_service_name}
-                           onChange={(e) => setSlotForm(prev => ({ 
-                             ...prev, 
-                             custom_service_name: e.target.value,
-                             provider_service_id: ''
-                           }))}
-                           required
-                         />
-                       )}
-                       {providerServices.length === 0 && (
-                         <p className="text-sm text-muted-foreground">
-                           You can type any service name here, or add predefined services in the Services tab for easier management.
-                         </p>
-                       )}
-                     </div>
+          {/* Add Slot Form */}
+          {showAddSlot && (
+            <Card className="card-elegant p-8 border-primary/10">
+              <div className="flex justify-between items-center mb-8">
+                <div>
+                  <h3 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                    Add New Slot
+                  </h3>
+                  <p className="text-muted-foreground mt-1">Create a new availability slot for your services</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => setShowAddSlot(false)} className="hover:bg-destructive/10">
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="date">Date *</Label>
+              <form onSubmit={handleAddSlot} className="space-y-8">
+                {/* Service Selection */}
+                <div className="space-y-3">
+                  <Label htmlFor="service" className="text-sm font-medium">Service *</Label>
+                  {providerServices.length > 0 ? (
+                    <Select 
+                      value={slotForm.provider_service_id} 
+                      onValueChange={(value) => {
+                        setSlotForm(prev => ({ ...prev, provider_service_id: value, custom_service_name: "" }));
+                        // Auto-fill price and duration from provider service
+                        const selectedService = providerServices.find(s => s.id === value);
+                        if (selectedService) {
+                          setSlotForm(prev => ({ 
+                            ...prev, 
+                            price: selectedService.base_price?.toString() || "",
+                            duration: selectedService.duration_minutes
+                          }));
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder="Select a service from your offerings" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {providerServices.map((service) => (
+                          <SelectItem key={service.id} value={service.id}>
+                            {service.service_name} {service.base_price && `(£${service.base_price})`}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      placeholder="Enter service name (e.g., Classic Lash Extensions)"
+                      value={slotForm.custom_service_name}
+                      onChange={(e) => setSlotForm(prev => ({ 
+                        ...prev, 
+                        custom_service_name: e.target.value,
+                        provider_service_id: ""
+                      }))}
+                      className="h-11"
+                      required
+                    />
+                  )}
+                  {providerServices.length === 0 && (
+                    <p className="text-sm text-muted-foreground bg-accent/10 p-3 rounded-lg border border-accent/20">
+                      💡 You can type any service name here, or add predefined services in the Services tab for easier management.
+                    </p>
+                  )}
+                </div>
+
+                {/* Date & Time Section */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="date" className="text-sm font-medium">Date *</Label>
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="date"
                         type="date"
                         value={slotForm.date}
                         onChange={(e) => setSlotForm(prev => ({ ...prev, date: e.target.value }))}
-                        min={new Date().toISOString().split('T')[0]}
+                        min={new Date().toISOString().split("T")[0]}
+                        className="pl-10 h-11"
                         required
                       />
                     </div>
+                  </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="start_time">Start Time *</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="start_time" className="text-sm font-medium">Start Time *</Label>
+                    <div className="relative">
+                      <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="start_time"
                         type="time"
                         value={slotForm.start_time}
                         onChange={(e) => setSlotForm(prev => ({ ...prev, start_time: e.target.value }))}
+                        className="pl-10 h-11"
                         required
                       />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="duration">Duration (minutes)</Label>
-                      <Input
-                        id="duration"
-                        type="number"
-                        value={slotForm.duration}
-                        onChange={(e) => setSlotForm(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
-                        min="15"
-                        step="15"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="price">Price *</Label>
-                      <div className="relative">
-                        <PoundSterling className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="price"
-                          type="number"
-                          step="0.01"
-                          placeholder="0.00"
-                          value={slotForm.price}
-                          onChange={(e) => setSlotForm(prev => ({ ...prev, price: e.target.value }))}
-                          className="pl-10"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="discount_price">Discounted Price (optional)</Label>
-                      <div className="relative">
-                        <PoundSterling className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="discount_price"
-                          type="number"
-                          step="0.01"
-                          placeholder="0.00"
-                          value={slotForm.discount_price}
-                          onChange={(e) => setSlotForm(prev => ({ ...prev, discount_price: e.target.value }))}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="image">Image (optional)</Label>
-                    <div className="flex items-center gap-4">
-                      <label htmlFor="image-upload" className="cursor-pointer">
-                        <div className="flex items-center gap-2 p-2 border border-border rounded-md hover:bg-muted/50">
-                          <Upload className="h-4 w-4" />
-                          <span className="text-sm">{uploading ? "Uploading..." : "Upload Image"}</span>
-                        </div>
-                        <input
-                          id="image-upload"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                          disabled={uploading}
-                        />
-                      </label>
-                      {slotForm.image_url && (
-                        <div className="relative">
-                          <img 
-                            src={slotForm.image_url} 
-                            alt="Slot" 
-                            className="w-16 h-16 object-cover rounded"
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="absolute -top-2 -right-2 w-6 h-6 p-0"
-                            onClick={() => setSlotForm(prev => ({ ...prev, image_url: '' }))}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="notes">Notes (optional)</Label>
-                    <Textarea
-                      id="notes"
-                      placeholder="Any special notes about this slot..."
-                      value={slotForm.notes}
-                      onChange={(e) => setSlotForm(prev => ({ ...prev, notes: e.target.value }))}
+                  <div className="space-y-3">
+                    <Label htmlFor="duration" className="text-sm font-medium">Duration (minutes)</Label>
+                    <Input
+                      id="duration"
+                      type="number"
+                      value={slotForm.duration}
+                      onChange={(e) => setSlotForm(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
+                      min="15"
+                      step="15"
+                      className="h-11"
                     />
                   </div>
+                </div>
 
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setShowAddSlot(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button type="submit" variant="hero">
-                      Add Slot
-                    </Button>
+                {/* Pricing Section */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="price" className="text-sm font-medium">Price *</Label>
+                    <div className="relative">
+                      <PoundSterling className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="price"
+                        type="number"
+                        step="0.01"
+                        placeholder="25.00"
+                        value={slotForm.price}
+                        onChange={(e) => setSlotForm(prev => ({ ...prev, price: e.target.value }))}
+                        className="pl-10 h-11"
+                        required
+                      />
+                    </div>
                   </div>
-                </form>
-              </Card>
-            )}
+
+                  <div className="space-y-3">
+                    <Label htmlFor="discount_price" className="text-sm font-medium">Discounted Price (optional)</Label>
+                    <div className="relative">
+                      <PoundSterling className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="discount_price"
+                        type="number"
+                        step="0.01"
+                        placeholder="20.00"
+                        value={slotForm.discount_price}
+                        onChange={(e) => setSlotForm(prev => ({ ...prev, discount_price: e.target.value }))}
+                        className="pl-10 h-11"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Image Upload Section */}
+                <div className="space-y-4">
+                  <Label className="text-sm font-medium">Slot Image (optional)</Label>
+                  <p className="text-sm text-muted-foreground">Add an attractive image to showcase your service</p>
+                  
+                  <div className="flex items-center gap-4">
+                    <label htmlFor="image-upload" className="cursor-pointer">
+                      <div className="flex items-center gap-2 p-4 border-2 border-dashed border-border rounded-xl hover:border-primary/50 hover:bg-primary/5 transition-smooth">
+                        <Upload className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          {uploading ? "Uploading..." : "Upload Image"}
+                        </span>
+                      </div>
+                      <input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        disabled={uploading}
+                      />
+                    </label>
+                    
+                    {slotForm.image_url && (
+                      <div className="relative group">
+                        <img 
+                          src={slotForm.image_url} 
+                          alt="Slot preview" 
+                          className="w-20 h-20 object-cover rounded-xl border border-border"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="absolute -top-2 -right-2 w-6 h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => setSlotForm(prev => ({ ...prev, image_url: "" }))}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Notes Section */}
+                <div className="space-y-3">
+                  <Label htmlFor="notes" className="text-sm font-medium">Special Notes (optional)</Label>
+                  <Textarea
+                    id="notes"
+                    placeholder="Add any special instructions, requirements, or notes about this slot..."
+                    value={slotForm.notes}
+                    onChange={(e) => setSlotForm(prev => ({ ...prev, notes: e.target.value }))}
+                    rows={4}
+                    className="resize-none"
+                  />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
+                  <Button
+                    type="submit"
+                    variant="hero"
+                    className="shadow-elegant"
+                    disabled={uploading}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    {uploading ? "Creating..." : "Create Slot"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowAddSlot(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </Card>
+          )}
 
             {/* Bulk Slot Creator */}
             {showBulkCreator && (
