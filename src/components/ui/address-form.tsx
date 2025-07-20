@@ -10,7 +10,6 @@ export interface AddressData {
   address_line_1: string;
   address_line_2: string;
   town_city: string;
-  county: string;
   postcode: string;
   country: string;
   is_public: boolean; // Whether customers can see the full address
@@ -22,19 +21,6 @@ interface AddressFormProps {
   errors?: Partial<Record<keyof AddressData, string>>;
   className?: string;
 }
-
-const UK_COUNTIES = [
-  'Bedfordshire', 'Berkshire', 'Bristol', 'Buckinghamshire', 'Cambridgeshire',
-  'Cheshire', 'Cornwall', 'Cumbria', 'Derbyshire', 'Devon', 'Dorset', 'Durham',
-  'East Riding of Yorkshire', 'East Sussex', 'Essex', 'Gloucestershire',
-  'Greater London', 'Greater Manchester', 'Hampshire', 'Herefordshire',
-  'Hertfordshire', 'Isle of Wight', 'Kent', 'Lancashire', 'Leicestershire',
-  'Lincolnshire', 'Merseyside', 'Norfolk', 'North Yorkshire', 'Northamptonshire',
-  'Northumberland', 'Nottinghamshire', 'Oxfordshire', 'Rutland', 'Shropshire',
-  'Somerset', 'South Yorkshire', 'Staffordshire', 'Suffolk', 'Surrey',
-  'Tyne and Wear', 'Warwickshire', 'West Midlands', 'West Sussex', 'West Yorkshire',
-  'Wiltshire', 'Worcestershire'
-];
 
 const COUNTRIES = [
   { code: 'GB', name: 'United Kingdom' },
@@ -116,29 +102,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="county" className="text-sm font-medium">
-            County <span className="text-destructive">*</span>
-          </Label>
-          <Select value={value.county} onValueChange={(val) => handleFieldChange('county', val)}>
-            <SelectTrigger className={errors.county ? 'border-destructive' : ''}>
-              <SelectValue placeholder="Select county" />
-            </SelectTrigger>
-            <SelectContent>
-              {UK_COUNTIES.map((county) => (
-                <SelectItem key={county} value={county}>
-                  {county}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.county && (
-            <p className="text-sm text-destructive mt-1">{errors.county}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
           <Label htmlFor="postcode" className="text-sm font-medium">
             Postcode <span className="text-destructive">*</span>
           </Label>
@@ -153,50 +116,58 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             <p className="text-sm text-destructive mt-1">{errors.postcode}</p>
           )}
         </div>
-        
-        <div>
-          <Label htmlFor="country" className="text-sm font-medium">
-            Country <span className="text-destructive">*</span>
-          </Label>
-          <Select value={value.country} onValueChange={(val) => handleFieldChange('country', val)}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {COUNTRIES.map((country) => (
-                <SelectItem key={country.code} value={country.name}>
-                  {country.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="country" className="text-sm font-medium">
+          Country <span className="text-destructive">*</span>
+        </Label>
+        <Select value={value.country} onValueChange={(val) => handleFieldChange('country', val)}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {COUNTRIES.map((country) => (
+              <SelectItem key={country.code} value={country.name}>
+                {country.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Privacy Setting */}
-      <div className="flex items-center space-x-2 p-4 bg-muted/50 rounded-lg">
+      <div className="flex items-start space-x-3 p-4 bg-muted/50 rounded-lg border border-muted">
         <Checkbox
           id="address-public"
           checked={value.is_public}
           onCheckedChange={(checked) => handleFieldChange('is_public', checked as boolean)}
+          className="mt-1"
         />
-        <div className="flex-1">
-          <Label htmlFor="address-public" className="flex items-center space-x-2 cursor-pointer">
+        <div className="flex-1 space-y-2">
+          <Label htmlFor="address-public" className="flex items-center space-x-2 cursor-pointer font-medium">
             {value.is_public ? (
               <Eye className="h-4 w-4 text-green-600" />
             ) : (
               <EyeOff className="h-4 w-4 text-muted-foreground" />
             )}
             <span className="text-sm">
-              {value.is_public ? 'Address visible to customers' : 'Address hidden from customers'}
+              {value.is_public ? 'Full address visible to customers' : 'Full address hidden from customers'}
             </span>
           </Label>
-          <p className="text-xs text-muted-foreground ml-6">
-            {value.is_public 
-              ? 'Customers can see your full business address' 
-              : 'Only general area (town/city) will be visible to customers'
-            }
-          </p>
+          <div className="text-xs text-muted-foreground space-y-1">
+            {value.is_public ? (
+              <div>
+                <p className="font-medium text-green-700">✓ Customers will see your complete address</p>
+                <p>This helps customers find your business location easily but shares your exact address publicly.</p>
+              </div>
+            ) : (
+              <div>
+                <p className="font-medium text-blue-700">🔒 Only your town/city will be shown to customers</p>
+                <p>Your exact address stays private while customers can still find your general area. You can share specific details when booking.</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

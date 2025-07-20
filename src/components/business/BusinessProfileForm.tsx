@@ -81,7 +81,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         address_line_1: '',
         address_line_2: '',
         town_city: '',
-        county: '',
         postcode: '',
         country: 'United Kingdom',
         is_public: false // Default to private for safety
@@ -94,7 +93,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         address_line_1: addressData,
         address_line_2: '',
         town_city: '',
-        county: '',
         postcode: '',
         country: 'United Kingdom',
         is_public: false // Default to private for safety
@@ -106,7 +104,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       address_line_1: addressData.address_line_1 || '',
       address_line_2: addressData.address_line_2 || '',
       town_city: addressData.town_city || '',
-      county: addressData.county || '',
       postcode: addressData.postcode || '',
       country: addressData.country || 'United Kingdom',
       is_public: addressData.is_public ?? false // Default to private for safety
@@ -178,9 +175,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       }
       if (!address.town_city.trim()) {
         newErrors.town_city = 'Town/City is required';
-      }
-      if (!address.county.trim()) {
-        newErrors.county = 'County is required';
       }
       if (!address.postcode.trim()) {
         newErrors.postcode = 'Postcode is required';
@@ -293,7 +287,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         formData.business_address.address_line_1,
         formData.business_address.address_line_2,
         formData.business_address.town_city,
-        formData.business_address.county,
         formData.business_address.postcode,
         formData.business_address.country
       ].filter(Boolean).join(', ');
@@ -459,7 +452,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               errors={{
                 address_line_1: errors.address_line_1,
                 town_city: errors.town_city,
-                county: errors.county,
                 postcode: errors.postcode,
                 country: errors.country
               }}
