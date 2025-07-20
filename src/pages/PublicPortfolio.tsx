@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Star, MapPin, Phone, Mail, Globe, Instagram, Facebook, Clock, Shield } from 'lucide-react';
 import Header from '@/components/ui/header';
+import { SocialMediaLinks } from '@/components/portfolio/SocialMediaLinks';
 
 interface PortfolioItem {
   id: string;
@@ -211,6 +212,15 @@ const PublicPortfolio = () => {
                   </p>
                 )}
 
+                {/* Social Media Links */}
+                <div className="mb-4">
+                  <SocialMediaLinks 
+                    providerId={providerId!}
+                    size="md"
+                    className="justify-center md:justify-start"
+                  />
+                </div>
+
                 {/* Contact Info */}
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   {(providerDetails?.business_phone || providerProfile.phone) && (
@@ -232,30 +242,6 @@ const PublicPortfolio = () => {
                     >
                       <Globe className="h-4 w-4" />
                       <span className="text-sm">Website</span>
-                    </a>
-                  )}
-                  
-                  {providerDetails?.instagram_url && (
-                    <a 
-                      href={providerDetails.instagram_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-1 text-primary hover:underline"
-                    >
-                      <Instagram className="h-4 w-4" />
-                      <span className="text-sm">Instagram</span>
-                    </a>
-                  )}
-                  
-                  {providerDetails?.facebook_url && (
-                    <a 
-                      href={providerDetails.facebook_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-1 text-primary hover:underline"
-                    >
-                      <Facebook className="h-4 w-4" />
-                      <span className="text-sm">Facebook</span>
                     </a>
                   )}
                 </div>

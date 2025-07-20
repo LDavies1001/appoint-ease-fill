@@ -659,6 +659,42 @@ export type Database = {
         }
         Relationships: []
       }
+      social_media_connections: {
+        Row: {
+          created_at: string
+          handle: string
+          id: string
+          is_active: boolean | null
+          platform: string
+          profile_picture_url: string | null
+          profile_url: string
+          provider_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          handle: string
+          id?: string
+          is_active?: boolean | null
+          platform: string
+          profile_picture_url?: string | null
+          profile_url: string
+          provider_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          handle?: string
+          id?: string
+          is_active?: boolean | null
+          platform?: string
+          profile_picture_url?: string | null
+          profile_url?: string
+          provider_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

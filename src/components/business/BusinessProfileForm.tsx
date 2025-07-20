@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Stepper } from '@/components/ui/stepper';
 import { CategorySelector } from '@/components/ui/category-selector';
 import { AddressForm, AddressData } from '@/components/ui/address-form';
+import { SocialMediaConnector } from './SocialMediaConnector';
 import { 
   Building, 
   Phone, 
@@ -55,6 +56,10 @@ const STEPS = [
   {
     title: "Services Offered", 
     description: "What you provide"
+  },
+  {
+    title: "Connect Socials",
+    description: "Social media links"
   },
   {
     title: "Business Summary",
@@ -266,7 +271,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 
   const handleNext = () => {
     if (validateCurrentStep()) {
-      if (currentStep < 3) {
+      if (currentStep < 4) {
         setCurrentStep(prev => prev + 1);
       } else {
         handleSubmit();
@@ -495,6 +500,13 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       case 3:
         return (
           <div className="space-y-6 animate-fade-in">
+            <SocialMediaConnector />
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="space-y-6 animate-fade-in">
             <div className="text-center space-y-2">
               <h3 className="text-2xl font-bold text-accent">Tell us about your business</h3>
               <p className="text-muted-foreground">
@@ -573,12 +585,12 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
             >
               {loading ? (
                 <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
-              ) : currentStep === 3 ? (
+              ) : currentStep === 4 ? (
                 <CheckCircle className="h-4 w-4 mr-2" />
               ) : (
                 <ArrowRight className="h-4 w-4 mr-2" />
               )}
-              {currentStep === 3 ? 'Create My Free Business Account' : 'Next'}
+              {currentStep === 4 ? 'Create My Free Business Account' : 'Next'}
             </Button>
           </div>
         </Card>
