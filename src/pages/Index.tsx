@@ -39,7 +39,7 @@ const Index = () => {
               </Link>
               
               <Link to="/auth?tab=provider">
-                <Button className="w-full sm:w-auto px-8 py-4 text-lg font-medium">
+                <Button className="w-full sm:w-auto px-8 py-4 text-lg font-medium bg-green-600 hover:bg-green-700 text-white">
                   <Building className="mr-2 h-5 w-5" />
                   Join as Business
                   <ArrowRight className="ml-2 h-5 w-5" />
