@@ -528,7 +528,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                         type="file"
                         accept="image/jpeg,image/png"
                         onChange={handleLogoUpload}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                         disabled={uploadingLogo}
                       />
                       <Button
@@ -681,7 +681,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               <div className="grid gap-6">
                 <div className="space-y-3">
                   <Label className="text-base font-semibold">Upload Certifications</Label>
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-accent/50 transition-colors">
+                  <div className="relative border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-accent/50 transition-colors">
                     <Upload className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
                     <p className="text-sm text-muted-foreground mb-2">
                       Drag and drop files here, or click to browse
@@ -695,10 +695,10 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                       accept=".pdf,.jpg,.jpeg,.png"
                       onChange={handleCertificationUpload}
                       disabled={uploadingCertifications}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                     {uploadingCertifications && (
-                      <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
+                      <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg z-20">
                         <div className="animate-spin h-8 w-8 border-2 border-accent border-t-transparent rounded-full" />
                       </div>
                     )}
