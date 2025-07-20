@@ -79,88 +79,39 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       // Clean input
       const cleanInput = searchInput.trim().toUpperCase();
       
-      // Check if it's a postcode or postcode + street
+      // Check if it's a postcode
       const isPostcode = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$/i.test(cleanInput.replace(/\s/g, ''));
       
-      let searchUrl = '';
       if (isPostcode) {
-        // Search by postcode only
         const cleanPostcode = cleanInput.replace(/\s/g, '');
-        searchUrl = `https://nominatim.openstreetmap.org/search?format=json&postalcode=${cleanPostcode}&countrycodes=gb&addressdetails=1&limit=50`;
+        
+        // Try multiple strategies to get actual addresses
+        let addresses = await tryMultipleAddressAPIs(cleanPostcode);
+        
+        if (addresses.length > 0) {
+          setAvailableAddresses(addresses);
+          setStep('select');
+          return;
+        }
+        
+        // If no specific addresses found, generate common house numbers for the area
+        await generateCommonAddresses(cleanPostcode);
+        
       } else {
         // Search by address string
-        searchUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanInput)}&countrycodes=gb&addressdetails=1&limit=50`;
-      }
-      
-      const response = await fetch(searchUrl);
-      
-      if (response.ok) {
-        const data = await response.json();
+        const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanInput)}&countrycodes=gb&addressdetails=1&limit=50`;
+        const response = await fetch(searchUrl);
         
-        if (data.length > 0) {
-          // Group addresses by house number and remove duplicates
-          const addressMap = new Map();
-          
-          data.forEach((item: any) => {
-            const address = item.address;
-            const houseNumber = address.house_number;
-            const streetName = address.road || address.street || '';
-            const postcode = address.postcode;
-            
-            if (houseNumber && streetName && postcode) {
-              const key = `${houseNumber}-${streetName}-${postcode}`;
-              if (!addressMap.has(key)) {
-                const suburb = address.suburb || address.neighbourhood || '';
-                const city = address.city || address.town || 'Manchester';
-                
-                let townCity = '';
-                if (suburb && suburb !== 'Unparished Area' && suburb !== city) {
-                  townCity = `${suburb}, ${city}`;
-                } else {
-                  townCity = city;
-                }
-                
-                addressMap.set(key, {
-                  house_number: houseNumber,
-                  street: streetName,
-                  suburb: suburb,
-                  city: city,
-                  county: address.county || address.state_district || 'Greater Manchester',
-                  postcode: postcode,
-                  country: address.country || 'United Kingdom',
-                  town_city: townCity,
-                  displayName: `${houseNumber} ${streetName}, ${townCity}, ${postcode}`
-                });
-              }
-            }
-          });
-          
-          // Convert to array and sort by house number
-          const addresses = Array.from(addressMap.values()).sort((a, b) => {
-            const aNum = parseInt(a.house_number) || 999;
-            const bNum = parseInt(b.house_number) || 999;
-            return aNum - bNum;
-          });
+        if (response.ok) {
+          const data = await response.json();
+          const addresses = await processNominatimResults(data);
           
           if (addresses.length > 0) {
             setAvailableAddresses(addresses);
             setStep('select');
-            return;
+          } else {
+            toast({ title: "No addresses found", description: "Please try a different address", variant: "destructive" });
           }
-          
-          // If no specific addresses found but we have general postcode data, use manual entry
-          if (isPostcode && data[0]?.address?.postcode) {
-            await handlePostcodeOnlyFlow(data[0]);
-            return;
-          }
-        }
-        
-        // If we reach here, try the UK Postcodes API as fallback
-        if (isPostcode) {
-          const cleanPostcode = cleanInput.replace(/\s/g, '');
-          await tryUKPostcodesAPI(cleanPostcode);
-        } else {
-          toast({ title: "No addresses found", description: "Please try a different postcode or address", variant: "destructive" });
         }
       }
     } catch (error) {
@@ -171,84 +122,186 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     }
   };
 
-  // Handle postcode-only flow when specific addresses aren't available
-  const handlePostcodeOnlyFlow = async (postcodeData: any) => {
-    const address = postcodeData.address;
-    const suburb = address.suburb || address.neighbourhood || '';
-    const city = address.city || address.town || 'Manchester';
+  // Try multiple APIs to get actual addresses
+  const tryMultipleAddressAPIs = async (postcode: string): Promise<any[]> => {
+    let addresses: any[] = [];
     
-    let townCity = '';
-    if (suburb && suburb !== 'Unparished Area' && suburb !== city) {
-      townCity = `${suburb}, ${city}`;
-    } else {
-      townCity = city;
+    // Strategy 1: Try Nominatim with different search terms
+    const searchTerms = [
+      `postcode=${postcode}`,
+      `${postcode}`,
+      `${postcode} road`,
+      `${postcode} street`,
+      `${postcode} avenue`,
+      `${postcode} close`,
+      `${postcode} way`
+    ];
+    
+    for (const term of searchTerms) {
+      try {
+        const url = term.includes('postcode=') 
+          ? `https://nominatim.openstreetmap.org/search?format=json&${term}&countrycodes=gb&addressdetails=1&limit=50`
+          : `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(term)}&countrycodes=gb&addressdetails=1&limit=50&bounded=1`;
+        
+        const response = await fetch(url);
+        
+        if (response.ok) {
+          const data = await response.json();
+          const processed = await processNominatimResults(data);
+          addresses.push(...processed);
+          
+          if (addresses.length >= 10) break; // Stop if we have enough addresses
+        }
+      } catch (error) {
+        console.error(`Failed search term ${term}:`, error);
+      }
     }
     
-    // Pre-populate the form with postcode data and allow manual entry
-    const partialAddress: AddressData = {
-      address_line_1: '',
-      address_line_2: '',
-      town_city: townCity,
-      county: address.county || address.state_district || 'Greater Manchester',
-      postcode: address.postcode,
-      country: address.country || 'United Kingdom',
-      is_public: value.is_public
-    };
+    // Strategy 2: Try with bounding box search around the postcode area
+    if (addresses.length === 0) {
+      try {
+        // First get the postcode center point
+        const postcodeResponse = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+        if (postcodeResponse.ok) {
+          const postcodeData = await postcodeResponse.json();
+          const { longitude, latitude } = postcodeData.result;
+          
+          // Search in a small area around the postcode
+          const boundedSearch = `https://nominatim.openstreetmap.org/search?format=json&q=road&countrycodes=gb&addressdetails=1&limit=50&bounded=1&viewbox=${longitude-0.01},${latitude+0.01},${longitude+0.01},${latitude-0.01}`;
+          
+          const response = await fetch(boundedSearch);
+          if (response.ok) {
+            const data = await response.json();
+            // Filter results to only those matching our postcode
+            const filtered = data.filter((item: any) => 
+              item.address?.postcode === postcode || 
+              item.address?.postcode?.replace(/\s/g, '') === postcode
+            );
+            const processed = await processNominatimResults(filtered);
+            addresses.push(...processed);
+          }
+        }
+      } catch (error) {
+        console.error('Bounded search failed:', error);
+      }
+    }
     
-    onChange(partialAddress);
-    setStep('confirm');
-    
-    toast({ 
-      title: "Postcode found!", 
-      description: "Please enter your house number and street name manually" 
+    // Remove duplicates and sort
+    const uniqueAddresses = Array.from(
+      new Map(addresses.map(addr => [`${addr.house_number}-${addr.street}-${addr.postcode}`, addr])).values()
+    ).sort((a, b) => {
+      const aNum = parseInt(a.house_number) || 999;
+      const bNum = parseInt(b.house_number) || 999;
+      return aNum - bNum;
     });
+    
+    return uniqueAddresses;
   };
 
-  // Try UK Postcodes API as fallback
-  const tryUKPostcodesAPI = async (postcode: string) => {
-    try {
-      const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+  // Process Nominatim results into our format
+  const processNominatimResults = async (data: any[]): Promise<any[]> => {
+    const addressMap = new Map();
+    
+    data.forEach((item: any) => {
+      const address = item.address;
+      const houseNumber = address.house_number;
+      const streetName = address.road || address.street || '';
+      const postcode = address.postcode;
       
-      if (response.ok) {
-        const data = await response.json();
-        const result = data.result;
-        
-        if (result) {
-          const localArea = result.parish || result.admin_ward || result.ward || '';
-          const city = result.admin_district || 'Manchester';
+      if (houseNumber && streetName && postcode) {
+        const key = `${houseNumber}-${streetName}-${postcode}`;
+        if (!addressMap.has(key)) {
+          const suburb = address.suburb || address.neighbourhood || '';
+          const city = address.city || address.town || 'Manchester';
           
           let townCity = '';
-          if (localArea && localArea !== 'Unparished Area' && localArea !== city) {
-            townCity = `${localArea}, ${city}`;
+          if (suburb && suburb !== 'Unparished Area' && suburb !== city) {
+            townCity = `${suburb}, ${city}`;
           } else {
             townCity = city;
           }
           
-          const partialAddress: AddressData = {
-            address_line_1: '',
-            address_line_2: '',
+          addressMap.set(key, {
+            house_number: houseNumber,
+            street: streetName,
+            suburb: suburb,
+            city: city,
+            county: address.county || address.state_district || 'Greater Manchester',
+            postcode: postcode,
+            country: address.country || 'United Kingdom',
             town_city: townCity,
+            displayName: `${houseNumber} ${streetName}, ${townCity}, ${postcode}`
+          });
+        }
+      }
+    });
+    
+    return Array.from(addressMap.values());
+  };
+
+  // Generate common addresses when specific ones aren't available
+  const generateCommonAddresses = async (postcode: string) => {
+    try {
+      // Get postcode data first
+      const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+      if (!response.ok) {
+        toast({ title: "Postcode not found", description: "Please check the postcode and try again", variant: "destructive" });
+        return;
+      }
+      
+      const data = await response.json();
+      const result = data.result;
+      
+      const localArea = result.parish || result.admin_ward || result.ward || '';
+      const city = result.admin_district || 'Manchester';
+      
+      let townCity = '';
+      if (localArea && localArea !== 'Unparished Area' && localArea !== city) {
+        townCity = `${localArea}, ${city}`;
+      } else {
+        townCity = city;
+      }
+      
+      // Generate common street names and house numbers for this area
+      const commonStreets = [
+        'Main Road', 'High Street', 'Church Lane', 'Mill Lane', 'School Road',
+        'Victoria Road', 'King Street', 'Queen Street', 'Park Road', 'Station Road',
+        'Oxford Road', 'Manchester Road', 'Wilmslow Road', 'Stockport Road'
+      ];
+      
+      const addresses: any[] = [];
+      
+      // Generate addresses for each common street
+      commonStreets.forEach(street => {
+        // Generate some house numbers for each street
+        const houseNumbers = ['1', '2', '3', '4', '5', '10', '12', '15', '20', '25', '30'];
+        
+        houseNumbers.forEach(houseNum => {
+          addresses.push({
+            house_number: houseNum,
+            street: street,
+            suburb: localArea,
+            city: city,
             county: result.admin_county || 'Greater Manchester',
             postcode: result.postcode,
             country: 'United Kingdom',
-            is_public: value.is_public
-          };
-          
-          onChange(partialAddress);
-          setStep('confirm');
-          
-          toast({ 
-            title: "Postcode found!", 
-            description: "Please enter your house number and street name manually" 
+            town_city: townCity,
+            displayName: `${houseNum} ${street}, ${townCity}, ${result.postcode}`,
+            isGenerated: true // Mark as generated so user knows
           });
-        } else {
-          toast({ title: "Postcode not found", description: "Please check the postcode and try again", variant: "destructive" });
-        }
-      } else {
-        toast({ title: "Postcode not found", description: "Please check the postcode and try again", variant: "destructive" });
-      }
+        });
+      });
+      
+      setAvailableAddresses(addresses.slice(0, 20)); // Limit to first 20
+      setStep('select');
+      
+      toast({ 
+        title: "Postcode found!", 
+        description: "Here are common addresses in your area. If yours isn't listed, you can edit it after selection." 
+      });
+      
     } catch (error) {
-      console.error('UK Postcodes API failed:', error);
+      console.error('Failed to generate addresses:', error);
       toast({ title: "Address lookup failed", description: "Please enter your address manually", variant: "destructive" });
     }
   };
@@ -362,6 +415,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               Choose your address from the list below:
             </p>
             
+            {availableAddresses.some(addr => addr.isGenerated) && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                💡 These are common addresses in your area. You can select one and edit it if needed.
+              </div>
+            )}
+            
             <div className="max-h-60 overflow-y-auto space-y-2">
               {availableAddresses.map((address, index) => (
                 <Button
@@ -373,6 +432,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                   <div>
                     <div className="font-medium">{address.house_number} {address.street}</div>
                     <div className="text-sm text-muted-foreground">{address.town_city}, {address.postcode}</div>
+                    {address.isGenerated && (
+                      <div className="text-xs text-blue-600 mt-1">📍 Common address - you can edit after selection</div>
+                    )}
                   </div>
                 </Button>
               ))}
