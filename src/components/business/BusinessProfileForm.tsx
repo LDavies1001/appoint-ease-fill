@@ -642,8 +642,16 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    const defaultHours = getDefaultOperatingHours();
-                    setFormData(prev => ({ ...prev, operating_hours: defaultHours }));
+                    const clearedHours = {
+                      monday: { open: '09:00', close: '17:00', closed: true },
+                      tuesday: { open: '09:00', close: '17:00', closed: true },
+                      wednesday: { open: '09:00', close: '17:00', closed: true },
+                      thursday: { open: '09:00', close: '17:00', closed: true },
+                      friday: { open: '09:00', close: '17:00', closed: true },
+                      saturday: { open: '09:00', close: '17:00', closed: true },
+                      sunday: { open: '09:00', close: '17:00', closed: true }
+                    };
+                    setFormData(prev => ({ ...prev, operating_hours: clearedHours }));
                   }}
                   className="text-xs"
                 >
