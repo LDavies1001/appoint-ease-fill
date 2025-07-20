@@ -727,12 +727,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-accent to-accent-glow rounded-xl p-6 text-white text-center">
-              <h4 className="font-bold text-xl mb-2">🎉 Almost done!</h4>
-              <p className="text-white/90 text-lg">
-                Your business profile will be published and visible to customers once you complete this step.
-              </p>
-            </div>
           </div>
         );
 
