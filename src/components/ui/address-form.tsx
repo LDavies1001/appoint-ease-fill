@@ -84,7 +84,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             className={errors.town_city ? 'border-destructive' : ''}
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Choose the closest town to you
+            Choose the closest town to you so customers can find you when searching for services in your area
           </p>
           {errors.town_city && (
             <p className="text-sm text-destructive mt-1">{errors.town_city}</p>
