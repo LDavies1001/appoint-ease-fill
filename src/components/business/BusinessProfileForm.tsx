@@ -651,8 +651,13 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 </Button>
               </div>
               
+              {/* Debug info */}
+              <div className="text-xs text-gray-500 mb-2">
+                Debug: {JSON.stringify(formData.operating_hours).substring(0, 100)}...
+              </div>
+              
               <div className="space-y-3">
-                {Object.entries(formData.operating_hours).map(([day, hours]) => {
+                {formData.operating_hours && Object.entries(formData.operating_hours).map(([day, hours]) => {
                   const dayName = day.charAt(0).toUpperCase() + day.slice(1);
                   return (
                     <div key={day} className="flex items-center justify-between p-3 bg-white/60 rounded-lg border border-accent/20">
@@ -667,7 +672,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                               newHours[day as keyof typeof newHours].closed = !e.target.checked;
                               setFormData(prev => ({ ...prev, operating_hours: newHours }));
                             }}
-                            className="rounded border-accent/30"
+                            className="rounded border-accent/30 w-4 h-4"
                           />
                           <span className="text-sm text-muted-foreground">Open</span>
                         </label>
