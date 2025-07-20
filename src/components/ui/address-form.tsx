@@ -39,7 +39,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     <div className={cn("space-y-4", className)}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="address_line_1" className="text-sm font-medium">
+          <Label htmlFor="address_line_1">
             House Number/Name <span className="text-destructive">*</span>
           </Label>
           <Input
@@ -55,7 +55,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="address_line_2" className="text-sm font-medium">
+          <Label htmlFor="address_line_2">
             Street <span className="text-destructive">*</span>
           </Label>
           <Input
@@ -73,7 +73,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="town_city" className="text-sm font-medium">
+          <Label htmlFor="town_city">
             Town/City <span className="text-destructive">*</span>
           </Label>
           <Input
@@ -83,13 +83,16 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             placeholder="e.g., Manchester"
             className={errors.town_city ? 'border-destructive' : ''}
           />
+          <p className="text-xs text-muted-foreground mt-1">
+            Choose the closest town to you
+          </p>
           {errors.town_city && (
             <p className="text-sm text-destructive mt-1">{errors.town_city}</p>
           )}
         </div>
         
         <div>
-          <Label htmlFor="postcode" className="text-sm font-medium">
+          <Label htmlFor="postcode">
             Postcode <span className="text-destructive">*</span>
           </Label>
           <Input
