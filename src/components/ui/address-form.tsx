@@ -90,9 +90,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         try {
           const { latitude, longitude } = position.coords;
           
-          // Use OpenStreetMap's Nominatim for reverse geocoding
+          // Use OpenStreetMap's Nominatim for reverse geocoding with high precision
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&extratags=1`
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&extratags=1&zoom=18&accept-language=en`
           );
           
           if (!response.ok) throw new Error('Failed to get location');
