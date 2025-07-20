@@ -41,7 +41,9 @@ interface BusinessProfileData {
 
 interface BusinessProfileFormProps {
   mode: 'create' | 'edit';
-  existingData?: Partial<BusinessProfileData>;
+  existingData?: Partial<BusinessProfileData & {
+    services_offered?: string[];
+  }>;
   onSuccess?: () => void;
 }
 
@@ -67,13 +69,12 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<BusinessProfileData>({
-    business_name: '',
-    business_categories: [],
-    business_phone: '',
-    business_address: '',
-    business_description: '',
-    business_logo_url: '',
-    ...existingData
+    business_name: existingData?.business_name || '',
+    business_categories: existingData?.business_categories || existingData?.services_offered || [],
+    business_phone: existingData?.business_phone || '',
+    business_address: existingData?.business_address || '',
+    business_description: existingData?.business_description || '',
+    business_logo_url: existingData?.business_logo_url || ''
   });
 
   const [categories, setCategories] = useState<BusinessCategory[]>([]);
@@ -89,7 +90,15 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   useEffect(() => {
     fetchCategories();
     if (existingData) {
-      setFormData(prev => ({ ...prev, ...existingData }));
+      setFormData(prev => ({
+        ...prev,
+        business_name: existingData.business_name || '',
+        business_categories: existingData.business_categories || existingData.services_offered || [],
+        business_phone: existingData.business_phone || '',
+        business_address: existingData.business_address || '',
+        business_description: existingData.business_description || '',
+        business_logo_url: existingData.business_logo_url || ''
+      }));
     }
   }, [existingData]);
 

@@ -27,19 +27,48 @@ const CreateBusinessProfile = () => {
 
   const checkExistingProfile = async () => {
     try {
-      const { data, error } = await supabase
+      // First check for existing provider details
+      const { data: providerData, error: providerError } = await supabase
         .from('provider_details')
         .select('*')
         .eq('user_id', user?.id)
         .maybeSingle();
 
-      if (error) throw error;
+      if (providerError && providerError.code !== 'PGRST116') {
+        throw providerError;
+      }
       
-      if (data) {
-        setExistingProfile(data);
+      // Prepare initial data from signup information
+      const signupData = {
+        business_name: user?.user_metadata?.business_name || profile?.business_name || '',
+        business_phone: profile?.phone || user?.user_metadata?.phone || '',
+        business_address: profile?.location || user?.user_metadata?.location || '',
+        business_categories: []
+      };
+
+      // If provider details exist, merge with signup data (provider details take precedence)
+      if (providerData) {
+        const mergedData = {
+          ...signupData,
+          ...providerData,
+          // Convert services_offered array to business_categories if it exists
+          business_categories: providerData.services_offered || []
+        };
+        setExistingProfile(mergedData);
+      } else {
+        // Use signup data as initial form data
+        setExistingProfile(signupData);
       }
     } catch (error) {
       console.error('Error checking existing profile:', error);
+      // Still set signup data even if there's an error
+      const fallbackData = {
+        business_name: user?.user_metadata?.business_name || profile?.business_name || '',
+        business_phone: profile?.phone || user?.user_metadata?.phone || '',
+        business_address: profile?.location || user?.user_metadata?.location || '',
+        business_categories: []
+      };
+      setExistingProfile(fallbackData);
     } finally {
       setLoading(false);
     }
