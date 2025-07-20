@@ -37,8 +37,36 @@ const Index = () => {
                   <div className="text-center mb-6">
                     <User className="h-12 w-12 text-primary mx-auto mb-4" />
                     <h3 className="text-2xl font-bold text-foreground mb-2">For Customers</h3>
-                    <p className="text-muted-foreground">Book last-minute appointments instantly</p>
+                    <p className="text-muted-foreground mb-6">Book last-minute appointments instantly</p>
                   </div>
+
+                  {/* How It Works for Customers */}
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-start space-x-3">
+                      <Calendar className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm">Browse Available Slots</h4>
+                        <p className="text-xs text-muted-foreground">See real-time availability from verified providers near you</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm">Book Instantly</h4>
+                        <p className="text-xs text-muted-foreground">No waiting for approval - book available slots immediately</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <Star className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm">Read Reviews</h4>
+                        <p className="text-xs text-muted-foreground">Check ratings and reviews from real customers before booking</p>
+                      </div>
+                    </div>
+                  </div>
+
                   <Link to="/auth?tab=signup" className="block">
                     <Button className="w-full px-8 py-4 text-lg font-medium">
                       <User className="mr-2 h-5 w-5" />
@@ -53,8 +81,36 @@ const Index = () => {
                   <div className="text-center mb-6">
                     <Building className="h-12 w-12 text-accent mx-auto mb-4" />
                     <h3 className="text-2xl font-bold text-foreground mb-2">For Businesses</h3>
-                    <p className="text-muted-foreground">Fill empty slots and maximize revenue</p>
+                    <p className="text-muted-foreground mb-6">Fill empty slots and maximize revenue</p>
                   </div>
+
+                  {/* How It Works for Businesses */}
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-start space-x-3">
+                      <Calendar className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm">Set Your Availability</h4>
+                        <p className="text-xs text-muted-foreground">Add last-minute slots or cancellations to fill your schedule</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <Shield className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm">Get Instant Bookings</h4>
+                        <p className="text-xs text-muted-foreground">Customers can book immediately without back-and-forth messaging</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <Star className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm">Build Your Reputation</h4>
+                        <p className="text-xs text-muted-foreground">Earn reviews and grow your customer base organically</p>
+                      </div>
+                    </div>
+                  </div>
+
                   <Link to="/auth?tab=provider" className="block">
                     <Button variant="accent" className="w-full px-8 py-4 text-lg font-medium">
                       <Building className="mr-2 h-5 w-5" />
@@ -84,41 +140,6 @@ const Index = () => {
                 </div>
               </div>
             </div>
-
-            {/* Feature Highlights */}
-            <div className="grid sm:grid-cols-2 gap-6 pt-8">
-              <div className="flex items-start space-x-3">
-                <Calendar className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Instant Booking</h3>
-                  <p className="text-sm text-muted-foreground">Book available slots immediately without waiting</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Shield className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Verified Providers</h3>
-                  <p className="text-sm text-muted-foreground">All service providers are verified and rated</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Star className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Quality Service</h3>
-                  <p className="text-sm text-muted-foreground">Read reviews from real customers</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Building className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">For Businesses</h3>
-                  <p className="text-sm text-muted-foreground">Fill empty slots and maximize revenue</p>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Right Side - Hero Image */}
@@ -126,46 +147,6 @@ const Index = () => {
             <div className="w-full bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
               <img src={heroImage} alt="Professional eyelash extension service" className="w-full h-auto object-cover" />
             </div>
-          </div>
-        </div>
-
-        {/* Features Section */}
-        <div className="py-16 border-t border-border/40">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">How It Works</h2>
-            
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8 text-center border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 hover:shadow-medium hover:border-primary/30 transition-all duration-300">
-              <div className="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Calendar className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-foreground">Book Instantly</h3>
-              <p className="text-muted-foreground">
-                See what's available and book right away. No waiting around.
-              </p>
-            </Card>
-
-            <Card className="p-8 text-center border-2 border-accent/20 bg-gradient-to-br from-accent/10 to-accent/5 hover:shadow-medium hover:border-accent/30 transition-all duration-300">
-              <div className="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Shield className="h-8 w-8 text-accent" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-foreground">Trusted People</h3>
-              <p className="text-muted-foreground">
-                All service providers are verified and rated by real customers.
-              </p>
-            </Card>
-
-            <Card className="p-8 text-center border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 hover:shadow-medium hover:border-primary/30 transition-all duration-300">
-              <div className="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Star className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-foreground">Great Service</h3>
-              <p className="text-muted-foreground">
-                Read real reviews from customers before you book.
-              </p>
-            </Card>
           </div>
         </div>
       </div>
