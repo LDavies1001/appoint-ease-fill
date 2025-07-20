@@ -242,7 +242,20 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   // Generate common addresses when specific ones aren't available
   const generateCommonAddresses = async (postcode: string) => {
     try {
-      // Get postcode data first
+      // First try to get REAL addresses using our edge function
+      const realAddresses = await getRealAddresses(postcode);
+      
+      if (realAddresses.length > 0) {
+        setAvailableAddresses(realAddresses);
+        setStep('select');
+        toast({ 
+          title: "Real addresses found!", 
+          description: `Found ${realAddresses.length} actual addresses in ${postcode}` 
+        });
+        return;
+      }
+
+      // Fallback to postcode data if real addresses not available
       const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
       if (!response.ok) {
         toast({ title: "Postcode not found", description: "Please check the postcode and try again", variant: "destructive" });
@@ -262,47 +275,52 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         townCity = city;
       }
       
-      // Generate common street names and house numbers for this area
-      const commonStreets = [
-        'Main Road', 'High Street', 'Church Lane', 'Mill Lane', 'School Road',
-        'Victoria Road', 'King Street', 'Queen Street', 'Park Road', 'Station Road',
-        'Oxford Road', 'Manchester Road', 'Wilmslow Road', 'Stockport Road'
-      ];
+      // Pre-populate with postcode data and skip to manual entry
+      const partialAddress: AddressData = {
+        address_line_1: '',
+        address_line_2: '',
+        town_city: townCity,
+        county: result.admin_county || 'Greater Manchester',
+        postcode: result.postcode,
+        country: 'United Kingdom',
+        is_public: value.is_public
+      };
       
-      const addresses: any[] = [];
-      
-      // Generate addresses for each common street
-      commonStreets.forEach(street => {
-        // Generate some house numbers for each street
-        const houseNumbers = ['1', '2', '3', '4', '5', '10', '12', '15', '20', '25', '30'];
-        
-        houseNumbers.forEach(houseNum => {
-          addresses.push({
-            house_number: houseNum,
-            street: street,
-            suburb: localArea,
-            city: city,
-            county: result.admin_county || 'Greater Manchester',
-            postcode: result.postcode,
-            country: 'United Kingdom',
-            town_city: townCity,
-            displayName: `${houseNum} ${street}, ${townCity}, ${result.postcode}`,
-            isGenerated: true // Mark as generated so user knows
-          });
-        });
-      });
-      
-      setAvailableAddresses(addresses.slice(0, 20)); // Limit to first 20
-      setStep('select');
+      onChange(partialAddress);
+      setStep('confirm');
       
       toast({ 
         title: "Postcode found!", 
-        description: "Here are common addresses in your area. If yours isn't listed, you can edit it after selection." 
+        description: "No specific addresses available - please enter your details manually" 
       });
       
     } catch (error) {
-      console.error('Failed to generate addresses:', error);
+      console.error('Failed to get addresses:', error);
       toast({ title: "Address lookup failed", description: "Please enter your address manually", variant: "destructive" });
+    }
+  };
+
+  // Get real addresses using our edge function
+  const getRealAddresses = async (postcode: string): Promise<any[]> => {
+    try {
+      const response = await fetch('https://evklieodtmiquyfusmwa.supabase.co/functions/v1/get-real-addresses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ postcode })
+      });
+
+      if (!response.ok) {
+        console.error('Edge function call failed:', response.status);
+        return [];
+      }
+
+      const data = await response.json();
+      return data.addresses || [];
+    } catch (error) {
+      console.error('Failed to get real addresses:', error);
+      return [];
     }
   };
 
@@ -415,6 +433,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               Choose your address from the list below:
             </p>
             
+            {availableAddresses.some(addr => addr.isReal) && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">
+                ✅ These are real addresses found in {searchInput.toUpperCase()}
+              </div>
+            )}
+            
             {availableAddresses.some(addr => addr.isGenerated) && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
                 💡 These are common addresses in your area. You can select one and edit it if needed.
@@ -432,6 +456,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                   <div>
                     <div className="font-medium">{address.house_number} {address.street}</div>
                     <div className="text-sm text-muted-foreground">{address.town_city}, {address.postcode}</div>
+                    {address.isReal && (
+                      <div className="text-xs text-green-600 mt-1">✅ Real address</div>
+                    )}
                     {address.isGenerated && (
                       <div className="text-xs text-blue-600 mt-1">📍 Common address - you can edit after selection</div>
                     )}
