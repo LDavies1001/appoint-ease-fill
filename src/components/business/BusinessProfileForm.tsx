@@ -82,7 +82,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         address_line_2: '',
         town_city: '',
         postcode: '',
-        country: 'United Kingdom',
         is_public: false // Default to private for safety
       };
     }
@@ -94,7 +93,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         address_line_2: '',
         town_city: '',
         postcode: '',
-        country: 'United Kingdom',
         is_public: false // Default to private for safety
       };
     }
@@ -105,7 +103,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       address_line_2: addressData.address_line_2 || '',
       town_city: addressData.town_city || '',
       postcode: addressData.postcode || '',
-      country: addressData.country || 'United Kingdom',
       is_public: addressData.is_public ?? false // Default to private for safety
     };
   };
@@ -178,15 +175,12 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       }
       if (!address.postcode.trim()) {
         newErrors.postcode = 'Postcode is required';
-      } else if (address.country === 'United Kingdom') {
-        // Validate UK postcode format
+      } else {
+        // Validate UK postcode format (assuming UK since we removed country field)
         const ukPostcodeRegex = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$/i;
         if (!ukPostcodeRegex.test(address.postcode.replace(/\s/g, ''))) {
           newErrors.postcode = 'Please enter a valid UK postcode';
         }
-      }
-      if (!address.country.trim()) {
-        newErrors.country = 'Country is required';
       }
     }
 
@@ -287,8 +281,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         formData.business_address.address_line_1,
         formData.business_address.address_line_2,
         formData.business_address.town_city,
-        formData.business_address.postcode,
-        formData.business_address.country
+        formData.business_address.postcode
       ].filter(Boolean).join(', ');
 
       const submitData = {
@@ -452,8 +445,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               errors={{
                 address_line_1: errors.address_line_1,
                 town_city: errors.town_city,
-                postcode: errors.postcode,
-                country: errors.country
+                postcode: errors.postcode
               }}
             />
           </div>

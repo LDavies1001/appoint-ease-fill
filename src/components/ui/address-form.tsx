@@ -11,7 +11,6 @@ export interface AddressData {
   address_line_2: string;
   town_city: string;
   postcode: string;
-  country: string;
   is_public: boolean; // Whether customers can see the full address
 }
 
@@ -22,18 +21,6 @@ interface AddressFormProps {
   className?: string;
 }
 
-const COUNTRIES = [
-  { code: 'GB', name: 'United Kingdom' },
-  { code: 'IE', name: 'Ireland' },
-  { code: 'US', name: 'United States' },
-  { code: 'CA', name: 'Canada' },
-  { code: 'AU', name: 'Australia' },
-  { code: 'DE', name: 'Germany' },
-  { code: 'FR', name: 'France' },
-  { code: 'ES', name: 'Spain' },
-  { code: 'IT', name: 'Italy' },
-  { code: 'NL', name: 'Netherlands' }
-];
 
 export const AddressForm: React.FC<AddressFormProps> = ({
   value,
@@ -118,55 +105,72 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
       </div>
 
-      <div>
-        <Label htmlFor="country" className="text-sm font-medium">
-          Country <span className="text-destructive">*</span>
-        </Label>
-        <Select value={value.country} onValueChange={(val) => handleFieldChange('country', val)}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {COUNTRIES.map((country) => (
-              <SelectItem key={country.code} value={country.name}>
-                {country.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      {/* Privacy Question */}
+      <div className="space-y-4 p-6 bg-muted/30 rounded-lg border border-muted">
+        <div className="space-y-2">
+          <h3 className="text-base font-semibold text-foreground">
+            How much of your address should customers see?
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Choose what information customers can view before booking with you.
+          </p>
+        </div>
+        
+        <div className="space-y-3">
+          {/* Option 1: Show full address */}
+          <div 
+            className={cn(
+              "flex items-start space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all",
+              value.is_public 
+                ? "border-green-500 bg-green-50 dark:bg-green-950/20" 
+                : "border-border bg-background hover:border-muted-foreground/30"
+            )}
+            onClick={() => handleFieldChange('is_public', true)}
+          >
+            <div className="flex items-center justify-center w-4 h-4 mt-0.5">
+              <div className={cn(
+                "w-3 h-3 rounded-full",
+                value.is_public ? "bg-green-500" : "border-2 border-muted-foreground"
+              )} />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center space-x-2">
+                <Eye className="h-4 w-4 text-green-600" />
+                <span className="font-medium text-sm">Show my full address publicly</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Customers will see your complete address including house number and street name. 
+                This makes it easier for them to find you but shares your exact location.
+              </p>
+            </div>
+          </div>
 
-      {/* Privacy Setting */}
-      <div className="flex items-start space-x-3 p-4 bg-muted/50 rounded-lg border border-muted">
-        <Checkbox
-          id="address-public"
-          checked={value.is_public}
-          onCheckedChange={(checked) => handleFieldChange('is_public', checked as boolean)}
-          className="mt-1"
-        />
-        <div className="flex-1 space-y-2">
-          <Label htmlFor="address-public" className="flex items-center space-x-2 cursor-pointer font-medium">
-            {value.is_public ? (
-              <Eye className="h-4 w-4 text-green-600" />
-            ) : (
-              <EyeOff className="h-4 w-4 text-muted-foreground" />
+          {/* Option 2: Hide full address */}
+          <div 
+            className={cn(
+              "flex items-start space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all",
+              !value.is_public 
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-950/20" 
+                : "border-border bg-background hover:border-muted-foreground/30"
             )}
-            <span className="text-sm">
-              {value.is_public ? 'Full address visible to customers' : 'Full address hidden from customers'}
-            </span>
-          </Label>
-          <div className="text-xs text-muted-foreground space-y-1">
-            {value.is_public ? (
-              <div>
-                <p className="font-medium text-green-700">✓ Customers will see your complete address</p>
-                <p>This helps customers find your business location easily but shares your exact address publicly.</p>
+            onClick={() => handleFieldChange('is_public', false)}
+          >
+            <div className="flex items-center justify-center w-4 h-4 mt-0.5">
+              <div className={cn(
+                "w-3 h-3 rounded-full",
+                !value.is_public ? "bg-blue-500" : "border-2 border-muted-foreground"
+              )} />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center space-x-2">
+                <EyeOff className="h-4 w-4 text-blue-600" />
+                <span className="font-medium text-sm">Keep my address private (Recommended)</span>
               </div>
-            ) : (
-              <div>
-                <p className="font-medium text-blue-700">🔒 Only your town/city will be shown to customers</p>
-                <p>Your exact address stays private while customers can still find your general area. You can share specific details when booking.</p>
-              </div>
-            )}
+              <p className="text-xs text-muted-foreground">
+                Only show your town/city to customers. You can share your exact address later when they book with you. 
+                This protects your privacy while still letting customers find your area.
+              </p>
+            </div>
           </div>
         </div>
       </div>
