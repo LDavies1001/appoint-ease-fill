@@ -199,9 +199,21 @@ export const SocialMediaConnector: React.FC = () => {
       const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle;
       const profileUrl = `${platform.urlTemplate}${cleanHandle}`;
 
+      // First, check if a connection already exists and deactivate it
+      const { error: deactivateError } = await supabase
+        .from('social_media_connections')
+        .update({ is_active: false })
+        .eq('provider_id', user?.id)
+        .eq('platform', platform.id);
+
+      if (deactivateError) {
+        console.warn('Could not deactivate existing connection:', deactivateError);
+      }
+
+      // Then insert the new connection
       const { error } = await supabase
         .from('social_media_connections')
-        .upsert({
+        .insert({
           provider_id: user?.id,
           platform: platform.id,
           handle: cleanHandle,
