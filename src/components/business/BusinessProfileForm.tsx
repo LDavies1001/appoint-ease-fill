@@ -20,7 +20,8 @@ import {
   CheckCircle,
   AlertCircle,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 
 interface BusinessCategory {
@@ -344,19 +345,26 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-6 animate-fade-in">
-            {/* Business Logo */}
-            <div className="text-center space-y-4">
-              <Label className="text-lg font-semibold text-accent">Upload your business logo</Label>
+          <div className="space-y-8 animate-fade-in">
+            {/* Business Logo Section */}
+            <div className="text-center space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold text-accent">Let's start with your logo</h3>
+                <p className="text-muted-foreground text-lg">
+                  A great logo helps customers remember and trust your business
+                </p>
+              </div>
+              
               <div className="flex justify-center">
-                <div className="relative">
-                  <Avatar className="h-32 w-32 border-4 border-accent/30">
-                    <AvatarImage src={formData.business_logo_url} />
-                    <AvatarFallback className="text-4xl bg-gradient-to-br from-accent to-accent/80 text-white">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-accent to-accent-glow rounded-full opacity-50 group-hover:opacity-75 transition-opacity duration-300 blur"></div>
+                  <Avatar className="relative h-36 w-36 border-4 border-white shadow-xl">
+                    <AvatarImage src={formData.business_logo_url} className="object-cover" />
+                    <AvatarFallback className="text-5xl bg-gradient-to-br from-accent to-accent-glow text-white font-bold">
                       {formData.business_name.charAt(0) || 'B'}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute -bottom-2 -right-2">
+                  <div className="absolute -bottom-3 -right-3">
                     <div className="relative">
                       <input
                         type="file"
@@ -369,114 +377,132 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                         type="button"
                         size="sm"
                         disabled={uploadingLogo}
-                        className="h-10 w-10 rounded-full bg-accent hover:bg-accent/90"
+                        className="h-12 w-12 rounded-full bg-gradient-to-r from-accent to-accent-glow hover:from-accent/90 hover:to-accent-glow/90 shadow-lg hover:shadow-xl transition-all duration-300"
                       >
                         {uploadingLogo ? (
-                          <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                          <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
                         ) : (
-                          <Upload className="h-4 w-4" />
+                          <Upload className="h-5 w-5" />
                         )}
                       </Button>
                     </div>
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Upload a logo (JPEG/PNG, max 2MB) - Optional but recommended
-              </p>
+              <div className="bg-accent/5 border border-accent/20 rounded-lg p-4 max-w-md mx-auto">
+                <p className="text-sm text-muted-foreground">
+                  Upload a logo (JPEG/PNG, max 2MB) - Optional but highly recommended for professional appeal
+                </p>
+              </div>
             </div>
 
-            {/* Business Name */}
-            <div>
-              <Label htmlFor="business_name" className="text-sm font-semibold text-accent">
-                Business Name <span className="text-destructive">*</span>
-              </Label>
-              <div className="relative mt-2">
-                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
-                <Input
-                  id="business_name"
-                  value={formData.business_name}
-                  onChange={(e) => handleInputChange('business_name', e.target.value)}
-                  placeholder="Enter your business name"
-                  className={`pl-10 transition-all duration-200 focus:border-accent focus:ring-accent ${errors.business_name ? 'border-destructive' : ''}`}
-                />
-                {formData.business_name && !errors.business_name && (
-                  <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+            {/* Business Details Grid */}
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Business Name */}
+              <div className="space-y-3">
+                <Label htmlFor="business_name" className="text-base font-semibold text-accent flex items-center">
+                  <Building className="h-4 w-4 mr-2" />
+                  Business Name <span className="text-destructive ml-1">*</span>
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="business_name"
+                    value={formData.business_name}
+                    onChange={(e) => handleInputChange('business_name', e.target.value)}
+                    placeholder="Enter your business name"
+                    className={`h-12 pl-4 pr-12 text-lg border-2 transition-all duration-300 focus:border-accent focus:ring-accent/20 focus:ring-4 ${errors.business_name ? 'border-destructive' : 'border-accent/30'}`}
+                  />
+                  {formData.business_name && !errors.business_name && (
+                    <CheckCircle className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-accent" />
+                  )}
+                </div>
+                {errors.business_name && (
+                  <p className="text-sm text-destructive flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.business_name}
+                  </p>
                 )}
               </div>
-              {errors.business_name && (
-                <p className="text-sm text-destructive mt-1 flex items-center">
-                  <AlertCircle className="h-4 w-4 mr-1" />
-                  {errors.business_name}
-                </p>
-              )}
-            </div>
 
-            {/* Phone Number */}
-            <div>
-              <Label htmlFor="business_phone" className="text-sm font-semibold text-accent">
-                Contact Number <span className="text-destructive">*</span>
-              </Label>
-              <div className="relative mt-2">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
-                <Input
-                  id="business_phone"
-                  value={formData.business_phone}
-                  onChange={(e) => handleInputChange('business_phone', e.target.value)}
-                  placeholder="+44 123 456 7890"
-                  className={`pl-10 transition-all duration-200 focus:border-accent focus:ring-accent ${errors.business_phone ? 'border-destructive' : ''}`}
-                />
-                {formData.business_phone && !errors.business_phone && (
-                  <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+              {/* Business Phone */}
+              <div className="space-y-3">
+                <Label htmlFor="business_phone" className="text-base font-semibold text-accent flex items-center">
+                  <Phone className="h-4 w-4 mr-2" />
+                  Business Phone <span className="text-destructive ml-1">*</span>
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="business_phone"
+                    value={formData.business_phone}
+                    onChange={(e) => handleInputChange('business_phone', e.target.value)}
+                    placeholder="+44 123 456 7890"
+                    className={`h-12 pl-4 pr-12 text-lg border-2 transition-all duration-300 focus:border-accent focus:ring-accent/20 focus:ring-4 ${errors.business_phone ? 'border-destructive' : 'border-accent/30'}`}
+                  />
+                  {formData.business_phone && !errors.business_phone && (
+                    <CheckCircle className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-accent" />
+                  )}
+                </div>
+                {errors.business_phone && (
+                  <p className="text-sm text-destructive flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.business_phone}
+                  </p>
                 )}
               </div>
-              {errors.business_phone && (
-                <p className="text-sm text-destructive mt-1 flex items-center">
-                  <AlertCircle className="h-4 w-4 mr-1" />
-                  {errors.business_phone}
-                </p>
-              )}
             </div>
 
             {/* Business Address */}
-            <AddressForm
-              value={formData.business_address}
-              onChange={(address) => handleInputChange('business_address', address)}
-              errors={{
-                address_line_1: errors.address_line_1,
-                town_city: errors.town_city,
-                postcode: errors.postcode
-              }}
-            />
+            <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+              <h4 className="text-lg font-semibold text-accent mb-4 flex items-center">
+                <Building className="h-5 w-5 mr-2" />
+                Business Address
+              </h4>
+              <AddressForm
+                value={formData.business_address}
+                onChange={(address) => handleInputChange('business_address', address)}
+                errors={{
+                  address_line_1: errors.address_line_1,
+                  town_city: errors.town_city,
+                  postcode: errors.postcode
+                }}
+              />
+            </div>
           </div>
         );
 
       case 2:
         return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center space-y-2">
-              <h3 className="text-2xl font-bold text-accent">What services do you provide?</h3>
-              <p className="text-muted-foreground">
-                This helps customers find exactly what they're looking for.
+          <div className="space-y-8 animate-fade-in">
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-4 shadow-lg">
+                <Sparkles className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-3xl font-bold text-accent">What services do you provide?</h3>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                This helps customers find exactly what they're looking for. Choose up to 3 services that best represent your business.
               </p>
             </div>
             
-            <CategorySelector
-              categories={categories.map(cat => ({
-                id: cat.id,
-                name: cat.name,
-                description: cat.description
-              }))}
-              selectedCategories={formData.business_categories}
-              onSelectionChange={(selected) => handleInputChange('business_categories', selected)}
-              maxSelections={3}
-            />
+            <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+              <CategorySelector
+                categories={categories.map(cat => ({
+                  id: cat.id,
+                  name: cat.name,
+                  description: cat.description
+                }))}
+                selectedCategories={formData.business_categories}
+                onSelectionChange={(selected) => handleInputChange('business_categories', selected)}
+                maxSelections={3}
+              />
+            </div>
             
             {errors.business_categories && (
-              <p className="text-sm text-destructive flex items-center justify-center">
-                <AlertCircle className="h-4 w-4 mr-1" />
-                {errors.business_categories}
-              </p>
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+                <p className="text-sm text-destructive flex items-center justify-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.business_categories}
+                </p>
+              </div>
             )}
           </div>
         );
@@ -490,16 +516,19 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 
       case 4:
         return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center space-y-2">
-              <h3 className="text-2xl font-bold text-accent">Tell us about your business</h3>
-              <p className="text-muted-foreground">
-                Share what makes your business special (optional).
+          <div className="space-y-8 animate-fade-in">
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-4 shadow-lg">
+                <CheckCircle className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-3xl font-bold text-accent">Tell us about your business</h3>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                Share what makes your business special and help customers understand why they should choose you.
               </p>
             </div>
 
-            <div>
-              <Label htmlFor="business_description" className="text-sm font-semibold text-accent">
+            <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+              <Label htmlFor="business_description" className="text-base font-semibold text-accent mb-4 block">
                 Business Description (Optional)
               </Label>
               <Textarea
@@ -507,17 +536,22 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 value={formData.business_description}
                 onChange={(e) => handleInputChange('business_description', e.target.value)}
                 placeholder="Describe your business, services, experience, or what makes you unique..."
-                className="min-h-[120px] mt-2 transition-all duration-200 focus:border-accent focus:ring-accent"
+                className="min-h-[140px] text-base border-2 border-accent/30 focus:border-accent focus:ring-accent/20 focus:ring-4 transition-all duration-300"
                 maxLength={300}
               />
-              <p className="text-sm text-muted-foreground mt-1">
-                {formData.business_description.length}/300 characters
-              </p>
+              <div className="flex justify-between items-center mt-3">
+                <p className="text-sm text-muted-foreground">
+                  Help customers understand what makes your business special
+                </p>
+                <p className="text-sm text-muted-foreground font-medium">
+                  {formData.business_description.length}/300
+                </p>
+              </div>
             </div>
 
-            <div className="bg-accent/5 border border-accent/20 rounded-lg p-6">
-              <h4 className="font-semibold text-accent mb-2">Almost done! 🎉</h4>
-              <p className="text-sm text-muted-foreground">
+            <div className="bg-gradient-to-r from-accent to-accent-glow rounded-xl p-6 text-white text-center">
+              <h4 className="font-bold text-xl mb-2">🎉 Almost done!</h4>
+              <p className="text-white/90 text-lg">
                 Your business profile will be published and visible to customers once you complete this step.
               </p>
             </div>
@@ -530,54 +564,90 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-accent/5 py-12">
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-accent mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/10 py-8 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMS41IiBmaWxsPSJoc2woMTIwIDMwJSA3NSUgLyAwLjEpIi8+Cjwvc3ZnPg==')] opacity-50"></div>
+      
+      <div className="max-w-5xl mx-auto px-6 relative z-10">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-6 shadow-lg">
+            <Building className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent mb-4">
             Complete Your Profile
           </h1>
-          <p className="text-xl text-muted-foreground">
-            Set up your professional presence to attract customers
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Set up your professional presence to attract customers and grow your business
           </p>
         </div>
 
-        <div className="mb-8">
-          <Stepper currentStep={currentStep} steps={STEPS} />
+        {/* Enhanced Stepper */}
+        <div className="mb-12">
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
+            <Stepper currentStep={currentStep} steps={STEPS} />
+          </div>
         </div>
 
-        <Card className="p-8 shadow-lg border-accent/20">
-          {renderStepContent()}
+        {/* Main Content Card */}
+        <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border border-white/30 relative overflow-hidden">
+          {/* Card background decoration */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-accent/10 to-transparent rounded-full -translate-y-32 translate-x-32"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-primary/10 to-transparent rounded-full translate-y-24 -translate-x-24"></div>
+          
+          <div className="relative z-10">
+            {renderStepContent()}
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8 pt-6 border-t border-accent/20">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleBack}
-              disabled={currentStep === 1}
-              className="border-accent hover:bg-accent hover:text-white transition-all duration-200"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
+            {/* Enhanced Navigation Buttons */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-12 pt-8 border-t border-accent/20">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleBack}
+                disabled={currentStep === 1}
+                className="w-full sm:w-auto min-w-[140px] h-12 border-2 border-accent/30 hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
+                Back
+              </Button>
 
-            <Button
-              type="button"
-              onClick={handleNext}
-              disabled={loading}
-              className="bg-accent hover:bg-accent/90 text-white transition-all duration-200"
-            >
-              {loading ? (
-                <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
-              ) : currentStep === 4 ? (
-                <CheckCircle className="h-4 w-4 mr-2" />
-              ) : (
-                <ArrowRight className="h-4 w-4 mr-2" />
-              )}
-              {currentStep === 4 ? 'Create My Free Business Account' : 'Next'}
-            </Button>
+              <div className="flex items-center text-sm text-muted-foreground">
+                Step {currentStep} of {STEPS.length}
+              </div>
+
+              <Button
+                type="button"
+                onClick={handleNext}
+                disabled={loading}
+                className="w-full sm:w-auto min-w-[200px] h-12 bg-gradient-to-r from-accent to-accent-glow hover:from-accent/90 hover:to-accent-glow/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 group"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
+                    Processing...
+                  </>
+                ) : currentStep === 4 ? (
+                  <>
+                    <CheckCircle className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                    Create My Business Profile
+                  </>
+                ) : (
+                  <>
+                    Next Step
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
-        </Card>
+        </div>
+
+        {/* Footer encouragement */}
+        <div className="text-center mt-8">
+          <p className="text-sm text-muted-foreground">
+            Join thousands of professionals growing their business with us
+          </p>
+        </div>
       </div>
     </div>
   );
