@@ -59,18 +59,85 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 }) => {
   const [detecting, setDetecting] = useState(false);
   const [lookingUpPostcode, setLookingUpPostcode] = useState(false);
+  const [availableAddresses, setAvailableAddresses] = useState<any[]>([]);
+  const [showAddressSelector, setShowAddressSelector] = useState(false);
   const { toast } = useToast();
 
-  // Function to lookup address by postcode
-  const lookupPostcode = async (postcode: string) => {
+  // Function to lookup all addresses for a postcode
+  const lookupPostcodeAddresses = async (postcode: string) => {
     if (!postcode || postcode.length < 5) return;
     
     setLookingUpPostcode(true);
+    setAvailableAddresses([]);
+    setShowAddressSelector(false);
+    
     try {
       // Clean postcode (remove spaces, uppercase)
       const cleanPostcode = postcode.replace(/\s/g, '').toUpperCase();
       
-      // Try UK PostCode API first
+      // Search for all addresses in this postcode area using Nominatim
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&postalcode=${cleanPostcode}&countrycodes=gb&addressdetails=1&limit=50`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (data.length > 0) {
+          // Group addresses by house number and remove duplicates
+          const addressMap = new Map();
+          
+          data.forEach((item: any) => {
+            const address = item.address;
+            const houseNumber = address.house_number;
+            const streetName = address.road || address.street || '';
+            
+            if (houseNumber && streetName) {
+              const key = `${houseNumber}-${streetName}`;
+              if (!addressMap.has(key)) {
+                addressMap.set(key, {
+                  house_number: houseNumber,
+                  street: streetName,
+                  suburb: address.suburb || address.neighbourhood || '',
+                  city: address.city || address.town || 'Manchester',
+                  county: address.county || address.state_district || 'Greater Manchester',
+                  postcode: address.postcode || cleanPostcode,
+                  country: address.country || 'United Kingdom',
+                  displayName: `${houseNumber} ${streetName}`
+                });
+              }
+            }
+          });
+          
+          // Convert to array and sort by house number
+          const addresses = Array.from(addressMap.values()).sort((a, b) => {
+            const aNum = parseInt(a.house_number) || 999;
+            const bNum = parseInt(b.house_number) || 999;
+            return aNum - bNum;
+          });
+          
+          setAvailableAddresses(addresses);
+          setShowAddressSelector(addresses.length > 0);
+          
+          // If no specific addresses found, try general postcode lookup
+          if (addresses.length === 0) {
+            await fallbackGeneralLookup(cleanPostcode);
+          }
+        } else {
+          await fallbackGeneralLookup(cleanPostcode);
+        }
+      }
+    } catch (error) {
+      console.error('Postcode lookup failed:', error);
+      await fallbackGeneralLookup(postcode.replace(/\s/g, '').toUpperCase());
+    } finally {
+      setLookingUpPostcode(false);
+    }
+  };
+
+  // Fallback to general postcode info when specific addresses not found
+  const fallbackGeneralLookup = async (cleanPostcode: string) => {
+    try {
       const response = await fetch(`https://api.postcodes.io/postcodes/${cleanPostcode}`);
       
       if (response.ok) {
@@ -78,11 +145,10 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         const result = data.result;
         
         if (result) {
-          // Get the local area name (ward, parish, or admin ward)
+          // Get the local area name
           const localArea = result.parish || result.admin_ward || result.ward || '';
           const city = result.admin_district || 'Manchester';
           
-          // Create comprehensive town/city name
           let townCity = '';
           if (localArea && localArea !== 'Unparished Area' && localArea !== city) {
             townCity = `${localArea}, ${city}`;
@@ -90,28 +156,10 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             townCity = city;
           }
           
-          // Also try to get street name from Nominatim using the postcode center
-          let streetName = '';
-          try {
-            const nominatimResponse = await fetch(
-              `https://nominatim.openstreetmap.org/search?format=json&postalcode=${cleanPostcode}&countrycodes=gb&addressdetails=1&limit=1`
-            );
-            
-            if (nominatimResponse.ok) {
-              const nominatimData = await nominatimResponse.json();
-              if (nominatimData.length > 0) {
-                const address = nominatimData[0].address;
-                streetName = address.road || address.street || '';
-              }
-            }
-          } catch (err) {
-            console.error('Nominatim lookup failed:', err);
-          }
-          
-          // Update address fields
+          // Update fields with general area info, leave house number and street empty
           const updatedAddress: AddressData = {
-            address_line_1: value.address_line_1, // Keep existing house number/name
-            address_line_2: streetName, // Auto-populate street name
+            address_line_1: '',
+            address_line_2: '',
             town_city: townCity,
             county: result.admin_county || 'Greater Manchester',
             postcode: result.postcode,
@@ -123,10 +171,34 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         }
       }
     } catch (error) {
-      console.error('Postcode lookup failed:', error);
-    } finally {
-      setLookingUpPostcode(false);
+      console.error('Fallback postcode lookup failed:', error);
     }
+  };
+
+  // Handle address selection
+  const selectAddress = (selectedAddress: any) => {
+    const localArea = selectedAddress.suburb;
+    const city = selectedAddress.city;
+    
+    let townCity = '';
+    if (localArea && localArea !== 'Unparished Area' && localArea !== city) {
+      townCity = `${localArea}, ${city}`;
+    } else {
+      townCity = city;
+    }
+    
+    const fullAddress: AddressData = {
+      address_line_1: selectedAddress.house_number,
+      address_line_2: selectedAddress.street,
+      town_city: townCity,
+      county: selectedAddress.county,
+      postcode: selectedAddress.postcode,
+      country: selectedAddress.country,
+      is_public: value.is_public
+    };
+    
+    onChange(fullAddress);
+    setShowAddressSelector(false);
   };
 
   const handleFieldChange = (field: keyof AddressData, fieldValue: string | boolean) => {
@@ -350,139 +422,15 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
       {/* Address Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Address Line 1 - House Number/Name */}
-        <div className="md:col-span-1">
-          <Label htmlFor="address_line_1" className="text-sm font-medium text-accent">
-            House Number/Name <span className="text-muted-foreground">(Optional)</span>
-          </Label>
-          <div className="relative mt-1">
-            <Input
-              id="address_line_1"
-              value={value.address_line_1}
-              onChange={(e) => handleFieldChange('address_line_1', e.target.value)}
-              placeholder="123 or House Name"
-              autoComplete="address-line1"
-              className={cn(
-                "transition-all duration-200 focus:border-accent focus:ring-accent"
-              )}
-            />
-            {value.address_line_1 && (
-              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
-            )}
-          </div>
-        </div>
-
-        {/* Address Line 2 - Street Name (Auto-populated from postcode) */}
-        <div className="md:col-span-1">
-          <Label htmlFor="address_line_2" className="text-sm font-medium text-accent">
-            Street Name <span className="text-destructive">*</span>
-          </Label>
-          <div className="relative mt-1">
-            <Input
-              id="address_line_2"
-              value={value.address_line_2}
-              onChange={(e) => handleFieldChange('address_line_2', e.target.value)}
-              placeholder="Street name (auto-filled from postcode)"
-              autoComplete="address-line2"
-              className={cn(
-                "transition-all duration-200 focus:border-accent focus:ring-accent",
-                errors.address_line_2 ? 'border-destructive' : ''
-              )}
-            />
-            {value.address_line_2 && !errors.address_line_2 && (
-              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
-            )}
-          </div>
-          {errors.address_line_2 && (
-            <p className="text-sm text-destructive mt-1 flex items-center">
-              <AlertCircle className="h-4 w-4 mr-1" />
-              {errors.address_line_2}
-            </p>
-          )}
-        </div>
-
-        {/* Town/City */}
-        <div>
-          <Label htmlFor="town_city" className="text-sm font-medium text-accent">
-            Town/City <span className="text-destructive">*</span>
-          </Label>
-          <div className="relative mt-1">
-            <Input
-              id="town_city"
-              value={value.town_city}
-              onChange={(e) => handleFieldChange('town_city', e.target.value)}
-              placeholder="London"
-              autoComplete="address-level2"
-              className={cn(
-                "transition-all duration-200 focus:border-accent focus:ring-accent",
-                errors.town_city ? 'border-destructive' : ''
-              )}
-            />
-            {value.town_city && isFieldValid('town_city') && !errors.town_city && (
-              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
-            )}
-          </div>
-          {errors.town_city && (
-            <p className="text-sm text-destructive mt-1 flex items-center">
-              <AlertCircle className="h-4 w-4 mr-1" />
-              {errors.town_city}
-            </p>
-          )}
-        </div>
-
-        {/* County */}
-        <div>
-          <Label htmlFor="county" className="text-sm font-medium text-accent">
-            County <span className="text-destructive">*</span>
-          </Label>
-          <div className="mt-1">
-            {value.country === 'United Kingdom' ? (
-              <Select value={value.county} onValueChange={(val) => handleFieldChange('county', val)}>
-                <SelectTrigger className={cn(
-                  "transition-all duration-200 focus:border-accent focus:ring-accent",
-                  errors.county ? 'border-destructive' : ''
-                )}>
-                  <SelectValue placeholder="Select county" />
-                </SelectTrigger>
-                <SelectContent className="bg-background border-accent/20 max-h-[200px]">
-                  {UK_COUNTIES.map((county) => (
-                    <SelectItem key={county} value={county}>
-                      {county}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : (
-              <Input
-                id="county"
-                value={value.county}
-                onChange={(e) => handleFieldChange('county', e.target.value)}
-                placeholder="State/Province/County"
-                autoComplete="address-level1"
-                className={cn(
-                  "transition-all duration-200 focus:border-accent focus:ring-accent",
-                  errors.county ? 'border-destructive' : ''
-                )}
-              />
-            )}
-            {errors.county && (
-              <p className="text-sm text-destructive mt-1 flex items-center">
-                <AlertCircle className="h-4 w-4 mr-1" />
-                {errors.county}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Postcode */}
-        <div>
+        {/* Postcode - First Field */}
+        <div className="md:col-span-2">
           <Label htmlFor="postcode" className="text-sm font-medium text-accent">
             Postcode <span className="text-destructive">*</span>
           </Label>
           <p className="text-sm text-blue-600 mt-1 mb-2">
-            💡 Enter your postcode first to auto-fill street and area details
+            💡 Enter your postcode first to find your address
           </p>
-          <div className="relative mt-1">
+          <div className="relative">
             <Input
               id="postcode"
               value={value.postcode}
@@ -491,7 +439,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                 handleFieldChange('postcode', newPostcode);
                 // Auto-lookup when postcode looks complete
                 if (newPostcode.length >= 6 && newPostcode.length <= 8) {
-                  lookupPostcode(newPostcode);
+                  lookupPostcodeAddresses(newPostcode);
                 }
               }}
               placeholder="M23 9NY"
@@ -516,6 +464,144 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               {errors.postcode}
             </p>
           )}
+        </div>
+
+        {/* Address Selector - Shows after postcode lookup */}
+        {showAddressSelector && availableAddresses.length > 0 && (
+          <div className="md:col-span-2">
+            <Label className="text-sm font-medium text-accent">
+              Select Your Address <span className="text-destructive">*</span>
+            </Label>
+            <p className="text-sm text-green-600 mt-1 mb-2">
+              ✅ Found {availableAddresses.length} address(es) for {value.postcode}
+            </p>
+            <Select onValueChange={(selectedIndex) => selectAddress(availableAddresses[parseInt(selectedIndex)])}>
+              <SelectTrigger className="border-2 border-green-300 bg-green-50/50">
+                <SelectValue placeholder="👆 Click here to select your address" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border-accent/20 max-h-[200px] z-50">
+                {availableAddresses.map((address, index) => (
+                  <SelectItem key={index} value={index.toString()} className="cursor-pointer hover:bg-accent/10">
+                    {address.displayName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        {/* Address Line 1 - House Number/Name (Auto-filled from selection) */}
+        <div className="md:col-span-1">
+          <Label htmlFor="address_line_1" className="text-sm font-medium text-accent">
+            House Number/Name <span className="text-muted-foreground">(Auto-filled)</span>
+          </Label>
+          <div className="relative mt-1">
+            <Input
+              id="address_line_1"
+              value={value.address_line_1}
+              onChange={(e) => handleFieldChange('address_line_1', e.target.value)}
+              placeholder="Will be filled when you select address"
+              autoComplete="address-line1"
+              className={cn(
+                "transition-all duration-200 focus:border-accent focus:ring-accent",
+                value.address_line_1 ? 'bg-green-50/50' : ''
+              )}
+              readOnly={showAddressSelector}
+            />
+            {value.address_line_1 && (
+              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+            )}
+          </div>
+        </div>
+
+        {/* Address Line 2 - Street Name (Auto-filled from selection) */}
+        <div className="md:col-span-1">
+          <Label htmlFor="address_line_2" className="text-sm font-medium text-accent">
+            Street Name <span className="text-muted-foreground">(Auto-filled)</span>
+          </Label>
+          <div className="relative mt-1">
+            <Input
+              id="address_line_2"
+              value={value.address_line_2}
+              onChange={(e) => handleFieldChange('address_line_2', e.target.value)}
+              placeholder="Will be filled when you select address"
+              autoComplete="address-line2"
+              className={cn(
+                "transition-all duration-200 focus:border-accent focus:ring-accent",
+                value.address_line_2 ? 'bg-green-50/50' : '',
+                errors.address_line_2 ? 'border-destructive' : ''
+              )}
+              readOnly={showAddressSelector}
+            />
+            {value.address_line_2 && !errors.address_line_2 && (
+              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+            )}
+          </div>
+          {errors.address_line_2 && (
+            <p className="text-sm text-destructive mt-1 flex items-center">
+              <AlertCircle className="h-4 w-4 mr-1" />
+              {errors.address_line_2}
+            </p>
+          )}
+        </div>
+
+        {/* Town/City (Auto-filled) */}
+        <div>
+          <Label htmlFor="town_city" className="text-sm font-medium text-accent">
+            Town/City <span className="text-muted-foreground">(Auto-filled)</span>
+          </Label>
+          <div className="relative mt-1">
+            <Input
+              id="town_city"
+              value={value.town_city}
+              onChange={(e) => handleFieldChange('town_city', e.target.value)}
+              placeholder="Will be filled from postcode"
+              autoComplete="address-level2"
+              className={cn(
+                "transition-all duration-200 focus:border-accent focus:ring-accent",
+                value.town_city ? 'bg-green-50/50' : '',
+                errors.town_city ? 'border-destructive' : ''
+              )}
+              readOnly
+            />
+            {value.town_city && isFieldValid('town_city') && !errors.town_city && (
+              <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
+            )}
+          </div>
+          {errors.town_city && (
+            <p className="text-sm text-destructive mt-1 flex items-center">
+              <AlertCircle className="h-4 w-4 mr-1" />
+              {errors.town_city}
+            </p>
+          )}
+        </div>
+
+        {/* County (Auto-filled) */}
+        <div>
+          <Label htmlFor="county" className="text-sm font-medium text-accent">
+            County <span className="text-muted-foreground">(Auto-filled)</span>
+          </Label>
+          <div className="mt-1">
+            <Input
+              id="county"
+              value={value.county}
+              onChange={(e) => handleFieldChange('county', e.target.value)}
+              placeholder="Will be filled from postcode"
+              autoComplete="address-level1"
+              className={cn(
+                "transition-all duration-200 focus:border-accent focus:ring-accent",
+                value.county ? 'bg-green-50/50' : '',
+                errors.county ? 'border-destructive' : ''
+              )}
+              readOnly
+            />
+            {errors.county && (
+              <p className="text-sm text-destructive mt-1 flex items-center">
+                <AlertCircle className="h-4 w-4 mr-1" />
+                {errors.county}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Country */}
