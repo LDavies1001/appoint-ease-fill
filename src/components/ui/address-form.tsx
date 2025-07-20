@@ -105,8 +105,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               address.road || address.street
             ].filter(Boolean).join(' ') || '',
             address_line_2: address.suburb || address.neighbourhood || '',
-            town_city: address.city || address.town || address.village || '',
-            county: address.county || address.state || '',
+            town_city: address.city || address.town || address.village || address.hamlet || '',
+            county: address.county || address.state_district || address.state || '',
             postcode: address.postcode || '',
             country: value.country || 'United Kingdom' // Keep existing or default
           };
