@@ -171,10 +171,10 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         newErrors.business_phone = 'Phone number is required';
       }
       
-      // Validate address fields
+      // Validate address fields - Address Line 2 (street) is required, Address Line 1 (house number) is optional
       const address = formData.business_address;
-      if (!address.address_line_1.trim()) {
-        newErrors.address_line_1 = 'Address line 1 is required';
+      if (!address.address_line_2.trim()) {
+        newErrors.address_line_2 = 'Street name is required';
       }
       if (!address.town_city.trim()) {
         newErrors.town_city = 'Town/City is required';

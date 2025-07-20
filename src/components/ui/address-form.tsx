@@ -58,7 +58,76 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   className
 }) => {
   const [detecting, setDetecting] = useState(false);
+  const [lookingUpPostcode, setLookingUpPostcode] = useState(false);
   const { toast } = useToast();
+
+  // Function to lookup address by postcode
+  const lookupPostcode = async (postcode: string) => {
+    if (!postcode || postcode.length < 5) return;
+    
+    setLookingUpPostcode(true);
+    try {
+      // Clean postcode (remove spaces, uppercase)
+      const cleanPostcode = postcode.replace(/\s/g, '').toUpperCase();
+      
+      // Try UK PostCode API first
+      const response = await fetch(`https://api.postcodes.io/postcodes/${cleanPostcode}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const result = data.result;
+        
+        if (result) {
+          // Get the local area name (ward, parish, or admin ward)
+          const localArea = result.parish || result.admin_ward || result.ward || '';
+          const city = result.admin_district || 'Manchester';
+          
+          // Create comprehensive town/city name
+          let townCity = '';
+          if (localArea && localArea !== 'Unparished Area' && localArea !== city) {
+            townCity = `${localArea}, ${city}`;
+          } else {
+            townCity = city;
+          }
+          
+          // Also try to get street name from Nominatim using the postcode center
+          let streetName = '';
+          try {
+            const nominatimResponse = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=json&postalcode=${cleanPostcode}&countrycodes=gb&addressdetails=1&limit=1`
+            );
+            
+            if (nominatimResponse.ok) {
+              const nominatimData = await nominatimResponse.json();
+              if (nominatimData.length > 0) {
+                const address = nominatimData[0].address;
+                streetName = address.road || address.street || '';
+              }
+            }
+          } catch (err) {
+            console.error('Nominatim lookup failed:', err);
+          }
+          
+          // Update address fields
+          const updatedAddress: AddressData = {
+            address_line_1: value.address_line_1, // Keep existing house number/name
+            address_line_2: streetName, // Auto-populate street name
+            town_city: townCity,
+            county: result.admin_county || 'Greater Manchester',
+            postcode: result.postcode,
+            country: result.country || 'United Kingdom',
+            is_public: value.is_public
+          };
+          
+          onChange(updatedAddress);
+        }
+      }
+    } catch (error) {
+      console.error('Postcode lookup failed:', error);
+    } finally {
+      setLookingUpPostcode(false);
+    }
+  };
 
   const handleFieldChange = (field: keyof AddressData, fieldValue: string | boolean) => {
     onChange({
@@ -180,12 +249,43 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             bestAddress = data.address || {};
           }
           
+          // Get the local area name - prioritize specific areas over generic ones
+          const getLocalArea = (address: any) => {
+            // Prioritize suburb, neighbourhood, village, hamlet over generic city
+            const localArea = address.suburb || 
+                            address.neighbourhood || 
+                            address.village || 
+                            address.hamlet ||
+                            address.district ||
+                            address.borough ||
+                            address.city_district ||
+                            '';
+            
+            // Don't use unparished areas
+            if (localArea && localArea !== 'Unparished Area') {
+              return localArea;
+            }
+            
+            return '';
+          };
+          
+          const localArea = getLocalArea(bestAddress);
+          const city = bestAddress.city || bestAddress.town || 'Manchester';
+          
+          // Create comprehensive town/city name
+          let townCity = '';
+          if (localArea && localArea !== city) {
+            townCity = `${localArea}, ${city}`;
+          } else {
+            townCity = city;
+          }
+          
           // Map the best address to our structure
           const detectedAddress: AddressData = {
             address_line_1: bestAddress.house_number || '',
             address_line_2: bestAddress.road || bestAddress.street || '',
-            town_city: bestAddress.suburb || bestAddress.neighbourhood || bestAddress.city || bestAddress.town || bestAddress.village || bestAddress.hamlet || '',
-            county: bestAddress.county || bestAddress.state_district || bestAddress.state || '',
+            town_city: townCity,
+            county: bestAddress.county || bestAddress.state_district || bestAddress.state || 'Greater Manchester',
             postcode: bestAddress.postcode || '',
             country: bestAddress.country || 'United Kingdom',
             is_public: value.is_public // Preserve existing privacy setting
@@ -250,46 +350,39 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
       {/* Address Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Address Line 1 - House Number */}
-        <div className="md:col-span-2">
+        {/* Address Line 1 - House Number/Name */}
+        <div className="md:col-span-1">
           <Label htmlFor="address_line_1" className="text-sm font-medium text-accent">
-            Address Line 1 <span className="text-destructive">*</span>
+            House Number/Name <span className="text-muted-foreground">(Optional)</span>
           </Label>
           <div className="relative mt-1">
             <Input
               id="address_line_1"
               value={value.address_line_1}
               onChange={(e) => handleFieldChange('address_line_1', e.target.value)}
-              placeholder="123 High Street"
+              placeholder="123 or House Name"
               autoComplete="address-line1"
               className={cn(
-                "transition-all duration-200 focus:border-accent focus:ring-accent",
-                errors.address_line_1 ? 'border-destructive' : ''
+                "transition-all duration-200 focus:border-accent focus:ring-accent"
               )}
             />
-            {value.address_line_1 && isFieldValid('address_line_1') && !errors.address_line_1 && (
+            {value.address_line_1 && (
               <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
             )}
           </div>
-          {errors.address_line_1 && (
-            <p className="text-sm text-destructive mt-1 flex items-center">
-              <AlertCircle className="h-4 w-4 mr-1" />
-              {errors.address_line_1}
-            </p>
-          )}
         </div>
 
-        {/* Address Line 2 - Street Name */}
-        <div className="md:col-span-2">
+        {/* Address Line 2 - Street Name (Auto-populated from postcode) */}
+        <div className="md:col-span-1">
           <Label htmlFor="address_line_2" className="text-sm font-medium text-accent">
-            Address Line 2 <span className="text-muted-foreground">(Optional)</span>
+            Street Name <span className="text-destructive">*</span>
           </Label>
           <div className="relative mt-1">
             <Input
               id="address_line_2"
               value={value.address_line_2}
               onChange={(e) => handleFieldChange('address_line_2', e.target.value)}
-              placeholder="Apartment, suite, unit, building, floor, etc."
+              placeholder="Street name (auto-filled from postcode)"
               autoComplete="address-line2"
               className={cn(
                 "transition-all duration-200 focus:border-accent focus:ring-accent",
@@ -386,11 +479,21 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           <Label htmlFor="postcode" className="text-sm font-medium text-accent">
             Postcode <span className="text-destructive">*</span>
           </Label>
+          <p className="text-sm text-blue-600 mt-1 mb-2">
+            💡 Enter your postcode first to auto-fill street and area details
+          </p>
           <div className="relative mt-1">
             <Input
               id="postcode"
               value={value.postcode}
-              onChange={(e) => handleFieldChange('postcode', e.target.value.toUpperCase())}
+              onChange={(e) => {
+                const newPostcode = e.target.value.toUpperCase();
+                handleFieldChange('postcode', newPostcode);
+                // Auto-lookup when postcode looks complete
+                if (newPostcode.length >= 6 && newPostcode.length <= 8) {
+                  lookupPostcode(newPostcode);
+                }
+              }}
               placeholder="M23 9NY"
               autoComplete="postal-code"
               className={cn(
@@ -398,6 +501,11 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                 errors.postcode ? 'border-destructive' : ''
               )}
             />
+            {lookingUpPostcode && (
+              <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+                <div className="animate-spin h-4 w-4 border-2 border-accent border-t-transparent rounded-full" />
+              </div>
+            )}
             {value.postcode && isFieldValid('postcode') && !errors.postcode && (
               <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-accent" />
             )}
