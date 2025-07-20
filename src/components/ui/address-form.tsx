@@ -142,13 +142,23 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             return aNum - bNum;
           });
           
-          setAvailableAddresses(addresses);
-          
           if (addresses.length > 0) {
+            setAvailableAddresses(addresses);
             setStep('select');
-          } else {
-            toast({ title: "No addresses found", description: "Please try a different postcode or address", variant: "destructive" });
+            return;
           }
+          
+          // If no specific addresses found but we have general postcode data, use manual entry
+          if (isPostcode && data[0]?.address?.postcode) {
+            await handlePostcodeOnlyFlow(data[0]);
+            return;
+          }
+        }
+        
+        // If we reach here, try the UK Postcodes API as fallback
+        if (isPostcode) {
+          const cleanPostcode = cleanInput.replace(/\s/g, '');
+          await tryUKPostcodesAPI(cleanPostcode);
         } else {
           toast({ title: "No addresses found", description: "Please try a different postcode or address", variant: "destructive" });
         }
@@ -158,6 +168,88 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       toast({ title: "Search failed", description: "Please try again", variant: "destructive" });
     } finally {
       setSearching(false);
+    }
+  };
+
+  // Handle postcode-only flow when specific addresses aren't available
+  const handlePostcodeOnlyFlow = async (postcodeData: any) => {
+    const address = postcodeData.address;
+    const suburb = address.suburb || address.neighbourhood || '';
+    const city = address.city || address.town || 'Manchester';
+    
+    let townCity = '';
+    if (suburb && suburb !== 'Unparished Area' && suburb !== city) {
+      townCity = `${suburb}, ${city}`;
+    } else {
+      townCity = city;
+    }
+    
+    // Pre-populate the form with postcode data and allow manual entry
+    const partialAddress: AddressData = {
+      address_line_1: '',
+      address_line_2: '',
+      town_city: townCity,
+      county: address.county || address.state_district || 'Greater Manchester',
+      postcode: address.postcode,
+      country: address.country || 'United Kingdom',
+      is_public: value.is_public
+    };
+    
+    onChange(partialAddress);
+    setStep('confirm');
+    
+    toast({ 
+      title: "Postcode found!", 
+      description: "Please enter your house number and street name manually" 
+    });
+  };
+
+  // Try UK Postcodes API as fallback
+  const tryUKPostcodesAPI = async (postcode: string) => {
+    try {
+      const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const result = data.result;
+        
+        if (result) {
+          const localArea = result.parish || result.admin_ward || result.ward || '';
+          const city = result.admin_district || 'Manchester';
+          
+          let townCity = '';
+          if (localArea && localArea !== 'Unparished Area' && localArea !== city) {
+            townCity = `${localArea}, ${city}`;
+          } else {
+            townCity = city;
+          }
+          
+          const partialAddress: AddressData = {
+            address_line_1: '',
+            address_line_2: '',
+            town_city: townCity,
+            county: result.admin_county || 'Greater Manchester',
+            postcode: result.postcode,
+            country: 'United Kingdom',
+            is_public: value.is_public
+          };
+          
+          onChange(partialAddress);
+          setStep('confirm');
+          
+          toast({ 
+            title: "Postcode found!", 
+            description: "Please enter your house number and street name manually" 
+          });
+        } else {
+          toast({ title: "Postcode not found", description: "Please check the postcode and try again", variant: "destructive" });
+        }
+      } else {
+        toast({ title: "Postcode not found", description: "Please check the postcode and try again", variant: "destructive" });
+      }
+    } catch (error) {
+      console.error('UK Postcodes API failed:', error);
+      toast({ title: "Address lookup failed", description: "Please enter your address manually", variant: "destructive" });
     }
   };
 
@@ -308,10 +400,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2">
-              <h4 className="font-medium text-green-800">Selected Address:</h4>
+              <h4 className="font-medium text-green-800">
+                {value.address_line_1 && value.address_line_2 ? 'Selected Address:' : 'Postcode Found - Please Complete Your Address:'}
+              </h4>
               <div className="text-sm space-y-1">
-                <div><strong>House Number/Name:</strong> {value.address_line_1}</div>
-                <div><strong>Street:</strong> {value.address_line_2}</div>
+                <div><strong>House Number/Name:</strong> {value.address_line_1 || 'Please enter below'}</div>
+                <div><strong>Street:</strong> {value.address_line_2 || 'Please enter below'}</div>
                 <div><strong>Town/City:</strong> {value.town_city}</div>
                 <div><strong>County:</strong> {value.county}</div>
                 <div><strong>Postcode:</strong> {value.postcode}</div>
@@ -324,25 +418,30 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="edit-line1" className="text-sm font-medium">
-                    House Number/Name
+                    House Number/Name {!value.address_line_1 && <span className="text-destructive">*</span>}
                   </Label>
                   <Input
                     id="edit-line1"
                     value={value.address_line_1}
                     onChange={(e) => handleFieldChange('address_line_1', e.target.value)}
-                    placeholder="Optional"
+                    placeholder={!value.address_line_1 ? "e.g., 123 or Apartment A" : "Optional"}
+                    className={!value.address_line_1 ? 'border-blue-300 bg-blue-50' : ''}
                   />
                 </div>
                 
                 <div>
                   <Label htmlFor="edit-line2" className="text-sm font-medium">
-                    Street <span className="text-destructive">*</span>
+                    Street {!value.address_line_2 && <span className="text-destructive">*</span>}
                   </Label>
                   <Input
                     id="edit-line2"
                     value={value.address_line_2}
                     onChange={(e) => handleFieldChange('address_line_2', e.target.value)}
-                    className={errors.address_line_2 ? 'border-destructive' : ''}
+                    placeholder={!value.address_line_2 ? "e.g., Oxford Road" : "Street name"}
+                    className={cn(
+                      !value.address_line_2 ? 'border-blue-300 bg-blue-50' : '',
+                      errors.address_line_2 ? 'border-destructive' : ''
+                    )}
                   />
                   {errors.address_line_2 && (
                     <p className="text-sm text-destructive mt-1">{errors.address_line_2}</p>
