@@ -457,18 +457,32 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       console.log('Mode:', mode);
 
       if (mode === 'create') {
-        const { error } = await supabase
+        console.log('Attempting to INSERT provider_details...');
+        const { data, error } = await supabase
           .from('provider_details')
-          .insert(submitData);
+          .insert(submitData)
+          .select();
         
-        if (error) throw error;
+        console.log('INSERT result:', { data, error });
+        if (error) {
+          console.error('INSERT error details:', error);
+          throw error;
+        }
+        console.log('INSERT successful, data:', data);
       } else {
-        const { error } = await supabase
+        console.log('Attempting to UPDATE provider_details...');
+        const { data, error } = await supabase
           .from('provider_details')
           .update(submitData)
-          .eq('user_id', user?.id);
+          .eq('user_id', user?.id)
+          .select();
         
-        if (error) throw error;
+        console.log('UPDATE result:', { data, error });
+        if (error) {
+          console.error('UPDATE error details:', error);
+          throw error;
+        }
+        console.log('UPDATE successful, data:', data);
       }
 
       // Mark profile as complete
