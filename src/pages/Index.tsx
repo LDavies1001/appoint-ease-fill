@@ -68,7 +68,7 @@ const Index = () => {
                   </div>
 
                   <Link to="/auth?tab=signup" className="block mt-auto">
-                    <Button className="w-full px-8 py-4 text-lg font-medium">
+                    <Button variant="hero" className="w-full px-8 py-4 text-lg font-medium">
                       <User className="mr-2 h-5 w-5" />
                       Sign Up as Customer
                       <ArrowRight className="ml-2 h-5 w-5" />
