@@ -382,36 +382,27 @@ const LibraryTab = () => {
         .single();
 
       if (existingItem) {
-        // Toggle cover status on existing portfolio item
+        // Toggle cover status on existing portfolio item only
         const { error } = await supabase
           .from('portfolio_items')
           .update({ template_type: item.isCover ? null : 'cover' })
           .eq('id', existingItem.id);
 
         if (error) throw error;
+        
+        toast({
+          title: "Success",
+          description: item.isCover ? "Cover image removed!" : "Cover image set successfully!",
+        });
       } else {
-        // Create new portfolio item with cover status if not removing
-        if (!item.isCover) {
-          const { error } = await supabase
-            .from('portfolio_items')
-            .insert({
-              provider_id: user.id,
-              title: item.filename.replace(/\.[^/.]+$/, ""),
-              description: item.caption || '',
-              image_url: item.url,
-              category: item.category,
-              template_type: 'cover',
-              is_public: true
-            });
-
-          if (error) throw error;
-        }
+        // If no portfolio item exists, inform user they need to add to portfolio first
+        toast({
+          title: "Add to Portfolio First",
+          description: "Please add this image to your portfolio before setting it as cover.",
+          variant: "destructive",
+        });
+        return;
       }
-
-      toast({
-        title: "Success",
-        description: item.isCover ? "Cover image removed!" : "Cover image set successfully!",
-      });
 
       fetchMediaItems();
     } catch (error) {
