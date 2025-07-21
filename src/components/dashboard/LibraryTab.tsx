@@ -19,8 +19,15 @@ import {
   Star, 
   Trash2, 
   Crown,
-  Eye
+  Eye,
+  MoreVertical,
+  Check,
+  Heart
 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface MediaItem {
   id: string;
@@ -691,68 +698,127 @@ const LibraryTab = () => {
                   )}
                 </div>
 
-                {/* Controls Overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-2 p-4">
+                {/* Interactive Controls */}
+                <TooltipProvider>
+                  {/* Quick actions bar at bottom - always visible */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex space-x-1">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant={item.show_in_portfolio ? "default" : "outline"}
+                              className={`h-8 w-8 p-0 ${item.show_in_portfolio ? "bg-green-500 hover:bg-green-600 text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                              onClick={() => togglePortfolioDisplay(item)}
+                            >
+                              {item.show_in_portfolio ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{item.show_in_portfolio ? "Remove from portfolio" : "Add to portfolio"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant={item.isPinned ? "default" : "outline"}
+                              className={`h-8 w-8 p-0 ${item.isPinned ? "bg-provider text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                              onClick={() => togglePin(item)}
+                            >
+                              <Pin className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{item.isPinned ? "Unpin image" : "Pin to featured"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant={item.isCover ? "default" : "outline"}
+                              className={`h-8 w-8 p-0 ${item.isCover ? "bg-yellow-500 hover:bg-yellow-600 text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                              onClick={() => setCoverImage(item)}
+                            >
+                              <Crown className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{item.isCover ? "Remove as cover" : "Set as cover image"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-8 w-8 p-0 bg-white/90 hover:bg-white text-gray-800"
+                          >
+                            <MoreVertical className="h-3 w-3" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem onClick={() => setSelectedImage(item)}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Full Size
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => {
+                            setEditingItem(item.id);
+                            setEditCaption(item.caption);
+                          }}>
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit Caption
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Image
+                              </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Image</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "{item.filename}"? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => deleteImage(item)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+
+                  {/* Hover overlay for additional info */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center">
                     <Button
-                      size="sm"
                       variant="outline"
-                      className="bg-white/90 hover:bg-white text-xs flex items-center gap-1"
+                      size="lg"
+                      className="bg-white/95 hover:bg-white text-gray-800 shadow-lg"
                       onClick={() => setSelectedImage(item)}
                     >
-                      <Eye className="h-3 w-3" />
-                      <span>View</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="bg-white/90 hover:bg-white text-xs flex items-center gap-1"
-                      onClick={() => {
-                        setEditingItem(item.id);
-                        setEditCaption(item.caption);
-                      }}
-                    >
-                      <Edit className="h-3 w-3" />
-                      <span>Edit</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant={item.isPinned ? "provider" : "outline"}
-                      className={item.isPinned ? "text-xs flex items-center gap-1" : "bg-white/90 hover:bg-white text-xs flex items-center gap-1"}
-                      onClick={() => togglePin(item)}
-                    >
-                      <Pin className="h-3 w-3" />
-                      <span>{item.isPinned ? "Unpin" : "Pin"}</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant={item.isCover ? "default" : "outline"}
-                      className={item.isCover ? "bg-yellow-500 hover:bg-yellow-600 text-xs flex items-center gap-1" : "bg-white/90 hover:bg-white text-xs flex items-center gap-1"}
-                      onClick={() => setCoverImage(item)}
-                    >
-                      <Crown className="h-3 w-3" />
-                      <span>{item.isCover ? "Cover" : "Set Cover"}</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant={item.show_in_portfolio ? "default" : "outline"}
-                      className={item.show_in_portfolio ? "bg-green-500 hover:bg-green-600 text-xs flex items-center gap-1" : "bg-white/90 hover:bg-white text-xs flex items-center gap-1"}
-                      onClick={() => togglePortfolioDisplay(item)}
-                    >
-                      {item.show_in_portfolio ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
-                      <span>{item.show_in_portfolio ? "Hide" : "Show"}</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="text-xs flex items-center gap-1"
-                      onClick={() => deleteImage(item)}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                      <span>Delete</span>
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Full Size
                     </Button>
                   </div>
-                </div>
+                </TooltipProvider>
               </div>
 
               <CardContent className="p-4">
