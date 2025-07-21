@@ -338,11 +338,11 @@ const PublicPortfolio = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems.map((item) => (
                 <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="relative">
+                  <div className="relative aspect-square">
                     <img
                       src={item.image_url}
                       alt={item.title}
-                      className="w-full h-64 object-cover"
+                      className="w-full h-full object-cover"
                     />
                     {item.featured && (
                       <Badge className="absolute top-3 left-3 bg-yellow-500 text-white">
