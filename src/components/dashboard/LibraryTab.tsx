@@ -697,53 +697,59 @@ const LibraryTab = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="bg-white/90 hover:bg-white text-xs"
+                      className="bg-white/90 hover:bg-white text-xs flex items-center gap-1"
                       onClick={() => setSelectedImage(item)}
                     >
                       <Eye className="h-3 w-3" />
+                      <span>View</span>
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="bg-white/90 hover:bg-white text-xs"
+                      className="bg-white/90 hover:bg-white text-xs flex items-center gap-1"
                       onClick={() => {
                         setEditingItem(item.id);
                         setEditCaption(item.caption);
                       }}
                     >
                       <Edit className="h-3 w-3" />
+                      <span>Edit</span>
                     </Button>
                     <Button
                       size="sm"
                       variant={item.isPinned ? "provider" : "outline"}
-                      className={item.isPinned ? "text-xs" : "bg-white/90 hover:bg-white text-xs"}
+                      className={item.isPinned ? "text-xs flex items-center gap-1" : "bg-white/90 hover:bg-white text-xs flex items-center gap-1"}
                       onClick={() => togglePin(item)}
                     >
                       <Pin className="h-3 w-3" />
+                      <span>{item.isPinned ? "Unpin" : "Pin"}</span>
                     </Button>
                     <Button
                       size="sm"
                       variant={item.isCover ? "default" : "outline"}
-                      className={item.isCover ? "bg-yellow-500 hover:bg-yellow-600 text-xs" : "bg-white/90 hover:bg-white text-xs"}
+                      className={item.isCover ? "bg-yellow-500 hover:bg-yellow-600 text-xs flex items-center gap-1" : "bg-white/90 hover:bg-white text-xs flex items-center gap-1"}
                       onClick={() => setCoverImage(item)}
                     >
                       <Crown className="h-3 w-3" />
+                      <span>{item.isCover ? "Cover" : "Set Cover"}</span>
                     </Button>
                     <Button
                       size="sm"
                       variant={item.show_in_portfolio ? "default" : "outline"}
-                      className={item.show_in_portfolio ? "bg-green-500 hover:bg-green-600 text-xs" : "bg-white/90 hover:bg-white text-xs"}
+                      className={item.show_in_portfolio ? "bg-green-500 hover:bg-green-600 text-xs flex items-center gap-1" : "bg-white/90 hover:bg-white text-xs flex items-center gap-1"}
                       onClick={() => togglePortfolioDisplay(item)}
                     >
                       {item.show_in_portfolio ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+                      <span>{item.show_in_portfolio ? "Hide" : "Show"}</span>
                     </Button>
                     <Button
                       size="sm"
                       variant="destructive"
-                      className="text-xs"
+                      className="text-xs flex items-center gap-1"
                       onClick={() => deleteImage(item)}
                     >
                       <Trash2 className="h-3 w-3" />
+                      <span>Delete</span>
                     </Button>
                   </div>
                 </div>
