@@ -539,15 +539,29 @@ const Profile = () => {
                         placeholder="Tell your business story..."
                         className="min-h-[100px]"
                       />
-                    ) : providerDetails?.business_description ? (
-                      <p className="text-muted-foreground leading-relaxed">
-                        {providerDetails.business_description}
-                      </p>
-                    ) : (
-                      <p className="text-muted-foreground leading-relaxed italic">
-                        Welcome to our business! We're dedicated to providing exceptional service.
-                      </p>
-                    )}
+                    ) : (() => {
+                      // Parse business description to extract actual text content
+                      let description = providerDetails?.business_description;
+                      if (description) {
+                        try {
+                          // Try to parse if it's a JSON string
+                          const parsed = JSON.parse(description);
+                          description = parsed.description || description;
+                        } catch {
+                          // If not JSON, use as is
+                        }
+                      }
+                      
+                      return description ? (
+                        <p className="text-muted-foreground leading-relaxed">
+                          {description}
+                        </p>
+                      ) : (
+                        <p className="text-muted-foreground leading-relaxed italic">
+                          Welcome to our business! We're dedicated to providing exceptional service.
+                        </p>
+                      );
+                    })()}
                   </div>
 
                   {/* Social Media */}
