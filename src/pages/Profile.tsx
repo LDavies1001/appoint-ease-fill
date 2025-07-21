@@ -58,7 +58,9 @@ const Profile = () => {
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [coverSettings, setCoverSettings] = useState({
     size: 'full', // small, medium, large, full
-    position: 'center', // top, center, bottom
+    position: 'center', // top, center, bottom (kept for backward compatibility)
+    positionX: 50, // horizontal position percentage (0-100)
+    positionY: 50, // vertical position percentage (0-100)
     overlay: 'medium' // light, medium, dark
   });
   
@@ -477,11 +479,10 @@ const Profile = () => {
             <img 
               src={coverImage} 
               alt="Cover" 
-              className={`w-full h-full object-cover ${
-                coverSettings.position === 'top' ? 'object-top' : 
-                coverSettings.position === 'bottom' ? 'object-bottom' : 
-                'object-center'
-              }`}
+              className="w-full h-full object-cover"
+              style={{
+                objectPosition: `${coverSettings.positionX || 50}% ${coverSettings.positionY || 50}%`
+              }}
             />
             <div className={`absolute inset-0 ${
               coverSettings.overlay === 'light' ? 'bg-black/20' : 
@@ -527,22 +528,41 @@ const Profile = () => {
                   </select>
                 </div>
 
-                {/* Position Control */}
-                <div>
-                  <label className="text-xs font-medium text-gray-700 block mb-1">Position</label>
-                  <select 
-                    value={coverSettings.position}
-                    onChange={(e) => {
-                      const newSettings = {...coverSettings, position: e.target.value};
-                      setCoverSettings(newSettings);
-                      handleSaveField('cover_settings', newSettings);
-                    }}
-                    className="w-full text-xs border rounded px-2 py-1 bg-white"
-                  >
-                    <option value="top">Top</option>
-                    <option value="center">Center</option>
-                    <option value="bottom">Bottom</option>
-                  </select>
+                {/* Position Controls */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-gray-700 block">Position</label>
+                  <div className="space-y-2">
+                    <div>
+                      <label className="text-xs text-gray-600 block mb-1">Horizontal: {coverSettings.positionX || 50}%</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={coverSettings.positionX || 50}
+                        onChange={(e) => {
+                          const newSettings = {...coverSettings, positionX: parseInt(e.target.value)};
+                          setCoverSettings(newSettings);
+                          handleSaveField('cover_settings', newSettings);
+                        }}
+                        className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-600 block mb-1">Vertical: {coverSettings.positionY || 50}%</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={coverSettings.positionY || 50}
+                        onChange={(e) => {
+                          const newSettings = {...coverSettings, positionY: parseInt(e.target.value)};
+                          setCoverSettings(newSettings);
+                          handleSaveField('cover_settings', newSettings);
+                        }}
+                        className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Overlay Control */}
