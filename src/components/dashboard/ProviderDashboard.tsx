@@ -26,8 +26,10 @@ import {
   X,
   Wrench,
   Zap,
-  Image
+  Image,
+  ExternalLink
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import BulkSlotCreator from './BulkSlotCreator';
 
 interface ProviderService {
@@ -106,6 +108,7 @@ const ProviderDashboard = () => {
   
   const { profile, signOut } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchServices();

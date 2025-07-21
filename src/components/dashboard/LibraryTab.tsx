@@ -23,7 +23,8 @@ import {
   Eye,
   MoreVertical,
   Check,
-  Heart
+  Heart,
+  ExternalLink
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
@@ -381,29 +382,26 @@ const LibraryTab = () => {
         .single();
 
       if (existingItem) {
-        // Only update existing portfolio items
+        // Toggle cover status on existing portfolio item
         const { error } = await supabase
           .from('portfolio_items')
           .update({ template_type: item.isCover ? null : 'cover' })
           .eq('id', existingItem.id);
 
         if (error) throw error;
-      } else if (item.isCover) {
-        // If removing cover status but no portfolio item exists, do nothing
-        // This prevents automatically adding to portfolio when just setting cover
       } else {
-        // Only create portfolio item if user explicitly wants to set as cover
-        // and the item is already in portfolio (show_in_portfolio = true)
-        if (item.show_in_portfolio) {
+        // Create new portfolio item with cover status if not removing
+        if (!item.isCover) {
           const { error } = await supabase
             .from('portfolio_items')
             .insert({
               provider_id: user.id,
               title: item.filename.replace(/\.[^/.]+$/, ""),
-              description: item.caption,
+              description: item.caption || '',
               image_url: item.url,
               category: item.category,
-              template_type: 'cover'
+              template_type: 'cover',
+              is_public: true
             });
 
           if (error) throw error;
@@ -539,16 +537,27 @@ const LibraryTab = () => {
           </p>
         </div>
         
-        <div className="flex items-center space-x-4">
-          <Badge variant="outline" className="text-provider border-provider">
-            {mediaItems.length} images
-          </Badge>
-          <Badge variant="outline" className="text-provider border-provider">
-            {mediaItems.filter(item => item.isPinned).length}/3 pinned
-          </Badge>
-          <Badge variant="outline" className="text-provider border-provider">
-            {mediaItems.filter(item => item.show_in_portfolio).length} in portfolio
-          </Badge>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex items-center space-x-4">
+            <Badge variant="outline" className="text-provider border-provider">
+              {mediaItems.length} images
+            </Badge>
+            <Badge variant="outline" className="text-provider border-provider">
+              {mediaItems.filter(item => item.isPinned).length}/3 pinned
+            </Badge>
+            <Badge variant="outline" className="text-provider border-provider">
+              {mediaItems.filter(item => item.show_in_portfolio).length} in portfolio
+            </Badge>
+          </div>
+          
+          <Button
+            variant="outline"
+            onClick={() => window.open(`/portfolio/${user?.id}`, '_blank')}
+            className="border-provider/20 hover:border-provider text-provider"
+          >
+            <ExternalLink className="h-4 w-4 mr-2" />
+            View Public Portfolio
+          </Button>
         </div>
       </div>
 
