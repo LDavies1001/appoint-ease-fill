@@ -857,11 +857,52 @@ const LibraryTab = () => {
                     <h4 className="font-medium text-sm mb-1 truncate">
                       {item.filename}
                     </h4>
-                    {item.caption && (
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {item.caption}
-                      </p>
+                    
+                    {/* Editable Caption */}
+                    {editingItem === item.id ? (
+                      <div className="mb-2">
+                        <Input
+                          value={editCaption}
+                          onChange={(e) => setEditCaption(e.target.value)}
+                          placeholder="Add a caption..."
+                          className="text-sm h-8"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              updateCaption(item, editCaption);
+                              setEditingItem(null);
+                            } else if (e.key === 'Escape') {
+                              setEditingItem(null);
+                              setEditCaption('');
+                            }
+                          }}
+                          onBlur={() => {
+                            updateCaption(item, editCaption);
+                            setEditingItem(null);
+                          }}
+                          autoFocus
+                        />
+                      </div>
+                    ) : (
+                      <div 
+                        className="mb-2 cursor-pointer hover:bg-muted/50 rounded px-1 py-1 -mx-1 transition-colors group/caption"
+                        onClick={() => {
+                          setEditingItem(item.id);
+                          setEditCaption(item.caption || '');
+                        }}
+                        title="Click to edit caption"
+                      >
+                        {item.caption ? (
+                          <p className="text-sm text-muted-foreground group-hover/caption:text-foreground">
+                            {item.caption}
+                          </p>
+                        ) : (
+                          <p className="text-sm text-muted-foreground/50 italic group-hover/caption:text-muted-foreground">
+                            Click to add caption...
+                          </p>
+                        )}
+                      </div>
                     )}
+                    
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{formatFileSize(item.size)}</span>
                       <span>{item.folder === 'business-logos' ? 'Logo' : 'Media'}</span>
