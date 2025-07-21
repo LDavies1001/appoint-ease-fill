@@ -187,9 +187,9 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
             style={{
               width: `${imageScale[0]}%`,
               height: `${imageScale[0]}%`,
-              left: `${imagePositionX[0] - 50}%`,
-              top: `${imagePositionY[0] - 50}%`,
-              transform: 'translate(-50%, -50%)',
+              left: '50%',
+              top: '50%',
+              transform: `translate(calc(-50% + ${(imagePositionX[0] - 50) * 2}%), calc(-50% + ${(imagePositionY[0] - 50) * 2}%))`,
               objectFit: 'cover'
             }}
           />
@@ -329,9 +329,9 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                     style={{
                       width: `${imageScale[0]}%`,
                       height: `${imageScale[0]}%`,
-                      left: `${imagePositionX[0] - 50}%`,
-                      top: `${imagePositionY[0] - 50}%`,
-                      transform: 'translate(-50%, -50%)',
+                      left: '50%',
+                      top: '50%',
+                      transform: `translate(calc(-50% + ${(imagePositionX[0] - 50) * 2}%), calc(-50% + ${(imagePositionY[0] - 50) * 2}%))`,
                       objectFit: 'cover'
                     }}
                   />
