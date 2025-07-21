@@ -729,8 +729,8 @@ const LibraryTab = () => {
                           <TooltipTrigger asChild>
                             <Button
                               size="sm"
-                              variant={item.show_in_portfolio ? "default" : "outline"}
-                              className={`h-8 w-8 p-0 ${item.show_in_portfolio ? "bg-green-500 hover:bg-green-600 text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                              variant={item.show_in_portfolio ? "provider" : "outline"}
+                              className={`h-8 w-8 p-0 ${item.show_in_portfolio ? "" : "bg-white/90 hover:bg-white text-gray-800"}`}
                               onClick={() => togglePortfolioDisplay(item)}
                             >
                               {item.show_in_portfolio ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
@@ -745,8 +745,8 @@ const LibraryTab = () => {
                           <TooltipTrigger asChild>
                             <Button
                               size="sm"
-                              variant={item.isPinned ? "default" : "outline"}
-                              className={`h-8 w-8 p-0 ${item.isPinned ? "bg-provider text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                              variant={item.isPinned ? "provider" : "outline"}
+                              className={`h-8 w-8 p-0 ${item.isPinned ? "" : "bg-white/90 hover:bg-white text-gray-800"}`}
                               onClick={() => togglePin(item)}
                             >
                               <Pin className="h-3 w-3" />
@@ -761,8 +761,8 @@ const LibraryTab = () => {
                           <TooltipTrigger asChild>
                             <Button
                               size="sm"
-                              variant={item.isCover ? "default" : "outline"}
-                              className={`h-8 w-8 p-0 ${item.isCover ? "bg-yellow-500 hover:bg-yellow-600 text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                              variant={item.isCover ? "provider" : "outline"}
+                              className={`h-8 w-8 p-0 ${item.isCover ? "" : "bg-white/90 hover:bg-white text-gray-800"}`}
                               onClick={() => setCoverImage(item)}
                             >
                               <Crown className="h-3 w-3" />
@@ -940,8 +940,8 @@ const LibraryTab = () => {
                         <TooltipTrigger asChild>
                           <Button
                             size="sm"
-                            variant={selectedImage.show_in_portfolio ? "default" : "outline"}
-                            className={`${selectedImage.show_in_portfolio ? "bg-green-500 hover:bg-green-600 text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                            variant={selectedImage.show_in_portfolio ? "provider" : "outline"}
+                            className={`${selectedImage.show_in_portfolio ? "" : "bg-white/90 hover:bg-white text-gray-800"}`}
                             onClick={() => togglePortfolioDisplay(selectedImage)}
                           >
                             {selectedImage.show_in_portfolio ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
@@ -956,8 +956,8 @@ const LibraryTab = () => {
                         <TooltipTrigger asChild>
                           <Button
                             size="sm"
-                            variant={selectedImage.isPinned ? "default" : "outline"}
-                            className={`${selectedImage.isPinned ? "bg-provider text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                            variant={selectedImage.isPinned ? "provider" : "outline"}
+                            className={`${selectedImage.isPinned ? "" : "bg-white/90 hover:bg-white text-gray-800"}`}
                             onClick={() => togglePin(selectedImage)}
                           >
                             <Pin className="h-4 w-4" />
@@ -972,8 +972,8 @@ const LibraryTab = () => {
                         <TooltipTrigger asChild>
                           <Button
                             size="sm"
-                            variant={selectedImage.isCover ? "default" : "outline"}
-                            className={`${selectedImage.isCover ? "bg-yellow-500 hover:bg-yellow-600 text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                            variant={selectedImage.isCover ? "provider" : "outline"}
+                            className={`${selectedImage.isCover ? "" : "bg-white/90 hover:bg-white text-gray-800"}`}
                             onClick={() => setCoverImage(selectedImage)}
                           >
                             <Crown className="h-4 w-4" />
