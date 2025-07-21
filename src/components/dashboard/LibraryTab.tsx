@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/custom-button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -290,6 +291,15 @@ const LibraryTab = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const saveCaption = async (itemId: string) => {
+    const item = mediaItems.find(i => i.id === itemId);
+    if (!item) return;
+    
+    await updateCaption(item, editCaption);
+    setEditingItem(null);
+    setEditCaption('');
   };
 
   const togglePin = async (item: MediaItem) => {
@@ -874,35 +884,226 @@ const LibraryTab = () => {
         </div>
       )}
 
-      {/* Fullscreen Image Modal */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div className="relative max-w-4xl max-h-full">
-            <Button
-              variant="outline"
-              size="sm"
-              className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white"
-              onClick={() => setSelectedImage(null)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-            <img
-              src={selectedImage.url}
-              alt={selectedImage.caption || selectedImage.filename}
-              className="max-w-full max-h-full object-contain"
-              onClick={(e) => e.stopPropagation()}
-            />
-            {selectedImage.caption && (
-              <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white p-4 rounded-lg">
-                <p>{selectedImage.caption}</p>
+      {/* Enhanced Fullscreen Image Modal */}
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-6xl w-full h-[90vh] p-0 overflow-hidden">
+          {selectedImage && (
+            <div className="flex h-full">
+              {/* Image Display Area */}
+              <div className="flex-1 relative bg-black flex items-center justify-center">
+                <img
+                  src={selectedImage.url}
+                  alt={selectedImage.caption || selectedImage.filename}
+                  className="max-w-full max-h-full object-contain"
+                />
+                
+                {/* Image Navigation/Controls Overlay */}
+                <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                  <div className="flex space-x-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant={selectedImage.show_in_portfolio ? "default" : "outline"}
+                            className={`${selectedImage.show_in_portfolio ? "bg-green-500 hover:bg-green-600 text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                            onClick={() => togglePortfolioDisplay(selectedImage)}
+                          >
+                            {selectedImage.show_in_portfolio ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{selectedImage.show_in_portfolio ? "Remove from portfolio" : "Add to portfolio"}</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant={selectedImage.isPinned ? "default" : "outline"}
+                            className={`${selectedImage.isPinned ? "bg-provider text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                            onClick={() => togglePin(selectedImage)}
+                          >
+                            <Pin className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{selectedImage.isPinned ? "Unpin image" : "Pin to featured"}</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant={selectedImage.isCover ? "default" : "outline"}
+                            className={`${selectedImage.isCover ? "bg-yellow-500 hover:bg-yellow-600 text-white" : "bg-white/90 hover:bg-white text-gray-800"}`}
+                            onClick={() => setCoverImage(selectedImage)}
+                          >
+                            <Crown className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{selectedImage.isCover ? "Remove as cover" : "Set as cover image"}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </div>
+
+                {/* Caption Overlay */}
+                {selectedImage.caption && (
+                  <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white p-4 rounded-lg">
+                    <p>{selectedImage.caption}</p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-      )}
+
+              {/* Side Panel with Image Details and Controls */}
+              <div className="w-80 bg-background border-l flex flex-col">
+                <DialogHeader className="p-6 border-b">
+                  <DialogTitle className="text-lg font-semibold">Image Details</DialogTitle>
+                </DialogHeader>
+                
+                <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+                  {/* Basic Info */}
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Filename</Label>
+                      <p className="text-sm font-medium break-all">{selectedImage.filename}</p>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Size</Label>
+                      <p className="text-sm">{(selectedImage.size / (1024 * 1024)).toFixed(2)} MB</p>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Category</Label>
+                      <p className="text-sm capitalize">{selectedImage.category.replace('-', ' ')}</p>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Uploaded</Label>
+                      <p className="text-sm">{new Date(selectedImage.created_at).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+
+                  {/* Caption Editor */}
+                  <div className="space-y-2">
+                    <Label htmlFor="modal-caption" className="text-sm font-medium">Caption</Label>
+                    <Textarea
+                      id="modal-caption"
+                      value={editingItem === selectedImage.id ? editCaption : selectedImage.caption}
+                      onChange={(e) => {
+                        if (editingItem !== selectedImage.id) {
+                          setEditingItem(selectedImage.id);
+                          setEditCaption(e.target.value);
+                        } else {
+                          setEditCaption(e.target.value);
+                        }
+                      }}
+                      placeholder="Add a caption to describe this image..."
+                      className="min-h-[80px] resize-none"
+                    />
+                    {editingItem === selectedImage.id && (
+                      <div className="flex space-x-2">
+                        <Button
+                          size="sm"
+                          onClick={() => saveCaption(selectedImage.id)}
+                          className="flex-1"
+                        >
+                          <Check className="h-3 w-3 mr-1" />
+                          Save
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setEditingItem(null);
+                            setEditCaption('');
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Status Indicators */}
+                  <div className="space-y-3 pt-4 border-t">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Portfolio Visibility</span>
+                      <Badge variant={selectedImage.show_in_portfolio ? "default" : "secondary"}>
+                        {selectedImage.show_in_portfolio ? "Visible" : "Hidden"}
+                      </Badge>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Pinned</span>
+                      <Badge variant={selectedImage.isPinned ? "default" : "secondary"}>
+                        {selectedImage.isPinned ? "Yes" : "No"}
+                      </Badge>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Cover Image</span>
+                      <Badge variant={selectedImage.isCover ? "default" : "secondary"}>
+                        {selectedImage.isCover ? "Yes" : "No"}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="p-6 border-t space-y-2">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      setEditingItem(selectedImage.id);
+                      setEditCaption(selectedImage.caption);
+                    }}
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Caption
+                  </Button>
+                  
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="w-full">
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete Image
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Image</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete "{selectedImage.filename}"? This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => {
+                            deleteImage(selectedImage);
+                            setSelectedImage(null);
+                          }}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
