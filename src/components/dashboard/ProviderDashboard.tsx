@@ -465,14 +465,6 @@ const ProviderDashboard = () => {
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  onClick={() => window.location.href = '/business-profile/media-library'}
-                  className="border-provider/20 hover:border-provider"
-                >
-                  <Image className="h-4 w-4 mr-2" />
-                  Media Library
-                </Button>
-                <Button
-                  variant="outline"
                   onClick={() => setShowBulkCreator(true)}
                   className="border-provider/20 hover:border-provider"
                 >
