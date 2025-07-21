@@ -187,7 +187,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
             style={{
               objectFit: imageScale[0] <= 100 ? 'contain' : 'cover',
               transformOrigin: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
-              transform: `scale(${Math.max(imageScale[0] / 100, 0.5)})`
+              transform: `scale(${imageScale[0] / 100})`
             }}
           />
         </div>
@@ -326,7 +326,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                     style={{
                       objectFit: imageScale[0] <= 100 ? 'contain' : 'cover',
                       transformOrigin: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
-                      transform: `scale(${Math.max(imageScale[0] / 100, 0.5)})`
+                      transform: `scale(${imageScale[0] / 100})`
                     }}
                   />
                 </div>
@@ -346,14 +346,14 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                 <Slider
                   value={imageScale}
                   onValueChange={setImageScale}
-                  max={300}
-                  min={50}
-                  step={10}
+                  max={200}
+                  min={75}
+                  step={5}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>Fit Image (50%)</span>
-                  <span>Zoom In (300%)</span>
+                  <span>Fit Image (75%)</span>
+                  <span>Zoom In (200%)</span>
                 </div>
               </div>
 
