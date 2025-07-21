@@ -172,9 +172,11 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
           <img
             src={coverImageUrl}
             alt={altText || "Business cover photo"}
-            className="w-full h-full object-cover transition-transform duration-300"
+            className="w-full h-full transition-all duration-300 ease-out"
             style={{
-              transform: `scale(${imageScale[0] / 100}) translateX(${(imagePosition[0] - 50) * 2}%)`,
+              objectFit: 'cover',
+              objectPosition: `${imagePosition[0]}% center`,
+              transform: `scale(${imageScale[0] / 100})`,
               transformOrigin: 'center center'
             }}
           />
@@ -310,9 +312,11 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                   <img
                     src={coverImageUrl}
                     alt="Cover photo preview"
-                    className="w-full h-full object-cover transition-all duration-300 ease-out"
+                    className="w-full h-full transition-all duration-300 ease-out"
                     style={{
-                      transform: `scale(${imageScale[0] / 100}) translateX(${(imagePosition[0] - 50) * 2}%)`,
+                      objectFit: 'cover',
+                      objectPosition: `${imagePosition[0]}% center`,
+                      transform: `scale(${imageScale[0] / 100})`,
                       transformOrigin: 'center center'
                     }}
                   />
@@ -333,14 +337,14 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                 <Slider
                   value={imageScale}
                   onValueChange={setImageScale}
-                  max={200}
-                  min={50}
+                  max={150}
+                  min={80}
                   step={5}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>50%</span>
-                  <span>200%</span>
+                  <span>80%</span>
+                  <span>150%</span>
                 </div>
               </div>
 
