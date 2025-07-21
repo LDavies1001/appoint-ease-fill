@@ -132,43 +132,27 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
   }
 
   return (
-    <div className="relative">
-      {/* Cover Photo Display */}
-      <div 
-        className={`w-full bg-gradient-to-r from-muted via-muted/50 to-accent/10 border-b ${
-          coverImageUrl ? 'h-64 md:h-80' : 'h-32'
-        } overflow-hidden relative`}
-      >
-        {coverImageUrl ? (
+    <>
+      {/* Background Cover Image */}
+      {coverImageUrl && (
+        <div className="absolute inset-0">
           <img
             src={coverImageUrl}
             alt={altText || "Business cover photo"}
             className="w-full h-full object-cover"
           />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center text-muted-foreground">
-              <Camera className="h-12 w-12 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">No cover photo</p>
-            </div>
-          </div>
-        )}
-        
-        {/* Overlay for business name/logo could go here */}
-        {coverImageUrl && (
-          <div className="absolute inset-0 bg-black/20"></div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Owner Controls */}
       {isOwner && (
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4 z-10">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-background/80 backdrop-blur-sm border-white/20 hover:bg-background/90"
+                className="bg-white/80 backdrop-blur-sm border-white/20 hover:bg-white/90 text-gray-800 shadow-lg"
               >
                 {coverImageUrl ? (
                   <>
@@ -178,7 +162,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                 ) : (
                   <>
                     <Upload className="h-4 w-4 mr-2" />
-                    Upload Cover
+                    Add Cover Photo
                   </>
                 )}
               </Button>
@@ -259,6 +243,6 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
           </Dialog>
         </div>
       )}
-    </div>
+    </>
   );
 };

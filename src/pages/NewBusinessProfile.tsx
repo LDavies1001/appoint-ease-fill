@@ -118,19 +118,26 @@ const NewBusinessProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
       <Header />
       
-      {/* Cover Photo Section */}
-      <CoverPhotoManager
-        coverImageUrl={details.cover_image_url}
-        providerId={user?.id || ''}
-        onCoverImageUpdate={(url) => setDetails(prev => prev ? { ...prev, cover_image_url: url } : prev)}
-        isOwner={true}
-      />
-      
-      {/* Hero Section - Overlaid on Cover */}
-      <div className="relative bg-transparent">
-        {/* Semi-transparent overlay for text readability */}
+      {/* Hero Section with Integrated Cover Photo */}
+      <div className="relative h-80 bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50 overflow-hidden">
+        {/* Cover Photo Manager - provides background image and controls */}
+        <CoverPhotoManager
+          coverImageUrl={details.cover_image_url}
+          providerId={user?.id || ''}
+          onCoverImageUpdate={(url) => setDetails(prev => prev ? { ...prev, cover_image_url: url } : prev)}
+          isOwner={true}
+        />
+        
+        {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
-        <div className="relative max-w-6xl mx-auto px-6 py-12">
+        
+        {/* Default background pattern when no cover image */}
+        {!details.cover_image_url && (
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,119,198,0.1),_transparent_50%)]"></div>
+        )}
+        
+        {/* Business Content */}
+        <div className="relative max-w-6xl mx-auto px-6 py-12 z-10">
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
             
             {/* Avatar */}

@@ -387,22 +387,21 @@ const Profile = () => {
     <div className="min-h-screen" style={{ background: 'var(--gradient-bg)' }}>
       <Header />
       
-
-      {/* Cover Photo Section */}
-      <CoverPhotoManager
-        coverImageUrl={providerDetails?.cover_image_url}
-        providerId={user?.id || ''}
-        onCoverImageUpdate={(url) => setProviderDetails(prev => prev ? { ...prev, cover_image_url: url } : prev)}
-        isOwner={isOwner}
-      />
-
-      {/* Hero Section with Business Info - Overlaid on Cover */}
-      <div className="relative bg-transparent">
-        {/* Semi-transparent overlay for text readability */}
+      {/* Hero Section with Integrated Cover Photo */}
+      <div className="relative h-80 bg-gradient-to-br from-primary/20 via-accent/10 to-tertiary overflow-hidden">
+        {/* Cover Photo Manager - provides background image and controls */}
+        <CoverPhotoManager
+          coverImageUrl={providerDetails?.cover_image_url}
+          providerId={user?.id || ''}
+          onCoverImageUpdate={(url) => setProviderDetails(prev => prev ? { ...prev, cover_image_url: url } : prev)}
+          isOwner={isOwner}
+        />
+        
+        {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
         
         {/* Hero Content */}
-        <div className="relative container mx-auto px-4 py-12">
+        <div className="relative container mx-auto px-4 py-12 z-10">
           <div className="flex items-center gap-6 w-full">
             {/* Profile Avatar */}
             <div className="relative">
