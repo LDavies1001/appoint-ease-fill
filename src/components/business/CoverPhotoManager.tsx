@@ -173,12 +173,14 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
           <img
             src={coverImageUrl}
             alt={altText || "Business cover photo"}
-            className="w-full h-full transition-all duration-300 ease-out"
+            className="absolute transition-all duration-300 ease-out"
             style={{
-              objectFit: 'cover',
-              objectPosition: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
-              transform: `scale(${imageScale[0] / 100})`,
-              transformOrigin: 'center center'
+              width: `${imageScale[0]}%`,
+              height: `${imageScale[0]}%`,
+              left: `${imagePositionX[0] - 50}%`,
+              top: `${imagePositionY[0] - 50}%`,
+              transform: 'translate(-50%, -50%)',
+              objectFit: 'cover'
             }}
           />
         </div>
@@ -313,12 +315,14 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                   <img
                     src={coverImageUrl}
                     alt="Cover photo preview"
-                    className="w-full h-full transition-all duration-300 ease-out"
+                    className="absolute transition-all duration-300 ease-out"
                     style={{
-                      objectFit: 'cover',
-                      objectPosition: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
-                      transform: `scale(${imageScale[0] / 100})`,
-                      transformOrigin: 'center center'
+                      width: `${imageScale[0]}%`,
+                      height: `${imageScale[0]}%`,
+                      left: `${imagePositionX[0] - 50}%`,
+                      top: `${imagePositionY[0] - 50}%`,
+                      transform: 'translate(-50%, -50%)',
+                      objectFit: 'cover'
                     }}
                   />
                 </div>
@@ -338,14 +342,14 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                 <Slider
                   value={imageScale}
                   onValueChange={setImageScale}
-                  max={150}
-                  min={80}
-                  step={5}
+                  max={200}
+                  min={100}
+                  step={10}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>80%</span>
-                  <span>150%</span>
+                  <span>Zoom Out (100%)</span>
+                  <span>Zoom In (200%)</span>
                 </div>
               </div>
 
