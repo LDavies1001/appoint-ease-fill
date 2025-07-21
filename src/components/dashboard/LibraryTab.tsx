@@ -679,12 +679,15 @@ const LibraryTab = () => {
           {filteredItems.map((item) => (
             <Card key={item.id} className="break-inside-avoid overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative group">
-                <img
-                  src={item.url}
-                  alt={item.caption || item.filename}
-                  className="w-full object-cover cursor-pointer"
-                  onClick={() => setSelectedImage(item)}
-                />
+                {/* Fixed aspect ratio container */}
+                <div className="aspect-square overflow-hidden bg-gray-100">
+                  <img
+                    src={item.url}
+                    alt={item.caption || item.filename}
+                    className="w-full h-full object-cover cursor-pointer"
+                    onClick={() => setSelectedImage(item)}
+                  />
+                </div>
                 
                 {/* Badges */}
                 <div className="absolute top-3 left-3 flex flex-col space-y-2">
@@ -816,18 +819,6 @@ const LibraryTab = () => {
                     </div>
                   </div>
 
-                  {/* Hover overlay for additional info */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="bg-white/95 hover:bg-white text-gray-800 shadow-lg"
-                      onClick={() => setSelectedImage(item)}
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      View Full Size
-                    </Button>
-                  </div>
                 </TooltipProvider>
               </div>
 
