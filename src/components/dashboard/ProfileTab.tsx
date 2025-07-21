@@ -282,9 +282,10 @@ const ProfileTab = () => {
             />
 
             <div className="lg:col-span-2">
-              <AddressSection
+              <OperatingHoursSection
                 data={{
-                  business_address: businessData.business_address
+                  operating_hours: businessData.operating_hours,
+                  availability_notes: businessData.availability_notes
                 }}
                 userId={profile?.user_id || ''}
                 onUpdate={handleBusinessUpdate}
@@ -292,10 +293,9 @@ const ProfileTab = () => {
             </div>
 
             <div className="lg:col-span-2">
-              <OperatingHoursSection
+              <AddressSection
                 data={{
-                  operating_hours: businessData.operating_hours,
-                  availability_notes: businessData.availability_notes
+                  business_address: businessData.business_address
                 }}
                 userId={profile?.user_id || ''}
                 onUpdate={handleBusinessUpdate}
