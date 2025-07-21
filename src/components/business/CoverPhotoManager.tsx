@@ -167,7 +167,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
     setImagePositionY([50]);
     toast({
       title: "Image reset",
-      description: "Cover photo has been reset to original size and position"
+      description: "Cover photo has been reset to fit the entire image"
     });
   };
 
@@ -185,9 +185,9 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
             alt={altText || "Business cover photo"}
             className="w-full h-full transition-all duration-300 ease-out"
             style={{
-              objectFit: 'cover',
+              objectFit: imageScale[0] <= 100 ? 'contain' : 'cover',
               transformOrigin: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
-              transform: `scale(${imageScale[0] / 100})`
+              transform: `scale(${Math.max(imageScale[0] / 100, 0.5)})`
             }}
           />
         </div>
@@ -324,9 +324,9 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                     alt="Cover photo preview"
                     className="w-full h-full transition-all duration-300 ease-out"
                     style={{
-                      objectFit: 'cover',
+                      objectFit: imageScale[0] <= 100 ? 'contain' : 'cover',
                       transformOrigin: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
-                      transform: `scale(${imageScale[0] / 100})`
+                      transform: `scale(${Math.max(imageScale[0] / 100, 0.5)})`
                     }}
                   />
                 </div>
@@ -346,14 +346,14 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                 <Slider
                   value={imageScale}
                   onValueChange={setImageScale}
-                  max={200}
-                  min={100}
+                  max={300}
+                  min={50}
                   step={10}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>Zoom Out (100%)</span>
-                  <span>Zoom In (200%)</span>
+                  <span>Fit Image (50%)</span>
+                  <span>Zoom In (300%)</span>
                 </div>
               </div>
 
