@@ -183,14 +183,11 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
           <img
             src={coverImageUrl}
             alt={altText || "Business cover photo"}
-            className="absolute transition-all duration-300 ease-out"
+            className="w-full h-full transition-all duration-300 ease-out"
             style={{
-              width: `${imageScale[0]}%`,
-              height: `${imageScale[0]}%`,
-              left: '50%',
-              top: '50%',
-              transform: `translate(calc(-50% + ${(imagePositionX[0] - 50) * 2}%), calc(-50% + ${(imagePositionY[0] - 50) * 2}%))`,
-              objectFit: 'cover'
+              objectFit: 'cover',
+              transformOrigin: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
+              transform: `scale(${imageScale[0] / 100})`
             }}
           />
         </div>
@@ -325,14 +322,11 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                   <img
                     src={coverImageUrl}
                     alt="Cover photo preview"
-                    className="absolute transition-all duration-300 ease-out"
+                    className="w-full h-full transition-all duration-300 ease-out"
                     style={{
-                      width: `${imageScale[0]}%`,
-                      height: `${imageScale[0]}%`,
-                      left: '50%',
-                      top: '50%',
-                      transform: `translate(calc(-50% + ${(imagePositionX[0] - 50) * 2}%), calc(-50% + ${(imagePositionY[0] - 50) * 2}%))`,
-                      objectFit: 'cover'
+                      objectFit: 'cover',
+                      transformOrigin: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
+                      transform: `scale(${imageScale[0] / 100})`
                     }}
                   />
                 </div>
