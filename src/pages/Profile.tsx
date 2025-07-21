@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
+import { EditableField } from '@/components/profile/EditableField';
+import { CoverImageEditor } from '@/components/profile/CoverImageEditor';
 import { 
   User, 
   Building, 
@@ -167,6 +169,57 @@ const Profile = () => {
     }
     setIsEditMode(!isEditMode);
     console.log('Edit mode toggled to:', !isEditMode);
+  };
+
+  // Save individual field changes
+  const handleSaveField = async (field: string, value: any) => {
+    try {
+      if (field.startsWith('profile_')) {
+        // Handle profile fields
+        const profileField = field.replace('profile_', '');
+        const { error } = await supabase
+          .from('profiles')
+          .update({ [profileField]: value })
+          .eq('user_id', user?.id);
+        
+        if (error) throw error;
+      } else {
+        // Handle provider detail fields
+        const updateData: any = { [field]: value };
+        
+        // If updating cover settings, merge with existing description
+        if (field === 'cover_settings') {
+          const businessData = {
+            description: providerDetails?.business_description || '',
+            coverSettings: value
+          };
+          updateData.business_description = JSON.stringify(businessData);
+          delete updateData.cover_settings;
+        }
+        
+        const { error } = await supabase
+          .from('provider_details')
+          .update(updateData)
+          .eq('user_id', user?.id);
+        
+        if (error) throw error;
+      }
+
+      // Refresh data to show updated values
+      await fetchProviderData();
+      
+      toast({
+        title: "Updated",
+        description: `${field.replace('_', ' ')} updated successfully.`,
+      });
+    } catch (error) {
+      console.error('Error updating field:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Save profile changes
@@ -428,53 +481,75 @@ const Profile = () => {
           </div>
         )}
 
-        {/* Cover Settings Controls (Edit Mode Only) */}
-        {isEditMode && coverImage && (
-          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-4 space-y-3 shadow-lg">
-            <h3 className="font-semibold text-sm text-gray-900">Cover Display</h3>
+      {/* Cover Image Controls - Always visible for owner */}
+        {isOwner && (
+          <div className="absolute top-4 left-4 space-y-2">
+            <CoverImageEditor
+              currentImage={coverImage}
+              onImageUpdate={(url) => setCoverImage(url)}
+              providerId={user?.id || ''}
+            />
             
-            {/* Size Control */}
-            <div>
-              <label className="text-xs font-medium text-gray-700 block mb-1">Size</label>
-              <select 
-                value={coverSettings.size}
-                onChange={(e) => setCoverSettings({...coverSettings, size: e.target.value})}
-                className="w-full text-xs border rounded px-2 py-1 bg-white"
-              >
-                <option value="small">Small</option>
-                <option value="medium">Medium</option>
-                <option value="large">Large</option>
-                <option value="full">Full</option>
-              </select>
-            </div>
+            {coverImage && (
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 space-y-3 shadow-lg">
+                <h3 className="font-semibold text-sm text-gray-900">Display Settings</h3>
+                
+                {/* Size Control */}
+                <div>
+                  <label className="text-xs font-medium text-gray-700 block mb-1">Size</label>
+                  <select 
+                    value={coverSettings.size}
+                    onChange={(e) => {
+                      const newSettings = {...coverSettings, size: e.target.value};
+                      setCoverSettings(newSettings);
+                      handleSaveField('cover_settings', newSettings);
+                    }}
+                    className="w-full text-xs border rounded px-2 py-1 bg-white"
+                  >
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                    <option value="full">Full</option>
+                  </select>
+                </div>
 
-            {/* Position Control */}
-            <div>
-              <label className="text-xs font-medium text-gray-700 block mb-1">Position</label>
-              <select 
-                value={coverSettings.position}
-                onChange={(e) => setCoverSettings({...coverSettings, position: e.target.value})}
-                className="w-full text-xs border rounded px-2 py-1 bg-white"
-              >
-                <option value="top">Top</option>
-                <option value="center">Center</option>
-                <option value="bottom">Bottom</option>
-              </select>
-            </div>
+                {/* Position Control */}
+                <div>
+                  <label className="text-xs font-medium text-gray-700 block mb-1">Position</label>
+                  <select 
+                    value={coverSettings.position}
+                    onChange={(e) => {
+                      const newSettings = {...coverSettings, position: e.target.value};
+                      setCoverSettings(newSettings);
+                      handleSaveField('cover_settings', newSettings);
+                    }}
+                    className="w-full text-xs border rounded px-2 py-1 bg-white"
+                  >
+                    <option value="top">Top</option>
+                    <option value="center">Center</option>
+                    <option value="bottom">Bottom</option>
+                  </select>
+                </div>
 
-            {/* Overlay Control */}
-            <div>
-              <label className="text-xs font-medium text-gray-700 block mb-1">Overlay</label>
-              <select 
-                value={coverSettings.overlay}
-                onChange={(e) => setCoverSettings({...coverSettings, overlay: e.target.value})}
-                className="w-full text-xs border rounded px-2 py-1 bg-white"
-              >
-                <option value="light">Light</option>
-                <option value="medium">Medium</option>
-                <option value="dark">Dark</option>
-              </select>
-            </div>
+                {/* Overlay Control */}
+                <div>
+                  <label className="text-xs font-medium text-gray-700 block mb-1">Overlay</label>
+                  <select 
+                    value={coverSettings.overlay}
+                    onChange={(e) => {
+                      const newSettings = {...coverSettings, overlay: e.target.value};
+                      setCoverSettings(newSettings);
+                      handleSaveField('cover_settings', newSettings);
+                    }}
+                    className="w-full text-xs border rounded px-2 py-1 bg-white"
+                  >
+                    <option value="light">Light</option>
+                    <option value="medium">Medium</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
         )}
         
