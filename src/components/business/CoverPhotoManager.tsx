@@ -7,7 +7,7 @@ import { Slider } from '@/components/ui/slider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Camera, Upload, X, Edit, Trash2, Maximize2 } from 'lucide-react';
+import { Camera, Upload, X, Edit, Trash2, Maximize2, RotateCcw } from 'lucide-react';
 
 interface CoverPhotoManagerProps {
   coverImageUrl?: string | null;
@@ -159,6 +159,16 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
         variant: "destructive"
       });
     }
+  };
+
+  const handleResetImage = () => {
+    setImageScale([100]);
+    setImagePositionX([50]);
+    setImagePositionY([50]);
+    toast({
+      title: "Image reset",
+      description: "Cover photo has been reset to original size and position"
+    });
   };
 
   if (!isOwner && !coverImageUrl) {
@@ -400,6 +410,14 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                 className="flex-1"
               >
                 Cancel
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleResetImage}
+                className="flex items-center gap-2"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Reset
               </Button>
               <Button
                 onClick={handleSaveResize}
