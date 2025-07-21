@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Camera, Upload, X, Edit, Trash2 } from 'lucide-react';
+import { Camera, Upload, X, Edit, Trash2, Maximize2 } from 'lucide-react';
 
 interface CoverPhotoManagerProps {
   coverImageUrl?: string | null;
@@ -24,6 +25,9 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
   const [uploading, setUploading] = useState(false);
   const [altText, setAltText] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [resizeDialogOpen, setResizeDialogOpen] = useState(false);
+  const [imageScale, setImageScale] = useState([100]);
+  const [imagePosition, setImagePosition] = useState([50]);
   const { toast } = useToast();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,6 +131,35 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
     }
   };
 
+  const handleSaveResize = async () => {
+    try {
+      // Update provider_details with new cover image settings
+      const { error } = await supabase
+        .from('provider_details')
+        .update({ 
+          cover_image_url: coverImageUrl,
+          // You could store scale and position settings in a JSON field if needed
+          // cover_image_settings: { scale: imageScale[0], position: imagePosition[0] }
+        })
+        .eq('user_id', providerId);
+
+      if (error) throw error;
+
+      setResizeDialogOpen(false);
+      toast({
+        title: "Cover photo resized",
+        description: "Your cover photo size has been updated successfully"
+      });
+    } catch (error) {
+      console.error('Error saving resize settings:', error);
+      toast({
+        title: "Resize failed",
+        description: "Could not save resize settings. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   if (!isOwner && !coverImageUrl) {
     return null; // Don't show anything if no cover and user is not owner
   }
@@ -135,11 +168,15 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
     <>
       {/* Background Cover Image */}
       {coverImageUrl && (
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
           <img
             src={coverImageUrl}
             alt={altText || "Business cover photo"}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-300"
+            style={{
+              transform: `scale(${imageScale[0] / 100}) translateX(${(imagePosition[0] - 50) * 2}%)`,
+              transformOrigin: 'center center'
+            }}
           />
         </div>
       )}
@@ -149,23 +186,37 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
         <div className="absolute top-4 right-4 z-10">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white/80 backdrop-blur-sm border-white/20 hover:bg-white/90 text-gray-800 shadow-lg"
-              >
-                {coverImageUrl ? (
-                  <>
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit Cover
-                  </>
-                ) : (
-                  <>
-                    <Upload className="h-4 w-4 mr-2" />
-                    Add Cover Photo
-                  </>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-white/80 backdrop-blur-sm border-white/20 hover:bg-white/90 text-gray-800 shadow-lg"
+                >
+                  {coverImageUrl ? (
+                    <>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Cover
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Add Cover Photo
+                    </>
+                  )}
+                </Button>
+                
+                {coverImageUrl && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setResizeDialogOpen(true)}
+                    className="bg-white/80 backdrop-blur-sm border-white/20 hover:bg-white/90 text-gray-800 shadow-lg"
+                  >
+                    <Maximize2 className="h-4 w-4 mr-2" />
+                    Resize
+                  </Button>
                 )}
-              </Button>
+              </div>
             </DialogTrigger>
             
             <DialogContent className="sm:max-w-md">
@@ -243,6 +294,95 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
           </Dialog>
         </div>
       )}
+
+      {/* Resize Dialog */}
+      <Dialog open={resizeDialogOpen} onOpenChange={setResizeDialogOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Resize Cover Photo</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            {/* Live Preview */}
+            <div className="relative w-full h-48 bg-muted rounded-lg overflow-hidden border-2 border-dashed border-border">
+              {coverImageUrl && (
+                <div className="absolute inset-0 overflow-hidden">
+                  <img
+                    src={coverImageUrl}
+                    alt="Cover photo preview"
+                    className="w-full h-full object-cover transition-all duration-300 ease-out"
+                    style={{
+                      transform: `scale(${imageScale[0] / 100}) translateX(${(imagePosition[0] - 50) * 2}%)`,
+                      transformOrigin: 'center center'
+                    }}
+                  />
+                </div>
+              )}
+              <div className="absolute inset-0 border-2 border-primary/20 rounded-lg pointer-events-none"></div>
+              <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">
+                Preview
+              </div>
+            </div>
+
+            {/* Controls */}
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium mb-3 block">
+                  Image Scale: {imageScale[0]}%
+                </Label>
+                <Slider
+                  value={imageScale}
+                  onValueChange={setImageScale}
+                  max={200}
+                  min={50}
+                  step={5}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>50%</span>
+                  <span>200%</span>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium mb-3 block">
+                  Horizontal Position: {imagePosition[0]}%
+                </Label>
+                <Slider
+                  value={imagePosition}
+                  onValueChange={setImagePosition}
+                  max={100}
+                  min={0}
+                  step={5}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>Left</span>
+                  <span>Center</span>
+                  <span>Right</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setResizeDialogOpen(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveResize}
+                className="flex-1"
+              >
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
