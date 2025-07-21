@@ -381,25 +381,33 @@ const LibraryTab = () => {
         .single();
 
       if (existingItem) {
+        // Only update existing portfolio items
         const { error } = await supabase
           .from('portfolio_items')
           .update({ template_type: item.isCover ? null : 'cover' })
           .eq('id', existingItem.id);
 
         if (error) throw error;
+      } else if (item.isCover) {
+        // If removing cover status but no portfolio item exists, do nothing
+        // This prevents automatically adding to portfolio when just setting cover
       } else {
-        const { error } = await supabase
-          .from('portfolio_items')
-          .insert({
-            provider_id: user.id,
-            title: item.filename.replace(/\.[^/.]+$/, ""),
-            description: item.caption,
-            image_url: item.url,
-            category: item.category,
-            template_type: 'cover'
-          });
+        // Only create portfolio item if user explicitly wants to set as cover
+        // and the item is already in portfolio (show_in_portfolio = true)
+        if (item.show_in_portfolio) {
+          const { error } = await supabase
+            .from('portfolio_items')
+            .insert({
+              provider_id: user.id,
+              title: item.filename.replace(/\.[^/.]+$/, ""),
+              description: item.caption,
+              image_url: item.url,
+              category: item.category,
+              template_type: 'cover'
+            });
 
-        if (error) throw error;
+          if (error) throw error;
+        }
       }
 
       toast({
@@ -854,10 +862,6 @@ const LibraryTab = () => {
                   </div>
                 ) : (
                   <div>
-                    <h4 className="font-medium text-sm mb-1 truncate">
-                      {item.filename}
-                    </h4>
-                    
                     {/* Editable Caption */}
                     {editingItem === item.id ? (
                       <div className="mb-2">
@@ -884,7 +888,7 @@ const LibraryTab = () => {
                       </div>
                     ) : (
                       <div 
-                        className="mb-2 cursor-pointer hover:bg-muted/50 rounded px-1 py-1 -mx-1 transition-colors group/caption"
+                        className="mb-2 cursor-pointer hover:bg-muted/50 rounded px-1 py-1 -mx-1 transition-colors group/caption min-h-[40px] flex items-center"
                         onClick={() => {
                           setEditingItem(item.id);
                           setEditCaption(item.caption || '');
@@ -892,7 +896,7 @@ const LibraryTab = () => {
                         title="Click to edit caption"
                       >
                         {item.caption ? (
-                          <p className="text-sm text-muted-foreground group-hover/caption:text-foreground">
+                          <p className="text-sm text-foreground group-hover/caption:text-foreground font-medium">
                             {item.caption}
                           </p>
                         ) : (
@@ -904,7 +908,6 @@ const LibraryTab = () => {
                     )}
                     
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{formatFileSize(item.size)}</span>
                       <span>{item.folder === 'business-logos' ? 'Logo' : 'Media'}</span>
                       <span>{new Date(item.created_at).toLocaleDateString()}</span>
                     </div>
