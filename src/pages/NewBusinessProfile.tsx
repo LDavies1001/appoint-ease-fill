@@ -126,15 +126,16 @@ const NewBusinessProfile = () => {
         isOwner={true}
       />
       
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,119,198,0.1),_transparent_50%)]"></div>
+      {/* Hero Section - Overlaid on Cover */}
+      <div className="relative bg-transparent">
+        {/* Semi-transparent overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
         <div className="relative max-w-6xl mx-auto px-6 py-12">
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
             
             {/* Avatar */}
             <div className="flex-shrink-0">
-              <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-primary/20 shadow-2xl">
+              <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-white/50 shadow-2xl">
                 <AvatarImage src={profile?.avatar_url || undefined} />
                 <AvatarFallback className="text-2xl md:text-4xl font-bold bg-gradient-to-br from-primary to-accent text-white">
                   {details.business_name?.charAt(0) || 'B'}
@@ -145,32 +146,32 @@ const NewBusinessProfile = () => {
             {/* Business Info */}
             <div className="flex-1 text-center md:text-left space-y-4">
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
                   {details.business_name || 'Business Name'}
                 </h1>
-                <p className="text-lg text-muted-foreground mt-2 max-w-2xl">
+                <p className="text-lg text-white/90 mt-2 max-w-2xl drop-shadow">
                   {details.business_description || 'Business description not provided'}
                 </p>
               </div>
               
               {/* Quick Stats */}
               <div className="flex flex-wrap justify-center md:justify-start gap-4">
-                <div className="flex items-center space-x-2 bg-card/80 rounded-xl px-4 py-2 border">
-                  <Star className="h-4 w-4 text-yellow-500" />
-                  <span className="font-medium">{details.rating || 0}</span>
-                  <span className="text-sm text-muted-foreground">Rating</span>
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
+                  <Star className="h-4 w-4 text-yellow-400" />
+                  <span className="font-medium text-white">{details.rating || 0}</span>
+                  <span className="text-sm text-white/80">Rating</span>
                 </div>
                 
-                <div className="flex items-center space-x-2 bg-card/80 rounded-xl px-4 py-2 border">
-                  <Award className="h-4 w-4 text-primary" />
-                  <span className="font-medium">{details.years_experience || 0}y</span>
-                  <span className="text-sm text-muted-foreground">Experience</span>
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
+                  <Award className="h-4 w-4 text-primary-foreground" />
+                  <span className="font-medium text-white">{details.years_experience || 0}y</span>
+                  <span className="text-sm text-white/80">Experience</span>
                 </div>
                 
-                <div className="flex items-center space-x-2 bg-card/80 rounded-xl px-4 py-2 border">
-                  <Users className="h-4 w-4 text-accent" />
-                  <span className="font-medium">{details.services_offered?.length || 0}</span>
-                  <span className="text-sm text-muted-foreground">Services</span>
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
+                  <Users className="h-4 w-4 text-accent-foreground" />
+                  <span className="font-medium text-white">{details.services_offered?.length || 0}</span>
+                  <span className="text-sm text-white/80">Services</span>
                 </div>
               </div>
             </div>

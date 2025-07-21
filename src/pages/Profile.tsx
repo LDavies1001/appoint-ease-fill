@@ -387,43 +387,6 @@ const Profile = () => {
     <div className="min-h-screen" style={{ background: 'var(--gradient-bg)' }}>
       <Header />
       
-      {/* Floating Edit Controls for Owner */}
-      {isOwner && (
-        <div className="fixed top-20 right-4 z-50 space-y-2">
-          {isEditMode ? (
-            <>
-              <Button
-                onClick={handleSaveProfile}
-                variant="default"
-                size="sm"
-                className="bg-green-600 hover:bg-green-700 text-white shadow-elegant"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                Save Changes
-              </Button>
-              <Button
-                onClick={handleEditToggle}
-                variant="outline"
-                size="sm"
-                className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-elegant"
-              >
-                <X className="h-4 w-4 mr-2" />
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <Button
-              onClick={handleEditToggle}
-              variant="outline"
-              size="sm"
-              className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-elegant"
-            >
-              <Edit3 className="h-4 w-4 mr-2" />
-              Edit Profile
-            </Button>
-          )}
-        </div>
-      )}
 
       {/* Cover Photo Section */}
       <CoverPhotoManager
@@ -433,9 +396,10 @@ const Profile = () => {
         isOwner={isOwner}
       />
 
-      {/* Hero Section with Business Info */}
-      <div className="relative bg-gradient-to-br from-primary/20 via-accent/10 to-tertiary overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
+      {/* Hero Section with Business Info - Overlaid on Cover */}
+      <div className="relative bg-transparent">
+        {/* Semi-transparent overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
         
         {/* Hero Content */}
         <div className="relative container mx-auto px-4 py-12">
