@@ -190,7 +190,7 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-provider"></div>
       </div>
     );
   }
@@ -199,7 +199,7 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+          <h3 className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">
             Your Services
           </h3>
           <p className="text-muted-foreground mt-1">
@@ -207,7 +207,7 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
           </p>
         </div>
         {!showAddForm && (
-          <Button onClick={() => setShowAddForm(true)} variant="hero" className="shadow-elegant">
+          <Button onClick={() => setShowAddForm(true)} variant="provider-hero" className="shadow-elegant">
             <Plus className="h-4 w-4 mr-2" />
             Add Service
           </Button>
@@ -216,7 +216,7 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
 
       {/* Add Service Form */}
       {showAddForm && (
-        <Card className="card-elegant p-8 border-primary/10">
+        <Card className="card-elegant p-8 border-provider/10">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h4 className="text-2xl font-bold text-foreground">Add New Service</h4>
@@ -281,7 +281,7 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border">
-              <Button type="submit" variant="hero" className="shadow-elegant">
+              <Button type="submit" variant="provider-hero" className="shadow-elegant">
                 <Save className="h-4 w-4 mr-2" />
                 Add Service
               </Button>
@@ -301,7 +301,7 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
               <Wrench className="h-16 w-16 mx-auto mb-4 text-muted-foreground/50" />
               <h3 className="text-xl font-semibold mb-2">No services added yet</h3>
               <p className="text-muted-foreground mb-6">Start by adding your first service to begin accepting bookings</p>
-              <Button onClick={() => setShowAddForm(true)} variant="hero" className="shadow-elegant">
+              <Button onClick={() => setShowAddForm(true)} variant="provider-hero" className="shadow-elegant">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Your First Service
               </Button>
