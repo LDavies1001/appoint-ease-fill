@@ -10,6 +10,7 @@ import Header from '@/components/ui/header';
 import { BusinessInfoSection } from '@/components/business/BusinessInfoSection';
 import { ContactInfoSection } from '@/components/business/ContactInfoSection';
 import { SocialMediaSection } from '@/components/business/SocialMediaSection';
+import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
 
 interface ProviderDetails {
   business_name: string;
@@ -31,6 +32,7 @@ interface ProviderDetails {
   insurance_info: string;
   emergency_available: boolean;
   certification_files: string[];
+  cover_image_url: string | null;
 }
 
 const NewBusinessProfile = () => {
@@ -115,6 +117,14 @@ const NewBusinessProfile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
       <Header />
+      
+      {/* Cover Photo Section */}
+      <CoverPhotoManager
+        coverImageUrl={details.cover_image_url}
+        providerId={user?.id || ''}
+        onCoverImageUpdate={(url) => setDetails(prev => prev ? { ...prev, cover_image_url: url } : prev)}
+        isOwner={true}
+      />
       
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50">

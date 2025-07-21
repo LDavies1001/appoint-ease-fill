@@ -19,7 +19,6 @@ import {
   Pin, 
   Star, 
   Trash2, 
-  Crown,
   Eye,
   MoreVertical,
   Check,
@@ -38,7 +37,6 @@ interface MediaItem {
   caption: string;
   category: string;
   isPinned: boolean;
-  isCover: boolean;
   show_in_portfolio: boolean;
   created_at: string;
   size: number;
@@ -91,7 +89,6 @@ const LibraryTab = () => {
             caption: '',
             category: 'Business Logo',
             isPinned: false,
-            isCover: false,
             show_in_portfolio: false
           };
         })
@@ -120,7 +117,6 @@ const LibraryTab = () => {
             caption: '',
             category: 'General',
             isPinned: false,
-            isCover: false,
             show_in_portfolio: false
           };
         })
@@ -142,18 +138,15 @@ const LibraryTab = () => {
           ...item,
           caption: portfolioData?.description || '',
           isPinned: portfolioData?.featured || false,
-          isCover: portfolioData?.template_type === 'cover' || false,
           show_in_portfolio: !!portfolioData,
           category: portfolioData?.category || item.category
         };
       });
 
-      // Sort: pinned first, then cover, then by date
+      // Sort: pinned first, then by date
       const sortedItems = enrichedItems.sort((a, b) => {
         if (a.isPinned && !b.isPinned) return -1;
         if (!a.isPinned && b.isPinned) return 1;
-        if (a.isCover && !b.isCover) return -1;
-        if (!a.isCover && b.isCover) return 1;
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
 
@@ -363,57 +356,6 @@ const LibraryTab = () => {
     }
   };
 
-  const setCoverImage = async (item: MediaItem) => {
-    if (!user) return;
-
-    try {
-      // Remove cover status from all other images
-      await supabase
-        .from('portfolio_items')
-        .update({ template_type: null })
-        .eq('provider_id', user.id)
-        .eq('template_type', 'cover');
-
-      const { data: existingItem } = await supabase
-        .from('portfolio_items')
-        .select('id')
-        .eq('provider_id', user.id)
-        .eq('image_url', item.url)
-        .single();
-
-      if (existingItem) {
-        // Toggle cover status on existing portfolio item only
-        const { error } = await supabase
-          .from('portfolio_items')
-          .update({ template_type: item.isCover ? null : 'cover' })
-          .eq('id', existingItem.id);
-
-        if (error) throw error;
-        
-        toast({
-          title: "Success",
-          description: item.isCover ? "Cover image removed!" : "Cover image set successfully!",
-        });
-      } else {
-        // If no portfolio item exists, inform user they need to add to portfolio first
-        toast({
-          title: "Add to Portfolio First",
-          description: "Please add this image to your portfolio before setting it as cover.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      fetchMediaItems();
-    } catch (error) {
-      console.error('Error setting cover:', error);
-      toast({
-        title: "Error",
-        description: "Failed to set cover image.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const togglePortfolioDisplay = async (item: MediaItem) => {
     if (!user) return;
@@ -705,12 +647,6 @@ const LibraryTab = () => {
                       Pinned
                     </Badge>
                   )}
-                  {item.isCover && (
-                    <Badge className="bg-yellow-500 text-white text-xs">
-                      <Crown className="h-2 w-2 mr-1" />
-                      Cover
-                    </Badge>
-                  )}
                   {item.show_in_portfolio && (
                     <Badge className="bg-green-500 text-white text-xs">
                       <Eye className="h-2 w-2 mr-1" />
@@ -757,21 +693,6 @@ const LibraryTab = () => {
                           </TooltipContent>
                         </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              size="sm"
-                              variant={item.isCover ? "provider" : "outline"}
-                              className={`h-8 w-8 p-0 ${item.isCover ? "" : "bg-white/90 hover:bg-white text-gray-800"}`}
-                              onClick={() => setCoverImage(item)}
-                            >
-                              <Crown className="h-3 w-3" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{item.isCover ? "Remove as cover" : "Set as cover image"}</p>
-                          </TooltipContent>
-                        </Tooltip>
                       </div>
 
                       <DropdownMenu>
@@ -968,21 +889,6 @@ const LibraryTab = () => {
                         </TooltipContent>
                       </Tooltip>
 
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant={selectedImage.isCover ? "provider" : "outline"}
-                            className={`${selectedImage.isCover ? "" : "bg-white/90 hover:bg-white text-gray-800"}`}
-                            onClick={() => setCoverImage(selectedImage)}
-                          >
-                            <Crown className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{selectedImage.isCover ? "Remove as cover" : "Set as cover image"}</p>
-                        </TooltipContent>
-                      </Tooltip>
                     </TooltipProvider>
                   </div>
                 </div>
@@ -1082,12 +988,6 @@ const LibraryTab = () => {
                       </Badge>
                     </div>
                     
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Cover Image</span>
-                      <Badge variant={selectedImage.isCover ? "default" : "secondary"}>
-                        {selectedImage.isCover ? "Yes" : "No"}
-                      </Badge>
-                    </div>
                   </div>
                 </div>
 

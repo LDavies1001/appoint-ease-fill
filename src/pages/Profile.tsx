@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
 import { EditableField } from '@/components/profile/EditableField';
-import { CoverImageEditor } from '@/components/profile/CoverImageEditor';
+import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
 import { 
   User, 
   Building, 
@@ -55,14 +55,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState<any>({});
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [coverImage, setCoverImage] = useState<string | null>(null);
-  const [coverSettings, setCoverSettings] = useState({
-    size: 'full', // small, medium, large, full
-    position: 'center', // top, center, bottom (kept for backward compatibility)
-    positionX: 50, // horizontal position percentage (0-100)
-    positionY: 50, // vertical position percentage (0-100)
-    overlay: 'medium' // light, medium, dark
-  });
   
   // Use route protection to handle auth state and redirects
   useRouteProtection();
@@ -120,28 +112,6 @@ const Profile = () => {
         .limit(5);
 
       setReviews(reviewsData || []);
-
-      // Fetch cover image
-      const { data: coverData } = await supabase
-        .from('portfolio_items')
-        .select('image_url')
-        .eq('provider_id', user?.id)
-        .eq('template_type', 'cover')
-        .maybeSingle();
-
-      setCoverImage(coverData?.image_url || null);
-
-      // Parse cover settings from provider details
-      if (details?.business_description) {
-        try {
-          const parsedSettings = JSON.parse(details.business_description);
-          if (parsedSettings.coverSettings) {
-            setCoverSettings(parsedSettings.coverSettings);
-          }
-        } catch {
-          // If not JSON or no coverSettings, use defaults
-        }
-      }
     } catch (error) {
       console.error('Error fetching provider data:', error);
     } finally {
@@ -189,16 +159,6 @@ const Profile = () => {
         // Handle provider detail fields - create record if it doesn't exist
         const updateData: any = { [field]: value };
         
-        // If updating cover settings, merge with existing description
-        if (field === 'cover_settings') {
-          const businessData = {
-            description: providerDetails?.business_description || '',
-            coverSettings: value
-          };
-          updateData.business_description = JSON.stringify(businessData);
-          delete updateData.cover_settings;
-        }
-        
         // Try to update first, if no rows affected, create the record
         const { data: updatedData, error: updateError } = await supabase
           .from('provider_details')
@@ -241,18 +201,12 @@ const Profile = () => {
   // Save profile changes
   const handleSaveProfile = async () => {
     try {
-      // Prepare business description with cover settings
-      const businessData = {
-        description: editData.business_description || '',
-        coverSettings: coverSettings
-      };
-
       // Update provider details
       const { error: providerError } = await supabase
         .from('provider_details')
         .update({
           business_name: editData.business_name,
-          business_description: JSON.stringify(businessData),
+          business_description: editData.business_description,
           business_address: editData.business_address,
           business_phone: editData.business_phone,
           business_email: editData.business_email,
@@ -471,125 +425,21 @@ const Profile = () => {
         </div>
       )}
 
-      {/* Hero Cover Section */}
-      <div className={`relative ${coverSettings.size === 'small' ? 'h-48' : coverSettings.size === 'medium' ? 'h-64' : coverSettings.size === 'large' ? 'h-96' : 'h-80'} bg-gradient-to-br from-primary/20 via-accent/10 to-tertiary overflow-hidden`}>
-        {/* Cover Image */}
-        {coverImage ? (
-          <div className="absolute inset-0">
-            <img 
-              src={coverImage} 
-              alt="Cover" 
-              className="w-full h-full object-cover"
-              style={{
-                objectPosition: `${coverSettings.positionX || 50}% ${coverSettings.positionY || 50}%`
-              }}
-            />
-            <div className={`absolute inset-0 ${
-              coverSettings.overlay === 'light' ? 'bg-black/20' : 
-              coverSettings.overlay === 'dark' ? 'bg-black/60' : 
-              'bg-black/40'
-            }`}></div>
-          </div>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/15 to-tertiary/20">
-            <div className="absolute inset-0 bg-black/10"></div>
-          </div>
-        )}
+      {/* Cover Photo Section */}
+      <CoverPhotoManager
+        coverImageUrl={providerDetails?.cover_image_url}
+        providerId={user?.id || ''}
+        onCoverImageUpdate={(url) => setProviderDetails(prev => prev ? { ...prev, cover_image_url: url } : prev)}
+        isOwner={isOwner}
+      />
 
-      {/* Cover Image Controls - Always visible for owner */}
-        {isOwner && (
-          <div className="absolute top-4 left-4 space-y-2">
-            <CoverImageEditor
-              currentImage={coverImage}
-              onImageUpdate={(url) => setCoverImage(url)}
-              providerId={user?.id || ''}
-            />
-            
-            {coverImage && (
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 space-y-3 shadow-lg">
-                <h3 className="font-semibold text-sm text-gray-900">Display Settings</h3>
-                
-                {/* Size Control */}
-                <div>
-                  <label className="text-xs font-medium text-gray-700 block mb-1">Size</label>
-                  <select 
-                    value={coverSettings.size}
-                    onChange={(e) => {
-                      const newSettings = {...coverSettings, size: e.target.value};
-                      setCoverSettings(newSettings);
-                      handleSaveField('cover_settings', newSettings);
-                    }}
-                    className="w-full text-xs border rounded px-2 py-1 bg-white"
-                  >
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                    <option value="full">Full</option>
-                  </select>
-                </div>
-
-                {/* Position Controls */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-700 block">Position</label>
-                  <div className="space-y-2">
-                    <div>
-                      <label className="text-xs text-gray-600 block mb-1">Horizontal: {coverSettings.positionX || 50}%</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={coverSettings.positionX || 50}
-                        onChange={(e) => {
-                          const newSettings = {...coverSettings, positionX: parseInt(e.target.value)};
-                          setCoverSettings(newSettings);
-                          handleSaveField('cover_settings', newSettings);
-                        }}
-                        className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-gray-600 block mb-1">Vertical: {coverSettings.positionY || 50}%</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={coverSettings.positionY || 50}
-                        onChange={(e) => {
-                          const newSettings = {...coverSettings, positionY: parseInt(e.target.value)};
-                          setCoverSettings(newSettings);
-                          handleSaveField('cover_settings', newSettings);
-                        }}
-                        className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Overlay Control */}
-                <div>
-                  <label className="text-xs font-medium text-gray-700 block mb-1">Overlay</label>
-                  <select 
-                    value={coverSettings.overlay}
-                    onChange={(e) => {
-                      const newSettings = {...coverSettings, overlay: e.target.value};
-                      setCoverSettings(newSettings);
-                      handleSaveField('cover_settings', newSettings);
-                    }}
-                    className="w-full text-xs border rounded px-2 py-1 bg-white"
-                  >
-                    <option value="light">Light</option>
-                    <option value="medium">Medium</option>
-                    <option value="dark">Dark</option>
-                  </select>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+      {/* Hero Section with Business Info */}
+      <div className="relative bg-gradient-to-br from-primary/20 via-accent/10 to-tertiary overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
         
         {/* Hero Content */}
-        <div className="relative container mx-auto px-4 h-full flex items-end pb-8">
-          <div className="flex items-end gap-6 w-full">
+        <div className="relative container mx-auto px-4 py-12">
+          <div className="flex items-center gap-6 w-full">
             {/* Profile Avatar */}
             <div className="relative">
               {avatarPreview || profile?.avatar_url ? (
