@@ -185,7 +185,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
             alt={altText || "Business cover photo"}
             className="w-full h-full transition-all duration-300 ease-out"
             style={{
-              objectFit: imageScale[0] <= 100 ? 'contain' : 'cover',
+              objectFit: 'cover',
               transformOrigin: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
               transform: `scale(${imageScale[0] / 100})`
             }}
@@ -324,7 +324,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                     alt="Cover photo preview"
                     className="w-full h-full transition-all duration-300 ease-out"
                     style={{
-                      objectFit: imageScale[0] <= 100 ? 'contain' : 'cover',
+                      objectFit: 'cover',
                       transformOrigin: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
                       transform: `scale(${imageScale[0] / 100})`
                     }}
@@ -347,13 +347,14 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                   value={imageScale}
                   onValueChange={setImageScale}
                   max={200}
-                  min={75}
+                  min={50}
                   step={5}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>Fit Image (75%)</span>
-                  <span>Zoom In (200%)</span>
+                  <span>50%</span>
+                  <span>100%</span>
+                  <span>200%</span>
                 </div>
               </div>
 
