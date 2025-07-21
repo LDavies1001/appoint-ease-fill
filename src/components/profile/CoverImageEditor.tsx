@@ -85,7 +85,7 @@ export const CoverImageEditor = ({ currentImage, onImageUpdate, providerId }: Co
   }, []);
 
   const handleSaveCroppedImage = async () => {
-    if (!completedCrop || !imgRef.current || !selectedFile) {
+    if (!completedCrop || !imgRef.current) {
       toast({
         title: "Error",
         description: "Please select and crop an image first.",
@@ -97,8 +97,18 @@ export const CoverImageEditor = ({ currentImage, onImageUpdate, providerId }: Co
     setIsUploading(true);
 
     try {
-      // Get cropped image blob
-      const croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop);
+      let croppedImageBlob: Blob;
+      
+      // If we're cropping an existing image (no selectedFile), we need to handle it differently
+      if (!selectedFile && previewUrl) {
+        // For existing images, we're working with the preview URL
+        croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop);
+      } else if (selectedFile) {
+        // For new uploads, use the standard flow
+        croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop);
+      } else {
+        throw new Error('No image to process');
+      }
       
       // Create a file from the blob
       const fileName = `cover-${providerId}-${Date.now()}.jpg`;
@@ -173,15 +183,15 @@ export const CoverImageEditor = ({ currentImage, onImageUpdate, providerId }: Co
         <Button
           variant="outline"
           size="sm"
-          className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg"
+          className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg w-full"
         >
           <Edit3 className="h-4 w-4 mr-2" />
-          Edit Cover
+          {currentImage ? 'Recrop Image' : 'Upload Cover'}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Cover Image</DialogTitle>
+          <DialogTitle>{currentImage ? 'Recrop Cover Image' : 'Upload Cover Image'}</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
@@ -200,11 +210,34 @@ export const CoverImageEditor = ({ currentImage, onImageUpdate, providerId }: Co
               className="w-full"
             >
               <Upload className="h-4 w-4 mr-2" />
-              {selectedFile ? 'Choose Different Image' : 'Choose Image'}
+              {currentImage ? 'Choose New Image' : 'Choose Image'}
             </Button>
           </div>
 
-          {/* Current Image Preview (if no new file selected) */}
+          {/* Option to crop current image if it exists */}
+          {!selectedFile && currentImage && (
+            <div>
+              <Button
+                onClick={() => {
+                  setPreviewUrl(currentImage);
+                  setCrop({
+                    unit: '%',
+                    x: 0,
+                    y: 0,
+                    width: 100,
+                    height: 100,
+                  });
+                }}
+                variant="secondary"
+                className="w-full"
+              >
+                <Edit3 className="h-4 w-4 mr-2" />
+                Recrop Current Image
+              </Button>
+            </div>
+          )}
+
+          {/* Current Image Preview (if no new file selected and not recropping) */}
           {!previewUrl && currentImage && (
             <div className="text-center">
               <p className="text-sm text-muted-foreground mb-2">Current cover image:</p>
