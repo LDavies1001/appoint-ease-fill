@@ -604,7 +604,7 @@ const LibraryTab = () => {
               <FolderOpen className="h-8 w-8 text-provider mx-auto mb-3" />
               <h3 className="font-semibold mb-2">Media Library</h3>
               <p className="text-sm text-muted-foreground mb-3">
-                Upload portfolio images and media
+                Upload images to showcase your services
               </p>
               <input
                 type="file"
