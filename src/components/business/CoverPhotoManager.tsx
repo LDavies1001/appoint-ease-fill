@@ -27,7 +27,8 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [resizeDialogOpen, setResizeDialogOpen] = useState(false);
   const [imageScale, setImageScale] = useState([100]);
-  const [imagePosition, setImagePosition] = useState([50]);
+  const [imagePositionX, setImagePositionX] = useState([50]);
+  const [imagePositionY, setImagePositionY] = useState([50]);
   const { toast } = useToast();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,7 +176,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
             className="w-full h-full transition-all duration-300 ease-out"
             style={{
               objectFit: 'cover',
-              objectPosition: `${imagePosition[0]}% center`,
+              objectPosition: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
               transform: `scale(${imageScale[0] / 100})`,
               transformOrigin: 'center center'
             }}
@@ -315,7 +316,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                     className="w-full h-full transition-all duration-300 ease-out"
                     style={{
                       objectFit: 'cover',
-                      objectPosition: `${imagePosition[0]}% center`,
+                      objectPosition: `${imagePositionX[0]}% ${imagePositionY[0]}%`,
                       transform: `scale(${imageScale[0] / 100})`,
                       transformOrigin: 'center center'
                     }}
@@ -350,11 +351,11 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
 
               <div>
                 <Label className="text-sm font-medium mb-3 block">
-                  Horizontal Position: {imagePosition[0]}%
+                  Horizontal Position: {imagePositionX[0]}%
                 </Label>
                 <Slider
-                  value={imagePosition}
-                  onValueChange={setImagePosition}
+                  value={imagePositionX}
+                  onValueChange={setImagePositionX}
                   max={100}
                   min={0}
                   step={5}
@@ -364,6 +365,25 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                   <span>Left</span>
                   <span>Center</span>
                   <span>Right</span>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium mb-3 block">
+                  Vertical Position: {imagePositionY[0]}%
+                </Label>
+                <Slider
+                  value={imagePositionY}
+                  onValueChange={setImagePositionY}
+                  max={100}
+                  min={0}
+                  step={5}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>Top</span>
+                  <span>Center</span>
+                  <span>Bottom</span>
                 </div>
               </div>
             </div>
