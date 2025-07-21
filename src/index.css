@@ -18,10 +18,17 @@ All colors MUST be HSL.
     --popover: 0 0% 100%; /* Pure white for popovers */
     --popover-foreground: 222 15% 15%;
 
-    /* Enhanced Blush Pink as primary */
+    /* Customer Theme - Blush Pink */
     --primary: 0 45% 85%; /* Richer Blush Pink #F2C2C2 */
     --primary-foreground: 222 15% 15%;
     --primary-glow: 0 45% 92%;
+
+    /* Provider Theme - Sage Green */
+    --provider-primary: 120 35% 65%; /* Rich Sage Green */
+    --provider-primary-foreground: 0 0% 100%;
+    --provider-glow: 120 35% 75%;
+    --provider-secondary: 120 25% 85%; /* Light sage */
+    --provider-secondary-foreground: 222 15% 15%;
 
     /* Clean light grey as secondary */
     --secondary: 210 15% 95%; /* Clean light grey #F5F6F7 */
@@ -48,6 +55,8 @@ All colors MUST be HSL.
 
     /* Gradients for beautiful effects */
     --gradient-primary: linear-gradient(135deg, hsl(0 45% 85%), hsl(0 45% 92%));
+    --gradient-provider: linear-gradient(135deg, hsl(120 35% 65%), hsl(120 35% 75%));
+    --gradient-provider-secondary: linear-gradient(135deg, hsl(120 25% 85%), hsl(120 25% 90%));
     --gradient-accent: linear-gradient(135deg, hsl(120 30% 75%), hsl(120 30% 85%));
     --gradient-bg: linear-gradient(180deg, hsl(36 44% 98%), hsl(36 44% 96%));
 
@@ -84,10 +93,17 @@ All colors MUST be HSL.
     --popover: 0 0% 10%;
     --popover-foreground: 210 40% 98%;
 
-    /* Blush Pink adapted for dark mode */
+    /* Customer Theme - Blush Pink adapted for dark mode */
     --primary: 0 45% 65%; /* Richer pink for dark mode */
     --primary-foreground: 210 40% 98%;
     --primary-glow: 0 45% 75%;
+
+    /* Provider Theme - Sage Green for dark mode */
+    --provider-primary: 120 35% 55%; /* Rich Sage Green for dark */
+    --provider-primary-foreground: 210 40% 98%;
+    --provider-glow: 120 35% 65%;
+    --provider-secondary: 120 25% 75%; /* Light sage for dark */
+    --provider-secondary-foreground: 210 40% 98%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -143,6 +159,23 @@ All colors MUST be HSL.
   .btn-accent {
     @apply bg-accent hover:bg-accent/90 text-accent-foreground shadow-md hover:shadow-lg transition-all duration-300;
     background: var(--gradient-accent);
+  }
+
+  /* Provider theme components */
+  .btn-provider {
+    @apply shadow-md hover:shadow-lg transition-all duration-300;
+    background: var(--gradient-provider);
+    color: hsl(var(--provider-primary-foreground));
+  }
+  
+  .btn-provider:hover {
+    background: linear-gradient(135deg, hsl(120 35% 60%), hsl(120 35% 70%));
+  }
+  
+  .btn-provider-secondary {
+    @apply shadow-md hover:shadow-lg transition-all duration-300;
+    background: var(--gradient-provider-secondary);
+    color: hsl(var(--provider-secondary-foreground));
   }
 
   /* Enhanced card styles */
