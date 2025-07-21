@@ -40,35 +40,37 @@ const ImageCard: React.FC<ImageCardProps> = ({ image, onDelete, showBucket = tru
             <p className="text-xs text-muted-foreground">{formatBucketName(image.bucket)}</p>
           )}
           <p className="text-xs text-muted-foreground">{formatFileSize(image.size)}</p>
-          <div className="flex gap-1 mt-2">
+          <div className="flex gap-2 mt-3">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={() => window.open(image.url, '_blank')}
-                  className="flex-1"
+                  className="flex-1 flex items-center gap-1 text-xs"
                 >
                   <Eye className="h-3 w-3" />
+                  <span>View</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>View full size</p>
+                <p>View full size image</p>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={() => onDelete(image)}
-                  className="flex-1 text-destructive hover:text-destructive"
+                  className="flex-1 flex items-center gap-1 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
                   <Trash2 className="h-3 w-3" />
+                  <span>Delete</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Delete image</p>
+                <p>Delete this image</p>
               </TooltipContent>
             </Tooltip>
           </div>
