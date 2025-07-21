@@ -53,6 +53,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState<any>({});
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [coverImage, setCoverImage] = useState<string | null>(null);
   
   // Use route protection to handle auth state and redirects
   useRouteProtection();
@@ -110,6 +111,16 @@ const Profile = () => {
         .limit(5);
 
       setReviews(reviewsData || []);
+
+      // Fetch cover image
+      const { data: coverData } = await supabase
+        .from('portfolio_items')
+        .select('image_url')
+        .eq('provider_id', user?.id)
+        .eq('template_type', 'cover')
+        .single();
+
+      setCoverImage(coverData?.image_url || null);
     } catch (error) {
       console.error('Error fetching provider data:', error);
     } finally {
@@ -370,10 +381,21 @@ const Profile = () => {
 
       {/* Hero Cover Section */}
       <div className="relative h-80 bg-gradient-to-br from-primary/20 via-accent/10 to-tertiary overflow-hidden">
-        {/* Cover Image Placeholder */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/15 to-tertiary/20">
-          <div className="absolute inset-0 bg-black/10"></div>
-        </div>
+        {/* Cover Image */}
+        {coverImage ? (
+          <div className="absolute inset-0">
+            <img 
+              src={coverImage} 
+              alt="Cover" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/15 to-tertiary/20">
+            <div className="absolute inset-0 bg-black/10"></div>
+          </div>
+        )}
         
         {/* Hero Content */}
         <div className="relative container mx-auto px-4 h-full flex items-end pb-8">
