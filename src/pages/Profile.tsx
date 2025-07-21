@@ -76,12 +76,12 @@ const Profile = () => {
   const fetchProviderData = async () => {
     setLoading(true);
     try {
-      // Fetch provider details
+      // Fetch provider details - use maybeSingle to handle case where record doesn't exist
       const { data: details } = await supabase
         .from('provider_details')
         .select('*')
         .eq('user_id', user?.id)
-        .single();
+        .maybeSingle();
 
       setProviderDetails(details);
       setEditData(details || {});
@@ -125,7 +125,7 @@ const Profile = () => {
         .select('image_url')
         .eq('provider_id', user?.id)
         .eq('template_type', 'cover')
-        .single();
+        .maybeSingle();
 
       setCoverImage(coverData?.image_url || null);
 
@@ -184,7 +184,7 @@ const Profile = () => {
         
         if (error) throw error;
       } else {
-        // Handle provider detail fields
+        // Handle provider detail fields - create record if it doesn't exist
         const updateData: any = { [field]: value };
         
         // If updating cover settings, merge with existing description
@@ -197,12 +197,26 @@ const Profile = () => {
           delete updateData.cover_settings;
         }
         
-        const { error } = await supabase
+        // Try to update first, if no rows affected, create the record
+        const { data: updatedData, error: updateError } = await supabase
           .from('provider_details')
           .update(updateData)
-          .eq('user_id', user?.id);
+          .eq('user_id', user?.id)
+          .select();
         
-        if (error) throw error;
+        // If no rows were updated, create a new record
+        if (!updateError && (!updatedData || updatedData.length === 0)) {
+          const { error: insertError } = await supabase
+            .from('provider_details')
+            .insert({
+              user_id: user?.id,
+              ...updateData
+            });
+          
+          if (insertError) throw insertError;
+        } else if (updateError) {
+          throw updateError;
+        }
       }
 
       // Refresh data to show updated values
