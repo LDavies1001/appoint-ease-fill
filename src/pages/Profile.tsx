@@ -54,6 +54,11 @@ const Profile = () => {
   const [editData, setEditData] = useState<any>({});
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [coverSettings, setCoverSettings] = useState({
+    size: 'full', // small, medium, large, full
+    position: 'center', // top, center, bottom
+    overlay: 'medium' // light, medium, dark
+  });
   
   // Use route protection to handle auth state and redirects
   useRouteProtection();
@@ -121,6 +126,18 @@ const Profile = () => {
         .single();
 
       setCoverImage(coverData?.image_url || null);
+
+      // Parse cover settings from provider details
+      if (details?.business_description) {
+        try {
+          const parsedSettings = JSON.parse(details.business_description);
+          if (parsedSettings.coverSettings) {
+            setCoverSettings(parsedSettings.coverSettings);
+          }
+        } catch {
+          // If not JSON or no coverSettings, use defaults
+        }
+      }
     } catch (error) {
       console.error('Error fetching provider data:', error);
     } finally {
@@ -155,12 +172,18 @@ const Profile = () => {
   // Save profile changes
   const handleSaveProfile = async () => {
     try {
+      // Prepare business description with cover settings
+      const businessData = {
+        description: editData.business_description || '',
+        coverSettings: coverSettings
+      };
+
       // Update provider details
       const { error: providerError } = await supabase
         .from('provider_details')
         .update({
           business_name: editData.business_name,
-          business_description: editData.business_description,
+          business_description: JSON.stringify(businessData),
           business_address: editData.business_address,
           business_phone: editData.business_phone,
           business_email: editData.business_email,
@@ -380,20 +403,78 @@ const Profile = () => {
       )}
 
       {/* Hero Cover Section */}
-      <div className="relative h-80 bg-gradient-to-br from-primary/20 via-accent/10 to-tertiary overflow-hidden">
+      <div className={`relative ${coverSettings.size === 'small' ? 'h-48' : coverSettings.size === 'medium' ? 'h-64' : coverSettings.size === 'large' ? 'h-96' : 'h-80'} bg-gradient-to-br from-primary/20 via-accent/10 to-tertiary overflow-hidden`}>
         {/* Cover Image */}
         {coverImage ? (
           <div className="absolute inset-0">
             <img 
               src={coverImage} 
               alt="Cover" 
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover ${
+                coverSettings.position === 'top' ? 'object-top' : 
+                coverSettings.position === 'bottom' ? 'object-bottom' : 
+                'object-center'
+              }`}
             />
-            <div className="absolute inset-0 bg-black/40"></div>
+            <div className={`absolute inset-0 ${
+              coverSettings.overlay === 'light' ? 'bg-black/20' : 
+              coverSettings.overlay === 'dark' ? 'bg-black/60' : 
+              'bg-black/40'
+            }`}></div>
           </div>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/15 to-tertiary/20">
             <div className="absolute inset-0 bg-black/10"></div>
+          </div>
+        )}
+
+        {/* Cover Settings Controls (Edit Mode Only) */}
+        {isEditMode && coverImage && (
+          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-4 space-y-3 shadow-lg">
+            <h3 className="font-semibold text-sm text-gray-900">Cover Display</h3>
+            
+            {/* Size Control */}
+            <div>
+              <label className="text-xs font-medium text-gray-700 block mb-1">Size</label>
+              <select 
+                value={coverSettings.size}
+                onChange={(e) => setCoverSettings({...coverSettings, size: e.target.value})}
+                className="w-full text-xs border rounded px-2 py-1 bg-white"
+              >
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="full">Full</option>
+              </select>
+            </div>
+
+            {/* Position Control */}
+            <div>
+              <label className="text-xs font-medium text-gray-700 block mb-1">Position</label>
+              <select 
+                value={coverSettings.position}
+                onChange={(e) => setCoverSettings({...coverSettings, position: e.target.value})}
+                className="w-full text-xs border rounded px-2 py-1 bg-white"
+              >
+                <option value="top">Top</option>
+                <option value="center">Center</option>
+                <option value="bottom">Bottom</option>
+              </select>
+            </div>
+
+            {/* Overlay Control */}
+            <div>
+              <label className="text-xs font-medium text-gray-700 block mb-1">Overlay</label>
+              <select 
+                value={coverSettings.overlay}
+                onChange={(e) => setCoverSettings({...coverSettings, overlay: e.target.value})}
+                className="w-full text-xs border rounded px-2 py-1 bg-white"
+              >
+                <option value="light">Light</option>
+                <option value="medium">Medium</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
           </div>
         )}
         
