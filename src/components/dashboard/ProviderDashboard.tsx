@@ -370,36 +370,36 @@ const ProviderDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-primary/10">
-              <Calendar className="h-8 w-8 text-primary" />
+            <div className="p-3 rounded-full bg-provider/10">
+              <Calendar className="h-8 w-8 text-provider" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-muted-foreground">Today's Slots</p>
-              <p className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">{todaysSlots.length}</p>
+              <p className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">{todaysSlots.length}</p>
             </div>
           </div>
         </Card>
         
         <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-accent/10">
-              <BookOpen className="h-8 w-8 text-accent" />
+            <div className="p-3 rounded-full bg-provider-secondary/20">
+              <BookOpen className="h-8 w-8 text-provider" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-muted-foreground">Upcoming Bookings</p>
-              <p className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">{upcomingBookings.length}</p>
+              <p className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">{upcomingBookings.length}</p>
             </div>
           </div>
         </Card>
         
         <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-primary/10">
-              <Users className="h-8 w-8 text-primary" />
+            <div className="p-3 rounded-full bg-provider/10">
+              <Users className="h-8 w-8 text-provider" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-muted-foreground">Total Slots</p>
-              <p className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">{mySlots.length}</p>
+              <p className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">{mySlots.length}</p>
             </div>
           </div>
         </Card>
@@ -408,7 +408,7 @@ const ProviderDashboard = () => {
       {/* Navigation Tabs */}
       <div className="flex flex-wrap gap-2">
         <Button
-          variant={activeTab === 'slots' ? 'hero' : 'ghost'}
+          variant={activeTab === 'slots' ? 'provider-hero' : 'ghost'}
           onClick={() => setActiveTab('slots')}
           className="flex-1 min-w-fit"
         >
@@ -416,7 +416,7 @@ const ProviderDashboard = () => {
           My Slots
         </Button>
         <Button
-          variant={activeTab === 'services' ? 'hero' : 'ghost'}
+          variant={activeTab === 'services' ? 'provider-hero' : 'ghost'}
           onClick={() => setActiveTab('services')}
           className="flex-1 min-w-fit"
         >
@@ -424,7 +424,7 @@ const ProviderDashboard = () => {
           Services
         </Button>
         <Button
-          variant={activeTab === 'bookings' ? 'hero' : 'ghost'}
+          variant={activeTab === 'bookings' ? 'provider-hero' : 'ghost'}
           onClick={() => setActiveTab('bookings')}
           className="flex-1 min-w-fit"
         >
@@ -432,7 +432,7 @@ const ProviderDashboard = () => {
           Bookings
         </Button>
         <Button
-          variant={activeTab === 'library' ? 'hero' : 'ghost'}
+          variant={activeTab === 'library' ? 'provider-hero' : 'ghost'}
           onClick={() => setActiveTab('library')}
           className="flex-1 min-w-fit"
         >
@@ -440,7 +440,7 @@ const ProviderDashboard = () => {
           Library
         </Button>
         <Button
-          variant={activeTab === 'profile' ? 'hero' : 'ghost'}
+          variant={activeTab === 'profile' ? 'provider-hero' : 'ghost'}
           onClick={() => setActiveTab('profile')}
           className="flex-1 min-w-fit"
         >
@@ -454,7 +454,7 @@ const ProviderDashboard = () => {
           {/* Header Section */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">
                 Manage Availability
               </h2>
               <p className="text-muted-foreground mt-1">
@@ -466,13 +466,13 @@ const ProviderDashboard = () => {
                 <Button
                   variant="outline"
                   onClick={() => setShowBulkCreator(true)}
-                  className="border-primary/20 hover:border-primary"
+                  className="border-provider/20 hover:border-provider"
                 >
                   <Zap className="h-4 w-4 mr-2" />
                   Bulk Create
                 </Button>
                 <Button
-                  variant="hero"
+                  variant="provider-hero"
                   onClick={() => setShowAddSlot(true)}
                   className="shadow-elegant"
                 >
@@ -485,10 +485,10 @@ const ProviderDashboard = () => {
 
           {/* Add Slot Form */}
           {showAddSlot && (
-            <Card className="card-elegant p-8 border-primary/10">
+            <Card className="card-elegant p-8 border-provider/10">
               <div className="flex justify-between items-center mb-8">
                 <div>
-                  <h3 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                  <h3 className="text-2xl font-bold bg-gradient-provider bg-clip-text text-transparent">
                     Add New Slot
                   </h3>
                   <p className="text-muted-foreground mt-1">Create a new availability slot for your services</p>
@@ -625,7 +625,7 @@ const ProviderDashboard = () => {
                   
                   <div className="flex items-center gap-4">
                     <label htmlFor="image-upload" className="cursor-pointer">
-                      <div className="flex items-center gap-2 p-4 border-2 border-dashed border-border rounded-xl hover:border-primary/50 hover:bg-primary/5 transition-smooth">
+                      <div className="flex items-center gap-2 p-4 border-2 border-dashed border-border rounded-xl hover:border-provider/50 hover:bg-provider/5 transition-smooth">
                         <Upload className="h-5 w-5 text-muted-foreground" />
                         <span className="text-sm font-medium">
                           {uploading ? "Uploading..." : "Upload Image"}
@@ -679,7 +679,7 @@ const ProviderDashboard = () => {
                 <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
                   <Button
                     type="submit"
-                    variant="hero"
+                    variant="provider-hero"
                     className="shadow-elegant"
                     disabled={uploading}
                   >
@@ -714,13 +714,13 @@ const ProviderDashboard = () => {
             <div className="grid gap-4">
               {loading ? (
                 <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-provider"></div>
                 </div>
               ) : mySlots.length === 0 ? (
                 <Card className="card-elegant p-8 text-center">
                   <p className="text-muted-foreground">No slots created yet.</p>
                   <Button
-                    variant="hero"
+                    variant="provider-hero"
                     className="mt-4"
                     onClick={() => setShowAddSlot(true)}
                   >
