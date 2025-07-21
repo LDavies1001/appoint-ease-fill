@@ -155,12 +155,14 @@ const PublicPortfolio = () => {
       <Header />
       
       {/* Cover Photo Section */}
-      <CoverPhotoManager
-        coverImageUrl={providerDetails?.cover_image_url}
-        providerId={providerId || ''}
-        onCoverImageUpdate={() => {}} // No update needed for public view
-        isOwner={false}
-      />
+      <div className="relative w-full h-64 bg-muted overflow-hidden">
+        <CoverPhotoManager
+          coverImageUrl={providerDetails?.cover_image_url}
+          providerId={providerId || ''}
+          onCoverImageUpdate={() => {}} // No update needed for public view
+          isOwner={false}
+        />
+      </div>
       
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Back Navigation */}
