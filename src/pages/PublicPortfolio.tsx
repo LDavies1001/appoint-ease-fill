@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Star, MapPin, Phone, Mail, Globe, Instagram, Facebook, Clock, Shield } from 'lucide-react';
 import Header from '@/components/ui/header';
 import { SocialMediaLinks } from '@/components/portfolio/SocialMediaLinks';
+import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
 
 interface PortfolioItem {
   id: string;
@@ -45,6 +46,7 @@ interface ProviderDetails {
   certifications: string;
   operating_hours: string;
   services_offered: string[];
+  cover_image_url: string | null;
 }
 
 const PublicPortfolio = () => {
@@ -151,6 +153,14 @@ const PublicPortfolio = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      
+      {/* Cover Photo Section */}
+      <CoverPhotoManager
+        coverImageUrl={providerDetails?.cover_image_url}
+        providerId={providerId || ''}
+        onCoverImageUpdate={() => {}} // No update needed for public view
+        isOwner={false}
+      />
       
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Back Navigation */}

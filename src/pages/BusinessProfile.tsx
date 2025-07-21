@@ -36,6 +36,7 @@ import {
   Plus
 } from 'lucide-react';
 import Header from '@/components/ui/header';
+import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
 
 interface ProviderDetails {
   business_name: string;
@@ -54,6 +55,7 @@ interface ProviderDetails {
   rating: number;
   total_reviews: number;
   certification_files: string[];
+  cover_image_url: string | null;
 }
 
 const BusinessProfile = () => {
@@ -362,6 +364,14 @@ const BusinessProfile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
       <Header />
+      
+      {/* Cover Photo Section */}
+      <CoverPhotoManager
+        coverImageUrl={details.cover_image_url}
+        providerId={user?.id || ''}
+        onCoverImageUpdate={(url) => setDetails(prev => prev ? { ...prev, cover_image_url: url } : null)}
+        isOwner={true}
+      />
       
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50">

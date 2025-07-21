@@ -432,6 +432,7 @@ export type Database = {
           business_website: string | null
           certification_files: string[] | null
           certifications: string | null
+          cover_image_url: string | null
           created_at: string
           emergency_available: boolean | null
           facebook_url: string | null
@@ -465,6 +466,7 @@ export type Database = {
           business_website?: string | null
           certification_files?: string[] | null
           certifications?: string | null
+          cover_image_url?: string | null
           created_at?: string
           emergency_available?: boolean | null
           facebook_url?: string | null
@@ -498,6 +500,7 @@ export type Database = {
           business_website?: string | null
           certification_files?: string[] | null
           certifications?: string | null
+          cover_image_url?: string | null
           created_at?: string
           emergency_available?: boolean | null
           facebook_url?: string | null
