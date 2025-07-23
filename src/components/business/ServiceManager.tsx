@@ -323,7 +323,10 @@ const ServiceManager: React.FC<ServiceManagerProps> = ({ onServiceUpdate }) => {
                       <div className="space-y-2">
                         <div className="flex items-center space-x-3">
                           <h4 className="text-lg font-semibold">{service.service_name}</h4>
-                          <Badge variant={service.is_active ? "default" : "secondary"}>
+                          <Badge 
+                            variant={service.is_active ? "default" : "secondary"}
+                            className={service.is_active ? "bg-provider text-provider-foreground" : ""}
+                          >
                             {service.is_active ? "Active" : "Inactive"}
                           </Badge>
                         </div>
