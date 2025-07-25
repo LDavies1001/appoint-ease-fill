@@ -373,10 +373,10 @@ const ProviderDashboard = () => {
 
       {/* Enhanced Hero Banner */}
       <div className="relative overflow-hidden rounded-2xl">
-        {/* Darker Background for Better Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-br from-provider to-provider-glow opacity-90"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,_rgba(0,0,0,0.1),_transparent_50%)]"></div>
+        {/* Light Sage Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-provider via-provider-glow to-provider-secondary"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,_rgba(255,255,255,0.15),_transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,_rgba(255,255,255,0.1),_transparent_50%)]"></div>
         
         {/* Floating Elements */}
         <div className="absolute top-8 right-8 w-32 h-32 bg-white/5 rounded-full animate-pulse"></div>
