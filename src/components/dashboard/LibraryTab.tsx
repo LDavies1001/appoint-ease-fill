@@ -300,16 +300,6 @@ const LibraryTab = () => {
     if (!user) return;
 
     try {
-      const pinnedCount = mediaItems.filter(i => i.isPinned).length;
-      
-      if (!item.isPinned && pinnedCount >= 3) {
-        toast({
-          title: "Limit reached",
-          description: "You can only pin up to 3 images.",
-          variant: "destructive",
-        });
-        return;
-      }
 
       const { data: existingItem } = await supabase
         .from('portfolio_items')
@@ -476,7 +466,7 @@ const LibraryTab = () => {
               {mediaItems.length} images
             </Badge>
             <Badge variant="outline" className="text-provider border-provider">
-              {mediaItems.filter(item => item.isPinned).length}/3 pinned
+              {mediaItems.filter(item => item.isPinned).length} pinned
             </Badge>
             <Badge variant="outline" className="text-provider border-provider">
               {mediaItems.filter(item => item.show_in_portfolio).length} in portfolio
