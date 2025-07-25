@@ -400,7 +400,7 @@ const ProviderDashboard = () => {
                   <p className="text-xl font-medium leading-relaxed text-white drop-shadow-md">
                     Ready to fill those slots and grow your business? 
                     <br />
-                    <span className="text-yellow-100 font-bold text-2xl drop-shadow-lg">{"Let's make today profitable! 💰"}</span>
+                    <span className="text-white font-bold text-2xl drop-shadow-lg">{"Let's make today profitable! 💰"}</span>
                   </p>
                 </div>
                 
