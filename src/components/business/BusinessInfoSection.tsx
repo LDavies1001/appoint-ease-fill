@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { PostcodeLookup } from '@/components/ui/postcode-lookup';
 import { Building, Edit, Check, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -127,11 +128,15 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({
 
               <div className="space-y-2">
                 <Label htmlFor="service_area">Service Area</Label>
-                <Input
-                  id="service_area"
+                <PostcodeLookup
                   value={editData.service_area || ''}
-                  onChange={(e) => setEditData({ ...editData, service_area: e.target.value })}
-                  placeholder="e.g. London, UK"
+                  onChange={(value) => setEditData({ ...editData, service_area: value })}
+                  onLocationFound={(location) => {
+                    const locationStr = `${location.admin_district}, ${location.admin_ward}`;
+                    setEditData({ ...editData, service_area: locationStr });
+                  }}
+                  placeholder="Enter your service area postcode or street"
+                  className="w-full"
                 />
               </div>
             </div>
