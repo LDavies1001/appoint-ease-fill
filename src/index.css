@@ -23,12 +23,12 @@ All colors MUST be HSL.
     --primary-foreground: 222 15% 15%;
     --primary-glow: 0 45% 92%;
 
-    /* Provider Theme - Sage Green */
-    --provider-primary: 120 35% 65%; /* Rich Sage Green */
-    --provider-primary-foreground: 0 0% 100%;
-    --provider-glow: 120 35% 75%;
-    --provider-secondary: 120 25% 85%; /* Light sage */
-    --provider-secondary-foreground: 222 15% 15%;
+    /* Provider Theme - Light Sage Green */
+    --provider-primary: 120 20% 75%; /* Lighter, more muted sage */
+    --provider-primary-foreground: 120 15% 25%; /* Dark sage for contrast */
+    --provider-glow: 120 25% 85%; /* Very light sage */
+    --provider-secondary: 120 15% 90%; /* Almost white sage */
+    --provider-secondary-foreground: 120 15% 30%;
 
     /* Clean light grey as secondary */
     --secondary: 210 15% 95%; /* Clean light grey #F5F6F7 */
@@ -55,8 +55,8 @@ All colors MUST be HSL.
 
     /* Gradients for beautiful effects */
     --gradient-primary: linear-gradient(135deg, hsl(0 45% 85%), hsl(0 45% 92%));
-    --gradient-provider: linear-gradient(135deg, hsl(120 35% 65%), hsl(120 35% 75%));
-    --gradient-provider-secondary: linear-gradient(135deg, hsl(120 25% 85%), hsl(120 25% 90%));
+    --gradient-provider: linear-gradient(135deg, hsl(120 20% 75%), hsl(120 25% 85%));
+    --gradient-provider-secondary: linear-gradient(135deg, hsl(120 15% 90%), hsl(120 20% 95%));
     --gradient-accent: linear-gradient(135deg, hsl(120 30% 75%), hsl(120 30% 85%));
     --gradient-bg: linear-gradient(180deg, hsl(36 44% 98%), hsl(36 44% 96%));
 
@@ -99,12 +99,12 @@ All colors MUST be HSL.
     --primary-foreground: 210 40% 98%;
     --primary-glow: 0 45% 75%;
 
-    /* Provider Theme - Sage Green for dark mode */
-    --provider-primary: 120 35% 55%; /* Rich Sage Green for dark */
-    --provider-primary-foreground: 210 40% 98%;
-    --provider-glow: 120 35% 65%;
-    --provider-secondary: 120 25% 75%; /* Light sage for dark */
-    --provider-secondary-foreground: 210 40% 98%;
+    /* Provider Theme - Light Sage Green for dark mode */
+    --provider-primary: 120 25% 65%; /* Muted sage for dark */
+    --provider-primary-foreground: 120 20% 95%;
+    --provider-glow: 120 30% 75%;
+    --provider-secondary: 120 20% 70%; /* Muted sage for dark */
+    --provider-secondary-foreground: 120 20% 95%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -170,7 +170,7 @@ All colors MUST be HSL.
   }
   
   .btn-provider:hover {
-    background: linear-gradient(135deg, hsl(120 35% 60%), hsl(120 35% 70%));
+    background: linear-gradient(135deg, hsl(120 20% 70%), hsl(120 25% 80%));
   }
   
   .btn-provider-secondary {
