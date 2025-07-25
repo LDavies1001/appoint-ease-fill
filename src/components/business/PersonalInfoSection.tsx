@@ -230,6 +230,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 disabled={saving || uploading}
                 className="flex-1"
                 size="sm"
+                variant="provider"
               >
                 <Check className="h-4 w-4 mr-2" />
                 Save Changes

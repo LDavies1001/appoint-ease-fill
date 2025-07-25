@@ -125,6 +125,7 @@ export const SocialMediaSection: React.FC<SocialMediaSectionProps> = ({
                 disabled={saving}
                 className="flex-1"
                 size="sm"
+                variant="provider"
               >
                 <Check className="h-4 w-4 mr-2" />
                 Save Changes
