@@ -416,9 +416,9 @@ const ProviderDashboard = () => {
                     Create New Slots
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="lg"
-                    className="bg-gray-800 text-white hover:bg-gray-700 font-semibold border border-gray-700 hover:border-gray-600 shadow-lg"
+                    className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
                     onClick={() => setActiveTab('library')}
                   >
                     <Image className="h-5 w-5 mr-2" />
