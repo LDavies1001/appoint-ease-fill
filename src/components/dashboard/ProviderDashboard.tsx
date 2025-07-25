@@ -371,60 +371,93 @@ const ProviderDashboard = () => {
       {/* Add Role Card */}
       <AddRoleCard />
 
-      {/* Hero Banner */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-provider via-provider-glow to-provider-secondary opacity-90"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(255,255,255,0.1),_transparent_50%)]"></div>
-        <div className="relative px-8 py-12 text-center">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-bold text-white">
-              Welcome back, {profile?.name || 'Provider'}!
-            </h1>
-            <p className="text-xl text-white/90 font-medium max-w-2xl mx-auto">
-              Let's fill some slots and grow your business today ✨
-            </p>
+      {/* Enhanced Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-provider via-provider-glow to-provider-secondary"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,_rgba(255,255,255,0.15),_transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,_rgba(255,255,255,0.1),_transparent_50%)]"></div>
+        
+        {/* Floating Elements */}
+        <div className="absolute top-8 right-8 w-32 h-32 bg-white/5 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-8 left-8 w-24 h-24 bg-white/10 rounded-full animate-[pulse_3s_ease-in-out_infinite]"></div>
+        <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-white/5 rounded-full animate-[pulse_4s_ease-in-out_infinite]"></div>
+        
+        {/* Content */}
+        <div className="relative px-8 py-16">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              {/* Left Content */}
+              <div className="text-center lg:text-left space-y-6">
+                <div className="space-y-4 animate-fade-in">
+                  <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight">
+                    Welcome back,
+                    <br />
+                    <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                      {profile?.name || 'Provider'}!
+                    </span>
+                  </h1>
+                  <p className="text-xl text-white/90 font-medium leading-relaxed">
+                    Ready to fill those slots and grow your business? 
+                    <br />
+                    <span className="text-white font-semibold">{"Let's make today profitable! 💰"}</span>
+                  </p>
+                </div>
+                
+                {/* Quick Actions */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-slide-up">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="bg-white/20 border-white/30 text-white hover:bg-white/30 backdrop-blur-sm font-semibold"
+                    onClick={() => setActiveTab('slots')}
+                  >
+                    <Plus className="h-5 w-5 mr-2" />
+                    Create New Slots
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    className="text-white hover:bg-white/20 font-semibold"
+                    onClick={() => setActiveTab('library')}
+                  >
+                    <Image className="h-5 w-5 mr-2" />
+                    Upload Media
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Right Content - Stats Cards */}
+              <div className="grid grid-cols-2 gap-4 animate-scale-in">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
+                  <div className="text-3xl font-bold text-white">{todaysSlots.length}</div>
+                  <div className="text-white/80 text-sm font-medium">Today's Slots</div>
+                  <div className="mt-2 text-white/60 text-xs">Ready to book</div>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
+                  <div className="text-3xl font-bold text-white">{upcomingBookings.length}</div>
+                  <div className="text-white/80 text-sm font-medium">Upcoming</div>
+                  <div className="mt-2 text-white/60 text-xs">Bookings confirmed</div>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
+                  <div className="text-3xl font-bold text-white">{mySlots.length}</div>
+                  <div className="text-white/80 text-sm font-medium">Total Slots</div>
+                  <div className="mt-2 text-white/60 text-xs">All time created</div>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
+                  <div className="text-3xl font-bold text-white">{providerServices.length}</div>
+                  <div className="text-white/80 text-sm font-medium">Services</div>
+                  <div className="mt-2 text-white/60 text-xs">Offered by you</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-provider/10">
-              <Calendar className="h-8 w-8 text-provider" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Today's Slots</p>
-              <p className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">{todaysSlots.length}</p>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-provider-secondary/20">
-              <BookOpen className="h-8 w-8 text-provider" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Upcoming Bookings</p>
-              <p className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">{upcomingBookings.length}</p>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-provider/10">
-              <Users className="h-8 w-8 text-provider" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Total Slots</p>
-              <p className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">{mySlots.length}</p>
-            </div>
-          </div>
-        </Card>
-      </div>
 
       {/* Navigation Tabs */}
       <Card className="card-elegant p-1">
