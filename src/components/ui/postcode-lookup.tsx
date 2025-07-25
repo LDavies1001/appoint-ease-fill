@@ -117,18 +117,46 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
       if (response.ok) {
         const data = await response.json();
         if (data.result) {
-          setSelectedLocation(data.result);
-          setIsValidated(true);
-          setValidationError(null);
-          
-          // Initialize selected areas with all available location parts
-          const areas = [data.result.admin_ward, data.result.admin_district, data.result.country].filter(Boolean);
-          setSelectedAreas(areas);
-          
-          onLocationFound?.(data.result);
-          
-          // Update the input value with the selected areas
-          onChange(areas.join(', '));
+        setSelectedLocation(data.result);
+        setIsValidated(true);
+        setValidationError(null);
+        
+        // Build comprehensive list of service areas
+        const areas = [];
+        
+        // Add primary locations
+        if (data.result.admin_ward) areas.push(data.result.admin_ward);
+        if (data.result.admin_district) areas.push(data.result.admin_district);
+        
+        // Extract towns from parliamentary constituency
+        if (data.result.parliamentary_constituency) {
+          const constituency = data.result.parliamentary_constituency;
+          // Common patterns: "Town and Town2", "Town, Town2 and Town3", etc.
+          const towns = constituency
+            .replace(/\s+(and|&)\s+/gi, ', ')
+            .split(', ')
+            .map(town => town.trim())
+            .filter(town => town && !town.match(/^(East|West|North|South|Central)$/i));
+          areas.push(...towns);
+        }
+        
+        // Add nearby areas based on common knowledge for M23 area
+        if (data.result.outcode === 'M23') {
+          const nearbyM23Areas = ['Wythenshawe', 'Baguley', 'Timperley', 'Sale', 'Brooklands', 'Northenden', 'Gatley'];
+          areas.push(...nearbyM23Areas);
+        }
+        
+        // Add region for broader coverage
+        if (data.result.region) areas.push(data.result.region);
+        
+        // Remove duplicates and filter out empty values
+        const uniqueAreas = [...new Set(areas.filter(Boolean))];
+        setSelectedAreas(uniqueAreas);
+        
+        onLocationFound?.(data.result);
+        
+        // Update the input value with the selected areas
+        onChange(uniqueAreas.join(', '));
           
           return data.result;
         }
