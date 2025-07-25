@@ -373,10 +373,10 @@ const ProviderDashboard = () => {
 
       {/* Enhanced Hero Banner */}
       <div className="relative overflow-hidden rounded-2xl">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-provider via-provider-glow to-provider-secondary"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,_rgba(255,255,255,0.15),_transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,_rgba(255,255,255,0.1),_transparent_50%)]"></div>
+        {/* Darker Background for Better Contrast */}
+        <div className="absolute inset-0 bg-gradient-to-br from-provider to-provider-glow opacity-90"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,_rgba(0,0,0,0.1),_transparent_50%)]"></div>
         
         {/* Floating Elements */}
         <div className="absolute top-8 right-8 w-32 h-32 bg-white/5 rounded-full animate-pulse"></div>
@@ -390,17 +390,17 @@ const ProviderDashboard = () => {
               {/* Left Content */}
               <div className="text-center lg:text-left space-y-6">
                 <div className="space-y-4 animate-fade-in">
-                  <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight">
-                    Welcome back,
+                  <h1 className="text-5xl md:text-6xl font-bold leading-tight drop-shadow-lg">
+                    <span className="text-white">Welcome back,</span>
                     <br />
-                    <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-white via-white to-yellow-100 bg-clip-text text-transparent drop-shadow-md">
                       {profile?.name || 'Provider'}!
                     </span>
                   </h1>
-                  <p className="text-xl text-white/90 font-medium leading-relaxed">
+                  <p className="text-xl font-medium leading-relaxed text-white drop-shadow-md">
                     Ready to fill those slots and grow your business? 
                     <br />
-                    <span className="text-white font-semibold">{"Let's make today profitable! 💰"}</span>
+                    <span className="text-yellow-100 font-bold text-2xl drop-shadow-lg">{"Let's make today profitable! 💰"}</span>
                   </p>
                 </div>
                 
@@ -409,7 +409,7 @@ const ProviderDashboard = () => {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="bg-white/20 border-white/30 text-white hover:bg-white/30 backdrop-blur-sm font-semibold"
+                    className="bg-white/95 border-white text-provider hover:bg-white hover:text-provider-secondary backdrop-blur-sm font-bold shadow-lg"
                     onClick={() => setActiveTab('slots')}
                   >
                     <Plus className="h-5 w-5 mr-2" />
@@ -418,7 +418,7 @@ const ProviderDashboard = () => {
                   <Button
                     variant="ghost"
                     size="lg"
-                    className="text-white hover:bg-white/20 font-semibold"
+                    className="text-white hover:bg-white/20 font-semibold border border-white/30 hover:border-white/50"
                     onClick={() => setActiveTab('library')}
                   >
                     <Image className="h-5 w-5 mr-2" />
@@ -429,28 +429,28 @@ const ProviderDashboard = () => {
               
               {/* Right Content - Stats Cards */}
               <div className="grid grid-cols-2 gap-4 animate-scale-in">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
-                  <div className="text-3xl font-bold text-white">{todaysSlots.length}</div>
-                  <div className="text-white/80 text-sm font-medium">Today's Slots</div>
-                  <div className="mt-2 text-white/60 text-xs">Ready to book</div>
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
+                  <div className="text-3xl font-bold text-provider">{todaysSlots.length}</div>
+                  <div className="text-provider-secondary text-sm font-semibold">Today's Slots</div>
+                  <div className="mt-2 text-provider/70 text-xs">Ready to book</div>
                 </div>
                 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
-                  <div className="text-3xl font-bold text-white">{upcomingBookings.length}</div>
-                  <div className="text-white/80 text-sm font-medium">Upcoming</div>
-                  <div className="mt-2 text-white/60 text-xs">Bookings confirmed</div>
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
+                  <div className="text-3xl font-bold text-provider">{upcomingBookings.length}</div>
+                  <div className="text-provider-secondary text-sm font-semibold">Upcoming</div>
+                  <div className="mt-2 text-provider/70 text-xs">Bookings confirmed</div>
                 </div>
                 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
-                  <div className="text-3xl font-bold text-white">{mySlots.length}</div>
-                  <div className="text-white/80 text-sm font-medium">Total Slots</div>
-                  <div className="mt-2 text-white/60 text-xs">All time created</div>
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
+                  <div className="text-3xl font-bold text-provider">{mySlots.length}</div>
+                  <div className="text-provider-secondary text-sm font-semibold">Total Slots</div>
+                  <div className="mt-2 text-provider/70 text-xs">All time created</div>
                 </div>
                 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
-                  <div className="text-3xl font-bold text-white">{providerServices.length}</div>
-                  <div className="text-white/80 text-sm font-medium">Services</div>
-                  <div className="mt-2 text-white/60 text-xs">Offered by you</div>
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
+                  <div className="text-3xl font-bold text-provider">{providerServices.length}</div>
+                  <div className="text-provider-secondary text-sm font-semibold">Services</div>
+                  <div className="mt-2 text-provider/70 text-xs">Offered by you</div>
                 </div>
               </div>
             </div>
