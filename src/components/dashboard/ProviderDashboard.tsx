@@ -27,10 +27,12 @@ import {
   Wrench,
   Zap,
   Image,
-  ExternalLink
+  ExternalLink,
+  Share2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BulkSlotCreator from './BulkSlotCreator';
+import { SocialMediaConnector } from '@/components/business/SocialMediaConnector';
 
 interface ProviderService {
   id: string;
@@ -369,6 +371,22 @@ const ProviderDashboard = () => {
       {/* Add Role Card */}
       <AddRoleCard />
 
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-provider via-provider-glow to-provider-secondary opacity-90"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(255,255,255,0.1),_transparent_50%)]"></div>
+        <div className="relative px-8 py-12 text-center">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-white">
+              Welcome back, {profile?.name || 'Provider'}!
+            </h1>
+            <p className="text-xl text-white/90 font-medium max-w-2xl mx-auto">
+              Let's fill some slots and grow your business today ✨
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="card-elegant p-6 hover:shadow-accent transition-smooth">
@@ -409,48 +427,61 @@ const ProviderDashboard = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap gap-2">
-        <Button
-          variant={activeTab === 'slots' ? 'provider-hero' : 'ghost'}
-          onClick={() => setActiveTab('slots')}
-          className="flex-1 min-w-fit"
-        >
-          <Calendar className="h-4 w-4 mr-2" />
-          My Slots
-        </Button>
-        <Button
-          variant={activeTab === 'services' ? 'provider-hero' : 'ghost'}
-          onClick={() => setActiveTab('services')}
-          className="flex-1 min-w-fit"
-        >
-          <Wrench className="h-4 w-4 mr-2" />
-          Services
-        </Button>
-        <Button
-          variant={activeTab === 'bookings' ? 'provider-hero' : 'ghost'}
-          onClick={() => setActiveTab('bookings')}
-          className="flex-1 min-w-fit"
-        >
-          <BookOpen className="h-4 w-4 mr-2" />
-          Bookings
-        </Button>
-        <Button
-          variant={activeTab === 'library' ? 'provider-hero' : 'ghost'}
-          onClick={() => setActiveTab('library')}
-          className="flex-1 min-w-fit"
-        >
-          <Image className="h-4 w-4 mr-2" />
-          My Portfolio
-        </Button>
-        <Button
-          variant={activeTab === 'profile' ? 'provider-hero' : 'ghost'}
-          onClick={() => setActiveTab('profile')}
-          className="flex-1 min-w-fit"
-        >
-          <Settings className="h-4 w-4 mr-2" />
-          Profile
-        </Button>
-      </div>
+      <Card className="card-elegant p-1">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1">
+          <Button
+            variant={activeTab === 'slots' ? 'provider-hero' : 'ghost'}
+            onClick={() => setActiveTab('slots')}
+            className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 h-auto py-3 px-2 text-xs sm:text-sm"
+          >
+            <Calendar className="h-4 w-4" />
+            <span className="hidden sm:inline">Slot Manager</span>
+            <span className="sm:hidden">Slots</span>
+          </Button>
+          <Button
+            variant={activeTab === 'services' ? 'provider-hero' : 'ghost'}
+            onClick={() => setActiveTab('services')}
+            className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 h-auto py-3 px-2 text-xs sm:text-sm"
+          >
+            <Wrench className="h-4 w-4" />
+            <span>Services</span>
+          </Button>
+          <Button
+            variant={activeTab === 'bookings' ? 'provider-hero' : 'ghost'}
+            onClick={() => setActiveTab('bookings')}
+            className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 h-auto py-3 px-2 text-xs sm:text-sm"
+          >
+            <BookOpen className="h-4 w-4" />
+            <span>Bookings</span>
+          </Button>
+          <Button
+            variant={activeTab === 'library' ? 'provider-hero' : 'ghost'}
+            onClick={() => setActiveTab('library')}
+            className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 h-auto py-3 px-2 text-xs sm:text-sm"
+          >
+            <Image className="h-4 w-4" />
+            <span className="hidden sm:inline">Media Library</span>
+            <span className="sm:hidden">Media</span>
+          </Button>
+          <Button
+            variant={activeTab === 'social' ? 'provider-hero' : 'ghost'}
+            onClick={() => setActiveTab('social')}
+            className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 h-auto py-3 px-2 text-xs sm:text-sm"
+          >
+            <Share2 className="h-4 w-4" />
+            <span className="hidden sm:inline">Social Media</span>
+            <span className="sm:hidden">Social</span>
+          </Button>
+          <Button
+            variant={activeTab === 'profile' ? 'provider-hero' : 'ghost'}
+            onClick={() => setActiveTab('profile')}
+            className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 h-auto py-3 px-2 text-xs sm:text-sm"
+          >
+            <Settings className="h-4 w-4" />
+            <span>Profile</span>
+          </Button>
+        </div>
+      </Card>
 
       {activeTab === 'slots' && (
         <div className="space-y-8">
@@ -849,6 +880,20 @@ const ProviderDashboard = () => {
         )}
 
       {activeTab === 'library' && <LibraryTab />}
+
+      {activeTab === 'social' && (
+        <div className="space-y-6">
+          <div className="text-center space-y-2">
+            <h2 className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">
+              Social Media Connections
+            </h2>
+            <p className="text-muted-foreground">
+              Connect your social media accounts to showcase your work and attract more customers
+            </p>
+          </div>
+          <SocialMediaConnector />
+        </div>
+      )}
 
       {activeTab === 'profile' && <ProfileTab />}
     </div>

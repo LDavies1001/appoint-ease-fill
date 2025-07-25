@@ -64,6 +64,7 @@ All colors MUST be HSL.
     --shadow-soft: 0 4px 12px hsl(0 0% 0% / 0.08);
     --shadow-medium: 0 8px 24px hsl(0 0% 0% / 0.12);
     --shadow-strong: 0 16px 40px hsl(0 0% 0% / 0.16);
+    --shadow-elegant: 0 12px 30px hsl(0 0% 0% / 0.1);
 
     /* Animation timing */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -193,5 +194,36 @@ All colors MUST be HSL.
   /* Focus states */
   .focus-enhanced {
     @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all duration-200;
+  }
+
+  /* Additional utility classes */
+  .card-elegant {
+    @apply bg-card text-card-foreground rounded-lg border backdrop-blur-sm;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+  }
+  
+  .card-elegant:hover {
+    box-shadow: var(--shadow-medium);
+  }
+
+  .bg-gradient-provider {
+    background: var(--gradient-provider);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-spring {
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .shadow-accent {
+    box-shadow: 0 8px 25px hsl(var(--accent) / 0.15);
+  }
+
+  .shadow-elegant {
+    box-shadow: var(--shadow-elegant);
   }
 }
