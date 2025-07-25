@@ -430,27 +430,27 @@ const ProviderDashboard = () => {
               {/* Right Content - Stats Cards */}
               <div className="grid grid-cols-2 gap-4 animate-scale-in">
                 <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
-                  <div className="text-3xl font-bold text-provider">{todaysSlots.length}</div>
-                  <div className="text-provider-secondary text-sm font-semibold">Today's Slots</div>
-                  <div className="mt-2 text-provider/70 text-xs">Ready to book</div>
+                  <div className="text-3xl font-bold text-gray-800">{todaysSlots.length}</div>
+                  <div className="text-gray-700 text-sm font-semibold">Today's Slots</div>
+                  <div className="mt-2 text-gray-600 text-xs">Ready to book</div>
                 </div>
                 
                 <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
-                  <div className="text-3xl font-bold text-provider">{upcomingBookings.length}</div>
-                  <div className="text-provider-secondary text-sm font-semibold">Upcoming</div>
-                  <div className="mt-2 text-provider/70 text-xs">Bookings confirmed</div>
+                  <div className="text-3xl font-bold text-gray-800">{upcomingBookings.length}</div>
+                  <div className="text-gray-700 text-sm font-semibold">Upcoming</div>
+                  <div className="mt-2 text-gray-600 text-xs">Bookings confirmed</div>
                 </div>
                 
                 <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
-                  <div className="text-3xl font-bold text-provider">{mySlots.length}</div>
-                  <div className="text-provider-secondary text-sm font-semibold">Total Slots</div>
-                  <div className="mt-2 text-provider/70 text-xs">All time created</div>
+                  <div className="text-3xl font-bold text-gray-800">{mySlots.length}</div>
+                  <div className="text-gray-700 text-sm font-semibold">Total Slots</div>
+                  <div className="mt-2 text-gray-600 text-xs">All time created</div>
                 </div>
                 
                 <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
-                  <div className="text-3xl font-bold text-provider">{providerServices.length}</div>
-                  <div className="text-provider-secondary text-sm font-semibold">Services</div>
-                  <div className="mt-2 text-provider/70 text-xs">Offered by you</div>
+                  <div className="text-3xl font-bold text-gray-800">{providerServices.length}</div>
+                  <div className="text-gray-700 text-sm font-semibold">Services</div>
+                  <div className="mt-2 text-gray-600 text-xs">Offered by you</div>
                 </div>
               </div>
             </div>
