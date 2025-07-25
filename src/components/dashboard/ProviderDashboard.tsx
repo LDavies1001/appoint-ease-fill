@@ -393,7 +393,7 @@ const ProviderDashboard = () => {
                   <h1 className="text-5xl md:text-6xl font-bold leading-tight drop-shadow-lg">
                     <span className="text-white">Welcome back,</span>
                     <br />
-                    <span className="bg-gradient-to-r from-white via-white to-yellow-100 bg-clip-text text-transparent drop-shadow-md">
+                    <span className="text-white drop-shadow-md">
                       {profile?.name || 'Provider'}!
                     </span>
                   </h1>
