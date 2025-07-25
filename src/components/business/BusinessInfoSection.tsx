@@ -127,13 +127,11 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="service_area">Service Area</Label>
                 <PostcodeLookup
                   value={editData.service_area || ''}
                   onChange={(value) => setEditData({ ...editData, service_area: value })}
                   onLocationFound={(location) => {
-                    const locationStr = `${location.admin_district}, ${location.admin_ward}`;
-                    setEditData({ ...editData, service_area: locationStr });
+                    // Location areas will be automatically set by the component
                   }}
                   placeholder="Enter your service area postcode or street"
                   className="w-full"

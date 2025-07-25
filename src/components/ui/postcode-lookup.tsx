@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MapPin, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { MapPin, Check, AlertCircle, Loader2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PostcodeResult {
@@ -48,6 +49,7 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
   const [selectedLocation, setSelectedLocation] = useState<PostcodeResult | null>(null);
   const [isValidated, setIsValidated] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -118,7 +120,16 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
           setSelectedLocation(data.result);
           setIsValidated(true);
           setValidationError(null);
+          
+          // Initialize selected areas with all available location parts
+          const areas = [data.result.admin_ward, data.result.admin_district, data.result.country].filter(Boolean);
+          setSelectedAreas(areas);
+          
           onLocationFound?.(data.result);
+          
+          // Update the input value with the selected areas
+          onChange(areas.join(', '));
+          
           return data.result;
         }
       } else if (response.status === 404) {
@@ -145,9 +156,10 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
     onChange(newValue);
     
     // Reset validation when user types
-    if (isValidated && newValue !== selectedLocation?.postcode) {
+    if (isValidated && newValue !== selectedAreas.join(', ')) {
       setIsValidated(false);
       setSelectedLocation(null);
+      setSelectedAreas([]);
       setValidationError(null);
     }
   };
@@ -177,6 +189,12 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
     if (suggestions.length > 0 && !isValidated) {
       setShowSuggestions(true);
     }
+  };
+
+  const handleRemoveArea = (areaToRemove: string) => {
+    const updatedAreas = selectedAreas.filter(area => area !== areaToRemove);
+    setSelectedAreas(updatedAreas);
+    onChange(updatedAreas.join(', '));
   };
 
   return (
@@ -219,7 +237,7 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
         {showSuggestions && suggestions.length > 0 && (
           <div
             ref={suggestionsRef}
-            className="absolute z-50 w-full mt-1 bg-white border border-border rounded-md shadow-lg max-h-48 overflow-auto"
+            className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-48 overflow-auto"
           >
             {suggestions.map((suggestion, index) => (
               <button
@@ -242,17 +260,36 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
         Start typing your postcode to search your location
       </p>
 
-      {/* Location Details */}
-      {isValidated && selectedLocation && (
+      {/* Location Areas - Removable Tags */}
+      {isValidated && selectedLocation && selectedAreas.length > 0 && (
         <div className="p-3 bg-provider/5 border border-provider/20 rounded-lg">
-          <div className="flex items-start space-x-2">
+          <div className="flex items-start space-x-2 mb-3">
             <Check className="h-4 w-4 text-provider mt-0.5" />
             <div>
               <p className="text-sm font-medium text-provider">Postcode verified!</p>
               <p className="text-xs text-muted-foreground">
-                Mapped to: {selectedLocation.admin_ward}, {selectedLocation.admin_district}
+                Choose your service areas by removing unwanted locations:
               </p>
             </div>
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            {selectedAreas.map((area, index) => (
+              <Badge
+                key={index}
+                variant="secondary"
+                className="bg-provider/10 text-provider hover:bg-provider/20 pr-1"
+              >
+                {area}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveArea(area)}
+                  className="ml-1 hover:bg-provider/30 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
           </div>
         </div>
       )}
