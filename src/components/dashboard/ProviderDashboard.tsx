@@ -409,7 +409,7 @@ const ProviderDashboard = () => {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="bg-white/95 border-white text-provider hover:bg-white hover:text-provider-secondary backdrop-blur-sm font-bold shadow-lg"
+                    className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:text-gray-900 backdrop-blur-sm font-bold shadow-lg"
                     onClick={() => setActiveTab('slots')}
                   >
                     <Plus className="h-5 w-5 mr-2" />
@@ -418,7 +418,7 @@ const ProviderDashboard = () => {
                   <Button
                     variant="ghost"
                     size="lg"
-                    className="text-white hover:bg-white/20 font-semibold border border-white/30 hover:border-white/50"
+                    className="bg-gray-800 text-white hover:bg-gray-700 font-semibold border border-gray-700 hover:border-gray-600 shadow-lg"
                     onClick={() => setActiveTab('library')}
                   >
                     <Image className="h-5 w-5 mr-2" />
