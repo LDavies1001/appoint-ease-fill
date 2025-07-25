@@ -137,7 +137,11 @@ const ProfileTab = () => {
                 address_line_2: '',
                 town_city: '',
                 postcode: '',
-                is_public: businessDetails.is_address_public || false
+                is_public: businessDetails.is_address_public || false,
+                admin_district: businessDetails.postcode_admin_district || undefined,
+                admin_ward: businessDetails.postcode_admin_ward || undefined,
+                latitude: businessDetails.postcode_latitude || undefined,
+                longitude: businessDetails.postcode_longitude || undefined
               };
             }
             
@@ -147,7 +151,11 @@ const ProfileTab = () => {
               address_line_2: parts[1] || '',
               town_city: parts[2] || '',
               postcode: parts[3] || '',
-              is_public: businessDetails.is_address_public || false
+              is_public: businessDetails.is_address_public || false,
+              admin_district: businessDetails.postcode_admin_district || undefined,
+              admin_ward: businessDetails.postcode_admin_ward || undefined,
+              latitude: businessDetails.postcode_latitude || undefined,
+              longitude: businessDetails.postcode_longitude || undefined
             };
           };
 

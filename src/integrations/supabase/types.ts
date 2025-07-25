@@ -441,6 +441,11 @@ export type Database = {
           insurance_info: string | null
           is_address_public: boolean | null
           operating_hours: string | null
+          postcode_admin_district: string | null
+          postcode_admin_ward: string | null
+          postcode_latitude: number | null
+          postcode_longitude: number | null
+          postcode_verified_at: string | null
           pricing_info: string | null
           profile_published: boolean | null
           profile_visibility: string | null
@@ -475,6 +480,11 @@ export type Database = {
           insurance_info?: string | null
           is_address_public?: boolean | null
           operating_hours?: string | null
+          postcode_admin_district?: string | null
+          postcode_admin_ward?: string | null
+          postcode_latitude?: number | null
+          postcode_longitude?: number | null
+          postcode_verified_at?: string | null
           pricing_info?: string | null
           profile_published?: boolean | null
           profile_visibility?: string | null
@@ -509,6 +519,11 @@ export type Database = {
           insurance_info?: string | null
           is_address_public?: boolean | null
           operating_hours?: string | null
+          postcode_admin_district?: string | null
+          postcode_admin_ward?: string | null
+          postcode_latitude?: number | null
+          postcode_longitude?: number | null
+          postcode_verified_at?: string | null
           pricing_info?: string | null
           profile_published?: boolean | null
           profile_visibility?: string | null

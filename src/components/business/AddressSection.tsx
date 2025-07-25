@@ -36,12 +36,24 @@ export const AddressSection: React.FC<AddressSectionProps> = ({
         editData.business_address.postcode
       ].filter(Boolean).join(', ');
 
+      // Prepare update data with location metadata
+      const updateData: any = {
+        business_address: addressString,
+        is_address_public: editData.business_address.is_public
+      };
+
+      // Add location metadata if available from postcode lookup
+      if (editData.business_address.latitude && editData.business_address.longitude) {
+        updateData.postcode_latitude = editData.business_address.latitude;
+        updateData.postcode_longitude = editData.business_address.longitude;
+        updateData.postcode_admin_district = editData.business_address.admin_district;
+        updateData.postcode_admin_ward = editData.business_address.admin_ward;
+        updateData.postcode_verified_at = new Date().toISOString();
+      }
+
       const { error } = await supabase
         .from('provider_details')
-        .update({
-          business_address: addressString,
-          is_address_public: editData.business_address.is_public
-        })
+        .update(updateData)
         .eq('user_id', userId);
 
       if (error) throw error;
