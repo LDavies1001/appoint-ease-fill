@@ -2,6 +2,7 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { PostcodeLookup } from '@/components/ui/postcode-lookup';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -12,6 +13,11 @@ export interface AddressData {
   town_city: string;
   postcode: string;
   is_public: boolean; // Whether customers can see the full address
+  // Location metadata from postcode lookup
+  admin_district?: string;
+  admin_ward?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface AddressFormProps {
@@ -32,6 +38,24 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     onChange({
       ...value,
       [field]: fieldValue
+    });
+  };
+
+  const handlePostcodeChange = (postcode: string, locationData?: any) => {
+    const updates: Partial<AddressData> = { postcode };
+    
+    if (locationData) {
+      // Auto-populate location fields from postcode lookup
+      updates.town_city = locationData.admin_district || value.town_city;
+      updates.admin_district = locationData.admin_district;
+      updates.admin_ward = locationData.admin_ward;
+      updates.latitude = locationData.latitude;
+      updates.longitude = locationData.longitude;
+    }
+    
+    onChange({
+      ...value,
+      ...updates
     });
   };
 
@@ -71,6 +95,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
       </div>
 
+      {/* Enhanced Postcode Lookup */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="town_city">
@@ -84,7 +109,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             className={errors.town_city ? 'border-destructive' : ''}
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Choose the closest town to you so customers can find you when searching for services in your area
+            This will be auto-filled when you select a valid postcode
           </p>
           {errors.town_city && (
             <p className="text-sm text-destructive mt-1">{errors.town_city}</p>
@@ -92,19 +117,15 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="postcode">
-            Postcode <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="postcode"
+          <PostcodeLookup
             value={value.postcode}
-            onChange={(e) => handleFieldChange('postcode', e.target.value.toUpperCase())}
-            placeholder="e.g., M23 9NY"
-            className={errors.postcode ? 'border-destructive' : ''}
+            onChange={handlePostcodeChange}
+            onLocationFound={(locationData) => {
+              // Additional handling if needed
+              console.log('Location found:', locationData);
+            }}
+            error={errors.postcode}
           />
-          {errors.postcode && (
-            <p className="text-sm text-destructive mt-1">{errors.postcode}</p>
-          )}
         </div>
       </div>
 
