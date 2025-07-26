@@ -127,23 +127,6 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
       <CardContent className="space-y-6">
         {isEditing ? (
           <div className="space-y-6 animate-in slide-in-from-top-2 duration-300">
-            {/* Full Address Input */}
-            <div className="space-y-3">
-              <Label htmlFor="business-address" className="text-green-800 font-medium">
-                Full Business Address
-              </Label>
-              <p className="text-sm text-muted-foreground">
-                Enter your complete business address
-              </p>
-              
-              <Input
-                id="business-address"
-                value={editData.business_address}
-                onChange={(e) => handleFullAddressChange(e.target.value)}
-                placeholder="e.g., 21 Chorlton Road, Wythenshawe, Manchester, M23 9NY"
-              />
-            </div>
-
             {/* Structured Address Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
@@ -207,6 +190,38 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
               </div>
             </div>
 
+            {/* Address Privacy Settings */}
+            <div className="space-y-3">
+              <Label className="text-green-800 font-medium">Address Visibility</Label>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="address-public"
+                    name="address-visibility"
+                    checked={editData.is_address_public}
+                    onChange={() => setEditData(prev => ({ ...prev, is_address_public: true }))}
+                    className="w-4 h-4 text-green-600"
+                  />
+                  <Label htmlFor="address-public" className="text-sm">
+                    📍 Show full address publicly (customers can see exact location)
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="address-private"
+                    name="address-visibility"
+                    checked={!editData.is_address_public}
+                    onChange={() => setEditData(prev => ({ ...prev, is_address_public: false }))}
+                    className="w-4 h-4 text-green-600"
+                  />
+                  <Label htmlFor="address-private" className="text-sm">
+                    🔒 Keep address private (recommended - share only area/town)
+                  </Label>
+                </div>
+              </div>
+            </div>
 
             <div className="flex space-x-2 pt-4">
               <Button
