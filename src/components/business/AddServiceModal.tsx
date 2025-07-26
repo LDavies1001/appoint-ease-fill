@@ -20,6 +20,7 @@ interface Service {
   description: string;
   base_price: number;
   duration_minutes: number;
+  duration_text?: string;
   is_active: boolean;
 }
 
@@ -43,10 +44,28 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
     description: '',
     base_price: 0,
     duration_minutes: 60,
+    duration_text: '60 min',
     is_active: true
   });
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
+
+  const parseDurationToMinutes = (durationText: string): number => {
+    // Extract numbers from the text
+    const numbers = durationText.match(/\d+(?:\.\d+)?/g);
+    if (!numbers) return 60; // Default to 60 minutes
+    
+    const text = durationText.toLowerCase();
+    const firstNumber = parseFloat(numbers[0]);
+    
+    // Check for hours
+    if (text.includes('hour') || text.includes('hr') || text.includes('h ')) {
+      return Math.round(firstNumber * 60);
+    }
+    
+    // Default to minutes
+    return Math.round(firstNumber);
+  };
 
   useEffect(() => {
     if (editingService) {
@@ -55,6 +74,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
         description: editingService.description || '',
         base_price: editingService.base_price,
         duration_minutes: editingService.duration_minutes,
+        duration_text: editingService.duration_text || `${editingService.duration_minutes} min`,
         is_active: editingService.is_active
       });
     } else {
@@ -63,6 +83,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
         description: '',
         base_price: 0,
         duration_minutes: 60,
+        duration_text: '60 min',
         is_active: true
       });
     }
@@ -98,6 +119,9 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
 
     setSaving(true);
     try {
+      // Parse duration text to minutes before saving
+      const parsedDurationMinutes = parseDurationToMinutes(formData.duration_text || '60 min');
+      
       let savedService: Service;
 
       if (editingService?.id) {
@@ -108,7 +132,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             service_name: formData.service_name,
             description: formData.description,
             base_price: formData.base_price,
-            duration_minutes: formData.duration_minutes,
+            duration_minutes: parsedDurationMinutes,
             is_active: formData.is_active
           })
           .eq('id', editingService.id)
@@ -116,7 +140,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
           .single();
 
         if (error) throw error;
-        savedService = data;
+        savedService = { ...data, duration_text: formData.duration_text };
       } else {
         // Create new service
         const { data, error } = await supabase
@@ -126,14 +150,14 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             service_name: formData.service_name,
             description: formData.description,
             base_price: formData.base_price,
-            duration_minutes: formData.duration_minutes,
+            duration_minutes: parsedDurationMinutes,
             is_active: formData.is_active
           })
           .select()
           .single();
 
         if (error) throw error;
-        savedService = data;
+        savedService = { ...data, duration_text: formData.duration_text };
       }
 
       onSave(savedService);
