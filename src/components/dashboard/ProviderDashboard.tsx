@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 import EnhancedLibraryTab from './EnhancedLibraryTab';
 import ProfileTab from './ProfileTab';
+import AnalyticsTab from './AnalyticsTab';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ServicesSection } from '@/components/business/ServicesSection';
@@ -30,7 +31,8 @@ import {
   ExternalLink,
   Share2,
   Edit,
-  Trash2
+  Trash2,
+  BarChart3
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BulkSlotCreator from './BulkSlotCreator';
@@ -611,7 +613,7 @@ const ProviderDashboard = () => {
 
       {/* Navigation Tabs */}
       <Card className="card-elegant p-1">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-1">
           <Button
             variant={activeTab === 'slots' ? 'provider-hero' : 'ghost'}
             onClick={() => setActiveTab('slots')}
@@ -654,6 +656,15 @@ const ProviderDashboard = () => {
             <Share2 className="h-4 w-4" />
             <span className="hidden sm:inline">Social Media</span>
             <span className="sm:hidden">Social</span>
+          </Button>
+          <Button
+            variant={activeTab === 'analytics' ? 'provider-hero' : 'ghost'}
+            onClick={() => setActiveTab('analytics')}
+            className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 h-auto py-3 px-2 text-xs sm:text-sm"
+          >
+            <BarChart3 className="h-4 w-4" />
+            <span className="hidden sm:inline">Analytics</span>
+            <span className="sm:hidden">Stats</span>
           </Button>
           <Button
             variant={activeTab === 'profile' ? 'provider-hero' : 'ghost'}
@@ -1305,6 +1316,8 @@ const ProviderDashboard = () => {
           <SocialMediaConnector />
         </div>
       )}
+
+      {activeTab === 'analytics' && <AnalyticsTab />}
 
       {activeTab === 'profile' && <ProfileTab />}
     </div>
