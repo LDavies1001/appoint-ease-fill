@@ -366,6 +366,22 @@ const ImageCard: React.FC<ImageCardProps> = ({
                   <TooltipContent>View full size</TooltipContent>
                 </Tooltip>
 
+                {onMoveToFolder && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="bg-white/90 hover:bg-white text-gray-800 shadow-lg cursor-move"
+                        title="Drag to move to folder"
+                      >
+                        <Move className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Drag to move to folder</TooltipContent>
+                  </Tooltip>
+                )}
+
                 {onTogglePortfolio && (
                   <Tooltip>
                     <TooltipTrigger asChild>
