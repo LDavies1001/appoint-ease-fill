@@ -36,8 +36,6 @@ interface BusinessData {
   business_website: string;
   business_address: string;
   is_address_public: boolean;
-  postcode_full: string | null;
-  postcode_area: string | null;
   facebook_url: string;
   instagram_url: string;
   tiktok_url: string;
@@ -45,7 +43,6 @@ interface BusinessData {
   service_area: string;
   operating_hours: OperatingHours;
   availability_notes: string;
-  coverage_towns: string[];
 }
 
 const ProfileTab = () => {
@@ -75,16 +72,13 @@ const ProfileTab = () => {
     business_website: '',
     business_address: '',
     is_address_public: false,
-    postcode_full: null,
-    postcode_area: null,
     facebook_url: '',
     instagram_url: '',
     tiktok_url: '',
     years_experience: 0,
     service_area: '',
     operating_hours: getDefaultOperatingHours(),
-    availability_notes: '',
-    coverage_towns: []
+    availability_notes: ''
   });
 
   const [loading, setLoading] = useState(true);
@@ -170,16 +164,13 @@ const ProfileTab = () => {
             business_website: businessDetails.business_website || '',
             business_address: businessDetails.business_address || '',
             is_address_public: businessDetails.is_address_public || false,
-            postcode_full: (businessDetails as any).postcode_full || null,
-            postcode_area: (businessDetails as any).postcode_area || null,
             facebook_url: businessDetails.facebook_url || '',
             instagram_url: businessDetails.instagram_url || '',
             tiktok_url: businessDetails.tiktok_url || '',
             years_experience: businessDetails.years_experience || 0,
             service_area: businessDetails.service_area || '',
             operating_hours: parseOperatingHours(businessDetails.operating_hours),
-            availability_notes: businessDetails.availability_notes || '',
-            coverage_towns: (businessDetails as any).coverage_towns || []
+            availability_notes: businessDetails.availability_notes || ''
           });
         }
       }
@@ -280,10 +271,7 @@ const ProfileTab = () => {
               <BusinessLocationSection
                 data={{
                   business_address: businessData.business_address,
-                  is_address_public: businessData.is_address_public,
-                  postcode_full: businessData.postcode_full,
-                  postcode_area: businessData.postcode_area,
-                  coverage_towns: businessData.coverage_towns || []
+                  is_address_public: businessData.is_address_public
                 }}
                 userId={profile?.user_id || ''}
                 onUpdate={handleBusinessUpdate}
