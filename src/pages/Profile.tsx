@@ -596,23 +596,6 @@ const Profile = () => {
                     <p className="text-sm text-muted-foreground">Years Experience</p>
                   </div>
                 </div>
-                
-                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <Award className="h-5 w-5 text-provider" />
-                    <span className="font-medium">
-                      Profile Status: {providerDetails.profile_published ? (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
-                          Published & Active
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200">
-                          Draft Mode
-                        </Badge>
-                      )}
-                    </span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
             
