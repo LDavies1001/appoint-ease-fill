@@ -432,6 +432,25 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
                 </button>
               </Badge>
             ))}
+            
+            {/* Manual area addition */}
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="Add custom area"
+                className="h-6 text-xs px-2 min-w-24 w-auto"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                    const newArea = e.currentTarget.value.trim();
+                    if (!selectedAreas.includes(newArea)) {
+                      const updatedAreas = [...selectedAreas, newArea];
+                      setSelectedAreas(updatedAreas);
+                      onChange(updatedAreas.join(', '));
+                    }
+                    e.currentTarget.value = '';
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
       )}
