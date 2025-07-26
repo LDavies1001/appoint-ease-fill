@@ -534,24 +534,33 @@ const ProviderDashboard = () => {
                 </div>
                 
                 {/* Quick Actions */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-slide-up">
+                <div className="flex flex-col sm:flex-row gap-3 pt-4 animate-slide-up">
                   <Button
                     variant="outline"
                     size="lg"
                     className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:text-gray-900 backdrop-blur-sm font-bold shadow-lg"
-                    onClick={() => setActiveTab('slots')}
+                    onClick={() => setActiveTab('bookings')}
                   >
-                    <Plus className="h-5 w-5 mr-2" />
-                    Create New Slots
+                    <Calendar className="h-5 w-5 mr-2" />
+                    View My Bookings
                   </Button>
                   <Button
                     variant="outline"
                     size="lg"
                     className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
-                    onClick={() => setActiveTab('library')}
+                    onClick={() => setActiveTab('profile')}
                   >
-                    <Image className="h-5 w-5 mr-2" />
-                    Upload Media
+                    <Settings className="h-5 w-5 mr-2" />
+                    Edit My Profile
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
+                    onClick={() => setActiveTab('services')}
+                  >
+                    <Plus className="h-5 w-5 mr-2" />
+                    Add a Service
                   </Button>
                 </div>
               </div>
