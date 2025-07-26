@@ -100,20 +100,27 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
         if (result.result) {
           setValidatedAddress(result.result);
           
-          // Create a descriptive address using the postcode data
-          const fullAddress = `${result.result.admin_ward}, ${result.result.admin_district}, ${result.result.postcode}`;
+          // Create a basic address template that user can edit
+          const basicAddress = `${result.result.admin_ward}, ${result.result.admin_district}, ${result.result.postcode}`;
           
           setEditData(prev => ({
             ...prev,
-            business_address: fullAddress,
+            business_address: basicAddress,
             postcode_latitude: result.result.latitude,
             postcode_longitude: result.result.longitude,
             postcode_admin_district: result.result.admin_district,
             postcode_admin_ward: result.result.admin_ward
           }));
           
-          setAddressInput(fullAddress);
+          // Don't auto-fill the input - let user add house number/street
           setShowSuggestions(false);
+          
+          // Show a message that they can now edit the address
+          toast({
+            title: "Postcode validated ✅",
+            description: "Now add your house number and street name to the address field",
+            variant: "default"
+          });
           return result.result;
         }
       } else if (response.status === 404) {
@@ -180,13 +187,22 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
 
   const handleAddressInputChange = (value: string) => {
     setAddressInput(value);
-    searchAddresses(value);
+    
+    // If postcode is already validated, update the address directly
+    if (validatedAddress) {
+      setEditData(prev => ({ ...prev, business_address: value }));
+    } else {
+      // Still searching for postcode
+      searchAddresses(value);
+    }
   };
 
   const handleSuggestionClick = async (suggestion: string) => {
-    setAddressInput(suggestion);
-    setShowSuggestions(false);
-    await validateAddress(suggestion);
+    const result = await validateAddress(suggestion);
+    if (result) {
+      // Clear the input so user can type their full address
+      setAddressInput('');
+    }
   };
 
   const handleRadiusChange = async (radius: string) => {
@@ -278,10 +294,13 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
             {/* Smart Address Input */}
             <div className="space-y-2">
               <Label htmlFor="address-lookup">
-                Business Postcode <span className="text-destructive">*</span>
+                Business Address <span className="text-destructive">*</span>
               </Label>
               <p className="text-sm text-muted-foreground">
-                Start typing your postcode to see suggestions (e.g., M23 9NY)
+                {validatedAddress 
+                  ? "Enter your full address (house number, street, area, postcode)" 
+                  : "First, type your postcode to validate location (e.g., M23 9NY)"
+                }
               </p>
               
               <div className="relative">
@@ -289,7 +308,10 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
                   id="address-lookup"
                   value={addressInput}
                   onChange={(e) => handleAddressInputChange(e.target.value)}
-                  placeholder="Type your postcode (e.g., M23 9NY)"
+                  placeholder={validatedAddress 
+                    ? "e.g., 28 Brooklands Close, Brooklands, Manchester, M23 9NY" 
+                    : "Type your postcode (e.g., M23 9NY)"
+                  }
                   className="pr-10"
                 />
                 
