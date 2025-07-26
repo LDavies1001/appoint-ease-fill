@@ -920,7 +920,12 @@ const Profile = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {providerDetails.is_address_public 
+                      ? providerDetails.business_address 
+                      : providerDetails.business_address?.split(', ').slice(-2).join(', ') || 'Service area not specified'
+                    }
+                  </p>
                 </CardContent>
               </Card>
             )}
