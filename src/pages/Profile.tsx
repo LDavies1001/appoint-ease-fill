@@ -387,39 +387,40 @@ const Profile = () => {
   // Customer Profile View
   if (profile.active_role === 'customer') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
-        {/* Hero Section */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10">
+      <div className="min-h-screen bg-gradient-to-br from-background to-secondary">
+        <Header />
+        
+        {/* Professional Hero Section */}
+        <div className="relative overflow-hidden bg-white shadow-sm">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5"></div>
-          <div className="relative container mx-auto px-4 py-20">
-            <div className="text-center animate-fade-in max-w-4xl mx-auto">
-              <div className="relative inline-block mb-8">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-full blur-3xl opacity-20 scale-150"></div>
-                <Avatar className="w-48 h-48 border-8 border-white/30 shadow-2xl relative z-10 mx-auto">
+          <div className="relative container mx-auto px-4 py-16">
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="relative inline-block mb-6">
+                <Avatar className="w-32 h-32 border-4 border-white shadow-lg mx-auto">
                   <AvatarImage src={customerProfile?.avatar_url} className="object-cover" />
-                  <AvatarFallback className="text-6xl bg-gradient-to-br from-primary to-accent text-white font-bold">
+                  <AvatarFallback className="text-3xl bg-gradient-to-br from-primary to-accent text-primary-foreground font-semibold">
                     {customerProfile?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'C'}
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent">
-                {customerProfile?.name || 'Beauty Enthusiast'}
+              <h1 className="text-4xl font-bold mb-3 text-foreground">
+                {customerProfile?.name || 'Welcome'}
               </h1>
               {customerProfile?.bio ? (
-                <p className="text-2xl text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
                   {customerProfile.bio}
                 </p>
               ) : (
-                <p className="text-2xl text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
-                  Beauty enthusiast exploring the world of wellness and self-care
+                <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+                  Welcome to your beauty journey
                 </p>
               )}
-              <div className="flex flex-wrap justify-center gap-4 mb-8">
-                <Badge variant="outline" className="text-lg px-6 py-3 bg-white/20 border-white/30 text-foreground backdrop-blur-sm">
+              <div className="flex flex-wrap justify-center gap-3 mb-6">
+                <Badge variant="outline" className="px-3 py-1 bg-white border-border text-foreground">
                   <MapPin className="h-4 w-4 mr-2" />
                   {customerProfile?.location || 'Location not set'}
                 </Badge>
-                <Badge variant="outline" className="text-lg px-6 py-3 bg-white/20 border-white/30 text-foreground backdrop-blur-sm">
+                <Badge variant="outline" className="px-3 py-1 bg-white border-border text-foreground">
                   <Calendar className="h-4 w-4 mr-2" />
                   Member since {new Date(customerProfile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 </Badge>
@@ -428,177 +429,131 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-12">
           <div className="max-w-6xl mx-auto">
-            {/* Activity Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 animate-scale-in">
-              <div className="text-center group hover-scale bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-                  <Calendar className="h-10 w-10 text-white" />
+            {/* Professional Activity Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
+              <Card className="text-center p-4 md:p-6 hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <Calendar className="h-6 w-6 md:h-8 md:w-8 text-white" />
                 </div>
-                <div className="text-4xl font-bold text-foreground mb-2">0</div>
-                <div className="text-muted-foreground font-medium">Appointments</div>
-              </div>
-              <div className="text-center group hover-scale bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
-                <div className="w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-                  <Heart className="h-10 w-10 text-white" />
+                <div className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">0</div>
+                <div className="text-sm md:text-base text-muted-foreground font-medium">Appointments</div>
+              </Card>
+              <Card className="text-center p-4 md:p-6 hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <Heart className="h-6 w-6 md:h-8 md:w-8 text-white" />
                 </div>
-                <div className="text-4xl font-bold text-foreground mb-2">0</div>
-                <div className="text-muted-foreground font-medium">Favorites</div>
-              </div>
-              <div className="text-center group hover-scale bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
-                <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-                  <Star className="h-10 w-10 text-white" />
+                <div className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">0</div>
+                <div className="text-sm md:text-base text-muted-foreground font-medium">Favorites</div>
+              </Card>
+              <Card className="text-center p-4 md:p-6 hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <Star className="h-6 w-6 md:h-8 md:w-8 text-white" />
                 </div>
-                <div className="text-4xl font-bold text-foreground mb-2">0</div>
-                <div className="text-muted-foreground font-medium">Reviews</div>
-              </div>
-              <div className="text-center group hover-scale bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-                  <Award className="h-10 w-10 text-white" />
+                <div className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">0</div>
+                <div className="text-sm md:text-base text-muted-foreground font-medium">Reviews</div>
+              </Card>
+              <Card className="text-center p-4 md:p-6 hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <Award className="h-6 w-6 md:h-8 md:w-8 text-white" />
                 </div>
-                <div className="text-4xl font-bold text-foreground mb-2">0</div>
-                <div className="text-muted-foreground font-medium">Experiences</div>
-              </div>
+                <div className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">0</div>
+                <div className="text-sm md:text-base text-muted-foreground font-medium">Experiences</div>
+              </Card>
             </div>
 
-            {/* Beauty Profile Sections */}
-            <div className="grid lg:grid-cols-3 gap-12">
+            {/* Professional Content Layout */}
+            <div className="grid lg:grid-cols-3 gap-8">
               {/* Main Content */}
-              <div className="lg:col-span-2 space-y-12">
-                {/* Beauty Interests */}
-                <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-10 border border-white/30 shadow-2xl animate-fade-in">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <Sparkles className="h-8 w-8 text-white" />
+              <div className="lg:col-span-2 space-y-8">
+                {/* Beauty Interests Card */}
+                <Card className="p-6 md:p-8">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center">
+                      <Sparkles className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-bold">Beauty Passions</h2>
-                      <p className="text-muted-foreground">Services and treatments I love</p>
+                      <h2 className="text-2xl font-bold">Beauty Interests</h2>
+                      <p className="text-muted-foreground">Services and treatments you love</p>
                     </div>
                   </div>
                   
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {['Lash Extensions', 'Nail Care', 'Hair Styling', 'Skincare', 'Massage', 'Makeup'].map((category, index) => (
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {['Lash Extensions', 'Nail Care', 'Hair Styling', 'Skincare', 'Massage', 'Makeup'].map((category) => (
                       <div 
                         key={category} 
-                        className="group p-4 bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl border border-primary/10 hover:border-primary/30 transition-all duration-300 hover-scale"
+                        className="p-4 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-3 h-3 bg-gradient-to-r from-primary to-accent rounded-full"></div>
-                          <span className="font-semibold text-lg">{category}</span>
+                          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                            <Sparkles className="h-5 w-5 text-primary" />
+                          </div>
+                          <span className="font-medium text-foreground">{category}</span>
                         </div>
                       </div>
                     ))}
                   </div>
-                </div>
+                </Card>
 
-                {/* Preferences & Style */}
-                <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-10 border border-white/30 shadow-2xl animate-fade-in">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <Users className="h-8 w-8 text-white" />
+                {/* Upcoming Appointments Card */}
+                <Card className="p-6 md:p-8">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                      <Calendar className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-bold">Style Profile</h2>
-                      <p className="text-muted-foreground">My beauty preferences and budget</p>
+                      <h2 className="text-2xl font-bold">Upcoming Appointments</h2>
+                      <p className="text-muted-foreground">Your scheduled beauty sessions</p>
                     </div>
                   </div>
                   
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
-                      <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-6">
-                        <div className="flex items-center gap-3 mb-3">
-                          <PoundSterling className="h-6 w-6 text-primary" />
-                          <h3 className="text-xl font-semibold">Budget Range</h3>
-                        </div>
-                        <p className="text-2xl font-bold text-primary">£25 - £100</p>
-                        <p className="text-muted-foreground mt-2">Per service</p>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-6">
-                      <div className="bg-gradient-to-br from-purple/10 to-pink/10 rounded-2xl p-6">
-                        <div className="flex items-center gap-3 mb-3">
-                          <Star className="h-6 w-6 text-purple-500" />
-                          <h3 className="text-xl font-semibold">Style Preference</h3>
-                        </div>
-                        <p className="text-lg font-medium">Natural & Elegant</p>
-                        <p className="text-muted-foreground mt-2">Classic beauty with modern touches</p>
-                      </div>
-                    </div>
+                  <div className="text-center py-12 border-2 border-dashed border-border rounded-xl">
+                    <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">No upcoming appointments</h3>
+                    <p className="text-muted-foreground mb-4">Book your next beauty session to get started</p>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Find Services
+                    </Button>
                   </div>
-                </div>
+                </Card>
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-8">
-                {/* Quick Info */}
-                <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/30 shadow-2xl animate-scale-in">
-                  <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                      <User className="h-6 w-6 text-white" />
-                    </div>
-                    About
-                  </h3>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
-                      <MapPin className="h-5 w-5 text-primary" />
-                      <span className="font-medium">{customerProfile?.location || 'Location not set'}</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
-                      <Calendar className="h-5 w-5 text-primary" />
-                      <span className="font-medium">Joined {new Date(customerProfile?.created_at || '').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
-                      <Bell className="h-5 w-5 text-primary" />
-                      <span className="font-medium">
-                        {customerProfile?.notification_preferences?.marketing_communications ? 'Open to offers' : 'Private profile'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Activity Summary */}
-                <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-8 border border-primary/20 shadow-2xl animate-scale-in">
-                  <h3 className="text-2xl font-bold mb-6">Activity</h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">This month</span>
-                      <Badge variant="secondary">0 bookings</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Favorite spots</span>
-                      <Badge variant="secondary">0 saved</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Reviews shared</span>
-                      <Badge variant="secondary">0 written</Badge>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Call to Action */}
-                {profile?.user_id === user?.id && (
-                  <div className="bg-gradient-to-br from-primary to-accent rounded-3xl p-8 text-white shadow-2xl animate-scale-in">
-                    <h3 className="text-xl font-bold mb-4">Customize Your Profile</h3>
-                    <p className="text-white/90 mb-6">Make your beauty profile stand out and connect with amazing businesses.</p>
-                    <Button 
-                      onClick={() => navigate('/dashboard')} 
-                      className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white backdrop-blur-sm"
-                      size="lg"
-                    >
+              <div className="space-y-6">
+                {/* Quick Actions */}
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+                  <div className="space-y-3">
+                    <Button variant="outline" className="w-full justify-start">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Book Appointment
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Heart className="h-4 w-4 mr-2" />
+                      View Favorites
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
                       <Settings className="h-4 w-4 mr-2" />
-                      Edit Profile
+                      Account Settings
                     </Button>
                   </div>
-                )}
+                </Card>
+
+                {/* Recent Activity */}
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
+                  <div className="text-center py-8">
+                    <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground text-sm">No recent activity</p>
+                  </div>
+                </Card>
               </div>
             </div>
 
             {/* Customer Portfolio */}
-            <div className="mt-16">
+            <div className="mt-12">
               <CustomerPortfolio 
                 customerId={profile?.user_id || ''}
                 isOwner={profile?.user_id === user?.id}
@@ -795,515 +750,322 @@ const Profile = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            
-            {/* Business Performance Stats */}
-            <Card className="card-elegant overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                    <Star className="h-5 w-5 text-provider" />
-                  </div>
-                  <h2 className="text-2xl font-semibold">Business Performance</h2>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center space-x-1 mb-2">
-                      <Star className="h-6 w-6 text-yellow-500" />
-                      <span className="text-3xl font-bold text-provider">
-                        {providerDetails.total_reviews > 0 ? providerDetails.rating.toFixed(1) : '0.0'}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">Average Rating</p>
-                  </div>
-                  
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-provider mb-2">
-                      {providerDetails.total_reviews || 0}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Customer Reviews</p>
-                  </div>
-
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-provider mb-2">
-                      {providerServices.length || 0}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Services Offered</p>
-                  </div>
-
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-provider mb-2">
-                      {providerDetails.years_experience || 0}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Years Experience</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* About Section */}
-            <Card className="card-elegant overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                      <User className="h-5 w-5 text-provider" />
-                    </div>
-                    <h2 className="text-2xl font-semibold">About {providerProfile.name || 'Business'}</h2>
-                  </div>
-                  {isOwner && (
-                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                {providerProfile.bio ? (
-                  <div className="mb-6">
-                    <p className="text-muted-foreground leading-relaxed">{providerProfile.bio}</p>
-                  </div>
-                ) : (
-                  <div className="mb-6 text-center py-8 border-2 border-dashed border-border rounded-lg">
-                    <User className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                    <p className="text-muted-foreground">No bio added yet</p>
-                    {isOwner && (
-                      <p className="text-xs text-muted-foreground mt-2">Add a personal bio to help customers get to know you</p>
-                    )}
-                  </div>
-                )}
-                
-                {providerDetails.service_area ? (
-                  <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
-                    <MapPin className="h-5 w-5 text-provider mt-0.5" />
-                    <div>
-                      <h4 className="font-medium mb-1">Service Area</h4>
-                      <p className="text-muted-foreground">{providerDetails.service_area}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
-                    <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <div>
-                      <h4 className="font-medium mb-1">Service Area</h4>
-                      <p className="text-muted-foreground">Not specified</p>
-                      {isOwner && (
-                        <p className="text-xs text-muted-foreground mt-1">Add your service area to help customers find you</p>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
             {/* Services Section */}
-            <Card className="card-elegant overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                      <Building className="h-5 w-5 text-provider" />
+            {providerServices.length > 0 && (
+              <Card className="p-6 lg:p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-provider to-provider-dark rounded-xl flex items-center justify-center">
+                      <Building className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-semibold">Services & Pricing</h2>
-                      {providerServices.length > 0 ? (
-                        <p className="text-sm text-muted-foreground">
-                          {providerServices.length} services • Total value £{totalServiceValue.toFixed(2)}
-                        </p>
-                      ) : (
-                        <p className="text-sm text-muted-foreground">No services added yet</p>
-                      )}
+                      <h2 className="text-2xl font-bold">Services</h2>
+                      <p className="text-muted-foreground">Professional beauty treatments</p>
                     </div>
                   </div>
-                  {!isOwner && providerServices.length > 0 && (
-                    <Button variant="provider" onClick={handleBookNow}>
-                      <Calendar className="h-4 w-4 mr-2" />
+                  {!isOwner && (
+                    <Button onClick={handleBookNow} className="bg-provider hover:bg-provider-dark">
                       Book Now
                     </Button>
                   )}
                 </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                {providerServices.length > 0 ? (
-                  <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {providerServices.map((service) => (
-                        <div key={service.id} className="group relative p-5 border border-border rounded-xl hover:shadow-lg hover:border-provider/30 transition-all duration-300">
-                          <div className="flex flex-col h-full">
-                            <div className="flex items-start justify-between mb-3">
-                              <h3 className="font-semibold text-foreground text-lg leading-tight">
-                                {service.service_name}
-                              </h3>
-                              <div className="text-right flex-shrink-0 ml-4">
-                                <div className="text-2xl font-bold text-provider">
-                                  £{service.discount_price || service.base_price}
-                                </div>
-                                {service.discount_price && service.base_price > service.discount_price && (
-                                  <div className="text-sm text-muted-foreground line-through">
-                                    £{service.base_price}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            
-                            {service.description ? (
-                              <p className="text-muted-foreground mb-3 text-sm leading-relaxed flex-grow">
-                                {service.description}
-                              </p>
-                            ) : (
-                              <p className="text-muted-foreground mb-3 text-sm italic flex-grow">
-                                No description provided
-                              </p>
-                            )}
-                            
-                            <div className="flex items-center justify-between pt-3 border-t border-border/50">
-                              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                <Clock className="h-4 w-4" />
-                                {service.duration_text || `${service.duration_minutes} min`}
-                              </div>
-                              {!isOwner && (
-                                <Button variant="provider" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                  Book
-                                </Button>
-                              )}
+
+                <div className="grid gap-4">
+                  {providerServices.map((service) => (
+                    <div key={service.id} className="p-4 border border-border rounded-xl hover:border-provider/30 transition-colors">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-lg mb-2">{service.service_name}</h3>
+                          {service.description && (
+                            <p className="text-muted-foreground mb-3">{service.description}</p>
+                          )}
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-4 w-4" />
+                              <span>{service.duration_text || `${service.duration_minutes} mins`}</span>
                             </div>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                    
-                    {providerDetails.pricing_info && (
-                      <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                        <h4 className="font-medium mb-2 flex items-center gap-2">
-                          <PoundSterling className="h-4 w-4 text-provider" />
-                          Additional Pricing Information
-                        </h4>
-                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                          {providerDetails.pricing_info}
-                        </p>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-provider">
+                            £{service.base_price}
+                          </div>
+                          {service.discount_price && service.discount_price < service.base_price && (
+                            <div className="text-sm text-muted-foreground line-through">
+                              £{service.discount_price}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-                    <Building className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium mb-2">No Services Added</h3>
-                    <p className="text-muted-foreground mb-4">
-                      {isOwner 
-                        ? "Add your services and pricing to attract customers" 
-                        : "This business hasn't added any services yet"
-                      }
-                    </p>
-                    {isOwner && (
-                      <Button variant="provider" onClick={() => navigate('/dashboard')}>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Services
-                      </Button>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
 
             {/* Portfolio Section */}
-            <Card id="portfolio" className="card-elegant overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                      <ImageIcon className="h-5 w-5 text-provider" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-semibold">Portfolio Gallery</h2>
-                      {portfolioItems.filter(item => item.is_public || isOwner).length > 0 ? (
-                        <p className="text-sm text-muted-foreground">
-                          Showcasing our best work
-                        </p>
-                      ) : (
-                        <p className="text-sm text-muted-foreground">No portfolio items yet</p>
-                      )}
-                    </div>
+            {portfolioItems.filter(item => item.is_public || isOwner).length > 0 && (
+              <Card className="p-6 lg:p-8" id="portfolio">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
+                    <ImageIcon className="h-6 w-6 text-white" />
                   </div>
-                  {isOwner && (
-                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                  )}
+                  <div>
+                    <h2 className="text-2xl font-bold">Portfolio</h2>
+                    <p className="text-muted-foreground">Showcase of our work</p>
+                  </div>
                 </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                {portfolioItems.filter(item => item.is_public || isOwner).length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {portfolioItems
-                      .filter(item => item.is_public || isOwner)
-                      .map((item) => (
-                      <div key={item.id} className="relative group overflow-hidden rounded-xl">
-                        <div className="aspect-square relative">
-                          <img 
-                            src={item.image_url} 
-                            alt={item.title}
-                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                          <div className="absolute bottom-3 left-3 right-3 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            <h4 className="font-medium text-sm mb-1">{item.title}</h4>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {portfolioItems
+                    .filter(item => item.is_public || isOwner)
+                    .map((item) => (
+                      <div key={item.id} className="group relative overflow-hidden rounded-xl bg-muted">
+                        <img
+                          src={item.image_url}
+                          alt={item.title}
+                          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="absolute bottom-4 left-4 right-4 text-white">
+                            <h3 className="font-semibold mb-1">{item.title}</h3>
                             {item.description && (
-                              <p className="text-xs opacity-90 line-clamp-2">{item.description}</p>
+                              <p className="text-sm opacity-90 line-clamp-2">{item.description}</p>
                             )}
                           </div>
-                          {item.featured && (
-                            <div className="absolute top-2 right-2">
-                              <Badge variant="secondary" className="bg-yellow-500/90 text-yellow-900 border-0">
-                                <Star className="h-3 w-3 mr-1" />
-                                Featured
-                              </Badge>
-                            </div>
-                          )}
-                          {!item.is_public && isOwner && (
-                            <div className="absolute top-2 left-2">
-                              <Badge variant="secondary" className="bg-red-500/90 text-white border-0">
-                                Private
-                              </Badge>
-                            </div>
-                          )}
                         </div>
+                        {item.featured && (
+                          <div className="absolute top-3 left-3">
+                            <Badge className="bg-yellow-500 text-yellow-900 border-0">
+                              <Star className="h-3 w-3 mr-1" />
+                              Featured
+                            </Badge>
+                          </div>
+                        )}
+                        {!item.is_public && isOwner && (
+                          <div className="absolute top-3 right-3">
+                            <Badge variant="secondary" className="bg-black/50 text-white border-0">
+                              Private
+                            </Badge>
+                          </div>
+                        )}
                       </div>
                     ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-                    <ImageIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium mb-2">No Portfolio Items</h3>
-                    <p className="text-muted-foreground mb-4">
-                      {isOwner 
-                        ? "Upload photos to showcase your work and attract customers" 
-                        : "This business hasn't added any portfolio items yet"
-                      }
-                    </p>
-                    {isOwner && (
-                      <Button variant="provider" onClick={() => navigate('/dashboard')}>
-                        <ImageIcon className="h-4 w-4 mr-2" />
-                        Add Portfolio Items
-                      </Button>
-                    )}
+                </div>
+              </Card>
+            )}
+
+            {/* About Section */}
+            <Card className="p-6 lg:p-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                  <User className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">About</h2>
+                  <p className="text-muted-foreground">Get to know us better</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {providerProfile.bio && (
+                  <div>
+                    <h3 className="font-semibold mb-2">Personal Bio</h3>
+                    <p className="text-muted-foreground leading-relaxed">{providerProfile.bio}</p>
                   </div>
                 )}
-              </CardContent>
+
+                {providerDetails.years_experience > 0 && (
+                  <div>
+                    <h3 className="font-semibold mb-2">Experience</h3>
+                    <p className="text-muted-foreground">
+                      {providerDetails.years_experience} years of professional experience in the beauty industry
+                    </p>
+                  </div>
+                )}
+
+                {providerDetails.certifications && (
+                  <div>
+                    <h3 className="font-semibold mb-2">Certifications</h3>
+                    <p className="text-muted-foreground">{providerDetails.certifications}</p>
+                  </div>
+                )}
+
+                {providerDetails.insurance_info && (
+                  <div>
+                    <h3 className="font-semibold mb-2">Insurance</h3>
+                    <p className="text-muted-foreground">{providerDetails.insurance_info}</p>
+                  </div>
+                )}
+              </div>
             </Card>
           </div>
 
-          {/* Right Sidebar */}
+          {/* Right Column - Sidebar */}
           <div className="space-y-6">
-            
             {/* Contact Information */}
-            <Card className="card-elegant">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-                    <Phone className="h-5 w-5 text-provider" />
-                  </div>
-                  <h3 className="text-lg font-semibold">Contact</h3>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {providerDetails.business_phone ? (
-                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <a href={`tel:${providerDetails.business_phone}`} className="text-sm hover:text-provider transition-colors">
-                      {providerDetails.business_phone}
-                    </a>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
-                    <Phone className="h-4 w-4" />
-                    <span className="text-sm">No phone number provided</span>
-                  </div>
-                )}
-                
-                {providerDetails.business_email || providerProfile.email ? (
-                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <a href={`mailto:${providerDetails.business_email || providerProfile.email}`} className="text-sm hover:text-provider transition-colors">
-                      {providerDetails.business_email || providerProfile.email}
-                    </a>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
-                    <Mail className="h-4 w-4" />
-                    <span className="text-sm">No email provided</span>
-                  </div>
-                )}
-                
-                {providerDetails.business_website ? (
-                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                    <Globe className="h-4 w-4 text-muted-foreground" />
-                    <a href={providerDetails.business_website} target="_blank" rel="noopener noreferrer" className="text-sm hover:text-provider transition-colors">
-                      Visit Website
-                    </a>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
-                    <Globe className="h-4 w-4" />
-                    <span className="text-sm">No website provided</span>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Location */}
-            {providerDetails.business_address && (
-              <Card className="card-elegant">
-                <CardHeader>
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+              <div className="space-y-4">
+                {providerDetails.business_phone && (
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-                      <MapPin className="h-5 w-5 text-provider" />
+                    <Phone className="h-5 w-5 text-provider" />
+                    <div>
+                      <p className="font-medium">{providerDetails.business_phone}</p>
+                      <p className="text-sm text-muted-foreground">Business Phone</p>
                     </div>
-                    <h3 className="text-lg font-semibold">Location</h3>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    {providerDetails.is_address_public 
-                      ? providerDetails.business_address 
-                      : (() => {
-                          if (!providerDetails.business_address) return 'Service area not specified';
-                          const parts = providerDetails.business_address.split(', ');
-                          if (parts.length >= 2) {
-                            const city = parts[parts.length - 2];
-                            const fullPostcode = parts[parts.length - 1];
-                            const postcodeArea = fullPostcode.split(' ')[0]; // Get just M23 from M23 9NY
-                            return `${city}, ${postcodeArea}`;
-                          }
-                          return 'Service area not specified';
-                        })()
-                    }
-                  </p>
-                </CardContent>
-              </Card>
-            )}
+                )}
+
+                {providerDetails.business_email && (
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-provider" />
+                    <div>
+                      <p className="font-medium">{providerDetails.business_email}</p>
+                      <p className="text-sm text-muted-foreground">Business Email</p>
+                    </div>
+                  </div>
+                )}
+
+                {providerDetails.business_website && (
+                  <div className="flex items-center gap-3">
+                    <Globe className="h-5 w-5 text-provider" />
+                    <div>
+                      <a 
+                        href={providerDetails.business_website} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="font-medium text-provider hover:underline flex items-center gap-1"
+                      >
+                        Visit Website
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                      <p className="text-sm text-muted-foreground">Business Website</p>
+                    </div>
+                  </div>
+                )}
+
+                {(providerDetails.is_address_public && providerDetails.business_address) && (
+                  <div className="flex items-start gap-3">
+                    <MapPin className="h-5 w-5 text-provider mt-0.5" />
+                    <div>
+                      <p className="font-medium">{providerDetails.business_address}</p>
+                      <p className="text-sm text-muted-foreground">Business Address</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </Card>
 
             {/* Operating Hours */}
-            {providerDetails.operating_hours && (
-              <Card className="card-elegant">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-                      <Clock className="h-5 w-5 text-provider" />
+            {operatingHours.length > 0 && (
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4">Operating Hours</h3>
+                <div className="space-y-2">
+                  {operatingHours.map((schedule, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="font-medium">{schedule.day}</span>
+                      <span className="text-muted-foreground">{schedule.hours}</span>
                     </div>
-                    <h3 className="text-lg font-semibold">Operating Hours</h3>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {operatingHours.map((day, index) => (
-                      <div key={index} className="flex justify-between text-sm">
-                        <span className="font-medium">{day.day}</span>
-                        <span className="text-muted-foreground">{day.hours}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
+                  ))}
+                </div>
               </Card>
             )}
 
-            {/* Credentials */}
-            <Card className="card-elegant">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-                    <Shield className="h-5 w-5 text-provider" />
-                  </div>
-                  <h3 className="text-lg font-semibold">Credentials</h3>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {providerDetails.years_experience > 0 && (
-                  <div className="text-center py-4 border-b">
-                    <div className="text-2xl font-bold text-provider mb-1">
-                      {providerDetails.years_experience}+ Years
-                    </div>
-                    <p className="text-sm text-muted-foreground">Professional Experience</p>
-                  </div>
-                )}
-                
-                {providerDetails.is_fully_verified && (
-                  <div className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                    <span className="text-sm">Verified Business</span>
-                  </div>
-                )}
-                
-                {/* Show verification progress if not fully verified */}
-                {!providerDetails.is_fully_verified && (
-                  <div className="space-y-2">
-                    <h4 className="font-medium text-sm">Verification Progress</h4>
-                    <div className="space-y-1">
-                      <div className="flex items-center text-xs">
-                        {providerDetails.identity_verified ? (
-                          <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                        ) : (
-                          <X className="h-3 w-3 text-red-500 mr-2" />
-                        )}
-                        <span>Identity Documents</span>
-                      </div>
-                      <div className="flex items-center text-xs">
-                        {providerDetails.address_verified ? (
-                          <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                        ) : (
-                          <X className="h-3 w-3 text-red-500 mr-2" />
-                        )}
-                        <span>Address Verification</span>
-                      </div>
-                      <div className="flex items-center text-xs">
-                        {providerDetails.insurance_verified ? (
-                          <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                        ) : (
-                          <X className="h-3 w-3 text-red-500 mr-2" />
-                        )}
-                        <span>Insurance & Licensing</span>
-                      </div>
-                      <div className="flex items-center text-xs">
-                        {providerDetails.background_check_verified ? (
-                          <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                        ) : (
-                          <X className="h-3 w-3 text-red-500 mr-2" />
-                        )}
-                        <span>Background Check</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {providerDetails.insurance_info && (
-                  <div className="flex items-center">
-                    <Shield className="h-4 w-4 text-provider mr-3" />
-                    <span className="text-sm">Insured Professional</span>
-                  </div>
-                )}
+            {/* Social Media */}
+            {(socialConnections.length > 0 || providerDetails.facebook_url || providerDetails.instagram_url) && (
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
+                <div className="space-y-3">
+                  {providerDetails.facebook_url && (
+                    <a 
+                      href={providerDetails.facebook_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-provider/30 transition-colors"
+                    >
+                      <Facebook className="h-5 w-5 text-blue-600" />
+                      <span className="font-medium">Facebook</span>
+                      <ExternalLink className="h-4 w-4 ml-auto text-muted-foreground" />
+                    </a>
+                  )}
 
-                {/* Certifications */}
-                {providerDetails.certifications && (
-                  <div>
-                    <h4 className="font-medium mb-2 flex items-center">
-                      <Award className="h-4 w-4 mr-2" />
-                      Certifications
-                    </h4>
-                    <div className="flex flex-wrap gap-1">
-                      {providerDetails.certifications.split(',').map((cert: string, index: number) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {cert.trim()}
-                        </Badge>
-                      ))}
+                  {providerDetails.instagram_url && (
+                    <a 
+                      href={providerDetails.instagram_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-provider/30 transition-colors"
+                    >
+                      <Instagram className="h-5 w-5 text-pink-600" />
+                      <span className="font-medium">Instagram</span>
+                      <ExternalLink className="h-4 w-4 ml-auto text-muted-foreground" />
+                    </a>
+                  )}
+
+                  {socialConnections.map((connection) => (
+                    <a 
+                      key={connection.id}
+                      href={connection.profile_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-provider/30 transition-colors"
+                    >
+                      <div className="w-5 h-5 bg-gradient-to-r from-provider to-provider-dark rounded flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">
+                          {connection.platform.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <span className="font-medium">{connection.platform}</span>
+                      <ExternalLink className="h-4 w-4 ml-auto text-muted-foreground" />
+                    </a>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {/* Service Area */}
+            {providerDetails.service_area && (
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4">Service Area</h3>
+                <div className="flex items-start gap-3">
+                  <Map className="h-5 w-5 text-provider mt-0.5" />
+                  <p className="text-muted-foreground">{providerDetails.service_area}</p>
+                </div>
+              </Card>
+            )}
+
+            {/* Verification Status */}
+            {(providerDetails.identity_verified || providerDetails.address_verified || providerDetails.insurance_verified) && (
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4">Verification Status</h3>
+                <div className="space-y-3">
+                  {providerDetails.identity_verified && (
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="font-medium">Identity Verified</span>
                     </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  )}
+                  
+                  {providerDetails.address_verified && (
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="font-medium">Address Verified</span>
+                    </div>
+                  )}
+                  
+                  {providerDetails.insurance_verified && (
+                    <div className="flex items-center gap-3">
+                      <Shield className="h-5 w-5 text-green-500" />
+                      <span className="font-medium">Insurance Verified</span>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            )}
           </div>
         </div>
       </div>
