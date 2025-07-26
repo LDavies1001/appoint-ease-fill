@@ -67,13 +67,21 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <Link to="/signup/customer" className="block mt-auto">
-                    <Button variant="hero" className="w-full px-8 py-4 text-lg font-medium">
-                      <User className="mr-2 h-5 w-5" />
-                      Sign Up as Customer
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </Link>
+                  <div className="space-y-3 mt-auto">
+                    <Link to="/discover" className="block">
+                      <Button className="w-full px-8 py-4 text-lg font-medium bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white">
+                        <Calendar className="mr-2 h-5 w-5" />
+                        Find Available Slots
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    </Link>
+                    <Link to="/signup/customer" className="block">
+                      <Button variant="outline" className="w-full px-8 py-3 text-base font-medium border-pink-200 text-pink-600 hover:bg-pink-50">
+                        <User className="mr-2 h-4 w-4" />
+                        Sign Up as Customer
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Business Section */}

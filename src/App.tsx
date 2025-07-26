@@ -12,6 +12,7 @@ import CustomerSignup from "./pages/CustomerSignup";
 import BusinessSignup from "./pages/BusinessSignup";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
+import SlotDiscovery from "./pages/SlotDiscovery";
 import BusinessProfile from "./pages/BusinessProfile";
 import NewBusinessProfile from "./pages/NewBusinessProfile";
 import CreateBusinessProfile from "./pages/CreateBusinessProfile";
@@ -40,6 +41,7 @@ const App = () => (
                   <Route path="/signup/business" element={<BusinessSignup />} />
                   <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/discover" element={<SlotDiscovery />} />
                   <Route path="/business-profile" element={<NewBusinessProfile />} />
                   <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
                   <Route path="/profile" element={<Profile />} />

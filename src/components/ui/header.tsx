@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
-import { Calendar, ChevronDown, User, Settings, LogOut, Building } from 'lucide-react';
+import { Calendar, ChevronDown, User, Settings, LogOut, Building, Search } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { RoleSwitcher } from '@/components/ui/role-switcher';
 import {
@@ -51,6 +51,14 @@ const Header = () => {
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
+                  {profile.active_role === 'customer' && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/discover" className="flex items-center">
+                        <Search className="h-4 w-4 mr-2" />
+                        Find Slots
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="flex items-center">
                       {profile.active_role === 'provider' ? (
@@ -82,6 +90,11 @@ const Header = () => {
             </div>
           ) : (
             <div className="flex items-center space-x-4">
+              <Link to="/discover">
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                  Find Slots
+                </Button>
+              </Link>
               <Link to="/auth?tab=provider">
                 <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                   For Your Business
