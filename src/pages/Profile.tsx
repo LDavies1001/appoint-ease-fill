@@ -1,240 +1,253 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouteProtection } from '@/hooks/useRouteProtection';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { PhotoUpload, DocumentUpload } from '@/components/ui/photo-upload';
+import Header from '@/components/ui/header';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useToast } from '@/hooks/use-toast';
+import { useEffect, useState } from 'react';
+import { EditableField } from '@/components/profile/EditableField';
+import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
 import { 
-  MapPin, 
+  User, 
+  Building, 
+  Star, 
   Phone, 
   Mail, 
-  Globe, 
-  Star, 
-  Clock, 
-  Award,
-  Shield,
-  Edit2,
+  MapPin, 
+  Clock,
+  Calendar,
+  Heart,
+  MessageSquare,
   Camera,
+  Users,
+  Award,
+  Edit3,
+  Eye,
+  CheckCircle,
+  Globe,
   Instagram,
   Facebook,
-  Heart,
-  Share2,
-  MessageCircle,
-  Calendar,
-  PoundSterling,
-  CheckCircle,
-  Users,
-  Sparkles,
-  ExternalLink,
-  ChevronRight,
-  Building,
-  User,
-  Image as ImageIcon,
-  Map,
+  Twitter,
+  Save,
+  X,
+  Upload,
   FileText,
-  Copy,
-  Plus
+  PoundSterling
 } from 'lucide-react';
-import Header from '@/components/ui/header';
-import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
-
-interface ProviderProfile {
-  user_id: string;
-  name: string;
-  bio: string;
-  avatar_url: string;
-  location: string;
-  phone: string;
-  email: string;
-}
-
-interface ProviderDetails {
-  user_id: string;
-  business_name: string;
-  business_description: string;
-  business_email: string;
-  business_phone: string;
-  business_website: string;
-  business_address: string;
-  business_street: string;
-  business_city: string;
-  business_county: string;
-  business_country: string;
-  business_postcode: string;
-  postcode_area: string;
-  coverage_towns: string[];
-  business_logo_url: string;
-  cover_image_url: string;
-  operating_hours: string;
-  certifications: string;
-  insurance_info: string;
-  certification_files: string[];
-  awards_recognitions: string;
-  professional_memberships: string;
-  other_qualifications: string;
-  pricing_info: string;
-  years_experience: number;
-  services_offered: string[];
-  business_category: string;
-  rating: number;
-  total_reviews: number;
-  profile_published: boolean;
-  profile_visibility: string;
-  is_address_public: boolean;
-  emergency_available: boolean;
-  social_media_links: any;
-  instagram_url: string;
-  facebook_url: string;
-  tiktok_url: string;
-}
-
-interface PortfolioItem {
-  id: string;
-  title: string;
-  description: string;
-  image_url: string;
-  category: string;
-  tags: string[];
-  featured: boolean;
-  is_public: boolean;
-  view_count: number;
-  public_slug: string;
-}
-
-interface Review {
-  id: string;
-  rating: number;
-  comment: string;
-  created_at: string;
-  reviewer: {
-    name: string;
-  };
-}
-
-interface Service {
-  id: string;
-  service_name: string;
-  description: string;
-  base_price: number;
-  discount_price: number;
-  duration_minutes: number;
-  duration_text: string;
-  is_active: boolean;
-}
-
-interface SocialConnection {
-  id: string;
-  platform: string;
-  handle: string;
-  profile_url: string;
-  profile_picture_url: string;
-  is_active: boolean;
-}
 
 const Profile = () => {
   const { user, profile } = useAuth();
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const [providerProfile, setProviderProfile] = useState<ProviderProfile | null>(null);
-  const [providerDetails, setProviderDetails] = useState<ProviderDetails | null>(null);
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
-  const [socialConnections, setSocialConnections] = useState<SocialConnection[]>([]);
+  const navigate = useNavigate();
+  const [providerDetails, setProviderDetails] = useState<any>(null);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [portfolioItems, setPortfolioItems] = useState<any[]>([]);
+  const [providerServices, setProviderServices] = useState<any[]>([]);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const [editData, setEditData] = useState<any>({});
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  
   // Use route protection to handle auth state and redirects
   useRouteProtection();
 
   useEffect(() => {
-    if (user && profile) {
-      if (profile.role === 'provider') {
-        fetchProviderData();
-      } else {
-        setLoading(false);
-      }
+    if (user && profile?.role === 'provider') {
+      fetchProviderData();
+    } else {
+      setLoading(false);
     }
   }, [user, profile]);
 
   const fetchProviderData = async () => {
-    if (!user?.id) return;
-
     setLoading(true);
     try {
-      // Fetch provider profile
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      setProviderProfile(profileData);
-
-      // Fetch provider details
-      const { data: detailsData } = await supabase
+      // Fetch provider details - use maybeSingle to handle case where record doesn't exist
+      const { data: details } = await supabase
         .from('provider_details')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user?.id)
         .maybeSingle();
 
-      setProviderDetails(detailsData);
+      setProviderDetails(details);
+      setEditData(details || {});
 
-      // Fetch portfolio items
-      const { data: portfolioData } = await supabase
+      // Fetch featured portfolio items
+      const { data: portfolio } = await supabase
         .from('portfolio_items')
         .select('*')
-        .eq('provider_id', user.id)
+        .eq('provider_id', user?.id)
         .eq('featured', true)
-        .order('created_at', { ascending: false })
         .limit(6);
 
-      setPortfolioItems(portfolioData || []);
+      setPortfolioItems(portfolio || []);
 
-      // Fetch reviews
+      // Fetch provider services
+      const { data: services } = await supabase
+        .from('provider_services')
+        .select('*')
+        .eq('provider_id', user?.id)
+        .eq('is_active', true)
+        .order('created_at', { ascending: true });
+
+      setProviderServices(services || []);
+
+      // Fetch recent reviews
       const { data: reviewsData } = await supabase
         .from('reviews')
         .select(`
           *,
           reviewer:profiles!reviews_reviewer_id_fkey(name)
         `)
-        .eq('reviewee_id', user.id)
+        .eq('reviewee_id', user?.id)
         .order('created_at', { ascending: false })
         .limit(5);
 
       setReviews(reviewsData || []);
-
-      // Fetch services
-      const { data: servicesData } = await supabase
-        .from('provider_services')
-        .select('*')
-        .eq('provider_id', user.id)
-        .eq('is_active', true)
-        .order('created_at', { ascending: true });
-
-      setServices(servicesData || []);
-
-      // Fetch social connections
-      const { data: socialData } = await supabase
-        .from('social_media_connections')
-        .select('*')
-        .eq('provider_id', user.id)
-        .eq('is_active', true);
-
-      setSocialConnections(socialData || []);
-
     } catch (error) {
       console.error('Error fetching provider data:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load profile data. Please refresh the page.",
-        variant: "destructive"
-      });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const isOwner = user?.id === profile?.user_id;
+  
+  // Debug logging - this should show immediately when component loads
+  console.log('Profile Debug Info:', {
+    userId: user?.id,
+    profileUserId: profile?.user_id,
+    profileRole: profile?.role,
+    isOwner,
+    isEditMode,
+    userExists: !!user,
+    profileExists: !!profile
+  });
+
+  // Function to handle edit button click
+  const handleEditToggle = () => {
+    console.log('Edit button clicked! Current isEditMode:', isEditMode);
+    if (isEditMode) {
+      // Exiting edit mode - reset data
+      setEditData(providerDetails || {});
+    }
+    setIsEditMode(!isEditMode);
+    console.log('Edit mode toggled to:', !isEditMode);
+  };
+
+  // Save individual field changes
+  const handleSaveField = async (field: string, value: any) => {
+    try {
+      if (field.startsWith('profile_')) {
+        // Handle profile fields
+        const profileField = field.replace('profile_', '');
+        const { error } = await supabase
+          .from('profiles')
+          .update({ [profileField]: value })
+          .eq('user_id', user?.id);
+        
+        if (error) throw error;
+      } else {
+        // Handle provider detail fields - create record if it doesn't exist
+        const updateData: any = { [field]: value };
+        
+        // Try to update first, if no rows affected, create the record
+        const { data: updatedData, error: updateError } = await supabase
+          .from('provider_details')
+          .update(updateData)
+          .eq('user_id', user?.id)
+          .select();
+        
+        // If no rows were updated, create a new record
+        if (!updateError && (!updatedData || updatedData.length === 0)) {
+          const { error: insertError } = await supabase
+            .from('provider_details')
+            .insert({
+              user_id: user?.id,
+              ...updateData
+            });
+          
+          if (insertError) throw insertError;
+        } else if (updateError) {
+          throw updateError;
+        }
+      }
+
+      // Refresh data to show updated values
+      await fetchProviderData();
+      
+      toast({
+        title: "Updated",
+        description: `${field.replace('_', ' ')} updated successfully.`,
+      });
+    } catch (error) {
+      console.error('Error updating field:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Save profile changes
+  const handleSaveProfile = async () => {
+    try {
+      // Update provider details
+      const { error: providerError } = await supabase
+        .from('provider_details')
+        .update({
+          business_name: editData.business_name,
+          business_description: editData.business_description,
+          business_address: editData.business_address,
+          business_phone: editData.business_phone,
+          business_email: editData.business_email,
+          operating_hours: editData.operating_hours,
+          social_media_links: editData.social_media_links,
+          certifications: editData.certifications,
+          business_logo_url: editData.business_logo_url,
+          certification_files: editData.certification_files,
+        })
+        .eq('user_id', user?.id);
+
+      if (providerError) throw providerError;
+
+      // Update avatar in profiles table if changed
+      if (avatarPreview) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({
+            avatar_url: avatarPreview,
+          })
+          .eq('user_id', user?.id);
+
+        if (profileError) throw profileError;
+      }
+
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated successfully.",
+      });
+
+      // Refresh data and exit edit mode
+      await fetchProviderData();
+      setIsEditMode(false);
+      setAvatarPreview(null);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -274,26 +287,14 @@ const Profile = () => {
     }
   };
 
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`h-4 w-4 ${
-          i < Math.floor(rating)
-            ? 'fill-yellow-400 text-yellow-400'
-            : i < rating
-            ? 'fill-yellow-400/50 text-yellow-400'
-            : 'text-gray-300'
-        }`}
-      />
-    ));
-  };
-
   const formatOperatingHours = (hoursString: string) => {
     if (!hoursString) return null;
     try {
-      return JSON.parse(hoursString);
+      const parsed = JSON.parse(hoursString);
+      console.log('Parsed operating hours:', parsed);
+      return parsed;
     } catch {
+      console.log('Failed to parse operating hours:', hoursString);
       return null;
     }
   };
@@ -302,10 +303,12 @@ const Profile = () => {
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const numericKey = typeof dayKey === 'string' ? parseInt(dayKey) : dayKey;
     
+    // If it's a numeric key (0-6), map to day name
     if (typeof numericKey === 'number' && numericKey >= 0 && numericKey <= 6) {
       return dayNames[numericKey];
     }
     
+    // If it's already a day name, return as is (but capitalize)
     if (typeof dayKey === 'string') {
       return dayKey.charAt(0).toUpperCase() + dayKey.slice(1).toLowerCase();
     }
@@ -334,20 +337,10 @@ const Profile = () => {
         <div className="container mx-auto px-4 py-8">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold flex items-center">
-                  <User className="h-6 w-6 mr-2" />
-                  My Profile
-                </h1>
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/dashboard')}
-                  className="flex items-center"
-                >
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Dashboard
-                </Button>
-              </div>
+              <CardTitle className="flex items-center">
+                <User className="h-5 w-5 mr-2" />
+                My Profile
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <CustomerProfileForm
@@ -375,7 +368,7 @@ const Profile = () => {
     );
   }
 
-  // Loading state for providers
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -389,100 +382,104 @@ const Profile = () => {
     );
   }
 
-  // Provider Profile View - Enhanced Business Profile
-  const isOwner = true; // This is always the user's own profile
-  const businessEmail = providerDetails?.business_email || providerProfile?.email;
-  const operatingHours = formatOperatingHours(providerDetails?.operating_hours || '');
-
+  // Elegant Business Showcase with Edit Capabilities
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/50 to-primary/5">
+    <div className="min-h-screen" style={{ background: 'var(--gradient-bg)' }}>
       <Header />
       
-      {/* Hero Section */}
-      <div className="relative">
-        {/* Cover Image */}
-        <div className="h-80 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 relative overflow-hidden">
-          {providerDetails?.cover_image_url && (
-            <img
-              src={providerDetails.cover_image_url}
-              alt="Cover"
-              className="w-full h-full object-cover"
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-        </div>
-
-        {/* Profile Info Overlay */}
-        <div className="relative -mt-24 container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-start lg:items-end gap-6 mb-8">
-            {/* Avatar */}
+      {/* Hero Section with Integrated Cover Photo */}
+      <div className="relative h-80 bg-gradient-to-br from-primary/20 via-accent/10 to-tertiary overflow-hidden">
+        {/* Cover Photo Manager - provides background image and controls */}
+        <CoverPhotoManager
+          coverImageUrl={providerDetails?.cover_image_url}
+          providerId={user?.id || ''}
+          onCoverImageUpdate={(url) => setProviderDetails(prev => prev ? { ...prev, cover_image_url: url } : prev)}
+          isOwner={isOwner}
+        />
+        
+        {/* Gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+        
+        {/* Hero Content */}
+        <div className="relative container mx-auto px-4 py-12 z-10">
+          <div className="flex items-center gap-6 w-full">
+            {/* Profile Avatar */}
             <div className="relative">
-              <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
-                <AvatarImage
-                  src={providerProfile?.avatar_url}
-                  alt={providerProfile?.name}
+              {avatarPreview || profile?.avatar_url ? (
+                <img
+                  src={avatarPreview || profile?.avatar_url || ''}
+                  alt="Profile Picture"
+                  className="w-32 h-32 rounded-full object-cover shadow-elegant border-4 border-white"
                 />
-                <AvatarFallback className="text-3xl font-bold bg-primary text-primary-foreground">
-                  {providerProfile?.name?.charAt(0)?.toUpperCase() || 'B'}
-                </AvatarFallback>
-              </Avatar>
+              ) : (
+                <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-elegant border-4 border-white">
+                  <User className="h-16 w-16 text-primary" />
+                </div>
+              )}
+              {isEditMode && (
+                <PhotoUpload
+                  onUpload={(url) => setAvatarPreview(url)}
+                  bucket="profile-photos"
+                  folder="avatars"
+                  className="absolute -top-2 -right-2 rounded-full w-8 h-8 p-0"
+                >
+                  <Button size="sm" className="rounded-full w-8 h-8 p-0">
+                    <Camera className="h-4 w-4" />
+                  </Button>
+                </PhotoUpload>
+              )}
             </div>
 
-            {/* Business Info */}
-            <div className="flex-1 lg:pb-4">
-              <div className="bg-white/95 backdrop-blur-sm rounded-lg p-6 shadow-lg">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                      {providerDetails?.business_name || providerProfile?.name || 'Business Name'}
-                    </h1>
-                    <div className="flex items-center gap-4 mb-3">
-                      {providerDetails?.rating && providerDetails.rating > 0 && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex">{renderStars(providerDetails.rating)}</div>
-                          <span className="font-semibold">{providerDetails.rating.toFixed(1)}</span>
-                          <span className="text-muted-foreground">
-                            ({providerDetails.total_reviews || 0} reviews)
-                          </span>
-                        </div>
-                      )}
-                      {providerDetails?.profile_published && (
-                        <Badge className="bg-green-100 text-green-800 border-green-200">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Verified
-                        </Badge>
-                      )}
-                    </div>
-                    {providerProfile?.location && (
-                      <div className="flex items-center text-muted-foreground mb-2">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        {providerProfile.location}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      onClick={() => navigate('/dashboard')}
-                      className="flex items-center"
-                    >
-                      <Edit2 className="h-4 w-4 mr-2" />
-                      Edit Profile
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      onClick={() => navigate(`/business/${user?.id}`)}
-                      className="flex items-center"
-                    >
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Public View
-                    </Button>
-                  </div>
+            {/* Business Title & Actions */}
+            <div className="flex-1 text-white">
+              <div className="mb-2">
+                {isEditMode ? (
+                  <Input
+                    value={editData.business_name || ''}
+                    onChange={(e) => setEditData({...editData, business_name: e.target.value})}
+                    className="text-4xl lg:text-5xl font-bold mb-2 bg-white/20 border-white/30 text-white placeholder:text-white/70"
+                    placeholder="Enter business name"
+                  />
+                ) : (
+                  <h1 className="text-4xl lg:text-5xl font-bold mb-2 drop-shadow-lg">
+                    {providerDetails?.business_name || profile?.name || 'Your Beautiful Business'}
+                  </h1>
+                )}
+                <div className="flex items-center gap-4 mb-4">
+                  <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                    <Building className="h-3 w-3 mr-1" />
+                    {providerDetails?.business_category || 'Beauty & Wellness'}
+                  </Badge>
+                  {providerDetails?.profile_published && (
+                    <Badge className="bg-accent/80 text-accent-foreground">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Verified Business
+                    </Badge>
+                  )}
                 </div>
-                
-                {providerDetails?.business_description && (
-                  <p className="text-muted-foreground leading-relaxed">
-                    {providerDetails.business_description}
-                  </p>
+              </div>
+              
+              <div className="flex flex-wrap gap-3">
+                {!isEditMode && (
+                  <>
+                    <Button 
+                      size="lg" 
+                      className="bg-white text-primary hover:bg-white/90 shadow-elegant"
+                      onClick={() => navigate('/dashboard')}
+                    >
+                      <Calendar className="h-5 w-5 mr-2" />
+                      View Dashboard
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="border-white/80 text-white hover:bg-white/20 bg-black/20 backdrop-blur-sm font-semibold"
+                      onClick={() => navigate(`/portfolio/${user?.id}`)}
+                    >
+                      <Eye className="h-5 w-5 mr-2" />
+                      View Public Profile
+                    </Button>
+                  </>
                 )}
               </div>
             </div>
@@ -491,412 +488,509 @@ const Profile = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Info */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Business Performance Stats */}
-            <Card>
-              <CardHeader>
-                <h2 className="text-xl font-semibold flex items-center">
-                  <Sparkles className="h-5 w-5 mr-2 text-primary" />
-                  Business Performance
-                </h2>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">{providerDetails?.total_reviews || 0}</div>
-                    <div className="text-sm text-blue-600">Reviews</div>
-                  </div>
-                  <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">{providerDetails?.rating?.toFixed(1) || '0.0'}</div>
-                    <div className="text-sm text-green-600">Rating</div>
-                  </div>
-                  <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600">{portfolioItems.length}</div>
-                    <div className="text-sm text-purple-600">Portfolio</div>
-                  </div>
-                  <div className="text-center p-4 bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg">
-                    <div className="text-2xl font-bold text-amber-600">{services.length}</div>
-                    <div className="text-sm text-amber-600">Services</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+      <div className="container mx-auto px-4 py-12">
+        {/* Elegant Tabbed Sections */}
+        <Tabs defaultValue="about" className="w-full mb-12">
+          <TabsList className="grid w-full grid-cols-4 mb-8 bg-white/50 backdrop-blur-sm">
+            <TabsTrigger value="about" className="flex items-center font-medium">
+              <Building className="h-4 w-4 mr-2" />
+              About
+            </TabsTrigger>
+            <TabsTrigger value="portfolio" className="flex items-center font-medium">
+              <Camera className="h-4 w-4 mr-2" />
+              Portfolio
+            </TabsTrigger>
+            <TabsTrigger value="services" className="flex items-center font-medium">
+              <PoundSterling className="h-4 w-4 mr-2" />
+              Services & Pricing
+            </TabsTrigger>
+            <TabsTrigger value="reviews" className="flex items-center font-medium">
+              <Users className="h-4 w-4 mr-2" />
+              Customer Reviews
+            </TabsTrigger>
+          </TabsList>
 
-            {/* About Section */}
-            {providerProfile?.bio && (
-              <Card>
-                <CardHeader>
-                  <h2 className="text-xl font-semibold flex items-center">
-                    <User className="h-5 w-5 mr-2 text-primary" />
-                    About
-                  </h2>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">{providerProfile.bio}</p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Services */}
-            {services.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <h2 className="text-xl font-semibold flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2 text-primary" />
-                    Services Offered
-                  </h2>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-4">
-                    {services.map((service) => (
-                      <div key={service.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-semibold">{service.service_name}</h3>
-                          <div className="text-right">
-                            {service.discount_price && service.discount_price !== service.base_price ? (
-                              <div className="flex flex-col items-end">
-                                <span className="text-lg font-bold text-primary">£{service.discount_price}</span>
-                                <span className="text-sm text-muted-foreground line-through">£{service.base_price}</span>
-                              </div>
-                            ) : (
-                              <span className="text-lg font-bold text-primary">£{service.base_price}</span>
-                            )}
-                          </div>
-                        </div>
-                        {service.description && (
-                          <p className="text-muted-foreground text-sm mb-2">{service.description}</p>
-                        )}
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Clock className="h-4 w-4 mr-1" />
-                          {service.duration_text || `${service.duration_minutes} minutes`}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Portfolio */}
-            {portfolioItems.length > 0 && (
-              <Card>
+          {/* About Tab Content */}
+          <TabsContent value="about" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* About Card */}
+              <Card className="lg:col-span-2 card-enhanced">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold flex items-center">
-                      <Camera className="h-5 w-5 mr-2 text-primary" />
-                      Featured Portfolio
-                    </h2>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => navigate(`/portfolio/${user?.id}`)}
-                    >
-                      View All
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {portfolioItems.map((item) => (
-                      <div key={item.id} className="group cursor-pointer">
-                        <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-2">
-                          <img
-                            src={item.image_url}
-                            alt={item.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                          />
-                        </div>
-                        <h3 className="font-medium text-sm">{item.title}</h3>
-                        {item.category && (
-                          <p className="text-xs text-muted-foreground">{item.category}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Reviews */}
-            {reviews.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <h2 className="text-xl font-semibold flex items-center">
-                    <MessageCircle className="h-5 w-5 mr-2 text-primary" />
-                    Recent Reviews
-                  </h2>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {reviews.map((review) => (
-                      <div key={review.id} className="border-b last:border-b-0 pb-4 last:pb-0">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">{review.reviewer?.name || 'Anonymous'}</span>
-                            <div className="flex">{renderStars(review.rating)}</div>
-                          </div>
-                          <span className="text-sm text-muted-foreground">
-                            {new Date(review.created_at).toLocaleDateString()}
-                          </span>
-                        </div>
-                        {review.comment && (
-                          <p className="text-muted-foreground">{review.comment}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-
-          {/* Right Column - Contact & Details */}
-          <div className="space-y-6">
-            {/* Contact Information */}
-            <Card>
-              <CardHeader>
-                <h3 className="font-semibold flex items-center">
-                  <Phone className="h-4 w-4 mr-2 text-primary" />
-                  Contact Information
-                </h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {businessEmail && (
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Email</p>
-                      <p className="font-medium">{businessEmail}</p>
-                      {providerDetails?.business_email !== providerProfile?.email && (
-                        <Badge variant="secondary" className="text-xs">Account Email</Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {providerDetails?.business_phone && (
-                  <div className="flex items-center gap-3">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Phone</p>
-                      <p className="font-medium">{providerDetails.business_phone}</p>
-                    </div>
-                  </div>
-                )}
-
-                {providerDetails?.business_website && (
-                  <div className="flex items-center gap-3">
-                    <Globe className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Website</p>
-                      <a 
-                        href={providerDetails.business_website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-primary hover:underline"
-                      >
-                        {providerDetails.business_website}
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Location */}
-            {(providerDetails?.business_address || providerProfile?.location) && (
-              <Card>
-                <CardHeader>
-                  <h3 className="font-semibold flex items-center">
-                    <MapPin className="h-4 w-4 mr-2 text-primary" />
-                    Location
-                  </h3>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {providerDetails?.business_address && (
-                      <p className="text-sm">{providerDetails.business_address}</p>
+                    <CardTitle className="flex items-center text-2xl">
+                      <Building className="h-6 w-6 mr-3 text-primary" />
+                      About Our Business
+                    </CardTitle>
+                    {isEditMode && isOwner && (
+                      <Button variant="ghost" size="sm">
+                        <Edit3 className="h-4 w-4" />
+                      </Button>
                     )}
-                    {providerDetails?.business_city && (
-                      <p className="text-sm">
-                        {providerDetails.business_city}
-                        {providerDetails.business_postcode && `, ${providerDetails.business_postcode}`}
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Business Description */}
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3">Our Story</h4>
+                    {isEditMode ? (
+                      <Textarea
+                        value={editData.business_description || ''}
+                        onChange={(e) => setEditData({...editData, business_description: e.target.value})}
+                        placeholder="Tell your business story..."
+                        className="min-h-[100px]"
+                      />
+                    ) : (() => {
+                      // Parse business description to extract actual text content
+                      let description = providerDetails?.business_description;
+                      if (description) {
+                        try {
+                          // Try to parse if it's a JSON string
+                          const parsed = JSON.parse(description);
+                          description = parsed.description || description;
+                        } catch {
+                          // If not JSON, use as is
+                        }
+                      }
+                      
+                      return description ? (
+                        <p className="text-muted-foreground leading-relaxed">
+                          {description}
+                        </p>
+                      ) : (
+                        <p className="text-muted-foreground leading-relaxed italic">
+                          Welcome to our business! We're dedicated to providing exceptional service.
+                        </p>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Social Media */}
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 flex items-center">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Connect With Us
+                      {isEditMode && isOwner && (
+                        <Button variant="ghost" size="sm" className="ml-auto">
+                          <Edit3 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {(() => {
+                        const socialMedia = providerDetails?.social_media_links || {};
+                        const platforms = [
+                          { name: 'Instagram', key: 'instagram', icon: Instagram, color: 'text-pink-600' },
+                          { name: 'Facebook', key: 'facebook', icon: Facebook, color: 'text-blue-600' },
+                          { name: 'TikTok', key: 'tiktok', icon: Camera, color: 'text-black' },
+                          { name: 'Twitter', key: 'twitter', icon: Twitter, color: 'text-blue-400' }
+                        ];
+                        
+                        return platforms.map(platform => {
+                          const IconComponent = platform.icon;
+                          const hasAccount = socialMedia[platform.key];
+                          
+                          return isEditMode && isOwner ? (
+                            <div key={platform.key} className="space-y-2">
+                              <div className="flex items-center p-3 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/20">
+                                <IconComponent className={`h-5 w-5 mr-3 ${platform.color}`} />
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-medium text-sm mb-1">{platform.name}</p>
+                                  <Input
+                                    value={socialMedia[platform.key] || ''}
+                                    onChange={(e) => {
+                                      const newSocialMedia = { ...socialMedia, [platform.key]: e.target.value };
+                                      setEditData({...editData, social_media_links: newSocialMedia});
+                                    }}
+                                    placeholder={`@username`}
+                                    className="text-xs h-8"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ) : hasAccount ? (
+                            <a
+                              key={platform.key}
+                              href={`https://${platform.key}.com/${socialMedia[platform.key].replace('@', '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center p-3 bg-muted rounded-lg hover:bg-muted/80 transition-all group"
+                            >
+                              <IconComponent className={`h-5 w-5 mr-3 ${platform.color}`} />
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-sm">{platform.name}</p>
+                                <p className="text-xs text-muted-foreground truncate">@{socialMedia[platform.key].replace('@', '')}</p>
+                              </div>
+                            </a>
+                          ) : (
+                            <div key={platform.key} className="flex items-center p-3 bg-muted/30 rounded-lg">
+                              <IconComponent className="h-5 w-5 mr-3 text-muted-foreground" />
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-sm text-muted-foreground">{platform.name}</p>
+                                <p className="text-xs text-muted-foreground">Not connected</p>
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  </div>
+
+                  {/* Certifications */}
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 flex items-center">
+                      <Award className="h-4 w-4 mr-2" />
+                      Certifications & Specialties
+                      {isEditMode && isOwner && (
+                        <DocumentUpload
+                          onUpload={(urls) => {
+                            const currentFiles = editData.certification_files || [];
+                            setEditData({...editData, certification_files: [...currentFiles, ...urls]});
+                          }}
+                          bucket="certifications"
+                          folder="documents"
+                          className="ml-auto"
+                        >
+                          <Button variant="ghost" size="sm">
+                            <Upload className="h-4 w-4 mr-1" />
+                            Upload
+                          </Button>
+                        </DocumentUpload>
+                      )}
+                    </h4>
+                    
+                    {isEditMode ? (
+                      <div className="space-y-4">
+                        <Input
+                          value={editData.certifications || ''}
+                          onChange={(e) => setEditData({...editData, certifications: e.target.value})}
+                          placeholder="Enter certifications (comma separated)"
+                        />
+                        
+                        {/* Display uploaded certification files */}
+                        {editData.certification_files && editData.certification_files.length > 0 && (
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">Uploaded Documents:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {editData.certification_files.map((fileUrl: string, index: number) => (
+                                <div key={index} className="flex items-center p-2 bg-muted rounded-lg text-sm">
+                                  <FileText className="h-4 w-4 mr-2" />
+                                  <span className="truncate max-w-[200px]">Document {index + 1}</span>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => {
+                                      const newFiles = editData.certification_files.filter((_: string, i: number) => i !== index);
+                                      setEditData({...editData, certification_files: newFiles});
+                                    }}
+                                    className="ml-2 h-6 w-6 p-0"
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : providerDetails?.certifications ? (
+                      <div className="flex flex-wrap gap-2">
+                        {providerDetails.certifications.split(',').map((cert: string, index: number) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {cert.trim()}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground text-sm italic">
+                        Professional certifications coming soon
                       </p>
                     )}
-                    {providerDetails?.coverage_towns && providerDetails.coverage_towns.length > 0 && (
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1">Service Areas:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {providerDetails.coverage_towns.map((town, index) => (
-                            <Badge key={index} variant="secondary" className="text-xs">
-                              {town}
-                            </Badge>
-                          ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Stats & Quick Info */}
+              <div className="space-y-6">
+                {/* Rating & Reviews */}
+                <Card className="card-enhanced">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex items-center justify-center mb-4">
+                      <Star className="h-8 w-8 text-yellow-500 fill-current mr-2" />
+                      <span className="text-3xl font-bold">
+                        {providerDetails?.rating ? providerDetails.rating.toFixed(1) : '5.0'}
+                      </span>
+                    </div>
+                    <p className="text-muted-foreground mb-2">
+                      {providerDetails?.total_reviews || 0} customer reviews
+                    </p>
+                    <div className="flex justify-center space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < Math.floor(providerDetails?.rating || 5)
+                              ? 'text-yellow-500 fill-current'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Experience & Location */}
+                <Card className="card-enhanced">
+                  <CardContent className="p-6 space-y-4">
+                    {providerDetails?.years_experience && (
+                      <div className="text-center pb-4 border-b">
+                        <div className="text-2xl font-bold text-primary mb-1">
+                          {providerDetails.years_experience}+ Years
+                        </div>
+                        <p className="text-sm text-muted-foreground">Professional Experience</p>
+                      </div>
+                    )}
+                    
+                    {providerDetails?.business_address && (
+                      <div className="flex items-start">
+                        <MapPin className="h-5 w-5 text-primary mt-1 mr-3 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-sm mb-1">Location</p>
+                          <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
                         </div>
                       </div>
                     )}
+                    
+                    {providerDetails?.business_phone && (
+                      <div className="flex items-start">
+                        <Phone className="h-5 w-5 text-primary mt-1 mr-3 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-sm mb-1">Contact</p>
+                          <p className="text-sm text-muted-foreground">{providerDetails.business_phone}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {providerDetails?.business_email && (
+                      <div className="flex items-start">
+                        <Mail className="h-5 w-5 text-primary mt-1 mr-3 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-sm mb-1">Email</p>
+                          <p className="text-sm text-muted-foreground">{providerDetails.business_email}</p>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Operating Hours */}
+                {providerDetails?.operating_hours && (
+                  <Card className="card-enhanced">
+                    <CardHeader>
+                      <CardTitle className="flex items-center text-lg">
+                        <Clock className="h-5 w-5 mr-2 text-primary" />
+                        Operating Hours
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 pt-0">
+                      <div className="space-y-3">
+                        {(() => {
+                          const hours = formatOperatingHours(providerDetails.operating_hours);
+                          if (!hours) return null;
+                          
+                          return Array.isArray(hours) 
+                            ? hours.map((day: any, index: number) => (
+                                <div key={index} className="flex justify-between items-center text-sm">
+                                  <span className="font-medium">{getDayName(day.day || index)}</span>
+                                  <span className={`${day.closed ? 'text-muted-foreground' : 'text-primary'}`}>
+                                    {day.closed ? 'Closed' : `${day.open} - ${day.close}`}
+                                  </span>
+                                </div>
+                              ))
+                            : Object.entries(hours).map(([dayKey, dayData]: [string, any]) => (
+                                <div key={dayKey} className="flex justify-between items-center text-sm">
+                                  <span className="font-medium">{getDayName(dayKey)}</span>
+                                  <span className={`${dayData.closed ? 'text-muted-foreground' : 'text-primary'}`}>
+                                    {dayData.closed ? 'Closed' : `${dayData.open} - ${dayData.close}`}
+                                  </span>
+                                </div>
+                              ));
+                        })()}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+                
+                {isEditMode && (!providerDetails?.business_address || !providerDetails?.operating_hours) && (
+                  <div className="text-center pt-2">
+                    <Button variant="outline" size="sm">
+                      <MapPin className="h-4 w-4 mr-2" />
+                      {!providerDetails?.business_address ? 'Add Address' : 'Add Hours'}
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Portfolio Gallery */}
+          <TabsContent value="portfolio" className="space-y-6">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-4">Our Portfolio</h3>
+              <p className="text-muted-foreground text-lg">Discover our latest work and creative achievements</p>
+            </div>
+            
+            {portfolioItems.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {portfolioItems.map((item) => (
+                  <Card key={item.id} className="card-enhanced group overflow-hidden">
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+                    </div>
+                    <CardContent className="p-6">
+                      <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
+                      <p className="text-muted-foreground text-sm mb-4">{item.description}</p>
+                      <div className="flex items-center justify-between">
+                        <Badge variant="secondary" className="text-xs">
+                          {item.category}
+                        </Badge>
+                        <Button variant="ghost" size="sm">
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Camera className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h4 className="text-xl font-semibold mb-2">No Portfolio Items Yet</h4>
+                <p className="text-muted-foreground mb-6">Start showcasing your beautiful work!</p>
+                {isOwner && (
+                  <Button>
+                    <Camera className="h-4 w-4 mr-2" />
+                    Add Portfolio Item
+                  </Button>
+                )}
+              </div>
             )}
+          </TabsContent>
 
-            {/* Operating Hours */}
-            {operatingHours && (
-              <Card>
-                <CardHeader>
-                  <h3 className="font-semibold flex items-center">
-                    <Clock className="h-4 w-4 mr-2 text-primary" />
-                    Operating Hours
-                  </h3>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {Object.entries(operatingHours).map(([day, hours]: [string, any]) => (
-                      <div key={day} className="flex justify-between items-center text-sm">
-                        <span className="font-medium">{getDayName(day)}</span>
-                        <span className="text-muted-foreground">
-                          {hours.closed ? 'Closed' : `${hours.open} - ${hours.close}`}
-                        </span>
+          {/* Services & Pricing */}
+          <TabsContent value="services" className="space-y-6">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-4">Services & Pricing</h3>
+              <p className="text-muted-foreground text-lg">Professional services tailored to your needs</p>
+            </div>
+            
+            
+            {providerServices.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {providerServices.map((service) => (
+                  <Card key={service.id} className="card-enhanced">
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <h4 className="font-semibold text-lg">{service.service_name}</h4>
+                        <Badge className="bg-primary/10 text-primary">
+                          £{service.base_price}
+                        </Badge>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      <p className="text-muted-foreground text-sm mb-4">
+                        {service.description || 'Professional service tailored to your needs'}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Clock className="h-4 w-4 mr-2" />
+                          {service.duration_minutes ? `${service.duration_minutes} min` : 'Contact for duration'}
+                        </div>
+                        <Button 
+                          size="sm"
+                          onClick={() => navigate('/dashboard')}
+                        >
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Manage Service
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h4 className="text-xl font-semibold mb-2">No Services Listed Yet</h4>
+                <p className="text-muted-foreground mb-6">Add your services to showcase your offerings!</p>
+                {isOwner && (
+                  <Button>
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Add Services
+                  </Button>
+                )}
+              </div>
             )}
+          </TabsContent>
 
-            {/* Credentials */}
-            {(providerDetails?.certifications || providerDetails?.insurance_info || 
-              providerDetails?.awards_recognitions || providerDetails?.professional_memberships || 
-              providerDetails?.other_qualifications) && (
-              <Card>
-                <CardHeader>
-                  <h3 className="font-semibold flex items-center">
-                    <Shield className="h-4 w-4 mr-2 text-primary" />
-                    Credentials & Certifications
-                  </h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {providerDetails?.insurance_info && (
-                    <div>
-                      <h4 className="font-medium mb-2 flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-provider" />
-                        Insurance Information
-                      </h4>
-                      <div className="space-y-1">
-                        {providerDetails.insurance_info.split('\n').filter(item => item.trim() !== '').map((item, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">{item}</span>
+          {/* Customer Reviews */}
+          <TabsContent value="reviews" className="space-y-6">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-4">Customer Reviews</h3>
+              <p className="text-muted-foreground text-lg">See what our valued clients have to say</p>
+            </div>
+            
+            {reviews.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {reviews.map((review) => (
+                  <Card key={review.id} className="card-enhanced">
+                    <CardContent className="p-6">
+                      <div className="flex items-center mb-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                          <User className="h-6 w-6 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <h5 className="font-semibold">{review.reviewer?.name || 'Anonymous'}</h5>
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-4 w-4 ${
+                                  i < review.rating
+                                    ? 'text-yellow-500 fill-current'
+                                    : 'text-gray-300'
+                                }`}
+                              />
+                            ))}
                           </div>
-                        ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-
-                  {providerDetails?.certifications && (
-                    <div>
-                      <h4 className="font-medium mb-2 flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-provider" />
-                        Certifications & Qualifications
-                      </h4>
-                      <div className="space-y-1">
-                        {providerDetails.certifications.split('\n').filter(item => item.trim() !== '').map((item, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {providerDetails?.awards_recognitions && (
-                    <div>
-                      <h4 className="font-medium mb-2 flex items-center gap-2">
-                        <Award className="h-4 w-4 text-provider" />
-                        Awards & Recognitions
-                      </h4>
-                      <div className="space-y-1">
-                        {providerDetails.awards_recognitions.split('\n').filter(item => item.trim() !== '').map((item, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {providerDetails?.professional_memberships && (
-                    <div>
-                      <h4 className="font-medium mb-2 flex items-center gap-2">
-                        <Users className="h-4 w-4 text-provider" />
-                        Professional Memberships
-                      </h4>
-                      <div className="space-y-1">
-                        {providerDetails.professional_memberships.split('\n').filter(item => item.trim() !== '').map((item, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {providerDetails?.other_qualifications && (
-                    <div>
-                      <h4 className="font-medium mb-2 flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-provider" />
-                        Other Training & Qualifications
-                      </h4>
-                      <div className="space-y-1">
-                        {providerDetails.other_qualifications.split('\n').filter(item => item.trim() !== '').map((item, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        "{review.review_text}"
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-4">
+                        {new Date(review.created_at).toLocaleDateString()}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Star className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h4 className="text-xl font-semibold mb-2">No Reviews Yet</h4>
+                <p className="text-muted-foreground mb-6">Be the first to share your experience!</p>
+                <Button>
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Leave a Review
+                </Button>
+              </div>
             )}
-
-            {/* Social Media */}
-            {socialConnections.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <h3 className="font-semibold flex items-center">
-                    <Share2 className="h-4 w-4 mr-2 text-primary" />
-                    Social Media
-                  </h3>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {socialConnections.map((connection) => (
-                      <a
-                        key={connection.id}
-                        href={connection.profile_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-3 py-2 bg-muted rounded-md hover:bg-muted/80 transition-colors"
-                      >
-                        {connection.platform === 'instagram' && <Instagram className="h-4 w-4" />}
-                        {connection.platform === 'facebook' && <Facebook className="h-4 w-4" />}
-                        <span className="text-sm font-medium">@{connection.handle}</span>
-                      </a>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
