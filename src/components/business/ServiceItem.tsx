@@ -11,7 +11,6 @@ interface Service {
   service_name: string;
   description: string;
   base_price: number;
-  discount_price?: number;
   duration_minutes: number;
   duration_text?: string;
   is_active: boolean;
@@ -92,14 +91,7 @@ export const ServiceItem: React.FC<ServiceItemProps> = ({
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1 text-provider">
               <DollarSign className="h-4 w-4" />
-              {service.discount_price ? (
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">£{service.discount_price}</span>
-                  <span className="text-muted-foreground line-through text-xs">£{service.base_price}</span>
-                </div>
-              ) : (
-                <span className="font-medium">£{service.base_price}</span>
-              )}
+              <span className="font-medium">£{service.base_price}</span>
             </div>
             <div className="flex items-center gap-1 text-muted-foreground">
               <Clock className="h-4 w-4" />
