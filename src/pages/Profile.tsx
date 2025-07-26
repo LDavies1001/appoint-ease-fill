@@ -47,7 +47,7 @@ import {
   Settings,
   BarChart3
 } from 'lucide-react';
-import Header from '@/components/ui/header';
+
 
 interface ProviderProfile {
   user_id: string;
@@ -387,40 +387,34 @@ const Profile = () => {
   // Customer Profile View
   if (profile.active_role === 'customer') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-secondary">
-        <Header />
-        
-        {/* Professional Hero Section */}
-        <div className="relative overflow-hidden bg-white shadow-sm">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5"></div>
-          <div className="relative container mx-auto px-4 py-16">
-            <div className="text-center max-w-4xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
+        {/* Hero Section - matching Dashboard style */}
+        <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,119,198,0.1),_transparent_50%)]"></div>
+          <div className="relative max-w-6xl mx-auto px-8 py-16">
+            <div className="text-center space-y-6">
               <div className="relative inline-block mb-6">
-                <Avatar className="w-32 h-32 border-4 border-white shadow-lg mx-auto">
+                <Avatar className="w-32 h-32 border-4 border-card shadow-xl mx-auto">
                   <AvatarImage src={customerProfile?.avatar_url} className="object-cover" />
                   <AvatarFallback className="text-3xl bg-gradient-to-br from-primary to-accent text-primary-foreground font-semibold">
                     {customerProfile?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'C'}
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <h1 className="text-4xl font-bold mb-3 text-foreground">
-                {customerProfile?.name || 'Welcome'}
-              </h1>
-              {customerProfile?.bio ? (
-                <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
-                  {customerProfile.bio}
+              <div className="space-y-4">
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground via-foreground to-primary/80 bg-clip-text text-transparent">
+                  {customerProfile?.name || 'Welcome'}
+                </h1>
+                <p className="text-xl text-muted-foreground/80 leading-relaxed max-w-2xl mx-auto font-medium">
+                  {customerProfile?.bio || 'Welcome to your beauty journey'}
                 </p>
-              ) : (
-                <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
-                  Welcome to your beauty journey
-                </p>
-              )}
-              <div className="flex flex-wrap justify-center gap-3 mb-6">
-                <Badge variant="outline" className="px-3 py-1 bg-white border-border text-foreground">
+              </div>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Badge variant="outline" className="px-4 py-2 bg-card border-border text-foreground shadow-sm">
                   <MapPin className="h-4 w-4 mr-2" />
                   {customerProfile?.location || 'Location not set'}
                 </Badge>
-                <Badge variant="outline" className="px-3 py-1 bg-white border-border text-foreground">
+                <Badge variant="outline" className="px-4 py-2 bg-card border-border text-foreground shadow-sm">
                   <Calendar className="h-4 w-4 mr-2" />
                   Member since {new Date(customerProfile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 </Badge>
@@ -429,49 +423,50 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-6xl mx-auto">
-            {/* Professional Activity Stats */}
+        {/* Main Content Container - matching Dashboard style */}
+        <div className="max-w-6xl mx-auto px-8 py-12">
+          <div className="bg-gradient-to-r from-card via-card/95 to-card/90 rounded-3xl p-8 shadow-xl border border-border/50 backdrop-blur-sm">
+            {/* Activity Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
-              <Card className="text-center p-4 md:p-6 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4">
-                  <Calendar className="h-6 w-6 md:h-8 md:w-8 text-white" />
+              <div className="text-center p-4 md:p-6 bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl border border-primary/10 hover:border-primary/30 transition-all duration-300">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
+                  <Calendar className="h-6 w-6 md:h-8 md:w-8 text-primary-foreground" />
                 </div>
                 <div className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">0</div>
                 <div className="text-sm md:text-base text-muted-foreground font-medium">Appointments</div>
-              </Card>
-              <Card className="text-center p-4 md:p-6 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4">
-                  <Heart className="h-6 w-6 md:h-8 md:w-8 text-white" />
+              </div>
+              <div className="text-center p-4 md:p-6 bg-gradient-to-br from-accent/5 to-primary/5 rounded-2xl border border-accent/10 hover:border-accent/30 transition-all duration-300">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-accent to-accent-glow rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
+                  <Heart className="h-6 w-6 md:h-8 md:w-8 text-accent-foreground" />
                 </div>
                 <div className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">0</div>
                 <div className="text-sm md:text-base text-muted-foreground font-medium">Favorites</div>
-              </Card>
-              <Card className="text-center p-4 md:p-6 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4">
-                  <Star className="h-6 w-6 md:h-8 md:w-8 text-white" />
+              </div>
+              <div className="text-center p-4 md:p-6 bg-gradient-to-br from-secondary/5 to-accent/5 rounded-2xl border border-secondary/10 hover:border-secondary/30 transition-all duration-300">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-secondary to-muted rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
+                  <Star className="h-6 w-6 md:h-8 md:w-8 text-secondary-foreground" />
                 </div>
                 <div className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">0</div>
                 <div className="text-sm md:text-base text-muted-foreground font-medium">Reviews</div>
-              </Card>
-              <Card className="text-center p-4 md:p-6 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4">
-                  <Award className="h-6 w-6 md:h-8 md:w-8 text-white" />
+              </div>
+              <div className="text-center p-4 md:p-6 bg-gradient-to-br from-tertiary/5 to-primary/5 rounded-2xl border border-tertiary/10 hover:border-tertiary/30 transition-all duration-300">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-tertiary to-background rounded-xl flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
+                  <Award className="h-6 w-6 md:h-8 md:w-8 text-tertiary-foreground" />
                 </div>
                 <div className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">0</div>
                 <div className="text-sm md:text-base text-muted-foreground font-medium">Experiences</div>
-              </Card>
+              </div>
             </div>
 
-            {/* Professional Content Layout */}
+            {/* Content Layout */}
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Main Content */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Beauty Interests Card */}
-                <Card className="p-6 md:p-8">
+                <div className="bg-gradient-to-br from-card via-card/95 to-accent/5 rounded-2xl p-6 md:p-8 border border-border/50 shadow-lg">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center">
-                      <Sparkles className="h-6 w-6 text-white" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                      <Sparkles className="h-6 w-6 text-primary-foreground" />
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold">Beauty Interests</h2>
@@ -486,7 +481,7 @@ const Profile = () => {
                         className="p-4 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                          <div className="w-10 h-10 bg-card rounded-lg flex items-center justify-center shadow-sm">
                             <Sparkles className="h-5 w-5 text-primary" />
                           </div>
                           <span className="font-medium text-foreground">{category}</span>
@@ -494,70 +489,63 @@ const Profile = () => {
                       </div>
                     ))}
                   </div>
-                </Card>
+                </div>
 
-                {/* Upcoming Appointments Card */}
-                <Card className="p-6 md:p-8">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                      <Calendar className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold">Upcoming Appointments</h2>
-                      <p className="text-muted-foreground">Your scheduled beauty sessions</p>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center py-12 border-2 border-dashed border-border rounded-xl">
-                    <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No upcoming appointments</h3>
-                    <p className="text-muted-foreground mb-4">Book your next beauty session to get started</p>
-                    <Button>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Find Services
-                    </Button>
-                  </div>
-                </Card>
+                {/* Customer Portfolio */}
+                {user && <CustomerPortfolio customerId={user.id} isOwner={isOwner} />}
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {/* Quick Actions */}
-                <Card className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+                <div className="bg-gradient-to-br from-card via-card/95 to-primary/5 rounded-2xl p-6 border border-border/50 shadow-lg">
+                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <Settings className="h-5 w-5" />
+                    Quick Actions
+                  </h3>
                   <div className="space-y-3">
-                    <Button variant="outline" className="w-full justify-start">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Book Appointment
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start gap-3 p-4 h-auto bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20 hover:border-primary/40"
+                      onClick={() => navigate('/dashboard')}
+                    >
+                      <BarChart3 className="h-5 w-5" />
+                      <div className="text-left">
+                        <div className="font-medium">Dashboard</div>
+                        <div className="text-sm text-muted-foreground">Manage your account</div>
+                      </div>
                     </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <Heart className="h-4 w-4 mr-2" />
-                      View Favorites
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Account Settings
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start gap-3 p-4 h-auto bg-gradient-to-r from-accent/5 to-primary/5 border-accent/20 hover:border-accent/40"
+                    >
+                      <Bell className="h-5 w-5" />
+                      <div className="text-left">
+                        <div className="font-medium">Notifications</div>
+                        <div className="text-sm text-muted-foreground">Stay updated</div>
+                      </div>
                     </Button>
                   </div>
-                </Card>
+                </div>
 
-                {/* Recent Activity */}
-                <Card className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-                  <div className="text-center py-8">
-                    <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                    <p className="text-muted-foreground text-sm">No recent activity</p>
+                {/* Account Summary */}
+                <div className="bg-gradient-to-br from-card via-card/95 to-accent/5 rounded-2xl p-6 border border-border/50 shadow-lg">
+                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Account Summary
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg">
+                      <span className="font-medium">Profile Status</span>
+                      <Badge variant="outline" className="bg-card">Complete</Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-accent/5 to-primary/5 rounded-lg">
+                      <span className="font-medium">Member Level</span>
+                      <Badge variant="outline" className="bg-card">Standard</Badge>
+                    </div>
                   </div>
-                </Card>
+                </div>
               </div>
-            </div>
-
-            {/* Customer Portfolio */}
-            <div className="mt-12">
-              <CustomerPortfolio 
-                customerId={profile?.user_id || ''}
-                isOwner={profile?.user_id === user?.id}
-              />
             </div>
           </div>
         </div>
