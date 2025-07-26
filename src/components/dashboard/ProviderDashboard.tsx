@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
-import { AddRoleCard } from '@/components/ui/role-switcher';
+
 import LibraryTab from './LibraryTab';
 import ProfileTab from './ProfileTab';
 import { supabase } from '@/integrations/supabase/client';
@@ -500,9 +500,6 @@ const ProviderDashboard = () => {
 
   return (
     <div className="space-y-8">
-      {/* Add Role Card */}
-      <AddRoleCard />
-
       {/* Enhanced Hero Banner */}
       <div className="relative overflow-hidden rounded-2xl">
         {/* Light Sage Background */}

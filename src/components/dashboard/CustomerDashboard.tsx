@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
-import { AddRoleCard } from '@/components/ui/role-switcher';
+
 import LibraryTab from './LibraryTab';
 import ProfileTab from './ProfileTab';
 import { supabase } from '@/integrations/supabase/client';
@@ -417,9 +417,6 @@ const CustomerDashboard = () => {
 
         {activeTab === 'browse' && (
           <div className="space-y-6">
-            {/* Add Role Card */}
-            <AddRoleCard />
-            
             {/* Search and Filters */}
             <Card className="card-elegant p-4">
               <div className="flex flex-col sm:flex-row gap-4">
