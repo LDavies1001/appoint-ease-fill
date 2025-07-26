@@ -486,10 +486,21 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       }
 
       // Mark profile as complete
-      await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({ is_profile_complete: true })
         .eq('user_id', user?.id);
+      
+      if (profileError) {
+        console.error('Error updating profile completion:', profileError);
+        throw profileError;
+      }
+
+      // Refresh the auth context to get updated profile
+      if (window.location.reload) {
+        window.location.href = '/dashboard';
+        return;
+      }
 
       // Clear saved form data on successful submission
       sessionStorage.removeItem('business-profile-form-data');
