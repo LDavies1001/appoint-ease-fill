@@ -18,10 +18,10 @@ All colors MUST be HSL.
     --popover: 0 0% 100%; /* Pure white for popovers */
     --popover-foreground: 222 15% 15%;
 
-    /* Customer Theme - Blush Pink */
-    --primary: 0 45% 85%; /* Richer Blush Pink #F2C2C2 */
+    /* Customer Theme - Muted Blush Pink */
+    --primary: 0 25% 90%; /* Muted Blush Pink #F7EDED */
     --primary-foreground: 222 15% 15%;
-    --primary-glow: 0 45% 92%;
+    --primary-glow: 0 20% 95%;
 
     /* Provider Theme - Light Sage Green */
     --provider-primary: 120 20% 75%; /* Lighter, more muted sage */
@@ -51,10 +51,10 @@ All colors MUST be HSL.
 
     --border: 210 15% 88%; /* Clearer borders */
     --input: 0 0% 100%; /* White input backgrounds */
-    --ring: 0 45% 85%; /* Primary color for focus rings */
+    --ring: 0 25% 90%; /* Muted primary color for focus rings */
 
     /* Gradients for beautiful effects */
-    --gradient-primary: linear-gradient(135deg, hsl(0 45% 85%), hsl(0 45% 92%));
+    --gradient-primary: linear-gradient(135deg, hsl(0 25% 90%), hsl(0 20% 95%));
     --gradient-provider: linear-gradient(135deg, hsl(120 20% 75%), hsl(120 25% 85%));
     --gradient-provider-secondary: linear-gradient(135deg, hsl(120 15% 90%), hsl(120 20% 95%));
     --gradient-accent: linear-gradient(135deg, hsl(120 30% 75%), hsl(120 30% 85%));
@@ -94,10 +94,10 @@ All colors MUST be HSL.
     --popover: 0 0% 10%;
     --popover-foreground: 210 40% 98%;
 
-    /* Customer Theme - Blush Pink adapted for dark mode */
-    --primary: 0 45% 65%; /* Richer pink for dark mode */
+    /* Customer Theme - Muted Blush Pink adapted for dark mode */
+    --primary: 0 30% 70%; /* Muted pink for dark mode */
     --primary-foreground: 210 40% 98%;
-    --primary-glow: 0 45% 75%;
+    --primary-glow: 0 25% 80%;
 
     /* Provider Theme - Light Sage Green for dark mode */
     --provider-primary: 120 25% 65%; /* Muted sage for dark */
@@ -125,7 +125,7 @@ All colors MUST be HSL.
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 0 45% 65%;
+    --ring: 0 30% 70%;
     
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

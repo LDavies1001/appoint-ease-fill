@@ -354,7 +354,7 @@ const UserSettingsPage = () => {
         </div>
         <h1 className={cn(
           "text-3xl font-bold mb-2",
-          isCustomer && "bg-gradient-to-r from-pink-600 to-pink-500 bg-clip-text text-transparent",
+          isCustomer && "text-primary",
           isProvider && "bg-gradient-provider bg-clip-text text-transparent"
         )}>
           Account Settings
@@ -427,7 +427,7 @@ const UserSettingsPage = () => {
               onClick={savePersonalInfo} 
               disabled={saving}
               className={cn(
-                isCustomer && "bg-pink-600 hover:bg-pink-700",
+                isCustomer && "bg-primary hover:bg-primary/90",
                 isProvider && "bg-provider hover:bg-provider/90"
               )}
             >
@@ -509,7 +509,7 @@ const UserSettingsPage = () => {
               <Button 
                 onClick={savePersonalInfo} 
                 disabled={saving}
-                className="bg-pink-600 hover:bg-pink-700"
+                className="bg-primary hover:bg-primary/90"
               >
                 <Save className="h-4 w-4 mr-2" />
                 Save Privacy Settings
@@ -596,7 +596,7 @@ const UserSettingsPage = () => {
               onClick={savePersonalInfo} 
               disabled={saving}
               className={cn(
-                isCustomer && "bg-pink-600 hover:bg-pink-700",
+                isCustomer && "bg-primary hover:bg-primary/90",
                 isProvider && "bg-provider hover:bg-provider/90"
               )}
             >
@@ -690,7 +690,7 @@ const UserSettingsPage = () => {
               onClick={changePassword} 
               disabled={saving || !passwordData.currentPassword || !passwordData.newPassword}
               className={cn(
-                isCustomer && "bg-pink-600 hover:bg-pink-700",
+                isCustomer && "bg-primary hover:bg-primary/90",
                 isProvider && "bg-provider hover:bg-provider/90"
               )}
             >

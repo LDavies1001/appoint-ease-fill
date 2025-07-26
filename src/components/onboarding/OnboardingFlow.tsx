@@ -178,33 +178,33 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Customer Option */}
-        <Card className="group cursor-pointer border-2 border-transparent hover:border-pink-200 hover:shadow-lg transition-all duration-300 hover-scale">
+        <Card className="group cursor-pointer border-2 border-transparent hover:border-primary/20 hover:shadow-lg transition-all duration-300 hover-scale">
           <CardHeader className="text-center pb-4">
-            <div className="mx-auto mb-4 p-4 bg-pink-50 rounded-full w-20 h-20 flex items-center justify-center group-hover:bg-pink-100 transition-colors">
-              <Heart className="h-10 w-10 text-pink-500" />
+            <div className="mx-auto mb-4 p-4 bg-primary/10 rounded-full w-20 h-20 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <Heart className="h-10 w-10 text-primary" />
             </div>
-            <CardTitle className="text-2xl text-pink-700">I'm a Customer</CardTitle>
+            <CardTitle className="text-2xl text-primary">I'm a Customer</CardTitle>
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-muted-foreground">
               Book appointments with local beauty professionals, salons, and wellness providers.
             </p>
             <div className="flex flex-wrap justify-center gap-2">
-              <Badge variant="secondary" className="bg-pink-50 text-pink-700 border-pink-200">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
                 <Scissors className="h-3 w-3 mr-1" />
                 Hair & Beauty
               </Badge>
-              <Badge variant="secondary" className="bg-pink-50 text-pink-700 border-pink-200">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
                 <Camera className="h-3 w-3 mr-1" />
                 Photography
               </Badge>
-              <Badge variant="secondary" className="bg-pink-50 text-pink-700 border-pink-200">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
                 <Star className="h-3 w-3 mr-1" />
                 Wellness
               </Badge>
             </div>
             <Button 
-              className="w-full bg-pink-500 hover:bg-pink-600 text-white"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => handleRoleSelection('customer')}
               disabled={loading}
             >
@@ -254,7 +254,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
   const renderCustomerSetup = () => (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold text-pink-600">Customer Profile Setup</h2>
+        <h2 className="text-3xl font-bold text-primary">Customer Profile Setup</h2>
         <p className="text-muted-foreground">Let's personalize your booking experience</p>
       </div>
       
@@ -306,7 +306,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
         size="lg"
         className={`px-8 py-3 text-lg ${
           selectedRole === 'customer' 
-            ? 'bg-pink-500 hover:bg-pink-600' 
+            ? 'bg-primary hover:bg-primary/90' 
             : 'bg-green-600 hover:bg-green-700'
         } text-white`}
         onClick={handleOnboardingComplete}

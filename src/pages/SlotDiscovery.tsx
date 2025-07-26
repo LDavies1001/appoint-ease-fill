@@ -53,11 +53,11 @@ const SlotCard: React.FC<{ slot: SlotData; onBook: (slot: SlotData) => void }> =
   const reviewCount = slot.provider_details?.total_reviews || 0;
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 border-pink-100 hover:border-pink-200 bg-gradient-to-br from-white to-pink-50/30">
+    <Card className="group hover:shadow-lg transition-all duration-300 border-primary/10 hover:border-primary/20 bg-gradient-to-br from-white to-primary/5">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-pink-600 transition-colors">
+            <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors">
               {businessName}
             </CardTitle>
             <div className="flex items-center gap-2 mt-1">
@@ -72,7 +72,7 @@ const SlotCard: React.FC<{ slot: SlotData; onBook: (slot: SlotData) => void }> =
               </div>
             )}
           </div>
-          <Badge variant="secondary" className="bg-pink-100 text-pink-700 border-pink-200">
+          <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
             {slot.custom_service_name || 'Service'}
           </Badge>
         </div>
@@ -89,12 +89,12 @@ const SlotCard: React.FC<{ slot: SlotData; onBook: (slot: SlotData) => void }> =
           </div>
           <Separator />
           <div className="flex items-center justify-between">
-            <div className="text-lg font-bold text-pink-600">
+            <div className="text-lg font-bold text-primary">
               £{slot.price}
             </div>
             <Button 
               onClick={() => onBook(slot)}
-              className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-6"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-6"
             >
               Book Now
             </Button>
@@ -263,15 +263,15 @@ const SlotDiscovery: React.FC = () => {
   }, [searchLocation, selectedCategory, selectedTimeRange, sortBy]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-white to-primary/10">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-pink-500 via-pink-600 to-rose-500 text-white">
+      <div className="text-white" style={{ background: 'var(--gradient-primary)' }}>
         <div className="max-w-6xl mx-auto px-6 py-16">
           <div className="text-center space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold">
               Find Your Perfect Slot
             </h1>
-            <p className="text-xl text-pink-100 max-w-2xl mx-auto">
+            <p className="text-xl text-white/80 max-w-2xl mx-auto">
               Discover available last-minute appointments with local beauty professionals near you
             </p>
           </div>
@@ -290,13 +290,13 @@ const SlotDiscovery: React.FC = () => {
                     placeholder="Enter your postcode or area..."
                     value={searchLocation}
                     onChange={(e) => setSearchLocation(e.target.value)}
-                    className="pl-10 h-12 border-gray-200 focus:border-pink-300 focus:ring-pink-200"
+                    className="pl-10 h-12 border-gray-200 focus:border-primary/30 focus:ring-primary/20"
                   />
                 </div>
               </div>
               
               <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
-                <SelectTrigger className="md:w-48 h-12 border-gray-200 focus:border-pink-300 focus:ring-pink-200">
+                <SelectTrigger className="md:w-48 h-12 border-gray-200 focus:border-primary/30 focus:ring-primary/20">
                   <SelectValue placeholder="When?" />
                 </SelectTrigger>
                 <SelectContent>
@@ -308,7 +308,7 @@ const SlotDiscovery: React.FC = () => {
               </Select>
 
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="md:w-48 h-12 border-gray-200 focus:border-pink-300 focus:ring-pink-200">
+                <SelectTrigger className="md:w-48 h-12 border-gray-200 focus:border-primary/30 focus:ring-primary/20">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -319,7 +319,7 @@ const SlotDiscovery: React.FC = () => {
 
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className="md:w-auto h-12 border-gray-200 hover:bg-pink-50 hover:border-pink-300">
+                  <Button variant="outline" className="md:w-auto h-12 border-gray-200 hover:bg-primary/5 hover:border-primary/30">
                     <Filter className="h-4 w-4 mr-2" />
                     Filters
                   </Button>
@@ -360,7 +360,7 @@ const SlotDiscovery: React.FC = () => {
       <div className="max-w-6xl mx-auto px-6 py-12">
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             <p className="mt-4 text-gray-600">Finding available slots...</p>
           </div>
         ) : slots.length > 0 ? (
@@ -382,8 +382,8 @@ const SlotDiscovery: React.FC = () => {
           </>
         ) : (
           <div className="text-center py-16">
-            <div className="w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Calendar className="h-12 w-12 text-pink-500" />
+            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Calendar className="h-12 w-12 text-primary" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               No slots found near you
@@ -394,7 +394,7 @@ const SlotDiscovery: React.FC = () => {
             <Button 
               onClick={loadSlots}
               variant="outline"
-              className="border-pink-200 text-pink-600 hover:bg-pink-50"
+              className="border-primary/20 text-primary hover:bg-primary/5"
             >
               Refresh Results
             </Button>
