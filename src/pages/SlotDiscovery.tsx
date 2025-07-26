@@ -113,7 +113,79 @@ const SlotDiscovery: React.FC = () => {
   const [searchLocation, setSearchLocation] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>('all');
+  const [selectedTimeOfDay, setSelectedTimeOfDay] = useState<string>('all');
+  const [selectedDistance, setSelectedDistance] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('date');
+  const [appliedFilters, setAppliedFilters] = useState<Array<{id: string, label: string, type: string}>>([]);
+  const [autoDetectingLocation, setAutoDetectingLocation] = useState(false);
+
+  // Auto-detect location
+  const handleAutoDetectLocation = () => {
+    setAutoDetectingLocation(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // For demo purposes, we'll set a generic location
+          // In production, you'd use reverse geocoding API
+          setSearchLocation('Current Location');
+          setAutoDetectingLocation(false);
+          showSuccessToast('Location detected successfully');
+        },
+        (error) => {
+          setAutoDetectingLocation(false);
+          showErrorToast('Unable to detect location. Please enter manually.');
+        }
+      );
+    } else {
+      setAutoDetectingLocation(false);
+      showErrorToast('Geolocation is not supported by this browser.');
+    }
+  };
+
+  // Update applied filters
+  const updateAppliedFilters = () => {
+    const filters = [];
+    if (selectedCategory !== 'all') {
+      filters.push({ id: 'category', label: selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1), type: 'category' });
+    }
+    if (selectedTimeRange !== 'all') {
+      const timeLabels = { today: 'Today', tomorrow: 'Tomorrow', week: 'This Week' };
+      filters.push({ id: 'timeRange', label: timeLabels[selectedTimeRange as keyof typeof timeLabels], type: 'timeRange' });
+    }
+    if (selectedTimeOfDay !== 'all') {
+      const timeOfDayLabels = { morning: 'Morning (6AM-12PM)', afternoon: 'Afternoon (12PM-6PM)', evening: 'Evening (6PM-10PM)' };
+      filters.push({ id: 'timeOfDay', label: timeOfDayLabels[selectedTimeOfDay as keyof typeof timeOfDayLabels], type: 'timeOfDay' });
+    }
+    if (selectedDistance !== 'all') {
+      const distanceLabels = { '1': 'Within 1 mile', '5': 'Within 5 miles', '10': 'Within 10 miles' };
+      filters.push({ id: 'distance', label: distanceLabels[selectedDistance as keyof typeof distanceLabels], type: 'distance' });
+    }
+    if (searchLocation.trim()) {
+      filters.push({ id: 'location', label: `Near ${searchLocation}`, type: 'location' });
+    }
+    setAppliedFilters(filters);
+  };
+
+  // Remove filter
+  const removeFilter = (filterId: string, type: string) => {
+    switch (type) {
+      case 'category':
+        setSelectedCategory('all');
+        break;
+      case 'timeRange':
+        setSelectedTimeRange('all');
+        break;
+      case 'timeOfDay':
+        setSelectedTimeOfDay('all');
+        break;
+      case 'distance':
+        setSelectedDistance('all');
+        break;
+      case 'location':
+        setSearchLocation('');
+        break;
+    }
+  };
 
   // Load available slots
   const loadSlots = async () => {
@@ -188,12 +260,36 @@ const SlotDiscovery: React.FC = () => {
         const profile = profilesData?.find(p => p.user_id === slot.provider_id);
         
         // Apply location filter if provided
-        if (searchLocation.trim()) {
+        if (searchLocation.trim() && searchLocation !== 'Current Location') {
           const locationLower = searchLocation.toLowerCase();
           const cityMatch = providerDetails?.business_city?.toLowerCase().includes(locationLower);
           const postcodeMatch = providerDetails?.business_postcode?.toLowerCase().includes(locationLower);
+          const addressMatch = providerDetails?.business_address?.toLowerCase().includes(locationLower);
           
-          if (!cityMatch && !postcodeMatch) {
+          if (!cityMatch && !postcodeMatch && !addressMatch) {
+            return null;
+          }
+        }
+
+        // Apply service category filter
+        if (selectedCategory !== 'all' && slot.custom_service_name) {
+          const serviceLower = slot.custom_service_name.toLowerCase();
+          const categoryLower = selectedCategory.toLowerCase();
+          if (!serviceLower.includes(categoryLower)) {
+            return null;
+          }
+        }
+
+        // Apply time of day filter
+        if (selectedTimeOfDay !== 'all') {
+          const startHour = parseInt(slot.start_time.split(':')[0]);
+          const isValidTimeSlot = (
+            (selectedTimeOfDay === 'morning' && startHour >= 6 && startHour < 12) ||
+            (selectedTimeOfDay === 'afternoon' && startHour >= 12 && startHour < 18) ||
+            (selectedTimeOfDay === 'evening' && startHour >= 18 && startHour < 22)
+          );
+          
+          if (!isValidTimeSlot) {
             return null;
           }
         }
@@ -206,6 +302,7 @@ const SlotDiscovery: React.FC = () => {
       }).filter(Boolean) as SlotData[];
 
       setSlots(enrichedSlots);
+      updateAppliedFilters();
     } catch (error) {
       console.error('Error in loadSlots:', error);
       showErrorToast('Failed to load available slots');
@@ -260,7 +357,11 @@ const SlotDiscovery: React.FC = () => {
 
   useEffect(() => {
     loadSlots();
-  }, [searchLocation, selectedCategory, selectedTimeRange, sortBy]);
+  }, [searchLocation, selectedCategory, selectedTimeRange, selectedTimeOfDay, selectedDistance, sortBy]);
+
+  useEffect(() => {
+    updateAppliedFilters();
+  }, [selectedCategory, selectedTimeRange, selectedTimeOfDay, selectedDistance, searchLocation]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-white to-primary/10">
@@ -335,75 +436,155 @@ const SlotDiscovery: React.FC = () => {
       <div id="search-section" className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">
         <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm animate-scale-in">
           <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Enter your postcode or area..."
-                    value={searchLocation}
-                    onChange={(e) => setSearchLocation(e.target.value)}
-                    className="pl-10 h-12 text-foreground font-medium focus:border-primary/30 focus:ring-primary/20"
-                  />
-                </div>
-              </div>
-              
-              <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
-                <SelectTrigger className="md:w-48 h-12 text-foreground font-medium focus:border-primary/30 focus:ring-primary/20">
-                  <SelectValue placeholder="When?" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any time</SelectItem>
-                  <SelectItem value="today">Today</SelectItem>
-                  <SelectItem value="tomorrow">Tomorrow</SelectItem>
-                  <SelectItem value="week">This week</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="md:w-48 h-12 text-foreground font-medium focus:border-primary/30 focus:ring-primary/20">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="date">Earliest first</SelectItem>
-                  <SelectItem value="price">Price: Low to high</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" className="md:w-auto h-12 text-foreground font-medium hover:bg-primary/5 hover:border-primary/30">
-                    <Filter className="h-4 w-4 mr-2" />
-                    Filters
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Filter Results</SheetTitle>
-                    <SheetDescription>
-                      Refine your search to find the perfect appointment
-                    </SheetDescription>
-                  </SheetHeader>
-                  <div className="space-y-6 mt-6">
-                     <div>
-                       <label className="text-sm font-bold mb-3 block text-foreground">Service Category</label>
-                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="All categories" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All categories</SelectItem>
-                          <SelectItem value="nails">Nails</SelectItem>
-                          <SelectItem value="lashes">Lashes</SelectItem>
-                          <SelectItem value="brows">Brows</SelectItem>
-                          <SelectItem value="hair">Hair</SelectItem>
-                          <SelectItem value="massage">Massage</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+            <div className="flex flex-col gap-4">
+              {/* Main Search Row */}
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Enter your postcode or area..."
+                      value={searchLocation}
+                      onChange={(e) => setSearchLocation(e.target.value)}
+                      className="pl-10 h-12 text-foreground font-medium focus:border-primary/30 focus:ring-primary/20"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleAutoDetectLocation}
+                      disabled={autoDetectingLocation}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary/80"
+                    >
+                      {autoDetectingLocation ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                      ) : (
+                        <MapPin className="h-4 w-4" />
+                      )}
+                    </Button>
                   </div>
-                </SheetContent>
-              </Sheet>
+                </div>
+                
+                <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+                  <SelectTrigger className="md:w-48 h-12 text-foreground font-medium focus:border-primary/30 focus:ring-primary/20">
+                    <SelectValue placeholder="When?" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Any time</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="tomorrow">Tomorrow</SelectItem>
+                    <SelectItem value="week">This week</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="md:w-48 h-12 text-foreground font-medium focus:border-primary/30 focus:ring-primary/20">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="date">Earliest first</SelectItem>
+                    <SelectItem value="price">Price: Low to high</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="md:w-auto h-12 text-foreground font-medium hover:bg-primary/5 hover:border-primary/30">
+                      <Filter className="h-4 w-4 mr-2" />
+                      More Filters
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent>
+                    <SheetHeader>
+                      <SheetTitle>Filter Results</SheetTitle>
+                      <SheetDescription>
+                        Refine your search to find the perfect appointment
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="space-y-6 mt-6">
+                      <div>
+                        <label className="text-sm font-bold mb-3 block text-foreground">Service Category</label>
+                        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="All categories" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All categories</SelectItem>
+                            <SelectItem value="nails">Nails</SelectItem>
+                            <SelectItem value="lashes">Lashes</SelectItem>
+                            <SelectItem value="brows">Brows</SelectItem>
+                            <SelectItem value="hair">Hair</SelectItem>
+                            <SelectItem value="massage">Massage</SelectItem>
+                            <SelectItem value="facial">Facial</SelectItem>
+                            <SelectItem value="waxing">Waxing</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <label className="text-sm font-bold mb-3 block text-foreground">Time of Day</label>
+                        <Select value={selectedTimeOfDay} onValueChange={setSelectedTimeOfDay}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Any time" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">Any time</SelectItem>
+                            <SelectItem value="morning">Morning (6AM-12PM)</SelectItem>
+                            <SelectItem value="afternoon">Afternoon (12PM-6PM)</SelectItem>
+                            <SelectItem value="evening">Evening (6PM-10PM)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-bold mb-3 block text-foreground">Distance</label>
+                        <Select value={selectedDistance} onValueChange={setSelectedDistance}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Any distance" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">Any distance</SelectItem>
+                            <SelectItem value="1">Within 1 mile</SelectItem>
+                            <SelectItem value="5">Within 5 miles</SelectItem>
+                            <SelectItem value="10">Within 10 miles</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+
+              {/* Applied Filters */}
+              {appliedFilters.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-2 border-t border-primary/10">
+                  <span className="text-sm font-medium text-foreground/70">Active filters:</span>
+                  {appliedFilters.map((filter) => (
+                    <Badge 
+                      key={filter.id}
+                      variant="secondary" 
+                      className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 cursor-pointer"
+                      onClick={() => removeFilter(filter.id, filter.type)}
+                    >
+                      {filter.label}
+                      <button className="ml-2 hover:text-primary/70">×</button>
+                    </Badge>
+                  ))}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedCategory('all');
+                      setSelectedTimeRange('all');
+                      setSelectedTimeOfDay('all');
+                      setSelectedDistance('all');
+                      setSearchLocation('');
+                    }}
+                    className="text-foreground/50 hover:text-foreground text-sm h-6"
+                  >
+                    Clear all
+                  </Button>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -412,10 +593,30 @@ const SlotDiscovery: React.FC = () => {
       {/* Results Section */}
       <div className="max-w-6xl mx-auto px-6 py-12">
         {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-              <p className="mt-4 text-foreground font-bold">Finding available slots...</p>
+          <div className="space-y-6">
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-foreground font-bold">Finding available slots...</p>
             </div>
+            {/* Skeleton Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <Card key={i} className="animate-pulse">
+                  <CardHeader>
+                    <div className="h-4 bg-primary/10 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-primary/10 rounded w-1/2"></div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="h-3 bg-primary/10 rounded w-full"></div>
+                      <div className="h-3 bg-primary/10 rounded w-2/3"></div>
+                      <div className="h-8 bg-primary/10 rounded w-1/3 ml-auto"></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         ) : slots.length > 0 ? (
           <>
             <div className="flex items-center justify-between mb-6">
