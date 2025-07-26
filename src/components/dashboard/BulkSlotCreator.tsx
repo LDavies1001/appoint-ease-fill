@@ -373,6 +373,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
                 <div key={day.value} className="flex items-center space-x-2">
                   <Checkbox
                     id={`day-${day.value}`}
+                    variant="provider"
                     checked={selectedWeekdays.includes(day.value)}
                     onCheckedChange={() => handleWeekdayToggle(day.value)}
                   />
@@ -388,6 +389,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
           <div className="flex items-center space-x-2">
             <Checkbox
               id="skip-weekends"
+              variant="provider"
               checked={skipWeekends}
               onCheckedChange={(checked) => setSkipWeekends(checked === true)}
             />
