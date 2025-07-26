@@ -23,7 +23,9 @@ import {
   ExternalLink,
   Palette,
   FolderOpen,
-  Building
+  Building,
+  Folder,
+  FolderPlus
 } from 'lucide-react';
 import ImageDropzone from './ImageDropzone';
 import ImageCard from './ImageCard';
@@ -51,6 +53,10 @@ const EnhancedLibraryTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedBucket, setSelectedBucket] = useState<string>('all');
+  const [selectedFolder, setSelectedFolder] = useState<string>('');
+  const [folders, setFolders] = useState<string[]>([]);
+  const [showCreateFolder, setShowCreateFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
   
   // Constants
   const categories = ['all', 'portraits', 'nails', 'hair', 'makeup', 'lashes', 'brows', 'other'];
@@ -62,7 +68,7 @@ const EnhancedLibraryTab = () => {
 
   useEffect(() => {
     filterItems();
-  }, [mediaItems, searchQuery, selectedCategory, selectedBucket]);
+  }, [mediaItems, searchQuery, selectedCategory, selectedBucket, selectedFolder]);
 
   const fetchMediaItems = async () => {
     if (!user) return;
@@ -70,6 +76,7 @@ const EnhancedLibraryTab = () => {
     try {
       setLoading(true);
       const allItems: MediaItem[] = [];
+      const allFolders = new Set<string>();
       
       const bucketList = ['portfolio', 'business-photos', 'profile-photos'];
       
@@ -91,25 +98,37 @@ const EnhancedLibraryTab = () => {
                 .from(bucket)
                 .getPublicUrl(`${user.id}/${file.name}`);
               
+              // Extract folder from path if it contains '/'
+              const pathParts = file.name.split('/');
+              const folder = pathParts.length > 1 ? pathParts[0] : '';
+              const filename = pathParts[pathParts.length - 1];
+              
+              if (folder) {
+                allFolders.add(folder);
+              }
+              
               return {
                 id: `${bucket}-${file.name}`,
-                name: file.name,
-                filename: file.name,
+                name: filename,
+                filename: filename,
                 url: publicUrl,
                 bucket,
+                folder,
+                fullPath: file.name,
                 size: file.metadata?.size,
                 created_at: file.created_at,
                 caption: '',
                 category: 'other',
                 isPinned: false,
                 show_in_portfolio: bucket === 'portfolio'
-              } as MediaItem;
+              } as MediaItem & { folder: string; fullPath: string };
             });
           
           allItems.push(...bucketItems);
         }
       }
 
+      setFolders(Array.from(allFolders).sort());
       setMediaItems(allItems);
     } catch (error) {
       console.error('Error fetching media:', error);
@@ -144,6 +163,13 @@ const EnhancedLibraryTab = () => {
       filtered = filtered.filter(item => item.bucket === selectedBucket);
     }
 
+    // Filter by folder
+    if (selectedFolder !== '') {
+      filtered = filtered.filter(item => 
+        (item as any).folder === selectedFolder
+      );
+    }
+
     // Sort: pinned first, then by date
     filtered.sort((a, b) => {
       if (a.isPinned && !b.isPinned) return -1;
@@ -156,7 +182,8 @@ const EnhancedLibraryTab = () => {
 
   const handleDelete = async (image: UploadedImage) => {
     try {
-      const filePath = `${user?.id}/${image.name}`;
+      const fullPath = (image as any).fullPath || image.name;
+      const filePath = `${user?.id}/${fullPath}`;
       
       const { error } = await supabase.storage
         .from(image.bucket)
@@ -178,12 +205,75 @@ const EnhancedLibraryTab = () => {
     }
   };
 
+  const handleRename = async (image: UploadedImage, newName: string) => {
+    try {
+      const oldPath = `${user?.id}/${(image as any).fullPath || image.name}`;
+      const folder = (image as any).folder || '';
+      const newPath = `${user?.id}/${folder ? folder + '/' : ''}${newName}`;
+      
+      // Copy file to new path
+      const { error: copyError } = await supabase.storage
+        .from(image.bucket)
+        .copy(oldPath, newPath);
+
+      if (copyError) throw copyError;
+
+      // Delete old file
+      const { error: deleteError } = await supabase.storage
+        .from(image.bucket)
+        .remove([oldPath]);
+
+      if (deleteError) throw deleteError;
+
+      toast({
+        title: "Image renamed successfully",
+      });
+      
+      fetchMediaItems();
+    } catch (error: any) {
+      toast({
+        title: "Error renaming image",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleTogglePortfolio = async (image: UploadedImage) => {
     // This would be implemented with a database table to track portfolio status
     toast({
       title: "Portfolio toggle",
       description: "Portfolio management coming soon!",
     });
+  };
+
+  const handleCreateFolder = async () => {
+    if (!newFolderName.trim()) return;
+    
+    try {
+      // Create a placeholder file in the new folder to ensure it exists
+      const placeholderPath = `${user?.id}/${newFolderName}/.emptyFolderPlaceholder`;
+      
+      const { error } = await supabase.storage
+        .from('portfolio')
+        .upload(placeholderPath, new Blob([''], { type: 'text/plain' }));
+
+      if (error && !error.message.includes('already exists')) throw error;
+
+      toast({
+        title: "Folder created successfully",
+      });
+      
+      setNewFolderName('');
+      setShowCreateFolder(false);
+      fetchMediaItems();
+    } catch (error: any) {
+      toast({
+        title: "Error creating folder",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
   };
 
   const formatBucketName = (bucket: string) => {
@@ -263,12 +353,77 @@ const EnhancedLibraryTab = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <ImageDropzone 
-            onUploadComplete={fetchMediaItems}
-            bucket="portfolio"
-            maxFiles={10}
-            maxSizeInMB={5}
-          />
+          <div className="space-y-4">
+            {/* Folder Selection */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <Select value={selectedFolder} onValueChange={setSelectedFolder}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select folder (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">No folder</SelectItem>
+                    {folders.map(folder => (
+                      <SelectItem key={folder} value={folder}>
+                        <div className="flex items-center gap-2">
+                          <Folder className="h-4 w-4" />
+                          {folder}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowCreateFolder(true)}
+                className="border-provider/20 hover:border-provider text-provider"
+              >
+                <FolderPlus className="h-4 w-4 mr-2" />
+                Create Folder
+              </Button>
+            </div>
+
+            {/* Create Folder Input */}
+            {showCreateFolder && (
+              <div className="flex items-center gap-2 p-4 bg-muted/50 rounded-lg">
+                <Input
+                  placeholder="Folder name"
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleCreateFolder();
+                    if (e.key === 'Escape') setShowCreateFolder(false);
+                  }}
+                />
+                <Button
+                  onClick={handleCreateFolder}
+                  disabled={!newFolderName.trim()}
+                  className="bg-provider hover:bg-provider-dark"
+                >
+                  Create
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowCreateFolder(false);
+                    setNewFolderName('');
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+
+            <ImageDropzone 
+              onUploadComplete={fetchMediaItems}
+              bucket="portfolio"
+              folder={selectedFolder}
+              maxFiles={10}
+              maxSizeInMB={5}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -297,6 +452,23 @@ const EnhancedLibraryTab = () => {
                   {buckets.slice(1).map(bucket => (
                     <SelectItem key={bucket} value={bucket}>
                       {formatBucketName(bucket)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={selectedFolder} onValueChange={setSelectedFolder}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="All Folders" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Folders</SelectItem>
+                  {folders.map(folder => (
+                    <SelectItem key={folder} value={folder}>
+                      <div className="flex items-center gap-2">
+                        <Folder className="h-3 w-3" />
+                        {folder}
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -369,8 +541,10 @@ const EnhancedLibraryTab = () => {
                   image={item}
                   onDelete={handleDelete}
                   onTogglePortfolio={handleTogglePortfolio}
+                  onRename={handleRename}
                   showBucket={true}
                   showActions={true}
+                  viewMode={viewMode}
                 />
               ))}
             </div>

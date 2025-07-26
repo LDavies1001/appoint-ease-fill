@@ -19,6 +19,7 @@ interface UploadFile {
 interface ImageDropzoneProps {
   onUploadComplete: () => void;
   bucket?: string;
+  folder?: string;
   maxFiles?: number;
   maxSizeInMB?: number;
 }
@@ -26,6 +27,7 @@ interface ImageDropzoneProps {
 const ImageDropzone: React.FC<ImageDropzoneProps> = ({
   onUploadComplete,
   bucket = 'portfolio',
+  folder = '',
   maxFiles = 10,
   maxSizeInMB = 5
 }) => {
@@ -95,7 +97,9 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({
         try {
           const fileExt = uploadFile.file.name.split('.').pop();
           const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-          const filePath = `${profile.user_id}/${fileName}`;
+          const filePath = folder 
+            ? `${profile.user_id}/${folder}/${fileName}`
+            : `${profile.user_id}/${fileName}`;
 
           // Upload file (Supabase doesn't support progress tracking in browser)
           const { error: uploadError } = await supabase.storage
