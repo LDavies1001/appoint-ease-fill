@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { CategorySelector } from '@/components/ui/category-selector';
 import { ServiceItem } from './ServiceItem';
 import { AddServiceModal } from './AddServiceModal';
-import { Building, Edit2, Save, X, Plus, DollarSign } from 'lucide-react';
+import { Building, Edit2, Save, X, Plus } from 'lucide-react';
 
 interface Service {
   id: string;
@@ -252,7 +252,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 <div className="flex items-center gap-4">
                   {activeServices.length > 0 && (
                     <div className="flex items-center gap-1 text-sm text-provider">
-                      <DollarSign className="h-4 w-4" />
                       <span className="font-medium">Total Value: £{totalValue.toFixed(2)}</span>
                     </div>
                   )}

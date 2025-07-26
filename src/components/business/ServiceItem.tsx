@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Edit2, Trash2, Clock, DollarSign } from 'lucide-react';
+import { Edit2, Trash2, Clock } from 'lucide-react';
 
 interface Service {
   id: string;
@@ -90,7 +90,6 @@ export const ServiceItem: React.FC<ServiceItemProps> = ({
           
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1 text-provider">
-              <DollarSign className="h-4 w-4" />
               <span className="font-medium">£{service.base_price}</span>
             </div>
             <div className="flex items-center gap-1 text-muted-foreground">
