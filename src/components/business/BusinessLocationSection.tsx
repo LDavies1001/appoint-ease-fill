@@ -207,38 +207,6 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
               </div>
             </div>
 
-            {/* Address Privacy Settings */}
-            <div className="space-y-3">
-              <Label className="text-green-800 font-medium">Address Visibility</Label>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="address-public"
-                    name="address-visibility"
-                    checked={editData.is_address_public}
-                    onChange={() => setEditData(prev => ({ ...prev, is_address_public: true }))}
-                    className="w-4 h-4 text-green-600"
-                  />
-                  <Label htmlFor="address-public" className="text-sm">
-                    📍 Show full address publicly (customers can see exact location)
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="address-private"
-                    name="address-visibility"
-                    checked={!editData.is_address_public}
-                    onChange={() => setEditData(prev => ({ ...prev, is_address_public: false }))}
-                    className="w-4 h-4 text-green-600"
-                  />
-                  <Label htmlFor="address-private" className="text-sm">
-                    🔒 Keep address private (recommended - share only area/town)
-                  </Label>
-                </div>
-              </div>
-            </div>
 
             <div className="flex space-x-2 pt-4">
               <Button
