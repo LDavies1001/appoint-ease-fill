@@ -590,7 +590,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
           <Button 
             onClick={handleBulkCreate} 
             disabled={loading || selectedDates.length === 0}
-            variant="hero"
+            variant="provider"
           >
             <Save className="h-4 w-4 mr-2" />
             {loading ? 'Creating...' : `Create ${calculateTotalSlots()} Slots`}
