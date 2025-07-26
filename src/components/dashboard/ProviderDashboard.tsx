@@ -513,101 +513,95 @@ const ProviderDashboard = () => {
         <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-white/5 rounded-full animate-[pulse_4s_ease-in-out_infinite]"></div>
         
         {/* Content */}
-        <div className="relative px-8 py-16">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
-              {/* Left Content */}
-              <div className="text-center lg:text-left space-y-6">
-                <div className="space-y-4 animate-fade-in">
-                  <h1 className="text-5xl md:text-6xl font-bold leading-tight drop-shadow-lg">
-                    <span className="text-white">Welcome back,</span>
-                    <br />
-                    <span className="text-white drop-shadow-md">
-                      {profile?.name || 'Provider'}!
-                    </span>
-                  </h1>
-                  <p className="text-xl font-medium leading-relaxed text-white drop-shadow-md">
-                    Ready to fill those slots and grow your business? 
-                    <br />
-                    <span className="text-white font-bold text-2xl drop-shadow-lg">{"Let's make today profitable! 💰"}</span>
-                  </p>
-                </div>
-                
-                {/* Quick Actions */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-4 animate-slide-up">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:text-gray-900 backdrop-blur-sm font-bold shadow-lg"
-                    onClick={() => setActiveTab('bookings')}
-                  >
-                    <Calendar className="h-5 w-5 mr-2" />
-                    View My Bookings
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
-                    onClick={() => setActiveTab('profile')}
-                  >
-                    <Settings className="h-5 w-5 mr-2" />
-                    Edit My Profile
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
-                    onClick={() => setActiveTab('services')}
-                  >
-                    <Plus className="h-5 w-5 mr-2" />
-                    Add a Service
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
-                    onClick={() => setActiveTab('slots')}
-                  >
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Create New Slots
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
-                    onClick={() => setActiveTab('library')}
-                  >
-                    <Image className="h-5 w-5 mr-2" />
-                    Upload Media
-                  </Button>
-                </div>
+        <div className="relative px-6 py-12">
+          <div className="max-w-6xl mx-auto">
+            {/* Top Section - Welcome Text */}
+            <div className="text-center mb-8 animate-fade-in">
+              <h1 className="text-4xl md:text-5xl font-bold leading-tight drop-shadow-lg mb-4">
+                <span className="text-white">Welcome back, </span>
+                <span className="text-white drop-shadow-md">{profile?.name || 'Provider'}!</span>
+              </h1>
+              <p className="text-lg md:text-xl font-medium leading-relaxed text-white drop-shadow-md max-w-3xl mx-auto">
+                Ready to fill those slots and grow your business? 
+                <span className="block mt-2 text-white font-bold text-xl drop-shadow-lg">{"Let's make today profitable! 💰"}</span>
+              </p>
+            </div>
+
+            {/* Quick Actions - Full Width */}
+            <div className="mb-8 animate-slide-up">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 max-w-5xl mx-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:text-gray-900 backdrop-blur-sm font-bold shadow-lg h-auto py-3"
+                  onClick={() => setActiveTab('bookings')}
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  <span className="text-sm">View Bookings</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md h-auto py-3"
+                  onClick={() => setActiveTab('profile')}
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  <span className="text-sm">Edit Profile</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md h-auto py-3"
+                  onClick={() => setActiveTab('services')}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  <span className="text-sm">Add Service</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md h-auto py-3"
+                  onClick={() => setActiveTab('slots')}
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  <span className="text-sm">Create Slots</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md h-auto py-3"
+                  onClick={() => setActiveTab('library')}
+                >
+                  <Image className="h-4 w-4 mr-2" />
+                  <span className="text-sm">Upload Media</span>
+                </Button>
+              </div>
+            </div>
+
+            {/* Stats Cards - Bottom Section */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto animate-scale-in">
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
+                <div className="text-3xl font-bold text-gray-800">{todaysSlots.length}</div>
+                <div className="text-gray-700 text-sm font-semibold">Today's Slots</div>
+                <div className="mt-2 text-gray-600 text-xs">Ready to book</div>
               </div>
               
-              {/* Right Content - Stats Cards */}
-              <div className="grid grid-cols-2 gap-4 animate-scale-in">
-                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
-                  <div className="text-3xl font-bold text-gray-800">{todaysSlots.length}</div>
-                  <div className="text-gray-700 text-sm font-semibold">Today's Slots</div>
-                  <div className="mt-2 text-gray-600 text-xs">Ready to book</div>
-                </div>
-                
-                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
-                  <div className="text-3xl font-bold text-gray-800">{upcomingBookings.length}</div>
-                  <div className="text-gray-700 text-sm font-semibold">Upcoming</div>
-                  <div className="mt-2 text-gray-600 text-xs">Bookings confirmed</div>
-                </div>
-                
-                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
-                  <div className="text-3xl font-bold text-gray-800">{mySlots.length}</div>
-                  <div className="text-gray-700 text-sm font-semibold">Total Slots</div>
-                  <div className="mt-2 text-gray-600 text-xs">All time created</div>
-                </div>
-                
-                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
-                  <div className="text-3xl font-bold text-gray-800">{providerServices.length}</div>
-                  <div className="text-gray-700 text-sm font-semibold">Services</div>
-                  <div className="mt-2 text-gray-600 text-xs">Offered by you</div>
-                </div>
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
+                <div className="text-3xl font-bold text-gray-800">{upcomingBookings.length}</div>
+                <div className="text-gray-700 text-sm font-semibold">Upcoming</div>
+                <div className="mt-2 text-gray-600 text-xs">Bookings confirmed</div>
+              </div>
+              
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
+                <div className="text-3xl font-bold text-gray-800">{mySlots.length}</div>
+                <div className="text-gray-700 text-sm font-semibold">Total Slots</div>
+                <div className="mt-2 text-gray-600 text-xs">All time created</div>
+              </div>
+              
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 text-center border border-white/30 shadow-lg">
+                <div className="text-3xl font-bold text-gray-800">{providerServices.length}</div>
+                <div className="text-gray-700 text-sm font-semibold">Services</div>
+                <div className="mt-2 text-gray-600 text-xs">Offered by you</div>
               </div>
             </div>
           </div>
