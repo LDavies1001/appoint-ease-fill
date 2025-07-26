@@ -170,8 +170,8 @@ const ProfileTab = () => {
             business_website: businessDetails.business_website || '',
             business_address: businessDetails.business_address || '',
             is_address_public: businessDetails.is_address_public || false,
-            postcode_full: businessDetails.postcode_full || null,
-            postcode_area: businessDetails.postcode_area || null,
+            postcode_full: (businessDetails as any).postcode_full || null,
+            postcode_area: (businessDetails as any).postcode_area || null,
             facebook_url: businessDetails.facebook_url || '',
             instagram_url: businessDetails.instagram_url || '',
             tiktok_url: businessDetails.tiktok_url || '',
@@ -179,7 +179,7 @@ const ProfileTab = () => {
             service_area: businessDetails.service_area || '',
             operating_hours: parseOperatingHours(businessDetails.operating_hours),
             availability_notes: businessDetails.availability_notes || '',
-            coverage_towns: businessDetails.coverage_towns || []
+            coverage_towns: (businessDetails as any).coverage_towns || []
           });
         }
       }

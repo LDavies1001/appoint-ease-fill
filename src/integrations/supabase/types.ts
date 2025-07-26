@@ -433,6 +433,7 @@ export type Database = {
           certification_files: string[] | null
           certifications: string | null
           cover_image_url: string | null
+          coverage_towns: string[] | null
           created_at: string
           emergency_available: boolean | null
           facebook_url: string | null
@@ -440,19 +441,15 @@ export type Database = {
           instagram_url: string | null
           insurance_info: string | null
           is_address_public: boolean | null
-          nearby_towns: string[] | null
           operating_hours: string | null
-          postcode_admin_district: string | null
-          postcode_admin_ward: string | null
-          postcode_latitude: number | null
-          postcode_longitude: number | null
+          postcode_area: string | null
+          postcode_full: string | null
           postcode_verified_at: string | null
           pricing_info: string | null
           profile_published: boolean | null
           profile_visibility: string | null
           rating: number | null
           service_area: string | null
-          service_radius_miles: number | null
           services_offered: string[] | null
           social_media_links: Json | null
           tiktok_url: string | null
@@ -474,6 +471,7 @@ export type Database = {
           certification_files?: string[] | null
           certifications?: string | null
           cover_image_url?: string | null
+          coverage_towns?: string[] | null
           created_at?: string
           emergency_available?: boolean | null
           facebook_url?: string | null
@@ -481,19 +479,15 @@ export type Database = {
           instagram_url?: string | null
           insurance_info?: string | null
           is_address_public?: boolean | null
-          nearby_towns?: string[] | null
           operating_hours?: string | null
-          postcode_admin_district?: string | null
-          postcode_admin_ward?: string | null
-          postcode_latitude?: number | null
-          postcode_longitude?: number | null
+          postcode_area?: string | null
+          postcode_full?: string | null
           postcode_verified_at?: string | null
           pricing_info?: string | null
           profile_published?: boolean | null
           profile_visibility?: string | null
           rating?: number | null
           service_area?: string | null
-          service_radius_miles?: number | null
           services_offered?: string[] | null
           social_media_links?: Json | null
           tiktok_url?: string | null
@@ -515,6 +509,7 @@ export type Database = {
           certification_files?: string[] | null
           certifications?: string | null
           cover_image_url?: string | null
+          coverage_towns?: string[] | null
           created_at?: string
           emergency_available?: boolean | null
           facebook_url?: string | null
@@ -522,19 +517,15 @@ export type Database = {
           instagram_url?: string | null
           insurance_info?: string | null
           is_address_public?: boolean | null
-          nearby_towns?: string[] | null
           operating_hours?: string | null
-          postcode_admin_district?: string | null
-          postcode_admin_ward?: string | null
-          postcode_latitude?: number | null
-          postcode_longitude?: number | null
+          postcode_area?: string | null
+          postcode_full?: string | null
           postcode_verified_at?: string | null
           pricing_info?: string | null
           profile_published?: boolean | null
           profile_visibility?: string | null
           rating?: number | null
           service_area?: string | null
-          service_radius_miles?: number | null
           services_offered?: string[] | null
           social_media_links?: Json | null
           tiktok_url?: string | null
