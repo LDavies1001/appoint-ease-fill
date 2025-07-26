@@ -211,18 +211,17 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="duration_minutes">Duration (min) *</Label>
+              <Label htmlFor="duration_text">Duration *</Label>
               <Input
-                id="duration_minutes"
-                type="number"
-                min="1"
-                step="15"
-                value={formData.duration_minutes}
-                onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: parseInt(e.target.value) || 60 }))}
+                id="duration_text"
+                type="text"
+                value={formData.duration_text || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, duration_text: e.target.value }))}
+                placeholder="e.g., 60 min, 1.5 hours, 45-90 min"
                 className="mt-1"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                {formatDuration(formData.duration_minutes)}
+                Enter duration in any format
               </p>
             </div>
           </div>
