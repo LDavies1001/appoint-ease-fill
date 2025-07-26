@@ -36,7 +36,8 @@ import {
   Image as ImageIcon,
   Map,
   FileText,
-  Copy
+  Copy,
+  Plus
 } from 'lucide-react';
 import Header from '@/components/ui/header';
 
@@ -467,138 +468,295 @@ const EnhancedBusinessProfile = () => {
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-8">
             
+            {/* Business Performance Stats */}
+            <Card className="card-elegant overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                    <Star className="h-5 w-5 text-provider" />
+                  </div>
+                  <h2 className="text-2xl font-semibold">Business Performance</h2>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center space-x-1 mb-2">
+                      <Star className="h-6 w-6 text-yellow-500" />
+                      <span className="text-3xl font-bold text-provider">
+                        {providerDetails.rating > 0 ? providerDetails.rating.toFixed(1) : '0.0'}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Average Rating</p>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-provider mb-2">
+                      {providerDetails.total_reviews || 0}
+                    </div>
+                    <p className="text-sm text-muted-foreground">Total Reviews</p>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-provider mb-2">
+                      {providerServices.length || 0}
+                    </div>
+                    <p className="text-sm text-muted-foreground">Services Offered</p>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-provider mb-2">
+                      {providerDetails.years_experience || 0}
+                    </div>
+                    <p className="text-sm text-muted-foreground">Years Experience</p>
+                  </div>
+                </div>
+                
+                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <Award className="h-5 w-5 text-provider" />
+                    <span className="font-medium">
+                      Profile Status: {providerDetails.profile_published ? (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+                          Published & Active
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200">
+                          Draft Mode
+                        </Badge>
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
             {/* About Section */}
-            {(providerProfile.bio || providerDetails.service_area) && (
-              <Card className="card-elegant overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+            <Card className="card-elegant overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
                       <User className="h-5 w-5 text-provider" />
                     </div>
-                    <h2 className="text-2xl font-semibold">About</h2>
+                    <h2 className="text-2xl font-semibold">About {providerProfile.name || 'Business'}</h2>
                   </div>
-                </CardHeader>
-                <CardContent className="p-6">
-                  {providerProfile.bio && (
-                    <div className="mb-4">
-                      <p className="text-muted-foreground leading-relaxed">{providerProfile.bio}</p>
-                    </div>
+                  {isOwner && (
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
                   )}
-                  
-                  {providerDetails.service_area && (
-                    <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
-                      <MapPin className="h-5 w-5 text-provider mt-0.5" />
-                      <div>
-                        <h4 className="font-medium mb-1">Service Area</h4>
-                        <p className="text-muted-foreground">{providerDetails.service_area}</p>
-                      </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                {providerProfile.bio ? (
+                  <div className="mb-6">
+                    <p className="text-muted-foreground leading-relaxed">{providerProfile.bio}</p>
+                  </div>
+                ) : (
+                  <div className="mb-6 text-center py-8 border-2 border-dashed border-border rounded-lg">
+                    <User className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground">No bio added yet</p>
+                    {isOwner && (
+                      <p className="text-xs text-muted-foreground mt-2">Add a personal bio to help customers get to know you</p>
+                    )}
+                  </div>
+                )}
+                
+                {providerDetails.service_area ? (
+                  <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                    <MapPin className="h-5 w-5 text-provider mt-0.5" />
+                    <div>
+                      <h4 className="font-medium mb-1">Service Area</h4>
+                      <p className="text-muted-foreground">{providerDetails.service_area}</p>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                  </div>
+                ) : (
+                  <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                    <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                    <div>
+                      <h4 className="font-medium mb-1">Service Area</h4>
+                      <p className="text-muted-foreground">Not specified</p>
+                      {isOwner && (
+                        <p className="text-xs text-muted-foreground mt-1">Add your service area to help customers find you</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            {/* Services Section */}
-            {providerServices.length > 0 && (
-              <Card className="card-elegant overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                        <Building className="h-5 w-5 text-provider" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-semibold">Services & Pricing</h2>
+            {/* Services Section - Always show */}
+            <Card className="card-elegant overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                      <Building className="h-5 w-5 text-provider" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-semibold">Services & Pricing</h2>
+                      {providerServices.length > 0 ? (
                         <p className="text-sm text-muted-foreground">
                           {providerServices.length} services • Total value £{totalServiceValue.toFixed(2)}
                         </p>
-                      </div>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No services added yet</p>
+                      )}
                     </div>
-                    {!isOwner && (
-                      <Button variant="provider" onClick={handleBookNow}>
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Book Now
-                      </Button>
-                    )}
                   </div>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {providerServices.map((service) => (
-                      <div key={service.id} className="group relative p-5 border border-border rounded-xl hover:shadow-lg hover:border-provider/30 transition-all duration-300">
-                        <div className="flex flex-col h-full">
-                          <div className="flex items-start justify-between mb-3">
-                            <h3 className="font-semibold text-foreground text-lg leading-tight">
-                              {service.service_name}
-                            </h3>
-                            <div className="text-right flex-shrink-0 ml-4">
-                              <div className="text-2xl font-bold text-provider">
-                                £{service.discount_price || service.base_price}
-                              </div>
-                              {service.discount_price && service.base_price > service.discount_price && (
-                                <div className="text-sm text-muted-foreground line-through">
-                                  £{service.base_price}
+                  {!isOwner && providerServices.length > 0 && (
+                    <Button variant="provider" onClick={handleBookNow}>
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Book Now
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                {providerServices.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {providerServices.map((service) => (
+                        <div key={service.id} className="group relative p-5 border border-border rounded-xl hover:shadow-lg hover:border-provider/30 transition-all duration-300">
+                          <div className="flex flex-col h-full">
+                            <div className="flex items-start justify-between mb-3">
+                              <h3 className="font-semibold text-foreground text-lg leading-tight">
+                                {service.service_name}
+                              </h3>
+                              <div className="text-right flex-shrink-0 ml-4">
+                                <div className="text-2xl font-bold text-provider">
+                                  £{service.discount_price || service.base_price}
                                 </div>
+                                {service.discount_price && service.base_price > service.discount_price && (
+                                  <div className="text-sm text-muted-foreground line-through">
+                                    £{service.base_price}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {service.description ? (
+                              <p className="text-muted-foreground mb-3 text-sm leading-relaxed flex-grow">
+                                {service.description}
+                              </p>
+                            ) : (
+                              <p className="text-muted-foreground mb-3 text-sm italic flex-grow">
+                                No description provided
+                              </p>
+                            )}
+                            
+                            <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                <Clock className="h-4 w-4" />
+                                {service.duration_text || `${service.duration_minutes} min`}
+                              </div>
+                              {!isOwner && (
+                                <Button variant="provider" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                  Book
+                                </Button>
                               )}
                             </div>
                           </div>
-                          
-                          {service.description && (
-                            <p className="text-muted-foreground mb-3 text-sm leading-relaxed flex-grow">
-                              {service.description}
-                            </p>
-                          )}
-                          
-                          <div className="flex items-center justify-between pt-3 border-t border-border/50">
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <Clock className="h-4 w-4" />
-                              {service.duration_text || `${service.duration_minutes} min`}
-                            </div>
-                            {!isOwner && (
-                              <Button variant="provider" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                Book
-                              </Button>
-                            )}
-                          </div>
                         </div>
+                      ))}
+                    </div>
+                    
+                    {providerDetails.pricing_info && (
+                      <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium mb-2 flex items-center gap-2">
+                          <PoundSterling className="h-4 w-4 text-provider" />
+                          Additional Pricing Information
+                        </h4>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                          {providerDetails.pricing_info}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                    <Building className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No Services Added</h3>
+                    <p className="text-muted-foreground mb-4">
+                      {isOwner 
+                        ? "Add your services and pricing to attract customers" 
+                        : "This business hasn't added any services yet"
+                      }
+                    </p>
+                    {isOwner && (
+                      <Button variant="provider" onClick={() => navigate('/dashboard')}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Services
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Business Categories */}
+            <Card className="card-elegant overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                    <Building className="h-5 w-5 text-provider" />
+                  </div>
+                  <h2 className="text-2xl font-semibold">Business Categories</h2>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                {businessCategories.length > 0 ? (
+                  <div className="flex flex-wrap gap-3">
+                    {businessCategories.map((category) => (
+                      <div key={category.id} className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow">
+                        <h4 className="font-medium text-provider mb-1">{category.name}</h4>
+                        {category.description && (
+                          <p className="text-sm text-muted-foreground">{category.description}</p>
+                        )}
                       </div>
                     ))}
                   </div>
-                  
-                  {providerDetails.pricing_info && (
-                    <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                      <h4 className="font-medium mb-2 flex items-center gap-2">
-                        <PoundSterling className="h-4 w-4 text-provider" />
-                        Additional Pricing Information
-                      </h4>
-                      <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                        {providerDetails.pricing_info}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
+                    <Building className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground">No business categories selected</p>
+                    {isOwner && (
+                      <p className="text-xs text-muted-foreground mt-2">Add categories to help customers find your services</p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            {/* Portfolio/Gallery Section */}
-            {portfolioItems.filter(item => item.is_public || isOwner).length > 0 && (
-              <Card className="card-elegant overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                        <ImageIcon className="h-5 w-5 text-provider" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-semibold">Portfolio Gallery</h2>
+            {/* Portfolio/Gallery Section - Always show */}
+            <Card className="card-elegant overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                      <ImageIcon className="h-5 w-5 text-provider" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-semibold">Portfolio Gallery</h2>
+                      {portfolioItems.filter(item => item.is_public || isOwner).length > 0 ? (
                         <p className="text-sm text-muted-foreground">
                           Showcasing our best work
                         </p>
-                      </div>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No portfolio items yet</p>
+                      )}
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="p-6">
+                  {isOwner && (
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                {portfolioItems.filter(item => item.is_public || isOwner).length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {portfolioItems
                       .filter(item => item.is_public || isOwner)
@@ -636,9 +794,26 @@ const EnhancedBusinessProfile = () => {
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                    <ImageIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No Portfolio Items</h3>
+                    <p className="text-muted-foreground mb-4">
+                      {isOwner 
+                        ? "Upload photos to showcase your work and attract customers" 
+                        : "This business hasn't added any portfolio items yet"
+                      }
+                    </p>
+                    {isOwner && (
+                      <Button variant="provider" onClick={() => navigate('/dashboard')}>
+                        <ImageIcon className="h-4 w-4 mr-2" />
+                        Add Portfolio Items
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right Column - Contact & Details */}
@@ -655,25 +830,35 @@ const EnhancedBusinessProfile = () => {
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {providerDetails.business_phone && (
+                {providerDetails.business_phone ? (
                   <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Phone className="h-4 w-4 text-muted-foreground" />
                     <a href={`tel:${providerDetails.business_phone}`} className="text-sm hover:text-provider transition-colors">
                       {providerDetails.business_phone}
                     </a>
                   </div>
+                ) : (
+                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
+                    <Phone className="h-4 w-4" />
+                    <span className="text-sm">No phone number provided</span>
+                  </div>
                 )}
                 
-                {providerDetails.business_email && (
+                {providerDetails.business_email ? (
                   <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Mail className="h-4 w-4 text-muted-foreground" />
                     <a href={`mailto:${providerDetails.business_email}`} className="text-sm hover:text-provider transition-colors">
                       {providerDetails.business_email}
                     </a>
                   </div>
+                ) : (
+                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
+                    <Mail className="h-4 w-4" />
+                    <span className="text-sm">No email provided</span>
+                  </div>
                 )}
                 
-                {providerDetails.business_website && (
+                {providerDetails.business_website ? (
                   <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Globe className="h-4 w-4 text-muted-foreground" />
                     <a 
@@ -685,6 +870,11 @@ const EnhancedBusinessProfile = () => {
                       Visit Website
                     </a>
                   </div>
+                ) : (
+                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
+                    <Globe className="h-4 w-4" />
+                    <span className="text-sm">No website provided</span>
+                  </div>
                 )}
 
                 {!isOwner && (
@@ -693,148 +883,228 @@ const EnhancedBusinessProfile = () => {
                     Send Message
                   </Button>
                 )}
+
+                {isOwner && !providerDetails.business_phone && !providerDetails.business_email && !providerDetails.business_website && (
+                  <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                    <p className="text-xs text-muted-foreground">
+                      Add contact information to make it easier for customers to reach you
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
-            {/* Location */}
-            {(providerDetails.business_address || providerProfile.location) && (
-              <Card className="card-elegant">
-                <CardHeader>
+            {/* Location - Always show */}
+            <Card className="card-elegant">
+              <CardHeader>
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
                       <MapPin className="h-5 w-5 text-provider" />
                     </div>
                     <h3 className="text-lg font-semibold">Location</h3>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  {providerDetails.is_address_public && providerDetails.business_address ? (
-                    <div className="space-y-3">
-                      <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
-                      <Button variant="outline" size="sm" className="w-full">
-                        <Map className="h-4 w-4 mr-2" />
-                        View on Map
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="text-center py-4">
-                      <MapPin className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        {providerProfile.location || 'Location available upon booking'}
-                      </p>
-                    </div>
+                  {isOwner && (
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
                   )}
-                </CardContent>
-              </Card>
-            )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {providerDetails.is_address_public && providerDetails.business_address ? (
+                  <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
+                    <Button variant="outline" size="sm" className="w-full">
+                      <Map className="h-4 w-4 mr-2" />
+                      View on Map
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {providerProfile.location || 'Location not specified'}
+                    </p>
+                    {!providerDetails.is_address_public && providerDetails.business_address && (
+                      <p className="text-xs text-muted-foreground">
+                        Full address available upon booking
+                      </p>
+                    )}
+                    {isOwner && !providerDetails.business_address && (
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Add your business address to help customers find you
+                      </p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            {/* Operating Hours */}
-            {operatingHours.length > 0 && (
-              <Card className="card-elegant">
-                <CardHeader>
+            {/* Operating Hours - Always show */}
+            <Card className="card-elegant">
+              <CardHeader>
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
                       <Clock className="h-5 w-5 text-provider" />
                     </div>
-                    <h3 className="text-lg font-semibold">Hours</h3>
+                    <h3 className="text-lg font-semibold">Operating Hours</h3>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {operatingHours.map(({ day, hours }, index) => (
-                    <div key={index} className="flex justify-between items-center py-1">
-                      <span className="text-sm font-medium">{day}</span>
-                      <span className="text-sm text-muted-foreground">{hours}</span>
-                    </div>
-                  ))}
-                  
-                  {providerDetails.availability_notes && (
-                    <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-                      <p className="text-xs text-muted-foreground">
-                        {providerDetails.availability_notes}
-                      </p>
-                    </div>
+                  {isOwner && (
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
                   )}
-                </CardContent>
-              </Card>
-            )}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {operatingHours.length > 0 ? (
+                  <>
+                    {operatingHours.map(({ day, hours }, index) => (
+                      <div key={index} className="flex justify-between items-center py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors">
+                        <span className="text-sm font-medium">{day}</span>
+                        <span className="text-sm text-muted-foreground">{hours}</span>
+                      </div>
+                    ))}
+                    
+                    {providerDetails.availability_notes && (
+                      <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium text-sm mb-1">Additional Notes</h4>
+                        <p className="text-xs text-muted-foreground">
+                          {providerDetails.availability_notes}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
+                    <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground mb-2">No operating hours set</p>
+                    {isOwner && (
+                      <p className="text-xs text-muted-foreground">
+                        Set your operating hours to let customers know when you're available
+                      </p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            {/* Credentials */}
-            {(providerDetails.certifications || providerDetails.insurance_info || providerDetails.certification_files?.length > 0) && (
-              <Card className="card-elegant">
-                <CardHeader>
+            {/* Credentials - Always show */}
+            <Card className="card-elegant">
+              <CardHeader>
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
                       <Shield className="h-5 w-5 text-provider" />
                     </div>
-                    <h3 className="text-lg font-semibold">Credentials</h3>
+                    <h3 className="text-lg font-semibold">Credentials & Certifications</h3>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {providerDetails.certifications && (
-                    <div>
-                      <h4 className="font-medium text-sm mb-2">Certifications</h4>
-                      <p className="text-sm text-muted-foreground">{providerDetails.certifications}</p>
-                    </div>
+                  {isOwner && (
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
                   )}
-                  
-                  {providerDetails.insurance_info && (
-                    <div>
-                      <h4 className="font-medium text-sm mb-2">Insurance</h4>
-                      <p className="text-sm text-muted-foreground">{providerDetails.insurance_info}</p>
-                    </div>
-                  )}
-                  
-                  {providerDetails.certification_files && providerDetails.certification_files.length > 0 && (
-                    <div>
-                      <h4 className="font-medium text-sm mb-2">Certification Files</h4>
-                      <div className="space-y-2">
-                        {providerDetails.certification_files.map((file, index) => (
-                          <a 
-                            key={index}
-                            href={file}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-sm text-provider hover:underline"
-                          >
-                            <FileText className="h-4 w-4" />
-                            Certificate {index + 1}
-                          </a>
-                        ))}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {providerDetails.certifications || providerDetails.insurance_info || (providerDetails.certification_files && providerDetails.certification_files.length > 0) ? (
+                  <>
+                    {providerDetails.certifications && (
+                      <div className="p-3 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium text-sm mb-2 flex items-center gap-2">
+                          <Award className="h-4 w-4 text-provider" />
+                          Certifications
+                        </h4>
+                        <p className="text-sm text-muted-foreground">{providerDetails.certifications}</p>
                       </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                    )}
+                    
+                    {providerDetails.insurance_info && (
+                      <div className="p-3 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium text-sm mb-2 flex items-center gap-2">
+                          <Shield className="h-4 w-4 text-provider" />
+                          Insurance & Protection
+                        </h4>
+                        <p className="text-sm text-muted-foreground">{providerDetails.insurance_info}</p>
+                      </div>
+                    )}
+                    
+                    {providerDetails.certification_files && providerDetails.certification_files.length > 0 && (
+                      <div className="p-3 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium text-sm mb-3 flex items-center gap-2">
+                          <FileText className="h-4 w-4 text-provider" />
+                          Certification Documents
+                        </h4>
+                        <div className="space-y-2">
+                          {providerDetails.certification_files.map((file, index) => (
+                            <a 
+                              key={index}
+                              href={file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-sm text-provider hover:underline p-2 rounded border border-border hover:border-provider/30 transition-colors"
+                            >
+                              <FileText className="h-4 w-4" />
+                              <span>Certificate Document {index + 1}</span>
+                              <ExternalLink className="h-3 w-3 ml-auto" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
+                    <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground mb-2">No credentials added</p>
+                    {isOwner && (
+                      <p className="text-xs text-muted-foreground">
+                        Add certifications and insurance info to build customer trust
+                      </p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            {/* Social Media */}
-            {(socialConnections.length > 0 || providerDetails.facebook_url || providerDetails.instagram_url || providerDetails.tiktok_url) && (
-              <Card className="card-elegant">
-                <CardHeader>
+            {/* Social Media - Always show */}
+            <Card className="card-elegant">
+              <CardHeader>
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
                       <Share2 className="h-5 w-5 text-provider" />
                     </div>
-                    <h3 className="text-lg font-semibold">Follow Us</h3>
+                    <h3 className="text-lg font-semibold">Social Media</h3>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-3">
+                  {isOwner && (
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {socialConnections.length > 0 || providerDetails.facebook_url || providerDetails.instagram_url || providerDetails.tiktok_url ? (
+                  <div className="grid grid-cols-1 gap-3">
                     {socialConnections.map((connection) => (
                       <a
                         key={connection.id}
                         href={connection.profile_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
+                        className="flex items-center gap-3 p-4 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
                       >
-                        <div className="w-8 h-8 bg-provider/10 rounded-lg flex items-center justify-center">
-                          <span className="text-xs font-medium capitalize text-provider">{connection.platform[0]}</span>
+                        <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
+                          <span className="text-sm font-medium capitalize text-provider">{connection.platform[0]}</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm capitalize">{connection.platform}</p>
-                          <p className="text-xs text-muted-foreground truncate">@{connection.handle}</p>
+                          <p className="font-medium capitalize">{connection.platform}</p>
+                          <p className="text-sm text-muted-foreground truncate">@{connection.handle}</p>
                         </div>
+                        <ExternalLink className="h-4 w-4 text-muted-foreground" />
                       </a>
                     ))}
                     
@@ -843,10 +1113,14 @@ const EnhancedBusinessProfile = () => {
                         href={providerDetails.facebook_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
+                        className="flex items-center gap-3 p-4 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
                       >
-                        <Facebook className="w-5 h-5 text-blue-600" />
-                        <span className="text-sm">Facebook</span>
+                        <Facebook className="w-8 h-8 text-blue-600" />
+                        <div className="flex-1">
+                          <p className="font-medium">Facebook</p>
+                          <p className="text-sm text-muted-foreground">Follow us on Facebook</p>
+                        </div>
+                        <ExternalLink className="h-4 w-4 text-muted-foreground" />
                       </a>
                     )}
                     
@@ -855,16 +1129,48 @@ const EnhancedBusinessProfile = () => {
                         href={providerDetails.instagram_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
+                        className="flex items-center gap-3 p-4 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
                       >
-                        <Instagram className="w-5 h-5 text-pink-600" />
-                        <span className="text-sm">Instagram</span>
+                        <Instagram className="w-8 h-8 text-pink-600" />
+                        <div className="flex-1">
+                          <p className="font-medium">Instagram</p>
+                          <p className="text-sm text-muted-foreground">See our latest work</p>
+                        </div>
+                        <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                      </a>
+                    )}
+
+                    {providerDetails.tiktok_url && (
+                      <a
+                        href={providerDetails.tiktok_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-4 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
+                      >
+                        <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">T</span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">TikTok</p>
+                          <p className="text-sm text-muted-foreground">Watch our videos</p>
+                        </div>
+                        <ExternalLink className="h-4 w-4 text-muted-foreground" />
                       </a>
                     )}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
+                    <Share2 className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground mb-2">No social media connected</p>
+                    {isOwner && (
+                      <p className="text-xs text-muted-foreground">
+                        Connect your social media to showcase your work and reach more customers
+                      </p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
