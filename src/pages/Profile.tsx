@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { CustomerPortfolio } from '@/components/profile/CustomerPortfolio';
 import { 
   MapPin, 
   Phone, 
@@ -594,6 +595,14 @@ const Profile = () => {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Customer Portfolio */}
+            <div className="mt-16">
+              <CustomerPortfolio 
+                customerId={profile?.user_id || ''}
+                isOwner={profile?.user_id === user?.id}
+              />
             </div>
           </div>
         </div>

@@ -99,6 +99,80 @@ export type Database = {
           },
         ]
       }
+      beauty_badges: {
+        Row: {
+          badge_type: string
+          created_at: string
+          criteria: Json | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          badge_type: string
+          created_at?: string
+          criteria?: Json | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          badge_type?: string
+          created_at?: string
+          criteria?: Json | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      beauty_journey_photos: {
+        Row: {
+          booking_id: string | null
+          created_at: string
+          customer_id: string
+          description: string | null
+          id: string
+          image_url: string
+          photo_type: string
+          treatment_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          booking_id?: string | null
+          created_at?: string
+          customer_id: string
+          description?: string | null
+          id?: string
+          image_url: string
+          photo_type: string
+          treatment_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string | null
+          created_at?: string
+          customer_id?: string
+          description?: string | null
+          id?: string
+          image_url?: string
+          photo_type?: string
+          treatment_type?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "beauty_journey_photos_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           booking_date: string
@@ -203,6 +277,35 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_badges: {
+        Row: {
+          badge_id: string
+          customer_id: string
+          earned_at: string
+          id: string
+        }
+        Insert: {
+          badge_id: string
+          customer_id: string
+          earned_at?: string
+          id?: string
+        }
+        Update: {
+          badge_id?: string
+          customer_id?: string
+          earned_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "beauty_badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_favourites: {
         Row: {
           created_at: string
@@ -231,6 +334,80 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      inspiration_board_items: {
+        Row: {
+          board_id: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string
+          position_x: number | null
+          position_y: number | null
+          source_url: string | null
+          title: string | null
+        }
+        Insert: {
+          board_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url: string
+          position_x?: number | null
+          position_y?: number | null
+          source_url?: string | null
+          title?: string | null
+        }
+        Update: {
+          board_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string
+          position_x?: number | null
+          position_y?: number | null
+          source_url?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inspiration_board_items_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "inspiration_boards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inspiration_boards: {
+        Row: {
+          created_at: string
+          customer_id: string
+          description: string | null
+          id: string
+          is_public: boolean | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       local_offers: {
         Row: {
@@ -720,28 +897,40 @@ export type Database = {
           booking_id: string
           comment: string | null
           created_at: string
+          helpful_count: number | null
           id: string
+          is_featured: boolean | null
+          photos: string[] | null
           rating: number
           reviewee_id: string
           reviewer_id: string
+          video_url: string | null
         }
         Insert: {
           booking_id: string
           comment?: string | null
           created_at?: string
+          helpful_count?: number | null
           id?: string
+          is_featured?: boolean | null
+          photos?: string[] | null
           rating: number
           reviewee_id: string
           reviewer_id: string
+          video_url?: string | null
         }
         Update: {
           booking_id?: string
           comment?: string | null
           created_at?: string
+          helpful_count?: number | null
           id?: string
+          is_featured?: boolean | null
+          photos?: string[] | null
           rating?: number
           reviewee_id?: string
           reviewer_id?: string
+          video_url?: string | null
         }
         Relationships: [
           {
