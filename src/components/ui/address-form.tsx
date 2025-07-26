@@ -125,6 +125,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               console.log('Location found:', locationData);
             }}
             error={errors.postcode}
+            mode="address"
           />
         </div>
       </div>

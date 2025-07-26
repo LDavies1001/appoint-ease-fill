@@ -36,6 +36,7 @@ interface PostcodeLookupProps {
   placeholder?: string;
   className?: string;
   error?: string;
+  mode?: 'address' | 'service-area'; // New prop to control behavior
 }
 
 export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
@@ -45,7 +46,8 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
   onServiceAreaUpdate,
   placeholder = "e.g., M23 9NY",
   className,
-  error
+  error,
+  mode = 'service-area' // Default to existing behavior
 }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -164,7 +166,7 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
     onChange(newValue);
     
     // Reset validation when user types
-    if (isValidated && newValue !== selectedAreas.join(', ')) {
+    if (isValidated && newValue !== (mode === 'address' ? selectedLocation?.postcode : selectedAreas.join(', '))) {
       setIsValidated(false);
       setSelectedLocation(null);
       setSelectedAreas([]);
@@ -202,7 +204,10 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
   const handleRemoveArea = (areaToRemove: string) => {
     const updatedAreas = selectedAreas.filter(area => area !== areaToRemove);
     setSelectedAreas(updatedAreas);
-    onChange(updatedAreas.join(', '));
+    // Only update input with service areas if in service-area mode
+    if (mode === 'service-area') {
+      onChange(updatedAreas.join(', '));
+    }
   };
 
   // Haversine formula to calculate distance between two points
@@ -284,8 +289,10 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
         setNearbyTowns(sortedAreas);
         setSelectedAreas(sortedAreas);
         
-        // Update the service area input with the nearby towns
-        onChange(sortedAreas.join(', '));
+        // Only update the input field with service areas if in service-area mode
+        if (mode === 'service-area') {
+          onChange(sortedAreas.join(', '));
+        }
         
         // Notify parent component
         onServiceAreaUpdate?.(radiusMiles, sortedAreas);
@@ -441,7 +448,10 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
                       if (!selectedAreas.includes(newArea)) {
                         const updatedAreas = [...selectedAreas, newArea];
                         setSelectedAreas(updatedAreas);
-                        onChange(updatedAreas.join(', '));
+                        // Only update input with service areas if in service-area mode
+                        if (mode === 'service-area') {
+                          onChange(updatedAreas.join(', '));
+                        }
                       }
                       e.currentTarget.value = '';
                     }
