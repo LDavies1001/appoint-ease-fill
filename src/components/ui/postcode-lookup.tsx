@@ -284,8 +284,8 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
 
   return (
     <div className={cn("space-y-2", className)}>
-      <Label htmlFor="postcode-lookup">
-        Enter your business postcode <span className="text-destructive">*</span>
+      <Label htmlFor="postcode-lookup" className="text-green-800 font-medium">
+        Business Postcode <span className="text-destructive">*</span>
       </Label>
       
       <div className="relative">
