@@ -343,7 +343,6 @@ const Profile = () => {
   if (!user || !profile) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-[400px]">
             <p>Please log in to view your profile.</p>
@@ -357,7 +356,6 @@ const Profile = () => {
   if (profile.active_role === 'customer') {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="container mx-auto px-4 py-8">
           <Card>
             <CardHeader>
@@ -398,7 +396,6 @@ const Profile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
-        <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-provider mx-auto mb-4"></div>
@@ -412,7 +409,6 @@ const Profile = () => {
   if (!providerProfile || !providerDetails) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
-        <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
           <div className="text-center">
             <Building className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -429,7 +425,6 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
-      <Header />
       
       {/* Hero/Cover Section */}
       <div className="relative">
