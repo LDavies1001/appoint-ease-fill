@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
 
-import LibraryTab from './LibraryTab';
+import EnhancedLibraryTab from './EnhancedLibraryTab';
 import ProfileTab from './ProfileTab';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -1290,7 +1290,7 @@ const ProviderDashboard = () => {
           </div>
         )}
 
-      {activeTab === 'library' && <LibraryTab />}
+      {activeTab === 'library' && <EnhancedLibraryTab />}
 
       {activeTab === 'social' && (
         <div className="space-y-6">
