@@ -109,7 +109,7 @@ const CreateBusinessProfile = () => {
   };
 
   const handleSuccess = () => {
-    navigate('/business-profile');
+    navigate('/dashboard');
   };
 
   if (loading) {
