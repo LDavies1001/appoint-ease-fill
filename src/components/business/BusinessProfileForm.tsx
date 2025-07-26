@@ -252,9 +252,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       if (!address.postcode.trim()) {
         newErrors.postcode = 'Postcode is required';
       } else {
-        // Validate UK postcode format (assuming UK since we removed country field)
-        const ukPostcodeRegex = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$/i;
-        if (!ukPostcodeRegex.test(address.postcode.replace(/\s/g, ''))) {
+        // Validate UK postcode format
+        const ukPostcodeRegex = /^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i;
+        if (!ukPostcodeRegex.test(address.postcode.trim())) {
           newErrors.postcode = 'Please enter a valid UK postcode';
         }
       }
