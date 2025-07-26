@@ -374,7 +374,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'browse' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('browse')}
-            className={activeTab === 'browse' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
+            className={activeTab === 'browse' ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md' : 'hover:bg-primary/20 hover:text-primary-foreground'}
           >
             <Search className="h-4 w-4 mr-2" />
             Browse Slots
@@ -382,7 +382,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'bookings' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('bookings')}
-            className={activeTab === 'bookings' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
+            className={activeTab === 'bookings' ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md' : 'hover:bg-primary/20 hover:text-primary-foreground'}
           >
             <BookOpen className="h-4 w-4 mr-2" />
             My Bookings
@@ -390,7 +390,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'favourites' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('favourites')}
-            className={activeTab === 'favourites' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
+            className={activeTab === 'favourites' ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md' : 'hover:bg-primary/20 hover:text-primary-foreground'}
           >
             <Heart className="h-4 w-4 mr-2" />
             Favourites
@@ -398,7 +398,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'offers' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('offers')}
-            className={activeTab === 'offers' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
+            className={activeTab === 'offers' ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md' : 'hover:bg-primary/20 hover:text-primary-foreground'}
           >
             <Tag className="h-4 w-4 mr-2" />
             Local Offers
@@ -406,7 +406,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'profile' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('profile')}
-            className={activeTab === 'profile' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
+            className={activeTab === 'profile' ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md' : 'hover:bg-primary/20 hover:text-primary-foreground'}
           >
             <Settings className="h-4 w-4 mr-2" />
             Profile
