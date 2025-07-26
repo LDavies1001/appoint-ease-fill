@@ -11,6 +11,11 @@ export interface UploadedImage {
   serviceName?: string;
   size?: number;
   created_at?: string;
+  // Portfolio and display properties
+  show_in_portfolio?: boolean;
+  isPinned?: boolean;
+  caption?: string;
+  category?: string;
 }
 
 export interface ServiceFolder {
