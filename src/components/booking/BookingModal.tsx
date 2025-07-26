@@ -137,7 +137,6 @@ const BookingModal: React.FC<BookingModalProps> = ({
           customer_id: user.id,
           provider_id: slot.provider_id,
           slot_id: slot.id,
-          service_id: slot.id, // Using slot id as service reference
           booking_date: slot.date,
           start_time: slot.start_time,
           end_time: slot.end_time,
