@@ -42,12 +42,9 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({
         service_area: editData.service_area
       };
 
-      // Add radius and nearby towns if they exist
-      if (serviceRadius !== null) {
-        updateData.service_radius_miles = serviceRadius;
-      }
+      // Add nearby towns to coverage_towns if they exist
       if (nearbyTowns.length > 0) {
-        updateData.nearby_towns = nearbyTowns;
+        updateData.coverage_towns = nearbyTowns;
       }
 
       const { error } = await supabase
