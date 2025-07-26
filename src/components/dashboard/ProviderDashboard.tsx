@@ -116,11 +116,13 @@ const ProviderDashboard = () => {
 
   useEffect(() => {
     fetchServices();
-    fetchMySlots();
-    fetchMyBookings();
-    fetchProviderServices();
-    fetchBusinessData();
-  }, []);
+    if (profile?.user_id) {
+      fetchMySlots();
+      fetchMyBookings();
+      fetchProviderServices();
+      fetchBusinessData();
+    }
+  }, [profile?.user_id]);
 
   const fetchServices = async () => {
     try {
