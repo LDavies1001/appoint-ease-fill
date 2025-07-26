@@ -124,46 +124,19 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
       if (response.ok) {
         const data = await response.json();
         if (data.result) {
-        setSelectedLocation(data.result);
-        setIsValidated(true);
-        setValidationError(null);
-        
-        // Build comprehensive list of service areas
-        const areas = [];
-        
-        // Add primary locations
-        if (data.result.admin_ward) areas.push(data.result.admin_ward);
-        if (data.result.admin_district) areas.push(data.result.admin_district);
-        
-        // Extract towns from parliamentary constituency
-        if (data.result.parliamentary_constituency) {
-          const constituency = data.result.parliamentary_constituency;
-          // Common patterns: "Town and Town2", "Town, Town2 and Town3", etc.
-          const towns = constituency
-            .replace(/\s+(and|&)\s+/gi, ', ')
-            .split(', ')
-            .map(town => town.trim())
-            .filter(town => town && !town.match(/^(East|West|North|South|Central)$/i));
-          areas.push(...towns);
-        }
-        
-        // Add nearby areas based on common knowledge for M23 area
-        if (data.result.outcode === 'M23') {
-          const nearbyM23Areas = ['Wythenshawe', 'Baguley', 'Timperley', 'Sale', 'Brooklands', 'Northenden', 'Gatley'];
-          areas.push(...nearbyM23Areas);
-        }
-        
-        // Add region for broader coverage
-        if (data.result.region) areas.push(data.result.region);
-        
-        // Remove duplicates and filter out empty values
-        const uniqueAreas = [...new Set(areas.filter(Boolean))];
-        setSelectedAreas(uniqueAreas);
-        
-        onLocationFound?.(data.result);
-        
-        // Update the input value with the selected areas
-        onChange(uniqueAreas.join(', '));
+          setSelectedLocation(data.result);
+          setIsValidated(true);
+          setValidationError(null);
+          
+          // Clear previous areas and radius - user must select radius first
+          setSelectedAreas([]);
+          setSelectedRadius(null);
+          setNearbyTowns([]);
+          
+          onLocationFound?.(data.result);
+          
+          // Don't set service area yet - wait for radius selection
+          onChange(postcode, data.result);
           
           return data.result;
         }
@@ -264,6 +237,14 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
         
         const townArray = Array.from(towns).sort();
         setNearbyTowns(townArray);
+        
+        // Set these towns as the selected areas for user to customize
+        setSelectedAreas(townArray);
+        
+        // Update the service area input with the nearby towns
+        onChange(townArray.join(', '));
+        
+        // Notify parent component
         onServiceAreaUpdate?.(radiusMiles, townArray);
       }
     } catch (error) {
@@ -402,8 +383,8 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
         </div>
       )}
 
-      {/* Location Areas - Removable Tags */}
-      {isValidated && selectedLocation && selectedAreas.length > 0 && (
+      {/* Location Areas - Removable Tags (only show after radius is selected) */}
+      {isValidated && selectedLocation && selectedRadius && selectedAreas.length > 0 && (
         <div className="p-3 bg-provider/5 border border-provider/20 rounded-lg">
           <div className="flex items-start space-x-2 mb-3">
             <Check className="h-4 w-4 text-provider mt-0.5" />
