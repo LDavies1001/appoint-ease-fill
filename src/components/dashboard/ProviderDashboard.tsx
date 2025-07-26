@@ -534,7 +534,7 @@ const ProviderDashboard = () => {
                 </div>
                 
                 {/* Quick Actions */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-4 animate-slide-up">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-4 animate-slide-up">
                   <Button
                     variant="outline"
                     size="lg"
@@ -561,6 +561,24 @@ const ProviderDashboard = () => {
                   >
                     <Plus className="h-5 w-5 mr-2" />
                     Add a Service
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
+                    onClick={() => setActiveTab('slots')}
+                  >
+                    <Calendar className="h-5 w-5 mr-2" />
+                    Create New Slots
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="bg-white/90 border-gray-300 text-gray-700 hover:bg-white hover:text-gray-800 font-semibold shadow-md"
+                    onClick={() => setActiveTab('library')}
+                  >
+                    <Image className="h-5 w-5 mr-2" />
+                    Upload Media
                   </Button>
                 </div>
               </div>
