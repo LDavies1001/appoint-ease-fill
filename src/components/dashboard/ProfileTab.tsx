@@ -346,9 +346,9 @@ const ProfileTab = () => {
             <div className="lg:col-span-2">
               <CertificationsSection
                 data={{
-                  certifications: businessData.certifications,
-                  insurance_info: businessData.insurance_info,
-                  certification_files: businessData.certification_files,
+                  certifications: businessData.certifications || '',
+                  insurance_info: businessData.insurance_info || '',
+                  certification_files: businessData.certification_files || [],
                   awards_recognitions: businessData.awards_recognitions || '',
                   professional_memberships: businessData.professional_memberships || '',
                   other_qualifications: businessData.other_qualifications || ''
