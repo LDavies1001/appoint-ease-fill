@@ -923,7 +923,17 @@ const Profile = () => {
                   <p className="text-sm text-muted-foreground">
                     {providerDetails.is_address_public 
                       ? providerDetails.business_address 
-                      : providerDetails.business_address?.split(', ').slice(-2).join(', ') || 'Service area not specified'
+                      : (() => {
+                          if (!providerDetails.business_address) return 'Service area not specified';
+                          const parts = providerDetails.business_address.split(', ');
+                          if (parts.length >= 2) {
+                            const city = parts[parts.length - 2];
+                            const fullPostcode = parts[parts.length - 1];
+                            const postcodeArea = fullPostcode.split(' ')[0]; // Get just M23 from M23 9NY
+                            return `${city}, ${postcodeArea}`;
+                          }
+                          return 'Service area not specified';
+                        })()
                     }
                   </p>
                 </CardContent>
