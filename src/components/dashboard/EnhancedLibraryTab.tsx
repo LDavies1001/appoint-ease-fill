@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import ImageDropzone from './ImageDropzone';
 import ImageCard from './ImageCard';
+import FolderDropZone from './FolderDropZone';
 import { UploadedImage } from '@/hooks/useImageLibrary';
 
 interface MediaItem extends UploadedImage {
@@ -57,6 +58,8 @@ const EnhancedLibraryTab = () => {
   const [folders, setFolders] = useState<string[]>([]);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
+  const [showFolderDropZones, setShowFolderDropZones] = useState(false);
+  const [draggingImageId, setDraggingImageId] = useState<string | null>(null);
   
   // Constants
   const categories = ['all', 'portraits', 'nails', 'hair', 'makeup', 'lashes', 'brows', 'other'];
@@ -284,6 +287,59 @@ const EnhancedLibraryTab = () => {
     }
   };
 
+  const handleMoveToFolder = async (image: UploadedImage, targetFolder: string) => {
+    try {
+      const currentFolder = (image as any).folder || '';
+      const oldPath = `${user?.id}/${(image as any).fullPath || image.name}`;
+      
+      // Determine new path based on target folder
+      let newPath: string;
+      if (targetFolder === 'none') {
+        // Moving to root (no folder)
+        newPath = `${user?.id}/${image.name}`;
+      } else {
+        // Moving to specific folder
+        newPath = `${user?.id}/${targetFolder}/${image.name}`;
+      }
+
+      // Skip if moving to same location
+      if (oldPath === newPath) {
+        toast({
+          title: "Image is already in this location",
+        });
+        return;
+      }
+
+      // Copy file to new path
+      const { error: copyError } = await supabase.storage
+        .from(image.bucket)
+        .copy(oldPath, newPath);
+
+      if (copyError) throw copyError;
+
+      // Delete old file
+      const { error: deleteError } = await supabase.storage
+        .from(image.bucket)
+        .remove([oldPath]);
+
+      if (deleteError) throw deleteError;
+
+      toast({
+        title: "Image moved successfully",
+        description: `Moved to ${targetFolder === 'none' ? 'root folder' : targetFolder}`,
+      });
+      
+      fetchMediaItems();
+      setShowFolderDropZones(false);
+    } catch (error: any) {
+      toast({
+        title: "Error moving image",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
   const formatBucketName = (bucket: string) => {
     switch (bucket) {
       case 'profile-photos': return 'Profile Pictures';
@@ -301,7 +357,31 @@ const EnhancedLibraryTab = () => {
     return { total, portfolio, pinned };
   };
 
+  const getFolderImageCount = (folderName: string) => {
+    if (folderName === 'none') {
+      return mediaItems.filter(item => !(item as any).folder || (item as any).folder === '').length;
+    }
+    return mediaItems.filter(item => (item as any).folder === folderName).length;
+  };
+
   const stats = getImageStats();
+
+  // Handle global drag events
+  React.useEffect(() => {
+    const handleDragStart = () => setShowFolderDropZones(true);
+    const handleDragEnd = () => {
+      setShowFolderDropZones(false);
+      setDraggingImageId(null);
+    };
+
+    document.addEventListener('dragstart', handleDragStart);
+    document.addEventListener('dragend', handleDragEnd);
+
+    return () => {
+      document.removeEventListener('dragstart', handleDragStart);
+      document.removeEventListener('dragend', handleDragEnd);
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -517,6 +597,37 @@ const EnhancedLibraryTab = () => {
         </CardContent>
       </Card>
 
+      {/* Folder Drop Zones - Show when dragging */}
+      {showFolderDropZones && (
+        <Card className="card-elegant bg-gradient-to-r from-provider/5 to-provider/10">
+          <CardContent className="p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <FolderOpen className="h-5 w-5 text-provider" />
+              Drop image into folder
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* No folder option */}
+              <FolderDropZone
+                folderName="none"
+                onDrop={handleMoveToFolder}
+                imageCount={getFolderImageCount('none')}
+              />
+              
+              {/* Existing folders */}
+              {folders.map(folder => (
+                <FolderDropZone
+                  key={folder}
+                  folderName={folder}
+                  onDrop={handleMoveToFolder}
+                  imageCount={getFolderImageCount(folder)}
+                  isActive={selectedFolder === folder}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Image Gallery */}
       <Card className="card-elegant">
         <CardContent className="p-6">
@@ -550,9 +661,11 @@ const EnhancedLibraryTab = () => {
                   onDelete={handleDelete}
                   onTogglePortfolio={handleTogglePortfolio}
                   onRename={handleRename}
+                  onMoveToFolder={handleMoveToFolder}
                   showBucket={true}
                   showActions={true}
                   viewMode={viewMode}
+                  isDragging={draggingImageId === item.id}
                 />
               ))}
             </div>

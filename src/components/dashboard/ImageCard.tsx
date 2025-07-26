@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Eye, Trash2, Edit, Star, Pin, Heart, Check, X, FolderOpen } from 'lucide-react';
+import { Eye, Trash2, Edit, Star, Pin, Heart, Check, X, FolderOpen, Move } from 'lucide-react';
 import { UploadedImage } from '@/hooks/useImageLibrary';
 
 interface ImageCardProps {
@@ -14,9 +14,11 @@ interface ImageCardProps {
   onTogglePortfolio?: (image: UploadedImage) => void;
   onToggleFeatured?: (image: UploadedImage) => void;
   onRename?: (image: UploadedImage, newName: string) => void;
+  onMoveToFolder?: (image: UploadedImage, targetFolder: string) => void;
   showBucket?: boolean;
   showActions?: boolean;
   viewMode?: 'grid' | 'list';
+  isDragging?: boolean;
 }
 
 const ImageCard: React.FC<ImageCardProps> = ({ 
@@ -25,9 +27,11 @@ const ImageCard: React.FC<ImageCardProps> = ({
   onTogglePortfolio,
   onToggleFeatured,
   onRename,
+  onMoveToFolder,
   showBucket = true,
   showActions = true,
-  viewMode = 'grid'
+  viewMode = 'grid',
+  isDragging = false
 }) => {
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
@@ -68,11 +72,25 @@ const ImageCard: React.FC<ImageCardProps> = ({
     setIsEditing(false);
   };
 
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData('application/json', JSON.stringify({
+      imageId: image.id || image.name,
+      imageData: image
+    }));
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
   // Different layouts for grid vs list view
   if (viewMode === 'list') {
     return (
       <TooltipProvider>
-        <Card className="card-elegant overflow-hidden group hover:shadow-lg transition-all duration-300">
+        <Card 
+          className={`card-elegant overflow-hidden group hover:shadow-lg transition-all duration-300 ${
+            isDragging ? 'opacity-50 scale-95' : ''
+          }`}
+          draggable={true}
+          onDragStart={handleDragStart}
+        >
           <div className="flex gap-4 p-4">
             {/* Image Thumbnail */}
             <div className="relative w-24 h-24 flex-shrink-0 overflow-hidden bg-muted/50 rounded-lg">
@@ -189,17 +207,33 @@ const ImageCard: React.FC<ImageCardProps> = ({
               <div className="flex items-center gap-2">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open(image.url, '_blank')}
-                      className="text-xs hover:border-provider hover:text-provider"
-                    >
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>View full size</TooltipContent>
-                </Tooltip>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(image.url, '_blank')}
+                        className="text-xs hover:border-provider hover:text-provider"
+                      >
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>View full size</TooltipContent>
+                  </Tooltip>
+
+                  {onMoveToFolder && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-xs hover:border-provider hover:text-provider cursor-move"
+                          title="Drag to move to folder"
+                        >
+                          <Move className="h-3 w-3" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Drag to move to folder</TooltipContent>
+                    </Tooltip>
+                  )}
 
                 {onTogglePortfolio && (
                   <Tooltip>
@@ -262,7 +296,13 @@ const ImageCard: React.FC<ImageCardProps> = ({
   // Grid view (original layout)
   return (
     <TooltipProvider>
-      <Card className="card-elegant overflow-hidden group hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+      <Card 
+        className={`card-elegant overflow-hidden group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] ${
+          isDragging ? 'opacity-50 scale-95' : ''
+        }`}
+        draggable={true}
+        onDragStart={handleDragStart}
+      >
         {/* Image Container */}
         <div className="relative aspect-square overflow-hidden bg-muted/50">
           {!imageError ? (

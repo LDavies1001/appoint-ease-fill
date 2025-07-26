@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 export interface UploadedImage {
+  id?: string;
   name: string;
   url: string;
   bucket: string;
