@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -23,7 +24,8 @@ import {
   EyeOff,
   Save,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
+  ArrowLeft
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -56,6 +58,7 @@ interface PasswordChangeData {
 
 const UserSettingsPage = () => {
   const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   
   const [loading, setLoading] = useState(true);
@@ -325,8 +328,19 @@ const UserSettingsPage = () => {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
-      {/* Header */}
+      {/* Header with Back Button */}
       <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/dashboard')}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </div>
         <h1 className={cn(
           "text-3xl font-bold mb-2",
           isCustomer && "bg-gradient-to-r from-pink-600 to-pink-500 bg-clip-text text-transparent",
