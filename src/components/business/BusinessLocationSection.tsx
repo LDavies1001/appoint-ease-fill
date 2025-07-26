@@ -54,9 +54,12 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
   const [validatedAddress, setValidatedAddress] = useState<PostcodeResult | null>(null);
   const { toast } = useToast();
 
-  // Search for address suggestions
+  // Search for postcode suggestions
   const searchAddresses = async (query: string) => {
-    if (query.length < 3) {
+    // Only search if it looks like a postcode (letters and numbers)
+    const postcodePattern = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9]?[A-Z]*$/i;
+    
+    if (query.length < 2 || !postcodePattern.test(query.replace(/\s/g, ''))) {
       setAddressSuggestions([]);
       setShowSuggestions(false);
       return;
@@ -71,10 +74,15 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
         if (result.result && Array.isArray(result.result)) {
           setAddressSuggestions(result.result.slice(0, 5));
           setShowSuggestions(true);
+        } else {
+          setAddressSuggestions([]);
+          setShowSuggestions(false);
         }
       }
     } catch (error) {
       console.error('Error fetching address suggestions:', error);
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
     } finally {
       setIsLoadingAddress(false);
     }
@@ -91,7 +99,7 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
         if (result.result) {
           setValidatedAddress(result.result);
           
-          // Auto-generate full address string
+          // Create a more detailed address string
           const fullAddress = `${result.result.admin_ward}, ${result.result.admin_district}, ${result.result.postcode}`;
           
           setEditData(prev => ({
@@ -263,10 +271,10 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
             {/* Smart Address Input */}
             <div className="space-y-2">
               <Label htmlFor="address-lookup">
-                Business Address <span className="text-destructive">*</span>
+                Business Postcode <span className="text-destructive">*</span>
               </Label>
               <p className="text-sm text-muted-foreground">
-                Start typing your business address or postcode
+                Enter your business postcode (e.g., M23 9NY)
               </p>
               
               <div className="relative">
@@ -274,7 +282,7 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
                   id="address-lookup"
                   value={addressInput}
                   onChange={(e) => handleAddressInputChange(e.target.value)}
-                  placeholder="e.g., M23 9NY or Wythenshawe, Manchester"
+                  placeholder="e.g., M23 9NY"
                   className="pr-10"
                 />
                 
