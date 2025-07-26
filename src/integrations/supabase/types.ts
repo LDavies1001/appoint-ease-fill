@@ -571,6 +571,7 @@ export type Database = {
           base_price: number | null
           created_at: string | null
           description: string | null
+          discount_price: number | null
           duration_minutes: number | null
           duration_text: string | null
           id: string
@@ -583,6 +584,7 @@ export type Database = {
           base_price?: number | null
           created_at?: string | null
           description?: string | null
+          discount_price?: number | null
           duration_minutes?: number | null
           duration_text?: string | null
           id?: string
@@ -595,6 +597,7 @@ export type Database = {
           base_price?: number | null
           created_at?: string | null
           description?: string | null
+          discount_price?: number | null
           duration_minutes?: number | null
           duration_text?: string | null
           id?: string
