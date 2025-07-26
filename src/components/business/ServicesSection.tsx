@@ -16,6 +16,7 @@ interface Service {
   service_name: string;
   description: string;
   base_price: number;
+  discount_price?: number;
   duration_minutes: number;
   duration_text?: string;
   is_active: boolean;

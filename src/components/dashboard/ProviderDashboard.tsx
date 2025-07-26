@@ -39,6 +39,7 @@ interface ProviderService {
   service_name: string;
   description?: string;
   base_price?: number;
+  discount_price?: number;
   duration_minutes: number;
   is_active: boolean;
 }

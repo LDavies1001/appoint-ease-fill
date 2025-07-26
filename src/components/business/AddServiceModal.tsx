@@ -20,6 +20,7 @@ interface Service {
   service_name: string;
   description: string;
   base_price: number;
+  discount_price?: number;
   duration_minutes: number;
   duration_text?: string;
   is_active: boolean;
@@ -44,6 +45,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
     service_name: '',
     description: '',
     base_price: 0,
+    discount_price: undefined,
     duration_minutes: 60,
     duration_text: '60 min',
     is_active: true
@@ -74,6 +76,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
         service_name: editingService.service_name,
         description: editingService.description || '',
         base_price: editingService.base_price,
+        discount_price: editingService.discount_price,
         duration_minutes: editingService.duration_minutes,
         duration_text: editingService.duration_text || `${editingService.duration_minutes} min`,
         is_active: editingService.is_active
@@ -133,6 +136,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             service_name: formData.service_name,
             description: formData.description,
             base_price: formData.base_price,
+            discount_price: formData.discount_price,
             duration_minutes: parsedDurationMinutes,
             duration_text: formData.duration_text,
             is_active: formData.is_active
@@ -152,6 +156,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             service_name: formData.service_name,
             description: formData.description,
             base_price: formData.base_price,
+            discount_price: formData.discount_price,
             duration_minutes: parsedDurationMinutes,
             duration_text: formData.duration_text,
             is_active: formData.is_active
@@ -226,7 +231,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <Label htmlFor="base_price">Price (£) *</Label>
               <Input
@@ -236,6 +241,20 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
                 step="0.01"
                 value={formData.base_price}
                 onChange={(e) => setFormData(prev => ({ ...prev, base_price: parseFloat(e.target.value) || 0 }))}
+                className="mt-1"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="discount_price">Discounted Price (£)</Label>
+              <Input
+                id="discount_price"
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.discount_price || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, discount_price: e.target.value ? parseFloat(e.target.value) : undefined }))}
+                placeholder="Optional discounted price"
                 className="mt-1"
               />
             </div>
