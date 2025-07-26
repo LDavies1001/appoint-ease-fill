@@ -306,7 +306,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
         <div className="space-y-3">
           <Label className="text-sm font-medium">Service *</Label>
           <Select value={selectedService} onValueChange={handleServiceChange}>
-            <SelectTrigger>
+            <SelectTrigger variant="provider">
               <SelectValue placeholder={providerServices.length > 0 ? "Select a service" : "No services found - please add services first"} />
             </SelectTrigger>
             <SelectContent>
@@ -432,6 +432,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 <Input
                   type="time"
+                  variant="provider"
                   value={slot.start_time}
                   onChange={(e) => updateTimeSlot(index, 'start_time', e.target.value)}
                   className="w-32"
@@ -439,6 +440,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
                 <span className="text-sm text-muted-foreground">for</span>
                 <Input
                   type="number"
+                  variant="provider"
                   value={slot.duration}
                   onChange={(e) => updateTimeSlot(index, 'duration', parseInt(e.target.value))}
                   min="15"
@@ -524,6 +526,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
                 type="number"
                 step="0.01"
                 min="0"
+                variant="provider"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="25.00"
@@ -541,6 +544,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
                 type="number"
                 step="0.01"
                 min="0"
+                variant="provider"
                 value={discountPrice}
                 onChange={(e) => setDiscountPrice(e.target.value)}
                 placeholder="20.00"
@@ -555,6 +559,7 @@ const BulkSlotCreator: React.FC<BulkSlotCreatorProps> = ({
           <Label>Notes (optional)</Label>
           <Textarea
             placeholder="Any special notes for these slots..."
+            variant="provider"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
