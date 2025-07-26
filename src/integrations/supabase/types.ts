@@ -300,6 +300,51 @@ export type Database = {
           },
         ]
       }
+      notifications_log: {
+        Row: {
+          booking_id: string | null
+          channel: string
+          content: Json
+          created_at: string
+          delivered_at: string | null
+          error_message: string | null
+          id: string
+          notification_type: string
+          sent_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_id?: string | null
+          channel: string
+          content: Json
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          notification_type: string
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_id?: string | null
+          channel?: string
+          content?: Json
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          notification_type?: string
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       portfolio_items: {
         Row: {
           category: string | null
@@ -372,6 +417,7 @@ export type Database = {
           is_profile_complete: boolean | null
           location: string | null
           name: string | null
+          notification_preferences: Json | null
           phone: string | null
           privacy_settings: Json | null
           role: Database["public"]["Enums"]["user_role"]
@@ -391,6 +437,7 @@ export type Database = {
           is_profile_complete?: boolean | null
           location?: string | null
           name?: string | null
+          notification_preferences?: Json | null
           phone?: string | null
           privacy_settings?: Json | null
           role: Database["public"]["Enums"]["user_role"]
@@ -410,6 +457,7 @@ export type Database = {
           is_profile_complete?: boolean | null
           location?: string | null
           name?: string | null
+          notification_preferences?: Json | null
           phone?: string | null
           privacy_settings?: Json | null
           role?: Database["public"]["Enums"]["user_role"]
