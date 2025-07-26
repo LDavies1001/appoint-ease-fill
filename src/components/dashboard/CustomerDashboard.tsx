@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/custom-button';
 import { Input } from '@/components/ui/input';
+import BookingModal from '@/components/booking/BookingModal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
@@ -120,6 +121,8 @@ const CustomerDashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('browse');
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState<AvailableSlot | null>(null);
   
   const { profile, signOut } = useAuth();
   const { toast } = useToast();
@@ -295,48 +298,21 @@ const CustomerDashboard = () => {
     }
   };
 
-  const handleBookSlot = async (slot: AvailableSlot) => {
-    try {
-      const { error: bookingError } = await supabase
-        .from('bookings')
-        .insert({
-          customer_id: profile?.user_id,
-          provider_id: slot.provider_id,
-          slot_id: slot.id,
-          service_id: slot.service_id,
-          booking_date: slot.date,
-          start_time: slot.start_time,
-          end_time: slot.end_time,
-          price: slot.price,
-          status: 'pending'
-        });
+  const handleBookSlot = (slot: AvailableSlot) => {
+    setSelectedSlot(slot);
+    setBookingModalOpen(true);
+  };
 
-      if (bookingError) throw bookingError;
-
-      // Mark slot as booked
-      const { error: slotError } = await supabase
-        .from('availability_slots')
-        .update({ is_booked: true })
-        .eq('id', slot.id);
-
-      if (slotError) throw slotError;
-
-      toast({
-        title: "Booking confirmed!",
-        description: "Your appointment has been booked successfully",
-      });
-
-      // Refresh data
-      fetchAvailableSlots();
-      fetchMyBookings();
-      setActiveTab('bookings');
-    } catch (error: any) {
-      toast({
-        title: "Booking failed",
-        description: error.message,
-        variant: "destructive"
-      });
-    }
+  const handleBookingSuccess = () => {
+    toast({
+      title: "Booking confirmed!",
+      description: "Your appointment has been booked successfully",
+    });
+    setBookingModalOpen(false);
+    setSelectedSlot(null);
+    fetchAvailableSlots();
+    fetchMyBookings();
+    setActiveTab('bookings');
   };
 
   const filteredSlots = availableSlots.filter(slot => {
@@ -818,6 +794,32 @@ const CustomerDashboard = () => {
 
         {activeTab === 'profile' && <ProfileTab />}
       </div>
+
+      {/* Booking Modal */}
+      {selectedSlot && (
+        <BookingModal
+          isOpen={bookingModalOpen}
+          onClose={() => {
+            setBookingModalOpen(false);
+            setSelectedSlot(null);
+          }}
+          slot={{
+            id: selectedSlot.id,
+            date: selectedSlot.date,
+            start_time: selectedSlot.start_time,
+            end_time: selectedSlot.end_time,
+            price: selectedSlot.price,
+            discount_price: selectedSlot.discount_price,
+            duration: selectedSlot.duration,
+            provider_id: selectedSlot.provider_id,
+            provider: selectedSlot.provider,
+            provider_service: selectedSlot.provider_service,
+            service: selectedSlot.service,
+            notes: selectedSlot.notes
+          }}
+          onBookingSuccess={handleBookingSuccess}
+        />
+      )}
     </div>
   );
 };

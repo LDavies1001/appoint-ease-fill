@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNotifications } from '@/hooks/useNotifications';
+import BookingModal from '@/components/booking/BookingModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -134,6 +135,8 @@ const SlotDiscovery: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>('date');
   const [appliedFilters, setAppliedFilters] = useState<Array<{id: string, label: string, type: string}>>([]);
   const [autoDetectingLocation, setAutoDetectingLocation] = useState(false);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState<SlotData | null>(null);
 
   // Auto-detect location
   const handleAutoDetectLocation = () => {
@@ -328,47 +331,20 @@ const SlotDiscovery: React.FC = () => {
   };
 
   // Handle slot booking
-  const handleBookSlot = async (slot: SlotData) => {
+  const handleBookSlot = (slot: SlotData) => {
     if (!user) {
       showErrorToast('Please sign in to book appointments');
       return;
     }
+    setSelectedSlot(slot);
+    setBookingModalOpen(true);
+  };
 
-    try {
-      const { error } = await supabase
-        .from('bookings')
-        .insert({
-          customer_id: user.id,
-          provider_id: slot.provider_id,
-          slot_id: slot.id,
-          service_id: slot.id, // Using slot id as service reference for now
-          booking_date: slot.date,
-          start_time: slot.start_time,
-          end_time: slot.end_time,
-          price: slot.price,
-          status: 'pending'
-        });
-
-      if (error) {
-        console.error('Booking error:', error);
-        showErrorToast('Failed to book appointment');
-        return;
-      }
-
-      // Mark slot as booked
-      await supabase
-        .from('availability_slots')
-        .update({ is_booked: true })
-        .eq('id', slot.id);
-
-      showSuccessToast('Appointment booked successfully!');
-      
-      // Refresh slots to remove booked slot
-      loadSlots();
-    } catch (error) {
-      console.error('Error booking slot:', error);
-      showErrorToast('Failed to book appointment');
-    }
+  const handleBookingSuccess = () => {
+    showSuccessToast('Appointment booked successfully!');
+    setBookingModalOpen(false);
+    setSelectedSlot(null);
+    loadSlots(); // Refresh slots
   };
 
   useEffect(() => {
@@ -671,6 +647,37 @@ const SlotDiscovery: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Booking Modal */}
+      {selectedSlot && (
+        <BookingModal
+          isOpen={bookingModalOpen}
+          onClose={() => {
+            setBookingModalOpen(false);
+            setSelectedSlot(null);
+          }}
+          slot={{
+            id: selectedSlot.id,
+            date: selectedSlot.date,
+            start_time: selectedSlot.start_time,
+            end_time: selectedSlot.end_time,
+            price: selectedSlot.price,
+            duration: 60, // Default duration
+            provider_id: selectedSlot.provider_id,
+            provider: {
+              name: selectedSlot.profiles?.name,
+              location: selectedSlot.provider_details?.business_city,
+              business_name: selectedSlot.provider_details?.business_name,
+              business_phone: selectedSlot.provider_details?.business_address,
+              rating: selectedSlot.provider_details?.rating,
+            },
+            service: {
+              name: selectedSlot.custom_service_name || 'Service'
+            }
+          }}
+          onBookingSuccess={handleBookingSuccess}
+        />
+      )}
     </div>
   );
 };
