@@ -120,7 +120,7 @@ export const BusinessBrandingSection: React.FC<BusinessBrandingSectionProps> = (
           <h3 className="text-xl font-semibold">Business Branding</h3>
         </div>
         <Button
-          variant="outline"
+          variant="provider-outline"
           size="sm"
           onClick={() => setIsEditing(!isEditing)}
         >
@@ -155,6 +155,7 @@ export const BusinessBrandingSection: React.FC<BusinessBrandingSectionProps> = (
                     disabled={uploading === 'logo'}
                   />
                   <Button
+                    variant="provider"
                     size="sm"
                     disabled={uploading === 'logo'}
                     className="w-full"
@@ -169,7 +170,7 @@ export const BusinessBrandingSection: React.FC<BusinessBrandingSectionProps> = (
                 </div>
                 {data.business_logo_url && (
                   <Button
-                    variant="outline"
+                    variant="provider-outline"
                     size="sm"
                     onClick={() => handleRemoveImage('logo')}
                     className="w-full"
@@ -228,6 +229,7 @@ export const BusinessBrandingSection: React.FC<BusinessBrandingSectionProps> = (
                     disabled={uploading === 'cover'}
                   />
                   <Button
+                    variant="provider"
                     size="sm"
                     disabled={uploading === 'cover'}
                     className="w-full"
@@ -242,7 +244,7 @@ export const BusinessBrandingSection: React.FC<BusinessBrandingSectionProps> = (
                 </div>
                 {data.cover_image_url && (
                   <Button
-                    variant="outline"
+                    variant="provider-outline"
                     size="sm"
                     onClick={() => handleRemoveImage('cover')}
                     className="w-full"
