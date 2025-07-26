@@ -54,12 +54,12 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
   const [validatedAddress, setValidatedAddress] = useState<PostcodeResult | null>(null);
   const { toast } = useToast();
 
-  // Search for postcode suggestions
+  // Search for actual addresses using postcode
   const searchAddresses = async (query: string) => {
-    // Only search if it looks like a postcode (letters and numbers)
-    const postcodePattern = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9]?[A-Z]*$/i;
+    // For postcodes, try to get actual addresses
+    const postcodePattern = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$/i;
     
-    if (query.length < 2 || !postcodePattern.test(query.replace(/\s/g, ''))) {
+    if (query.length < 3) {
       setAddressSuggestions([]);
       setShowSuggestions(false);
       return;
@@ -67,6 +67,29 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
     
     setIsLoadingAddress(true);
     try {
+      // First try to get actual addresses if it's a complete postcode
+      if (postcodePattern.test(query.replace(/\s/g, ''))) {
+        // Try GetAddress.io for actual addresses (free tier available)
+        const getAddressResponse = await fetch(`https://api.getaddress.io/find/${encodeURIComponent(query.replace(/\s/g, ''))}?api-key=demo`);
+        
+        if (getAddressResponse.ok) {
+          const getAddressResult = await getAddressResponse.json();
+          if (getAddressResult.addresses && getAddressResult.addresses.length > 0) {
+            // Format addresses nicely
+            const formattedAddresses = getAddressResult.addresses.map((addr: string) => {
+              const parts = addr.split(',').map(part => part.trim());
+              return parts.join(', ');
+            }).slice(0, 8); // Limit to 8 addresses
+            
+            setAddressSuggestions(formattedAddresses);
+            setShowSuggestions(true);
+            setIsLoadingAddress(false);
+            return;
+          }
+        }
+      }
+      
+      // Fallback to postcode autocomplete
       const response = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(query)}/autocomplete`);
       
       if (response.ok) {
@@ -89,18 +112,38 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
   };
 
   // Validate and get full address details
-  const validateAddress = async (postcode: string) => {
+  const validateAddress = async (addressOrPostcode: string) => {
     setIsLoadingAddress(true);
     try {
+      // If it's a full address, extract postcode and validate
+      let postcode = addressOrPostcode;
+      let fullAddress = addressOrPostcode;
+      
+      // Check if it's a full address (contains commas) or just a postcode
+      if (addressOrPostcode.includes(',')) {
+        // Extract postcode from full address (usually last part)
+        const parts = addressOrPostcode.split(',').map(part => part.trim());
+        postcode = parts[parts.length - 1];
+        fullAddress = addressOrPostcode;
+      } else {
+        // It's just a postcode, need to validate it
+        const response = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
+        
+        if (response.ok) {
+          const result = await response.json();
+          if (result.result) {
+            fullAddress = `${result.result.admin_ward}, ${result.result.admin_district}, ${result.result.postcode}`;
+          }
+        }
+      }
+      
+      // Validate the postcode to get location data
       const response = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
       
       if (response.ok) {
         const result = await response.json();
         if (result.result) {
           setValidatedAddress(result.result);
-          
-          // Create a more detailed address string
-          const fullAddress = `${result.result.admin_ward}, ${result.result.admin_district}, ${result.result.postcode}`;
           
           setEditData(prev => ({
             ...prev,
@@ -115,6 +158,12 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
           setShowSuggestions(false);
           return result.result;
         }
+      } else if (response.status === 404) {
+        toast({
+          title: "Invalid postcode",
+          description: "Please check the postcode and try again.",
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Error validating address:', error);
@@ -271,10 +320,10 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
             {/* Smart Address Input */}
             <div className="space-y-2">
               <Label htmlFor="address-lookup">
-                Business Postcode <span className="text-destructive">*</span>
+                Business Address <span className="text-destructive">*</span>
               </Label>
               <p className="text-sm text-muted-foreground">
-                Enter your business postcode (e.g., M23 9NY)
+                Enter your postcode (e.g., M23 9NY) to see available addresses
               </p>
               
               <div className="relative">
@@ -282,7 +331,7 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
                   id="address-lookup"
                   value={addressInput}
                   onChange={(e) => handleAddressInputChange(e.target.value)}
-                  placeholder="e.g., M23 9NY"
+                  placeholder="Enter postcode like M23 9NY"
                   className="pr-10"
                 />
                 
@@ -296,19 +345,19 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
                   )}
                 </div>
 
-                {/* Address Suggestions */}
+                {/* Address/Postcode Suggestions */}
                 {showSuggestions && addressSuggestions.length > 0 && (
-                  <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-48 overflow-auto">
+                  <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto">
                     {addressSuggestions.map((suggestion, index) => (
                       <button
                         key={index}
                         type="button"
-                        className="w-full px-4 py-2 text-left hover:bg-provider/10 hover:text-provider focus:bg-provider/10 focus:text-provider focus:outline-none transition-colors"
+                        className="w-full px-4 py-3 text-left hover:bg-provider/10 hover:text-provider focus:bg-provider/10 focus:text-provider focus:outline-none transition-colors border-b border-border last:border-b-0"
                         onClick={() => handleSuggestionClick(suggestion)}
                       >
-                        <div className="flex items-center space-x-2">
-                          <MapPin className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-sm">{suggestion}</span>
+                        <div className="flex items-start space-x-2">
+                          <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                          <span className="text-sm leading-tight">{suggestion}</span>
                         </div>
                       </button>
                     ))}
