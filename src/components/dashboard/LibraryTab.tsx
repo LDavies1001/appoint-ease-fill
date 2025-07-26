@@ -475,7 +475,9 @@ const LibraryTab = () => {
           
           <Button
             variant="outline"
-            onClick={() => window.open(`/portfolio/${user?.id}`, '_blank')}
+            onClick={() => {
+              window.location.href = '/profile#portfolio';
+            }}
             className="border-provider/20 hover:border-provider text-provider"
           >
             <ExternalLink className="h-4 w-4 mr-2" />

@@ -764,7 +764,7 @@ const Profile = () => {
             </Card>
 
             {/* Portfolio Section */}
-            <Card className="card-elegant overflow-hidden">
+            <Card id="portfolio" className="card-elegant overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
