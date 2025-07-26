@@ -569,7 +569,7 @@ const Profile = () => {
                     <div className="flex items-center justify-center space-x-1 mb-2">
                       <Star className="h-6 w-6 text-yellow-500" />
                       <span className="text-3xl font-bold text-provider">
-                        {providerDetails.rating > 0 ? providerDetails.rating.toFixed(1) : '5.0'}
+                        {providerDetails.total_reviews > 0 ? providerDetails.rating.toFixed(1) : '0.0'}
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground">Average Rating</p>
