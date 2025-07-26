@@ -14,18 +14,30 @@ interface ContactInfoSectionProps {
     business_website: string;
   };
   userId: string;
+  userEmail?: string;
   onUpdate: (data: any) => void;
 }
 
 export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
   data,
   userId,
+  userEmail,
   onUpdate
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(data);
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
+
+  const handleEditClick = () => {
+    // Auto-populate business email with user's account email if business email is empty
+    const updatedEditData = { ...data };
+    if (!data.business_email && userEmail) {
+      updatedEditData.business_email = userEmail;
+    }
+    setEditData(updatedEditData);
+    setIsEditing(true);
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -78,7 +90,7 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => setIsEditing(true)}
+            onClick={handleEditClick}
             className="h-8 w-8 p-0 hover:bg-accent/10"
           >
             <Edit className="h-4 w-4" />

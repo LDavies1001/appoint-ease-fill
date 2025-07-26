@@ -441,6 +441,7 @@ const ProfileTab = () => {
                 business_website: businessData.business_website
               }}
               userId={profile?.user_id || ''}
+              userEmail={profile?.email}
               onUpdate={handleBusinessUpdate}
             />
 
