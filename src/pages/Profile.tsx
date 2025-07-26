@@ -895,11 +895,11 @@ const Profile = () => {
                   </div>
                 )}
                 
-                {providerDetails.business_email ? (
+                {providerDetails.business_email || providerProfile.email ? (
                   <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Mail className="h-4 w-4 text-muted-foreground" />
-                    <a href={`mailto:${providerDetails.business_email}`} className="text-sm hover:text-provider transition-colors">
-                      {providerDetails.business_email}
+                    <a href={`mailto:${providerDetails.business_email || providerProfile.email}`} className="text-sm hover:text-provider transition-colors">
+                      {providerDetails.business_email || providerProfile.email}
                     </a>
                   </div>
                 ) : (
