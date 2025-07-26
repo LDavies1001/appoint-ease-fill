@@ -184,7 +184,7 @@ export type Database = {
           price: number | null
           provider_id: string
           provider_notes: string | null
-          service_id: string
+          service_id: string | null
           slot_id: string
           start_time: string
           status: string | null
@@ -200,7 +200,7 @@ export type Database = {
           price?: number | null
           provider_id: string
           provider_notes?: string | null
-          service_id: string
+          service_id?: string | null
           slot_id: string
           start_time: string
           status?: string | null
@@ -216,7 +216,7 @@ export type Database = {
           price?: number | null
           provider_id?: string
           provider_notes?: string | null
-          service_id?: string
+          service_id?: string | null
           slot_id?: string
           start_time?: string
           status?: string | null

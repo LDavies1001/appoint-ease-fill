@@ -137,6 +137,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
           customer_id: user.id,
           provider_id: slot.provider_id,
           slot_id: slot.id,
+          service_id: null, // Made nullable in database since we reference through provider_services
           booking_date: slot.date,
           start_time: slot.start_time,
           end_time: slot.end_time,
