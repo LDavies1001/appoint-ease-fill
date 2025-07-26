@@ -11,6 +11,9 @@ interface CertificationsData {
   certifications: string;
   insurance_info: string;
   certification_files: string[];
+  awards_recognitions: string;
+  professional_memberships: string;
+  other_qualifications: string;
 }
 
 interface CertificationsSectionProps {
@@ -32,6 +35,9 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
   const [certificationsList, setCertificationsList] = useState<string[]>([]);
   const [insuranceList, setInsuranceList] = useState<string[]>([]);
   const [certificationFiles, setCertificationFiles] = useState<string[]>([]);
+  const [awardsList, setAwardsList] = useState<string[]>([]);
+  const [membershipsList, setMembershipsList] = useState<string[]>([]);
+  const [otherQualificationsList, setOtherQualificationsList] = useState<string[]>([]);
   
   const { toast } = useToast();
 
@@ -57,8 +63,38 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
       }
     };
 
+    const parseAwards = () => {
+      if (data.awards_recognitions) {
+        const items = data.awards_recognitions.split('\n').filter(item => item.trim() !== '');
+        setAwardsList(items.length > 0 ? items : ['']);
+      } else {
+        setAwardsList(['']);
+      }
+    };
+
+    const parseMemberships = () => {
+      if (data.professional_memberships) {
+        const items = data.professional_memberships.split('\n').filter(item => item.trim() !== '');
+        setMembershipsList(items.length > 0 ? items : ['']);
+      } else {
+        setMembershipsList(['']);
+      }
+    };
+
+    const parseOtherQualifications = () => {
+      if (data.other_qualifications) {
+        const items = data.other_qualifications.split('\n').filter(item => item.trim() !== '');
+        setOtherQualificationsList(items.length > 0 ? items : ['']);
+      } else {
+        setOtherQualificationsList(['']);
+      }
+    };
+
     parseCertifications();
     parseInsurance();
+    parseAwards();
+    parseMemberships();
+    parseOtherQualifications();
     setCertificationFiles(data.certification_files || []);
   }, [data]);
 
