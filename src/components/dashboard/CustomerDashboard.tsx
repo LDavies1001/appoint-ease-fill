@@ -372,36 +372,41 @@ const CustomerDashboard = () => {
         {/* Navigation Tabs */}
         <div className="flex flex-wrap gap-1 mb-8">
           <Button
-            variant={activeTab === 'browse' ? 'hero' : 'ghost'}
+            variant={activeTab === 'browse' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('browse')}
+            className={activeTab === 'browse' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
           >
             <Search className="h-4 w-4 mr-2" />
             Browse Slots
           </Button>
           <Button
-            variant={activeTab === 'bookings' ? 'hero' : 'ghost'}
+            variant={activeTab === 'bookings' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('bookings')}
+            className={activeTab === 'bookings' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
           >
             <BookOpen className="h-4 w-4 mr-2" />
             My Bookings
           </Button>
           <Button
-            variant={activeTab === 'favourites' ? 'hero' : 'ghost'}
+            variant={activeTab === 'favourites' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('favourites')}
+            className={activeTab === 'favourites' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
           >
             <Heart className="h-4 w-4 mr-2" />
             Favourites
           </Button>
           <Button
-            variant={activeTab === 'offers' ? 'hero' : 'ghost'}
+            variant={activeTab === 'offers' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('offers')}
+            className={activeTab === 'offers' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
           >
             <Tag className="h-4 w-4 mr-2" />
             Local Offers
           </Button>
           <Button
-            variant={activeTab === 'profile' ? 'hero' : 'ghost'}
+            variant={activeTab === 'profile' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('profile')}
+            className={activeTab === 'profile' ? 'bg-gradient-to-r from-pink-400 to-pink-300 text-white hover:from-pink-500 hover:to-pink-400 shadow-lg' : 'hover:bg-pink-50 hover:text-pink-600'}
           >
             <Settings className="h-4 w-4 mr-2" />
             Profile
