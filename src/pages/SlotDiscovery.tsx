@@ -286,27 +286,19 @@ const SlotDiscovery: React.FC = () => {
               </p>
             </div>
 
-            {/* Social Proof */}
+            {/* Value Proposition */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-background/70">
               <div className="flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-primary/80 border-2 border-background"></div>
-                  <div className="w-8 h-8 rounded-full bg-accent/80 border-2 border-background"></div>
-                  <div className="w-8 h-8 rounded-full bg-primary/60 border-2 border-background"></div>
-                </div>
-                <span className="text-sm font-medium">500+ happy customers</span>
+                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                <span className="text-sm font-medium">Live availability updated daily</span>
               </div>
-              <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                <span className="text-sm font-medium ml-1">4.9/5 rating</span>
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                <span className="text-sm font-medium">Book same day appointments</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                <span className="text-sm font-medium">Available nationwide</span>
+                <span className="text-sm font-medium">Local beauty professionals</span>
               </div>
             </div>
 
