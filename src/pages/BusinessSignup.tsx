@@ -307,15 +307,6 @@ const BusinessSignup = () => {
 
             {/* Right column - Form */}
             <div className="w-full max-w-lg mx-auto lg:mx-0">
-              {/* Header for mobile */}
-              <div className="text-center lg:text-left mb-8 lg:hidden">
-                <div className="flex items-center justify-center space-x-2 mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-br from-accent to-accent-glow rounded-xl flex items-center justify-center">
-                    <Building className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-2xl font-bold text-foreground">OpenSlot</span>
-                </div>
-              </div>
 
               {/* Main heading */}
               <div className="text-center lg:text-left mb-8">
