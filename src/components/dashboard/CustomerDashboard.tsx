@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 
-import LibraryTab from './LibraryTab';
+
 import ProfileTab from './ProfileTab';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -398,13 +398,6 @@ const CustomerDashboard = () => {
           >
             <Tag className="h-4 w-4 mr-2" />
             Local Offers
-          </Button>
-          <Button
-            variant={activeTab === 'library' ? 'hero' : 'ghost'}
-            onClick={() => setActiveTab('library')}
-          >
-            <Image className="h-4 w-4 mr-2" />
-            Library
           </Button>
           <Button
             variant={activeTab === 'profile' ? 'hero' : 'ghost'}
@@ -816,7 +809,7 @@ const CustomerDashboard = () => {
           </div>
         )}
 
-        {activeTab === 'library' && <LibraryTab />}
+        
 
         {activeTab === 'profile' && <ProfileTab />}
       </div>
