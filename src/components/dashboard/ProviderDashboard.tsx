@@ -81,6 +81,7 @@ interface Booking {
   start_time: string;
   end_time: string;
   status: string;
+  customer_id: string;
   customer: {
     name: string;
   };
@@ -1273,7 +1274,14 @@ const ProviderDashboard = () => {
                             {booking.service.name}
                           </h3>
                           <p className="text-sm text-muted-foreground">
-                            Customer: {booking.customer.name}
+                            Customer: 
+                            <Button
+                              variant="link"
+                              className="p-0 h-auto font-normal text-primary hover:text-primary/80"
+                              onClick={() => navigate(`/customer/${booking.customer_id}`)}
+                            >
+                              {booking.customer.name}
+                            </Button>
                           </p>
                         </div>
                         <Badge 
