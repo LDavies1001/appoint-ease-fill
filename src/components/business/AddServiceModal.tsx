@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -196,6 +197,9 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
           <DialogTitle>
             {editingService ? 'Edit Service' : 'Add New Service'}
           </DialogTitle>
+          <DialogDescription>
+            {editingService ? 'Update your service details' : 'Create a new service with pricing and duration information'}
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
