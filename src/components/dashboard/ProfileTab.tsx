@@ -21,6 +21,7 @@ import { OperatingHoursSection } from '@/components/business/OperatingHoursSecti
 import { BusinessBrandingSection } from '@/components/business/BusinessBrandingSection';
 import { AddressSection } from '@/components/business/AddressSection';
 import { CertificationsSection } from '@/components/business/CertificationsSection';
+import { CustomerPortfolio } from '@/components/profile/CustomerPortfolio';
 
 interface PersonalData {
   name: string;
@@ -537,6 +538,9 @@ const ProfileTab = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Customer Portfolio */}
+          <CustomerPortfolio customerId={profile.user_id} isOwner={true} />
         </>
       ) : (
         // Provider content (existing code)
