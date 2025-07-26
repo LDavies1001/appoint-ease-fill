@@ -127,14 +127,6 @@ const Auth = () => {
       return;
     }
 
-    if (!location.trim()) {
-      toast({
-        title: "Location required",
-        description: "Please enter your business location",
-        variant: "destructive"
-      });
-      return;
-    }
     
     if (password !== confirmPassword) {
       toast({
@@ -173,7 +165,7 @@ const Auth = () => {
 
     try {
       const role = selectedRole === 'provider' ? 'provider' : 'customer';
-      const { error } = await signUp(email, password, role, fullName, phone, location, businessName);
+      const { error } = await signUp(email, password, role, fullName, phone, '', businessName);
       
       if (error) {
         toast({
