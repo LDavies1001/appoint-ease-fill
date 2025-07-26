@@ -66,6 +66,12 @@ const Header = () => {
                       )}
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings" className="flex items-center">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Account Settings
+                    </Link>
+                  </DropdownMenuItem>
                   {profile.active_role === 'provider' && (
                     <DropdownMenuItem asChild>
                       <Link to="/business-profile" className="flex items-center">
