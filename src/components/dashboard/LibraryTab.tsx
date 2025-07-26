@@ -25,6 +25,7 @@ import {
   Heart,
   ExternalLink
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -45,6 +46,7 @@ interface MediaItem {
 
 const LibraryTab = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -475,9 +477,7 @@ const LibraryTab = () => {
           
           <Button
             variant="outline"
-            onClick={() => {
-              window.location.href = '/profile#portfolio';
-            }}
+            onClick={() => navigate('/profile#portfolio')}
             className="border-provider/20 hover:border-provider text-provider"
           >
             <ExternalLink className="h-4 w-4 mr-2" />
