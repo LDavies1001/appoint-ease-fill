@@ -1,41 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { supabase } from '@/integrations/supabase/client';
+import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
 import { 
-  Star, 
   MapPin, 
   Phone, 
   Mail, 
   Globe, 
+  Star, 
   Clock, 
-  Shield, 
-  Calendar, 
-  Edit2,
-  ExternalLink,
   Award,
-  User,
-  Building,
-  Share2,
-  Copy,
-  Map,
-  Image as ImageIcon,
+  Shield,
+  Edit2,
+  Camera,
   Instagram,
-  Facebook
+  Facebook,
+  Heart,
+  Share2,
+  MessageCircle,
+  Calendar,
+  PoundSterling,
+  CheckCircle,
+  Users,
+  Sparkles,
+  ExternalLink,
+  ChevronRight,
+  Building,
+  User,
+  Image as ImageIcon,
+  Map,
+  FileText,
+  Copy
 } from 'lucide-react';
 import Header from '@/components/ui/header';
-import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
-import { BusinessInfoSection } from '@/components/business/BusinessInfoSection';
-import { ContactInfoSection } from '@/components/business/ContactInfoSection';
-import { OperatingHoursSection } from '@/components/business/OperatingHoursSection';
-import { AddressSection } from '@/components/business/AddressSection';
-import { SocialMediaSection } from '@/components/business/SocialMediaSection';
-import { PersonalInfoSection } from '@/components/business/PersonalInfoSection';
 
 interface ProviderProfile {
   user_id: string;
@@ -47,10 +50,22 @@ interface ProviderProfile {
   email: string;
 }
 
+interface BusinessCategory {
+  id: string;
+  name: string;
+  description: string;
+}
+
 interface ProviderDetails {
   business_name: string;
   business_description: string;
   business_address: string;
+  business_street: string;
+  business_city: string;
+  business_county: string;
+  business_postcode: string;
+  business_country: string;
+  is_address_public: boolean;
   business_phone: string;
   business_email: string;
   business_website: string;
@@ -58,13 +73,20 @@ interface ProviderDetails {
   total_reviews: number;
   years_experience: number;
   certifications: string;
+  insurance_info: string;
+  certification_files: string[];
   operating_hours: string;
+  availability_notes: string;
   services_offered: string[];
-  cover_image_url: string | null;
   service_area: string;
   pricing_info: string;
+  cover_image_url: string | null;
+  business_logo_url: string | null;
   social_media_links: any;
-  certification_files: string[];
+  facebook_url: string;
+  instagram_url: string;
+  tiktok_url: string;
+  profile_published: boolean;
 }
 
 interface PortfolioItem {
@@ -75,6 +97,7 @@ interface PortfolioItem {
   category: string;
   featured: boolean;
   created_at: string;
+  is_public: boolean;
 }
 
 interface ProviderService {
@@ -82,7 +105,18 @@ interface ProviderService {
   service_name: string;
   description: string;
   base_price: number;
+  discount_price?: number;
   duration_minutes: number;
+  duration_text?: string;
+  is_active: boolean;
+}
+
+interface SocialConnection {
+  id: string;
+  platform: string;
+  handle: string;
+  profile_url: string;
+  profile_picture_url?: string;
   is_active: boolean;
 }
 
@@ -96,6 +130,8 @@ const EnhancedBusinessProfile = () => {
   const [providerDetails, setProviderDetails] = useState<ProviderDetails | null>(null);
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
   const [providerServices, setProviderServices] = useState<ProviderService[]>([]);
+  const [businessCategories, setBusinessCategories] = useState<BusinessCategory[]>([]);
+  const [socialConnections, setSocialConnections] = useState<SocialConnection[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Check if current user is the profile owner
@@ -129,13 +165,13 @@ const EnhancedBusinessProfile = () => {
 
       if (detailsError) throw detailsError;
 
-      // Fetch portfolio items
+      // Fetch portfolio items (both public and private if owner)
       const { data: portfolioData, error: portfolioError } = await supabase
         .from('portfolio_items')
         .select('*')
         .eq('provider_id', providerId)
-        .eq('is_public', true)
-        .order('featured', { ascending: false });
+        .order('featured', { ascending: false })
+        .order('created_at', { ascending: false });
 
       if (portfolioError) throw portfolioError;
 
@@ -149,10 +185,34 @@ const EnhancedBusinessProfile = () => {
 
       if (servicesError) throw servicesError;
 
+      // Fetch business categories if services are offered
+      let categoriesData: BusinessCategory[] = [];
+      if (detailsData?.services_offered && detailsData.services_offered.length > 0) {
+        const { data: categories, error: categoriesError } = await supabase
+          .from('business_categories')
+          .select('*')
+          .in('id', detailsData.services_offered);
+
+        if (!categoriesError) {
+          categoriesData = categories || [];
+        }
+      }
+
+      // Fetch social media connections
+      const { data: socialData, error: socialError } = await supabase
+        .from('social_media_connections')
+        .select('*')
+        .eq('provider_id', providerId)
+        .eq('is_active', true);
+
+      if (socialError) throw socialError;
+
       setProviderProfile(profileData);
       setProviderDetails(detailsData);
       setPortfolioItems(portfolioData || []);
       setProviderServices(servicesData || []);
+      setBusinessCategories(categoriesData);
+      setSocialConnections(socialData || []);
     } catch (error) {
       console.error('Error fetching provider data:', error);
       toast({
@@ -165,12 +225,25 @@ const EnhancedBusinessProfile = () => {
     }
   };
 
+  const parseOperatingHours = (hoursStr: string) => {
+    if (!hoursStr) return [];
+    
+    try {
+      return hoursStr.split('\n').map(line => {
+        const [day, hours] = line.split(': ');
+        return { day, hours };
+      });
+    } catch {
+      return [];
+    }
+  };
+
   const handleBookNow = () => {
     navigate(`/provider/${providerId}/book`);
   };
 
   const handleShareProfile = async () => {
-    const profileUrl = `${window.location.origin}/portfolio/${providerId}`;
+    const profileUrl = `${window.location.origin}/business/${providerId}`;
     
     if (navigator.share) {
       try {
@@ -191,6 +264,9 @@ const EnhancedBusinessProfile = () => {
       });
     }
   };
+
+  const operatingHours = providerDetails ? parseOperatingHours(providerDetails.operating_hours) : [];
+  const totalServiceValue = providerServices.reduce((sum, service) => sum + (service.base_price || 0), 0);
 
   if (loading) {
     return (
@@ -228,91 +304,155 @@ const EnhancedBusinessProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
       <Header />
       
-      {/* Cover Photo Section */}
-      <CoverPhotoManager
-        coverImageUrl={providerDetails.cover_image_url}
-        providerId={providerId || ''}
-        onCoverImageUpdate={(url) => setProviderDetails(prev => prev ? { ...prev, cover_image_url: url } : null)}
-        isOwner={isOwner}
-      />
-      
-      {/* Business Header */}
-      <div className="relative bg-gradient-to-r from-card via-card/95 to-provider/10 border-b border-border/50">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex flex-col lg:flex-row items-start gap-6">
-            {/* Business Logo/Avatar */}
-            <div className="relative flex-shrink-0">
-              <Avatar className="h-24 w-24 lg:h-32 lg:w-32 border-4 border-provider/20 shadow-lg">
-                <AvatarImage src={providerProfile.avatar_url || undefined} />
-                <AvatarFallback className="text-2xl lg:text-4xl font-bold bg-gradient-provider text-provider-foreground">
-                  {providerDetails.business_name?.charAt(0) || providerProfile.name?.charAt(0) || 'B'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 lg:w-8 lg:h-8 bg-green-500 rounded-full border-4 border-background flex items-center justify-center">
-                <div className="w-2 h-2 lg:w-3 lg:h-3 bg-white rounded-full"></div>
+      {/* Hero/Cover Section */}
+      <div className="relative">
+        {/* Cover Image */}
+        <div className="h-64 md:h-80 lg:h-96 bg-gradient-to-r from-provider/20 via-provider/10 to-provider/20 overflow-hidden">
+          {providerDetails.cover_image_url ? (
+            <img 
+              src={providerDetails.cover_image_url} 
+              alt="Cover" 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-r from-provider via-provider-dark to-provider flex items-center justify-center">
+              <div className="text-center text-white">
+                <Camera className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg opacity-75">Professional Beauty Services</p>
               </div>
             </div>
-
-            {/* Business Info */}
-            <div className="flex-1 min-w-0">
-              <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">
-                {providerDetails.business_name || providerProfile.name}
-              </h1>
-              
-              {providerDetails.business_description && (
-                <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
-                  {providerDetails.business_description}
-                </p>
-              )}
-
-              {/* Quick Info */}
-              <div className="flex flex-wrap items-center gap-4 mb-4">
-                {providerDetails.rating > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-medium">{providerDetails.rating}</span>
-                    <span className="text-muted-foreground text-sm">
-                      ({providerDetails.total_reviews} reviews)
-                    </span>
-                  </div>
-                )}
-                
-                {providerDetails.years_experience > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Award className="h-4 w-4 text-provider" />
-                    <span className="text-sm">{providerDetails.years_experience} years experience</span>
-                  </div>
-                )}
-
-                {providerProfile.location && (
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">{providerProfile.location}</span>
-                  </div>
-                )}
-              </div>
+          )}
+          {isOwner && (
+            <div className="absolute top-4 right-4">
+              <Button variant="secondary" size="sm" className="bg-white/90 hover:bg-white">
+                <Edit2 className="h-4 w-4 mr-2" />
+                Edit Cover
+              </Button>
             </div>
+          )}
+        </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-2 w-full lg:w-auto">
-              {!isOwner && (
-                <Button variant="provider" size="lg" onClick={handleBookNow} className="w-full lg:w-auto">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Book Now
-                </Button>
-              )}
-              
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleShareProfile}>
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share
-                </Button>
+        {/* Business Header */}
+        <div className="relative bg-gradient-to-r from-card via-card/95 to-card border-b border-border/50">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className="flex flex-col lg:flex-row items-start gap-6">
+              {/* Business Logo/Avatar */}
+              <div className="relative flex-shrink-0 -mt-16 lg:-mt-20">
+                <div className="relative">
+                  <Avatar className="h-24 w-24 lg:h-32 lg:w-32 border-4 border-background shadow-xl">
+                    <AvatarImage src={providerDetails.business_logo_url || providerProfile.avatar_url || undefined} />
+                    <AvatarFallback className="text-2xl lg:text-4xl font-bold bg-gradient-to-r from-provider to-provider-dark text-white">
+                      {providerDetails.business_name?.charAt(0) || providerProfile.name?.charAt(0) || 'B'}
+                    </AvatarFallback>
+                  </Avatar>
+                  {providerDetails.profile_published && (
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 lg:w-8 lg:h-8 bg-green-500 rounded-full border-4 border-background flex items-center justify-center">
+                      <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 text-white" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Business Info */}
+              <div className="flex-1 min-w-0 pt-4 lg:pt-8">
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+                  <div>
+                    <h1 className="text-3xl lg:text-5xl font-bold text-foreground mb-2">
+                      {providerDetails.business_name}
+                    </h1>
+                    
+                    {providerProfile.name && providerProfile.name !== providerDetails.business_name && (
+                      <p className="text-lg text-muted-foreground mb-2">
+                        with {providerProfile.name}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-2">
+                    {!isOwner && (
+                      <Button variant="provider" size="lg" onClick={handleBookNow} className="shadow-lg">
+                        <Calendar className="h-5 w-5 mr-2" />
+                        Book Appointment
+                      </Button>
+                    )}
+                    
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={handleShareProfile}>
+                        <Share2 className="h-4 w-4 mr-2" />
+                        Share
+                      </Button>
+                      
+                      {!isOwner && (
+                        <Button variant="outline" size="sm">
+                          <Heart className="h-4 w-4 mr-2" />
+                          Save
+                        </Button>
+                      )}
+                      
+                      {isOwner && (
+                        <Button variant="provider-outline" size="sm" onClick={() => navigate('/dashboard')}>
+                          <Edit2 className="h-4 w-4 mr-2" />
+                          Edit Profile
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
                 
-                {isOwner && (
-                  <Button variant="provider-outline" size="sm" onClick={() => navigate('/dashboard')}>
-                    <Edit2 className="h-4 w-4 mr-2" />
-                    Edit Profile
-                  </Button>
+                {providerDetails.business_description && (
+                  <p className="text-lg text-muted-foreground mb-6 leading-relaxed max-w-3xl">
+                    {providerDetails.business_description}
+                  </p>
+                )}
+
+                {/* Quick Stats */}
+                <div className="flex flex-wrap items-center gap-6 mb-4">
+                  {providerDetails.rating > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        <span className="font-semibold text-lg">{providerDetails.rating.toFixed(1)}</span>
+                      </div>
+                      <span className="text-muted-foreground">
+                        ({providerDetails.total_reviews} reviews)
+                      </span>
+                    </div>
+                  )}
+                  
+                  {providerDetails.years_experience > 0 && (
+                    <div className="flex items-center gap-2">
+                      <Award className="h-5 w-5 text-provider" />
+                      <span className="font-medium">{providerDetails.years_experience} years experience</span>
+                    </div>
+                  )}
+
+                  {providerServices.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <Building className="h-5 w-5 text-provider" />
+                      <span className="font-medium">{providerServices.length} services</span>
+                    </div>
+                  )}
+
+                  {portfolioItems.filter(item => item.is_public || isOwner).length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <ImageIcon className="h-5 w-5 text-provider" />
+                      <span className="font-medium">
+                        {portfolioItems.filter(item => item.is_public || isOwner).length} portfolio items
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Business Categories */}
+                {businessCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {businessCategories.map((category) => (
+                      <Badge key={category.id} variant="secondary" className="bg-provider/10 text-provider border-provider/20">
+                        {category.name}
+                      </Badge>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
@@ -321,111 +461,181 @@ const EnhancedBusinessProfile = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Left Column - Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
             
             {/* About Section */}
-            <Card className="card-elegant">
-              <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-                    <User className="h-5 w-5 text-provider" />
-                  </div>
-                  <h2 className="text-xl font-semibold">About</h2>
-                </div>
-                {isOwner && (
-                  <Button variant="ghost" size="sm">
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </CardHeader>
-              <CardContent>
-                <PersonalInfoSection
-                  data={{
-                    name: providerProfile.name,
-                    bio: providerProfile.bio,
-                    avatar_url: providerProfile.avatar_url,
-                    location: providerProfile.location,
-                    phone: providerProfile.phone
-                  }}
-                  userId={providerId || ''}
-                  onUpdate={() => fetchProviderData()}
-                />
-              </CardContent>
-            </Card>
-
-            {/* Services Section */}
-            {providerServices.length > 0 && (
-              <Card className="card-elegant">
-                <CardHeader className="flex flex-row items-center justify-between pb-4">
+            {(providerProfile.bio || providerDetails.service_area) && (
+              <Card className="card-elegant overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-                      <Building className="h-5 w-5 text-provider" />
+                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                      <User className="h-5 w-5 text-provider" />
                     </div>
-                    <h2 className="text-xl font-semibold">Services</h2>
+                    <h2 className="text-2xl font-semibold">About</h2>
                   </div>
-                  {isOwner && (
-                    <Button variant="ghost" size="sm">
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                  )}
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {providerServices.map((service) => (
-                      <div key={service.id} className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow">
-                        <h3 className="font-medium text-foreground mb-2">{service.service_name}</h3>
-                        {service.description && (
-                          <p className="text-sm text-muted-foreground mb-2">{service.description}</p>
-                        )}
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {service.duration_minutes} min
-                          </span>
-                          <span className="font-medium text-provider">£{service.base_price}</span>
-                        </div>
+                <CardContent className="p-6">
+                  {providerProfile.bio && (
+                    <div className="mb-4">
+                      <p className="text-muted-foreground leading-relaxed">{providerProfile.bio}</p>
+                    </div>
+                  )}
+                  
+                  {providerDetails.service_area && (
+                    <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                      <MapPin className="h-5 w-5 text-provider mt-0.5" />
+                      <div>
+                        <h4 className="font-medium mb-1">Service Area</h4>
+                        <p className="text-muted-foreground">{providerDetails.service_area}</p>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
 
-            {/* Portfolio Section */}
-            {portfolioItems.length > 0 && (
-              <Card className="card-elegant">
-                <CardHeader className="flex flex-row items-center justify-between pb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-                      <ImageIcon className="h-5 w-5 text-provider" />
-                    </div>
-                    <h2 className="text-xl font-semibold">Gallery</h2>
-                  </div>
-                  {isOwner && (
-                    <Button variant="ghost" size="sm">
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </CardHeader>
-                <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {portfolioItems.map((item) => (
-                    <div key={item.id} className="relative group overflow-hidden rounded-lg">
-                      <img 
-                        src={item.image_url} 
-                        alt={item.title}
-                        className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <p className="text-white text-sm font-medium text-center px-2">{item.title}</p>
+            {/* Services Section */}
+            {providerServices.length > 0 && (
+              <Card className="card-elegant overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                        <Building className="h-5 w-5 text-provider" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-semibold">Services & Pricing</h2>
+                        <p className="text-sm text-muted-foreground">
+                          {providerServices.length} services • Total value £{totalServiceValue.toFixed(2)}
+                        </p>
                       </div>
                     </div>
-                  ))}
-                </div>
+                    {!isOwner && (
+                      <Button variant="provider" onClick={handleBookNow}>
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Book Now
+                      </Button>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {providerServices.map((service) => (
+                      <div key={service.id} className="group relative p-5 border border-border rounded-xl hover:shadow-lg hover:border-provider/30 transition-all duration-300">
+                        <div className="flex flex-col h-full">
+                          <div className="flex items-start justify-between mb-3">
+                            <h3 className="font-semibold text-foreground text-lg leading-tight">
+                              {service.service_name}
+                            </h3>
+                            <div className="text-right flex-shrink-0 ml-4">
+                              <div className="text-2xl font-bold text-provider">
+                                £{service.discount_price || service.base_price}
+                              </div>
+                              {service.discount_price && service.base_price > service.discount_price && (
+                                <div className="text-sm text-muted-foreground line-through">
+                                  £{service.base_price}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
+                          {service.description && (
+                            <p className="text-muted-foreground mb-3 text-sm leading-relaxed flex-grow">
+                              {service.description}
+                            </p>
+                          )}
+                          
+                          <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Clock className="h-4 w-4" />
+                              {service.duration_text || `${service.duration_minutes} min`}
+                            </div>
+                            {!isOwner && (
+                              <Button variant="provider" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                Book
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {providerDetails.pricing_info && (
+                    <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <PoundSterling className="h-4 w-4 text-provider" />
+                        Additional Pricing Information
+                      </h4>
+                      <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                        {providerDetails.pricing_info}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Portfolio/Gallery Section */}
+            {portfolioItems.filter(item => item.is_public || isOwner).length > 0 && (
+              <Card className="card-elegant overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                        <ImageIcon className="h-5 w-5 text-provider" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-semibold">Portfolio Gallery</h2>
+                        <p className="text-sm text-muted-foreground">
+                          Showcasing our best work
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {portfolioItems
+                      .filter(item => item.is_public || isOwner)
+                      .map((item) => (
+                      <div key={item.id} className="relative group overflow-hidden rounded-xl">
+                        <div className="aspect-square relative">
+                          <img 
+                            src={item.image_url} 
+                            alt={item.title}
+                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute bottom-3 left-3 right-3 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <h4 className="font-medium text-sm mb-1">{item.title}</h4>
+                            {item.description && (
+                              <p className="text-xs opacity-90 line-clamp-2">{item.description}</p>
+                            )}
+                          </div>
+                          {item.featured && (
+                            <div className="absolute top-2 right-2">
+                              <Badge variant="secondary" className="bg-yellow-500/90 text-yellow-900 border-0">
+                                <Star className="h-3 w-3 mr-1" />
+                                Featured
+                              </Badge>
+                            </div>
+                          )}
+                          {!item.is_public && isOwner && (
+                            <div className="absolute top-2 left-2">
+                              <Badge variant="secondary" className="bg-red-500/90 text-white border-0">
+                                Private
+                              </Badge>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -436,194 +646,220 @@ const EnhancedBusinessProfile = () => {
             
             {/* Contact Information */}
             <Card className="card-elegant">
-              <CardHeader className="flex flex-row items-center justify-between pb-4">
+              <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
                     <Phone className="h-5 w-5 text-provider" />
                   </div>
-                  <h2 className="text-lg font-semibold">Contact</h2>
+                  <h3 className="text-lg font-semibold">Contact</h3>
                 </div>
-                {isOwner && (
-                  <Button variant="ghost" size="sm">
-                    <Edit2 className="h-4 w-4" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {providerDetails.business_phone && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <a href={`tel:${providerDetails.business_phone}`} className="text-sm hover:text-provider transition-colors">
+                      {providerDetails.business_phone}
+                    </a>
+                  </div>
+                )}
+                
+                {providerDetails.business_email && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <a href={`mailto:${providerDetails.business_email}`} className="text-sm hover:text-provider transition-colors">
+                      {providerDetails.business_email}
+                    </a>
+                  </div>
+                )}
+                
+                {providerDetails.business_website && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                    <Globe className="h-4 w-4 text-muted-foreground" />
+                    <a 
+                      href={providerDetails.business_website.startsWith('http') ? providerDetails.business_website : `https://${providerDetails.business_website}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm hover:text-provider transition-colors"
+                    >
+                      Visit Website
+                    </a>
+                  </div>
+                )}
+
+                {!isOwner && (
+                  <Button variant="provider" className="w-full mt-4">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Send Message
                   </Button>
                 )}
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {providerDetails.business_phone && (
-                    <div className="flex items-center gap-3">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <a href={`tel:${providerDetails.business_phone}`} className="text-sm hover:text-provider">
-                        {providerDetails.business_phone}
-                      </a>
-                    </div>
-                  )}
-                  
-                  {providerDetails.business_email && (
-                    <div className="flex items-center gap-3">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <a href={`mailto:${providerDetails.business_email}`} className="text-sm hover:text-provider">
-                        {providerDetails.business_email}
-                      </a>
-                    </div>
-                  )}
-                  
-                  {providerDetails.business_website && (
-                    <div className="flex items-center gap-3">
-                      <Globe className="h-4 w-4 text-muted-foreground" />
-                      <a 
-                        href={providerDetails.business_website} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-sm hover:text-provider flex items-center gap-1"
-                      >
-                        Visit Website
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    </div>
-                  )}
-                </div>
               </CardContent>
             </Card>
 
-            {/* Address */}
-            {providerDetails.business_address && (
+            {/* Location */}
+            {(providerDetails.business_address || providerProfile.location) && (
               <Card className="card-elegant">
-                <CardHeader className="flex flex-row items-center justify-between pb-4">
+                <CardHeader>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
                       <MapPin className="h-5 w-5 text-provider" />
                     </div>
-                    <h2 className="text-lg font-semibold">Location</h2>
+                    <h3 className="text-lg font-semibold">Location</h3>
                   </div>
-                  {isOwner && (
-                    <Button variant="ghost" size="sm">
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                  )}
                 </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-sm">{providerDetails.business_address}</p>
-                      {providerDetails.service_area && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Service area: {providerDetails.service_area}
-                        </p>
-                      )}
+                <CardContent>
+                  {providerDetails.is_address_public && providerDetails.business_address ? (
+                    <div className="space-y-3">
+                      <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
+                      <Button variant="outline" size="sm" className="w-full">
+                        <Map className="h-4 w-4 mr-2" />
+                        View on Map
+                      </Button>
                     </div>
-                  </div>
-                </div>
-              </CardContent>
+                  ) : (
+                    <div className="text-center py-4">
+                      <MapPin className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">
+                        {providerProfile.location || 'Location available upon booking'}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
               </Card>
             )}
 
             {/* Operating Hours */}
-            {providerDetails.operating_hours && (
+            {operatingHours.length > 0 && (
               <Card className="card-elegant">
-                <CardHeader className="flex flex-row items-center justify-between pb-4">
+                <CardHeader>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
                       <Clock className="h-5 w-5 text-provider" />
                     </div>
-                    <h2 className="text-lg font-semibold">Hours</h2>
+                    <h3 className="text-lg font-semibold">Hours</h3>
                   </div>
-                  {isOwner && (
-                    <Button variant="ghost" size="sm">
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                  )}
                 </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {(() => {
-                    try {
-                      const hours = JSON.parse(providerDetails.operating_hours);
-                      return Object.entries(hours).map(([day, time]) => (
-                        <div key={day} className="flex justify-between text-sm">
-                          <span className="capitalize font-medium">{day}</span>
-                          <span className="text-muted-foreground">{time as string}</span>
-                        </div>
-                      ));
-                    } catch {
-                      return <p className="text-sm text-muted-foreground">{providerDetails.operating_hours}</p>;
-                    }
-                  })()}
-                </div>
-              </CardContent>
+                <CardContent className="space-y-2">
+                  {operatingHours.map(({ day, hours }, index) => (
+                    <div key={index} className="flex justify-between items-center py-1">
+                      <span className="text-sm font-medium">{day}</span>
+                      <span className="text-sm text-muted-foreground">{hours}</span>
+                    </div>
+                  ))}
+                  
+                  {providerDetails.availability_notes && (
+                    <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                      <p className="text-xs text-muted-foreground">
+                        {providerDetails.availability_notes}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
               </Card>
             )}
 
-            {/* Social Media */}
-            <Card className="card-elegant">
-              <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-                    <Share2 className="h-5 w-5 text-provider" />
-                  </div>
-                  <h2 className="text-lg font-semibold">Social</h2>
-                </div>
-                {isOwner && (
-                  <Button variant="ghost" size="sm">
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-4">
-                  {providerDetails.social_media_links?.instagram_url && (
-                    <a 
-                      href={providerDetails.social_media_links.instagram_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-provider"
-                    >
-                      <Instagram className="h-5 w-5" />
-                    </a>
-                  )}
-                  
-                  {providerDetails.social_media_links?.facebook_url && (
-                    <a 
-                      href={providerDetails.social_media_links.facebook_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-provider"
-                    >
-                      <Facebook className="h-5 w-5" />
-                    </a>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Certifications */}
-            {providerDetails.certifications && (
+            {/* Credentials */}
+            {(providerDetails.certifications || providerDetails.insurance_info || providerDetails.certification_files?.length > 0) && (
               <Card className="card-elegant">
-                <CardHeader className="flex flex-row items-center justify-between pb-4">
+                <CardHeader>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
                       <Shield className="h-5 w-5 text-provider" />
                     </div>
-                    <h2 className="text-lg font-semibold">Certifications</h2>
+                    <h3 className="text-lg font-semibold">Credentials</h3>
                   </div>
-                  {isOwner && (
-                    <Button variant="ghost" size="sm">
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {providerDetails.certifications && (
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Certifications</h4>
+                      <p className="text-sm text-muted-foreground">{providerDetails.certifications}</p>
+                    </div>
                   )}
+                  
+                  {providerDetails.insurance_info && (
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Insurance</h4>
+                      <p className="text-sm text-muted-foreground">{providerDetails.insurance_info}</p>
+                    </div>
+                  )}
+                  
+                  {providerDetails.certification_files && providerDetails.certification_files.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Certification Files</h4>
+                      <div className="space-y-2">
+                        {providerDetails.certification_files.map((file, index) => (
+                          <a 
+                            key={index}
+                            href={file}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-sm text-provider hover:underline"
+                          >
+                            <FileText className="h-4 w-4" />
+                            Certificate {index + 1}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Social Media */}
+            {(socialConnections.length > 0 || providerDetails.facebook_url || providerDetails.instagram_url || providerDetails.tiktok_url) && (
+              <Card className="card-elegant">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
+                      <Share2 className="h-5 w-5 text-provider" />
+                    </div>
+                    <h3 className="text-lg font-semibold">Follow Us</h3>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <p className="text-sm text-muted-foreground">{providerDetails.certifications}</p>
-                    {providerDetails.certification_files && providerDetails.certification_files.length > 0 && (
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-2">
-                          {providerDetails.certification_files.length} certification file(s) uploaded
-                        </p>
-                      </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {socialConnections.map((connection) => (
+                      <a
+                        key={connection.id}
+                        href={connection.profile_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
+                      >
+                        <div className="w-8 h-8 bg-provider/10 rounded-lg flex items-center justify-center">
+                          <span className="text-xs font-medium capitalize text-provider">{connection.platform[0]}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm capitalize">{connection.platform}</p>
+                          <p className="text-xs text-muted-foreground truncate">@{connection.handle}</p>
+                        </div>
+                      </a>
+                    ))}
+                    
+                    {providerDetails.facebook_url && (
+                      <a
+                        href={providerDetails.facebook_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
+                      >
+                        <Facebook className="w-5 h-5 text-blue-600" />
+                        <span className="text-sm">Facebook</span>
+                      </a>
+                    )}
+                    
+                    {providerDetails.instagram_url && (
+                      <a
+                        href={providerDetails.instagram_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
+                      >
+                        <Instagram className="w-5 h-5 text-pink-600" />
+                        <span className="text-sm">Instagram</span>
+                      </a>
                     )}
                   </div>
                 </CardContent>
