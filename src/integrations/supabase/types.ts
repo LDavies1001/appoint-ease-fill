@@ -440,6 +440,7 @@ export type Database = {
           instagram_url: string | null
           insurance_info: string | null
           is_address_public: boolean | null
+          nearby_towns: string[] | null
           operating_hours: string | null
           postcode_admin_district: string | null
           postcode_admin_ward: string | null
@@ -451,6 +452,7 @@ export type Database = {
           profile_visibility: string | null
           rating: number | null
           service_area: string | null
+          service_radius_miles: number | null
           services_offered: string[] | null
           social_media_links: Json | null
           tiktok_url: string | null
@@ -479,6 +481,7 @@ export type Database = {
           instagram_url?: string | null
           insurance_info?: string | null
           is_address_public?: boolean | null
+          nearby_towns?: string[] | null
           operating_hours?: string | null
           postcode_admin_district?: string | null
           postcode_admin_ward?: string | null
@@ -490,6 +493,7 @@ export type Database = {
           profile_visibility?: string | null
           rating?: number | null
           service_area?: string | null
+          service_radius_miles?: number | null
           services_offered?: string[] | null
           social_media_links?: Json | null
           tiktok_url?: string | null
@@ -518,6 +522,7 @@ export type Database = {
           instagram_url?: string | null
           insurance_info?: string | null
           is_address_public?: boolean | null
+          nearby_towns?: string[] | null
           operating_hours?: string | null
           postcode_admin_district?: string | null
           postcode_admin_ward?: string | null
@@ -529,6 +534,7 @@ export type Database = {
           profile_visibility?: string | null
           rating?: number | null
           service_area?: string | null
+          service_radius_miles?: number | null
           services_offered?: string[] | null
           social_media_links?: Json | null
           tiktok_url?: string | null

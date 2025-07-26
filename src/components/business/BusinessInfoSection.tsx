@@ -28,19 +28,31 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(data);
   const [saving, setSaving] = useState(false);
+  const [serviceRadius, setServiceRadius] = useState<number | null>(null);
+  const [nearbyTowns, setNearbyTowns] = useState<string[]>([]);
   const { toast } = useToast();
 
   const handleSave = async () => {
     setSaving(true);
     try {
+      const updateData: any = {
+        business_name: editData.business_name,
+        business_description: editData.business_description,
+        years_experience: editData.years_experience,
+        service_area: editData.service_area
+      };
+
+      // Add radius and nearby towns if they exist
+      if (serviceRadius !== null) {
+        updateData.service_radius_miles = serviceRadius;
+      }
+      if (nearbyTowns.length > 0) {
+        updateData.nearby_towns = nearbyTowns;
+      }
+
       const { error } = await supabase
         .from('provider_details')
-        .update({
-          business_name: editData.business_name,
-          business_description: editData.business_description,
-          years_experience: editData.years_experience,
-          service_area: editData.service_area
-        })
+        .update(updateData)
         .eq('user_id', userId);
 
       if (error) throw error;
@@ -66,6 +78,13 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({
   const handleCancel = () => {
     setEditData(data);
     setIsEditing(false);
+    setServiceRadius(null);
+    setNearbyTowns([]);
+  };
+
+  const handleServiceAreaUpdate = (radius: number, towns: string[]) => {
+    setServiceRadius(radius);
+    setNearbyTowns(towns);
   };
 
   return (
@@ -133,6 +152,7 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({
                   onLocationFound={(location) => {
                     // Location areas will be automatically set by the component
                   }}
+                  onServiceAreaUpdate={handleServiceAreaUpdate}
                   placeholder="Enter your service area postcode or street"
                   className="w-full"
                 />

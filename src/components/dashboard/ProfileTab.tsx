@@ -42,6 +42,8 @@ interface BusinessData {
   service_area: string;
   operating_hours: OperatingHours;
   availability_notes: string;
+  service_radius_miles: number | null;
+  nearby_towns: string[];
 }
 
 const ProfileTab = () => {
@@ -82,7 +84,9 @@ const ProfileTab = () => {
     years_experience: 0,
     service_area: '',
     operating_hours: getDefaultOperatingHours(),
-    availability_notes: ''
+    availability_notes: '',
+    service_radius_miles: null,
+    nearby_towns: []
   });
 
   const [loading, setLoading] = useState(true);
@@ -203,7 +207,9 @@ const ProfileTab = () => {
             years_experience: businessDetails.years_experience || 0,
             service_area: businessDetails.service_area || '',
             operating_hours: parseOperatingHours(businessDetails.operating_hours),
-            availability_notes: businessDetails.availability_notes || ''
+            availability_notes: businessDetails.availability_notes || '',
+            service_radius_miles: businessDetails.service_radius_miles || null,
+            nearby_towns: businessDetails.nearby_towns || []
           });
         }
       }

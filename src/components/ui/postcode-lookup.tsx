@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Check, AlertCircle, Loader2, X } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, Check, AlertCircle, Loader2, X, Map } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PostcodeResult {
@@ -30,6 +32,7 @@ interface PostcodeLookupProps {
   value: string;
   onChange: (postcode: string, locationData?: PostcodeResult) => void;
   onLocationFound?: (locationData: PostcodeResult) => void;
+  onServiceAreaUpdate?: (radius: number, nearbyTowns: string[]) => void;
   placeholder?: string;
   className?: string;
   error?: string;
@@ -39,6 +42,7 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
   value,
   onChange,
   onLocationFound,
+  onServiceAreaUpdate,
   placeholder = "e.g., M23 9NY",
   className,
   error
@@ -50,6 +54,9 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
   const [isValidated, setIsValidated] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
+  const [selectedRadius, setSelectedRadius] = useState<number | null>(null);
+  const [nearbyTowns, setNearbyTowns] = useState<string[]>([]);
+  const [loadingNearbyTowns, setLoadingNearbyTowns] = useState(false);
   
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -225,6 +232,56 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
     onChange(updatedAreas.join(', '));
   };
 
+  const fetchNearbyTowns = async (postcode: string, radiusMiles: number) => {
+    setLoadingNearbyTowns(true);
+    try {
+      // First get nearby postcodes within radius
+      const nearbyResponse = await fetch(
+        `https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}/nearest?radius=${radiusMiles * 1609}&limit=100`
+      );
+      
+      if (nearbyResponse.ok) {
+        const nearbyData = await nearbyResponse.json();
+        const nearbyPostcodes = nearbyData.result || [];
+        
+        // Extract unique towns/areas from nearby postcodes
+        const towns = new Set<string>();
+        
+        nearbyPostcodes.forEach((pc: PostcodeResult) => {
+          if (pc.admin_ward) towns.add(pc.admin_ward);
+          if (pc.admin_district) towns.add(pc.admin_district);
+          if (pc.parliamentary_constituency) {
+            // Extract town names from constituency
+            const constituency = pc.parliamentary_constituency;
+            const constituencyTowns = constituency
+              .replace(/\s+(and|&)\s+/gi, ', ')
+              .split(', ')
+              .map(town => town.trim())
+              .filter(town => town && !town.match(/^(East|West|North|South|Central)$/i));
+            constituencyTowns.forEach(town => towns.add(town));
+          }
+        });
+        
+        const townArray = Array.from(towns).sort();
+        setNearbyTowns(townArray);
+        onServiceAreaUpdate?.(radiusMiles, townArray);
+      }
+    } catch (error) {
+      console.error('Error fetching nearby towns:', error);
+    } finally {
+      setLoadingNearbyTowns(false);
+    }
+  };
+
+  const handleRadiusChange = (radius: string) => {
+    const radiusNum = parseInt(radius);
+    setSelectedRadius(radiusNum);
+    
+    if (selectedLocation && selectedLocation.postcode) {
+      fetchNearbyTowns(selectedLocation.postcode, radiusNum);
+    }
+  };
+
   return (
     <div className={cn("space-y-2", className)}>
       <Label htmlFor="postcode-lookup">
@@ -287,6 +344,63 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
       <p className="text-xs text-muted-foreground">
         Start typing your postcode to search your location
       </p>
+
+      {/* Service Radius Selection */}
+      {isValidated && selectedLocation && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="service-radius">Select your service radius</Label>
+            <Select onValueChange={handleRadiusChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose radius in miles" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 mile</SelectItem>
+                <SelectItem value="3">3 miles</SelectItem>
+                <SelectItem value="5">5 miles</SelectItem>
+                <SelectItem value="10">10 miles</SelectItem>
+                <SelectItem value="15">15 miles</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Nearby Towns Preview */}
+          {selectedRadius && (
+            <Card className="border border-provider/20">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm flex items-center space-x-2">
+                  <Map className="h-4 w-4 text-provider" />
+                  <span>Your business will be visible to customers in these areas:</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loadingNearbyTowns ? (
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Finding nearby areas...</span>
+                  </div>
+                ) : nearbyTowns.length > 0 ? (
+                  <div className="max-h-32 overflow-y-auto">
+                    <div className="flex flex-wrap gap-2">
+                      {nearbyTowns.map((town, index) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="bg-provider/10 text-provider text-xs"
+                        >
+                          {town}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No nearby areas found for this radius.</p>
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
 
       {/* Location Areas - Removable Tags */}
       {isValidated && selectedLocation && selectedAreas.length > 0 && (
