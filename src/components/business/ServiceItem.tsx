@@ -12,6 +12,7 @@ interface Service {
   description: string;
   base_price: number;
   duration_minutes: number;
+  duration_text?: string;
   is_active: boolean;
 }
 
@@ -94,7 +95,7 @@ export const ServiceItem: React.FC<ServiceItemProps> = ({
             </div>
             <div className="flex items-center gap-1 text-muted-foreground">
               <Clock className="h-4 w-4" />
-              <span>{formatDuration(service.duration_minutes)}</span>
+              <span>{service.duration_text || formatDuration(service.duration_minutes)}</span>
             </div>
           </div>
         </div>

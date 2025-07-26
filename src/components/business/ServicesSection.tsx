@@ -17,6 +17,7 @@ interface Service {
   description: string;
   base_price: number;
   duration_minutes: number;
+  duration_text?: string;
   is_active: boolean;
 }
 

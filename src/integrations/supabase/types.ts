@@ -572,6 +572,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           duration_minutes: number | null
+          duration_text: string | null
           id: string
           is_active: boolean | null
           provider_id: string
@@ -583,6 +584,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           duration_minutes?: number | null
+          duration_text?: string | null
           id?: string
           is_active?: boolean | null
           provider_id: string
@@ -594,6 +596,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           duration_minutes?: number | null
+          duration_text?: string | null
           id?: string
           is_active?: boolean | null
           provider_id?: string

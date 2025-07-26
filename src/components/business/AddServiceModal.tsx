@@ -133,6 +133,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             description: formData.description,
             base_price: formData.base_price,
             duration_minutes: parsedDurationMinutes,
+            duration_text: formData.duration_text,
             is_active: formData.is_active
           })
           .eq('id', editingService.id)
@@ -151,6 +152,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             description: formData.description,
             base_price: formData.base_price,
             duration_minutes: parsedDurationMinutes,
+            duration_text: formData.duration_text,
             is_active: formData.is_active
           })
           .select()
