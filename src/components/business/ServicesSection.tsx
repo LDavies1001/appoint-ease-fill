@@ -120,7 +120,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           {isEditing ? (
             <>
               <Button
-                variant="outline"
+                variant="provider-outline"
                 size="sm"
                 onClick={handleCancel}
                 disabled={saving}
@@ -129,6 +129,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 Cancel
               </Button>
               <Button
+                variant="provider"
                 size="sm"
                 onClick={handleSave}
                 disabled={saving}
@@ -143,7 +144,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             </>
           ) : (
             <Button
-              variant="outline"
+              variant="provider-outline"
               size="sm"
               onClick={() => setIsEditing(true)}
             >
