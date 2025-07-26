@@ -150,6 +150,22 @@ const Profile = () => {
     }
   }, [user, profile]);
 
+  // Handle hash navigation to portfolio section
+  useEffect(() => {
+    if (window.location.hash === '#portfolio') {
+      // Small delay to ensure the page has rendered
+      setTimeout(() => {
+        const portfolioElement = document.getElementById('portfolio');
+        if (portfolioElement) {
+          portfolioElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
+    }
+  }, [loading, providerDetails]); // Run after data is loaded
+
   const fetchProviderData = async () => {
     try {
       setLoading(true);
