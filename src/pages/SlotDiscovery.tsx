@@ -265,22 +265,83 @@ const SlotDiscovery: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-white to-primary/10">
       {/* Hero Section */}
-      <div className="bg-foreground text-background">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="text-center space-y-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-background">
-              Find Your Perfect Slot
-            </h1>
-            <p className="text-lg text-background/80 max-w-2xl mx-auto font-medium">
-              Discover available last-minute appointments with local beauty professionals near you
-            </p>
+      <div className="relative overflow-hidden bg-gradient-to-br from-foreground via-foreground/95 to-primary/20 text-background">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVHJhbnNmb3JtPSJyb3RhdGUoNDUpIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJtLTEwIDMwaDYwbS0xMC0xNWg2MG0tMTAtMTVoNjBtLTEwLTE1aDYwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBvcGFjaXR5PSIwLjA1Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+')] opacity-30"></div>
+        
+        <div className="relative max-w-6xl mx-auto px-6 py-20">
+          <div className="text-center space-y-8 animate-fade-in">
+            {/* Main Headline */}
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 bg-primary/20 text-background/90 px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm border border-background/10">
+                <Clock className="h-4 w-4" />
+                Last-minute slots available now
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold text-background leading-tight">
+                Book Beauty Slots
+                <span className="block text-primary/90">In Minutes</span>
+              </h1>
+              <p className="text-xl text-background/80 max-w-3xl mx-auto font-medium leading-relaxed">
+                Skip the wait lists. Find and book available beauty appointments from top-rated professionals in your area – today, tomorrow, or this week.
+              </p>
+            </div>
+
+            {/* Social Proof */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-background/70">
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/80 border-2 border-background"></div>
+                  <div className="w-8 h-8 rounded-full bg-accent/80 border-2 border-background"></div>
+                  <div className="w-8 h-8 rounded-full bg-primary/60 border-2 border-background"></div>
+                </div>
+                <span className="text-sm font-medium">500+ happy customers</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <span className="text-sm font-medium ml-1">4.9/5 rating</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                <span className="text-sm font-medium">Available nationwide</span>
+              </div>
+            </div>
+
+            {/* CTA Section */}
+            <div className="pt-4">
+              <Button 
+                onClick={() => {
+                  document.getElementById('search-section')?.scrollIntoView({ 
+                    behavior: 'smooth' 
+                  });
+                }}
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-foreground font-bold px-8 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 animate-scale-in"
+              >
+                Find Slots Near Me
+                <Search className="ml-2 h-5 w-5" />
+              </Button>
+              <p className="text-background/60 text-sm mt-3 font-medium">
+                No booking fees • Instant confirmation • Cancel anytime
+              </p>
+            </div>
           </div>
+        </div>
+
+        {/* Bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg className="w-full h-12 text-background" fill="currentColor" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+          </svg>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">
-        <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm">
+      <div id="search-section" className="max-w-6xl mx-auto px-6 -mt-8 relative z-10">
+        <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm animate-scale-in">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
