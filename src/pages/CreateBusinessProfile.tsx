@@ -7,6 +7,7 @@ import Header from '@/components/ui/header';
 
 const CreateBusinessProfile = () => {
   const [existingProfile, setExistingProfile] = useState<any>(null);
+  const [hasExistingProfile, setHasExistingProfile] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -38,11 +39,27 @@ const CreateBusinessProfile = () => {
         throw providerError;
       }
       
-      // Prepare initial data from signup information
-      const parseLocationToAddress = (location?: string) => {
-        if (!location) {
+      // If provider details exist, use them for editing
+      if (providerData) {
+        setExistingProfile(providerData);
+        setHasExistingProfile(true);
+      } else {
+        // Prepare initial data from signup information for new profile creation
+        const parseLocationToAddress = (location?: string) => {
+          if (!location) {
+            return {
+              address_line_1: '',
+              address_line_2: '',
+              town_city: '',
+              county: '',
+              postcode: '',
+              country: 'United Kingdom',
+              is_public: false // Default to private for safety
+            };
+          }
+          
           return {
-            address_line_1: '',
+            address_line_1: location,
             address_line_2: '',
             town_city: '',
             county: '',
@@ -50,44 +67,21 @@ const CreateBusinessProfile = () => {
             country: 'United Kingdom',
             is_public: false // Default to private for safety
           };
-        }
+        };
+
+        const signupData = {
+          business_name: user?.user_metadata?.business_name || profile?.business_name || '',
+          business_phone: profile?.phone || user?.user_metadata?.phone || '',
+          business_address: parseLocationToAddress(profile?.location || user?.user_metadata?.location),
+          business_categories: []
+        };
         
-        // Try to parse the location string into address components
-        // For now, put the whole location in address_line_1 as fallback
-        return {
-          address_line_1: location,
-          address_line_2: '',
-          town_city: '',
-          county: '',
-          postcode: '',
-          country: 'United Kingdom',
-          is_public: false // Default to private for safety
-        };
-      };
-
-      const signupData = {
-        business_name: user?.user_metadata?.business_name || profile?.business_name || '',
-        business_phone: profile?.phone || user?.user_metadata?.phone || '',
-        business_address: parseLocationToAddress(profile?.location || user?.user_metadata?.location),
-        business_categories: []
-      };
-
-      // If provider details exist, merge with signup data (provider details take precedence)
-      if (providerData) {
-        const mergedData = {
-          ...signupData,
-          ...providerData,
-          // Convert services_offered array to business_categories if it exists
-          business_categories: providerData.services_offered || []
-        };
-        setExistingProfile(mergedData);
-      } else {
-        // Use signup data as initial form data
         setExistingProfile(signupData);
+        setHasExistingProfile(false);
       }
     } catch (error) {
       console.error('Error checking existing profile:', error);
-      // Still set signup data even if there's an error
+      // Fallback data for new profile creation
       const fallbackData = {
         business_name: user?.user_metadata?.business_name || profile?.business_name || '',
         business_phone: profile?.phone || user?.user_metadata?.phone || '',
@@ -103,6 +97,7 @@ const CreateBusinessProfile = () => {
         business_categories: []
       };
       setExistingProfile(fallbackData);
+      setHasExistingProfile(false);
     } finally {
       setLoading(false);
     }
@@ -130,7 +125,7 @@ const CreateBusinessProfile = () => {
     <>
       <Header />
       <BusinessProfileForm 
-        mode={existingProfile ? 'edit' : 'create'}
+        mode={hasExistingProfile ? 'edit' : 'create'}
         existingData={existingProfile}
         onSuccess={handleSuccess}
       />
