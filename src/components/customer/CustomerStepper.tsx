@@ -431,18 +431,54 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Step {currentStep + 1} of {steps.length}</span>
-          <span className="text-muted-foreground">{Math.round(((currentStep + 1) / steps.length) * 100)}% Complete</span>
+          <span className="text-pink-600 font-medium">{Math.round(((currentStep + 1) / steps.length) * 100)}% Complete</span>
         </div>
         <div className="w-full bg-muted rounded-full h-2">
           <div 
-            className="bg-primary h-2 rounded-full transition-all duration-300" 
+            className="bg-gradient-to-r from-pink-400 to-pink-500 h-2 rounded-full transition-all duration-300 animate-scale-in" 
             style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
           />
         </div>
       </div>
 
+      {/* Step Indicator */}
+      <div className="flex justify-center space-x-4 mb-6">
+        {steps.map((step, index) => (
+          <div key={index} className="flex items-center">
+            <div className={`
+              w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300
+              ${index <= currentStep 
+                ? 'bg-pink-500 text-white shadow-lg' 
+                : 'bg-muted text-muted-foreground'
+              }
+            `}>
+              {index < currentStep ? (
+                <CheckCircle className="h-4 w-4" />
+              ) : (
+                index + 1
+              )}
+            </div>
+            {index < steps.length - 1 && (
+              <div className={`
+                w-12 h-0.5 mx-2 transition-all duration-300
+                ${index < currentStep ? 'bg-pink-500' : 'bg-muted'}
+              `} />
+            )}
+          </div>
+        ))}
+      </div>
+
       {/* Step Content */}
-      <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
+      <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8 border-l-4 border-l-pink-400">
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-pink-600 mb-1">
+            {steps[currentStep].title}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {steps[currentStep].description}
+          </p>
+        </div>
+
         {renderStepContent()}
 
         {/* Navigation */}
@@ -452,7 +488,7 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
             variant="outline"
             onClick={handleBack}
             disabled={currentStep === 0 || isLoading}
-            className={currentStep === 0 ? 'invisible' : ''}
+            className={`border-pink-200 text-pink-600 hover:bg-pink-50 ${currentStep === 0 ? 'invisible' : ''}`}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
@@ -460,12 +496,15 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
 
           <Button
             type="button"
-            variant="hero"
             onClick={handleNext}
             disabled={isLoading}
+            className="bg-pink-500 hover:bg-pink-600 text-white px-6"
           >
             {isLoading ? (
-              "Saving..."
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Saving...
+              </>
             ) : currentStep === steps.length - 1 ? (
               <>
                 <CheckCircle className="w-4 h-4 mr-2" />
