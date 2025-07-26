@@ -421,8 +421,14 @@ export type Database = {
       }
       provider_details: {
         Row: {
+          address_verification_method: string | null
+          address_verified: boolean | null
+          address_verified_at: string | null
           availability_notes: string | null
           awards_recognitions: string | null
+          background_check_documents: Json | null
+          background_check_verified: boolean | null
+          background_check_verified_at: string | null
           business_address: string | null
           business_category: string | null
           business_city: string | null
@@ -444,9 +450,16 @@ export type Database = {
           emergency_available: boolean | null
           facebook_url: string | null
           id: string
+          identity_documents: Json | null
+          identity_verified: boolean | null
+          identity_verified_at: string | null
           instagram_url: string | null
+          insurance_documents: Json | null
           insurance_info: string | null
+          insurance_verified: boolean | null
+          insurance_verified_at: string | null
           is_address_public: boolean | null
+          is_fully_verified: boolean | null
           operating_hours: string | null
           other_qualifications: string | null
           postcode_area: string | null
@@ -464,11 +477,18 @@ export type Database = {
           total_reviews: number | null
           updated_at: string
           user_id: string
+          verification_completed_at: string | null
           years_experience: number | null
         }
         Insert: {
+          address_verification_method?: string | null
+          address_verified?: boolean | null
+          address_verified_at?: string | null
           availability_notes?: string | null
           awards_recognitions?: string | null
+          background_check_documents?: Json | null
+          background_check_verified?: boolean | null
+          background_check_verified_at?: string | null
           business_address?: string | null
           business_category?: string | null
           business_city?: string | null
@@ -490,9 +510,16 @@ export type Database = {
           emergency_available?: boolean | null
           facebook_url?: string | null
           id?: string
+          identity_documents?: Json | null
+          identity_verified?: boolean | null
+          identity_verified_at?: string | null
           instagram_url?: string | null
+          insurance_documents?: Json | null
           insurance_info?: string | null
+          insurance_verified?: boolean | null
+          insurance_verified_at?: string | null
           is_address_public?: boolean | null
+          is_fully_verified?: boolean | null
           operating_hours?: string | null
           other_qualifications?: string | null
           postcode_area?: string | null
@@ -510,11 +537,18 @@ export type Database = {
           total_reviews?: number | null
           updated_at?: string
           user_id: string
+          verification_completed_at?: string | null
           years_experience?: number | null
         }
         Update: {
+          address_verification_method?: string | null
+          address_verified?: boolean | null
+          address_verified_at?: string | null
           availability_notes?: string | null
           awards_recognitions?: string | null
+          background_check_documents?: Json | null
+          background_check_verified?: boolean | null
+          background_check_verified_at?: string | null
           business_address?: string | null
           business_category?: string | null
           business_city?: string | null
@@ -536,9 +570,16 @@ export type Database = {
           emergency_available?: boolean | null
           facebook_url?: string | null
           id?: string
+          identity_documents?: Json | null
+          identity_verified?: boolean | null
+          identity_verified_at?: string | null
           instagram_url?: string | null
+          insurance_documents?: Json | null
           insurance_info?: string | null
+          insurance_verified?: boolean | null
+          insurance_verified_at?: string | null
           is_address_public?: boolean | null
+          is_fully_verified?: boolean | null
           operating_hours?: string | null
           other_qualifications?: string | null
           postcode_area?: string | null
@@ -556,6 +597,7 @@ export type Database = {
           total_reviews?: number | null
           updated_at?: string
           user_id?: string
+          verification_completed_at?: string | null
           years_experience?: number | null
         }
         Relationships: [
