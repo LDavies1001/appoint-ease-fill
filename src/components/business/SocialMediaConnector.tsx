@@ -48,9 +48,9 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
     id: 'instagram',
     name: 'Instagram',
     icon: Instagram,
-    color: 'bg-gradient-to-r from-purple-500 to-pink-500',
-    hoverColor: 'hover:from-purple-600 hover:to-pink-600',
-    description: "We'll only display your public handle and profile link.",
+    color: 'bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500',
+    hoverColor: 'hover:from-purple-600 hover:via-pink-600 hover:to-orange-600',
+    description: "Connect your Instagram to showcase your visual portfolio and attract more customers.",
     placeholder: '@username',
     urlTemplate: 'https://instagram.com/'
   },
@@ -58,9 +58,9 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
     id: 'facebook',
     name: 'Facebook',
     icon: Facebook,
-    color: 'bg-blue-600',
-    hoverColor: 'hover:bg-blue-700',
-    description: "We'll only display your public page and profile link.",
+    color: 'bg-gradient-to-r from-blue-600 to-blue-700',
+    hoverColor: 'hover:from-blue-700 hover:to-blue-800',
+    description: "Link your Facebook page to build trust and show customer reviews.",
     placeholder: 'your.page.name',
     urlTemplate: 'https://facebook.com/'
   },
@@ -68,11 +68,31 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
     id: 'tiktok',
     name: 'TikTok',
     icon: Music,
-    color: 'bg-black',
-    hoverColor: 'hover:bg-gray-800',
-    description: "We'll only display your public handle and profile link.",
+    color: 'bg-gradient-to-r from-black via-gray-900 to-red-600',
+    hoverColor: 'hover:from-gray-900 hover:via-black hover:to-red-700',
+    description: "Connect TikTok to show your creative process and behind-the-scenes content.",
     placeholder: '@username',
     urlTemplate: 'https://tiktok.com/'
+  },
+  {
+    id: 'twitter',
+    name: 'X (Twitter)',
+    icon: Twitter,
+    color: 'bg-black',
+    hoverColor: 'hover:bg-gray-800',
+    description: "Share updates and engage with customers on X (formerly Twitter).",
+    placeholder: '@username',
+    urlTemplate: 'https://x.com/'
+  },
+  {
+    id: 'youtube',
+    name: 'YouTube',
+    icon: Youtube,
+    color: 'bg-gradient-to-r from-red-600 to-red-700',
+    hoverColor: 'hover:from-red-700 hover:to-red-800',
+    description: "Showcase video tutorials, testimonials, and your work process.",
+    placeholder: '@channel',
+    urlTemplate: 'https://youtube.com/'
   }
 ];
 
@@ -285,12 +305,12 @@ export const SocialMediaConnector: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-4 shadow-lg">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-provider to-provider-glow rounded-full mb-4 shadow-elegant">
           <div className="text-3xl">📱</div>
         </div>
-        <h3 className="text-3xl font-bold text-accent">Connect Your Socials</h3>
+        <h3 className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">Connect Your Socials</h3>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Showcase your work and build trust by connecting your social media profiles. This step is completely optional.
+          Showcase your work and build trust by connecting your social media profiles. This enhances your credibility and helps customers discover your amazing work.
         </p>
       </div>
 
@@ -304,10 +324,10 @@ export const SocialMediaConnector: React.FC = () => {
             <div 
               key={platform.id} 
               className={cn(
-                "relative group rounded-xl border-2 transition-all duration-300 hover:shadow-lg",
+                "relative group rounded-xl border-2 transition-all duration-300 hover:shadow-elegant animate-fade-in",
                 connected 
-                  ? "bg-white border-accent/30 shadow-md" 
-                  : "bg-white/80 border-accent/10 hover:border-accent/30"
+                  ? "bg-white border-provider/30 shadow-elegant" 
+                  : "bg-white/80 border-provider/10 hover:border-provider/30"
               )}
             >
               {/* Platform Header */}
@@ -329,9 +349,9 @@ export const SocialMediaConnector: React.FC = () => {
                   {/* Status Badge */}
                   <div className="shrink-0">
                     {connected ? (
-                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-accent/10 border border-accent/20">
-                        <div className="w-2 h-2 rounded-full bg-accent"></div>
-                        <span className="text-xs font-medium text-accent">Connected</span>
+                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-provider/10 border border-provider/20">
+                        <div className="w-2 h-2 rounded-full bg-provider"></div>
+                        <span className="text-xs font-medium text-provider">Connected</span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-muted/50 border border-muted">
@@ -345,8 +365,8 @@ export const SocialMediaConnector: React.FC = () => {
                 {/* Connected State */}
                 {connected && connection ? (
                   <div className="space-y-4">
-                    <div className="p-3 rounded-lg bg-accent/5 border border-accent/20">
-                      <p className="font-medium text-sm text-accent">@{connection.handle}</p>
+                    <div className="p-3 rounded-lg bg-provider/5 border border-provider/20">
+                      <p className="font-medium text-sm text-provider">@{connection.handle}</p>
                       <p className="text-xs text-muted-foreground truncate">{connection.profile_url}</p>
                     </div>
                     
@@ -355,7 +375,7 @@ export const SocialMediaConnector: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => window.open(connection.profile_url, '_blank')}
-                        className="flex-1 border-accent/30 hover:border-accent hover:bg-accent/5"
+                        className="flex-1 border-provider/30 hover:border-provider hover:bg-provider/5"
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Visit Profile
@@ -386,7 +406,7 @@ export const SocialMediaConnector: React.FC = () => {
                     {showManualEntry[platform.id] ? (
                       <div className="space-y-3">
                         <div className="space-y-2">
-                          <Label htmlFor={`${platform.id}-handle`} className="text-sm font-medium text-accent">
+                          <Label htmlFor={`${platform.id}-handle`} className="text-sm font-medium text-provider">
                             Enter your {platform.name} handle
                           </Label>
                           <Input
@@ -397,7 +417,7 @@ export const SocialMediaConnector: React.FC = () => {
                               ...prev, 
                               [platform.id]: e.target.value 
                             }))}
-                            className="border-accent/30 focus:border-accent focus:ring-accent/20"
+                            className="border-provider/30 focus:border-provider focus:ring-provider/20"
                           />
                         </div>
                         <div className="flex gap-2">
@@ -405,7 +425,8 @@ export const SocialMediaConnector: React.FC = () => {
                             size="sm"
                             onClick={() => handleManualConnect(platform)}
                             disabled={!manualEntry[platform.id]?.trim()}
-                            className="flex-1 bg-accent hover:bg-accent/90 text-white"
+                            variant="provider"
+                            className="flex-1"
                           >
                             <Check className="h-4 w-4 mr-2" />
                             Connect Account
@@ -442,7 +463,7 @@ export const SocialMediaConnector: React.FC = () => {
                           variant="ghost"
                           size="sm"
                           onClick={() => setShowManualEntry(prev => ({ ...prev, [platform.id]: true }))}
-                          className="w-full text-muted-foreground hover:text-accent hover:bg-accent/5"
+                          className="w-full text-muted-foreground hover:text-provider hover:bg-provider/5"
                         >
                           Enter manually instead
                         </Button>
@@ -454,7 +475,7 @@ export const SocialMediaConnector: React.FC = () => {
 
               {/* Connected indicator border */}
               {connected && (
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent to-accent-glow rounded-t-xl"></div>
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-provider to-provider-glow rounded-t-xl"></div>
               )}
             </div>
           );
@@ -462,13 +483,13 @@ export const SocialMediaConnector: React.FC = () => {
       </div>
 
       {/* Privacy Section */}
-      <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+      <div className="bg-gradient-to-r from-provider/5 to-provider-glow/5 rounded-xl p-6 border border-provider/20">
         <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
+          <div className="flex-shrink-0 w-12 h-12 bg-provider/10 rounded-full flex items-center justify-center">
             <div className="text-2xl">🛡️</div>
           </div>
           <div>
-            <h4 className="font-semibold text-accent mb-2">Your Privacy is Protected</h4>
+            <h4 className="font-semibold text-provider mb-2">Your Privacy is Protected</h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
               We only display your public handle and profile link to help customers find and trust your business. 
               We never post on your behalf, access private information, or share your data with third parties.
