@@ -104,13 +104,19 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
       // Convert arrays back to strings for database storage
       const certificationsString = certificationsList.filter(item => item.trim() !== '').join('\n');
       const insuranceString = insuranceList.filter(item => item.trim() !== '').join('\n');
+      const awardString = awardsList.filter(item => item.trim() !== '').join('\n');
+      const membershipString = membershipsList.filter(item => item.trim() !== '').join('\n');
+      const otherQualificationsString = otherQualificationsList.filter(item => item.trim() !== '').join('\n');
 
       const { error } = await supabase
         .from('provider_details')
         .update({
           certifications: certificationsString,
           insurance_info: insuranceString,
-          certification_files: certificationFiles
+          certification_files: certificationFiles,
+          awards_recognitions: awardString,
+          professional_memberships: membershipString,
+          other_qualifications: otherQualificationsString
         })
         .eq('user_id', userId);
 
@@ -119,7 +125,10 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
       onUpdate({
         certifications: certificationsString,
         insurance_info: insuranceString,
-        certification_files: certificationFiles
+        certification_files: certificationFiles,
+        awards_recognitions: awardString,
+        professional_memberships: membershipString,
+        other_qualifications: otherQualificationsString
       });
       
       setIsEditing(false);
@@ -147,9 +156,21 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
     const parsedInsurance = data.insurance_info 
       ? data.insurance_info.split('\n').filter(item => item.trim() !== '') 
       : [''];
+    const parsedAwards = data.awards_recognitions 
+      ? data.awards_recognitions.split('\n').filter(item => item.trim() !== '') 
+      : [''];
+    const parsedMemberships = data.professional_memberships 
+      ? data.professional_memberships.split('\n').filter(item => item.trim() !== '') 
+      : [''];
+    const parsedOtherQualifications = data.other_qualifications 
+      ? data.other_qualifications.split('\n').filter(item => item.trim() !== '') 
+      : [''];
     
     setCertificationsList(parsedCertifications.length > 0 ? parsedCertifications : ['']);
     setInsuranceList(parsedInsurance.length > 0 ? parsedInsurance : ['']);
+    setAwardsList(parsedAwards.length > 0 ? parsedAwards : ['']);
+    setMembershipsList(parsedMemberships.length > 0 ? parsedMemberships : ['']);
+    setOtherQualificationsList(parsedOtherQualifications.length > 0 ? parsedOtherQualifications : ['']);
     setCertificationFiles(data.certification_files || []);
     setIsEditing(false);
   };
@@ -180,6 +201,51 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
     const updated = [...insuranceList];
     updated[index] = value;
     setInsuranceList(updated);
+  };
+
+  // Awards handlers
+  const addAwardItem = () => {
+    setAwardsList([...awardsList, '']);
+  };
+
+  const removeAwardItem = (index: number) => {
+    setAwardsList(awardsList.filter((_, i) => i !== index));
+  };
+
+  const updateAwardItem = (index: number, value: string) => {
+    const updated = [...awardsList];
+    updated[index] = value;
+    setAwardsList(updated);
+  };
+
+  // Memberships handlers
+  const addMembershipItem = () => {
+    setMembershipsList([...membershipsList, '']);
+  };
+
+  const removeMembershipItem = (index: number) => {
+    setMembershipsList(membershipsList.filter((_, i) => i !== index));
+  };
+
+  const updateMembershipItem = (index: number, value: string) => {
+    const updated = [...membershipsList];
+    updated[index] = value;
+    setMembershipsList(updated);
+  };
+
+  // Other qualifications handlers
+  const addOtherQualificationItem = () => {
+    setOtherQualificationsList([...otherQualificationsList, '']);
+  };
+
+  const removeOtherQualificationItem = (index: number) => {
+    setOtherQualificationsList(otherQualificationsList.filter((_, i) => i !== index));
+  };
+
+  const updateOtherQualificationItem = (index: number, value: string) => {
+    const updated = [...otherQualificationsList];
+    updated[index] = value;
+    setOtherQualificationsList(updated);
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -396,6 +462,56 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
             </div>
           </div>
 
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <Label className="text-base font-medium mb-3 block">
+                Awards & Recognitions
+              </Label>
+              <p className="text-sm text-muted-foreground mb-3">
+                List awards, recognitions, and achievements
+              </p>
+              {renderListItems(
+                awardsList,
+                updateAwardItem,
+                addAwardItem,
+                removeAwardItem,
+                "e.g., Best Beauty Therapist 2024"
+              )}
+            </div>
+
+            <div>
+              <Label className="text-base font-medium mb-3 block">
+                Professional Memberships
+              </Label>
+              <p className="text-sm text-muted-foreground mb-3">
+                List professional associations and memberships
+              </p>
+              {renderListItems(
+                membershipsList,
+                updateMembershipItem,
+                addMembershipItem,
+                removeMembershipItem,
+                "e.g., BABTAC, Federation of Holistic Therapists"
+              )}
+            </div>
+
+            <div>
+              <Label className="text-base font-medium mb-3 block">
+                Other Training & Qualifications
+              </Label>
+              <p className="text-sm text-muted-foreground mb-3">
+                Additional training, workshops, or specialized qualifications
+              </p>
+              {renderListItems(
+                otherQualificationsList,
+                updateOtherQualificationItem,
+                addOtherQualificationItem,
+                removeOtherQualificationItem,
+                "e.g., Advanced Facial Techniques Workshop"
+              )}
+            </div>
+          </div>
+
           <div>
             <Label className="text-base font-medium mb-3 block">Certification Files</Label>
             <p className="text-sm text-muted-foreground mb-3">
@@ -495,6 +611,65 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">No certifications listed</p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <FileText className="h-4 w-4 text-provider" />
+                Awards & Recognitions
+              </h4>
+              {data.awards_recognitions ? (
+                <div className="space-y-2">
+                  {data.awards_recognitions.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No awards or recognitions listed</p>
+              )}
+            </div>
+
+            <div>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <FileText className="h-4 w-4 text-provider" />
+                Professional Memberships
+              </h4>
+              {data.professional_memberships ? (
+                <div className="space-y-2">
+                  {data.professional_memberships.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No professional memberships listed</p>
+              )}
+            </div>
+
+            <div>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <FileText className="h-4 w-4 text-provider" />
+                Other Training & Qualifications
+              </h4>
+              {data.other_qualifications ? (
+                <div className="space-y-2">
+                  {data.other_qualifications.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No additional qualifications listed</p>
               )}
             </div>
           </div>

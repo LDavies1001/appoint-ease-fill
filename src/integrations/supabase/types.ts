@@ -422,6 +422,7 @@ export type Database = {
       provider_details: {
         Row: {
           availability_notes: string | null
+          awards_recognitions: string | null
           business_address: string | null
           business_category: string | null
           business_city: string | null
@@ -447,10 +448,12 @@ export type Database = {
           insurance_info: string | null
           is_address_public: boolean | null
           operating_hours: string | null
+          other_qualifications: string | null
           postcode_area: string | null
           postcode_full: string | null
           postcode_verified_at: string | null
           pricing_info: string | null
+          professional_memberships: string | null
           profile_published: boolean | null
           profile_visibility: string | null
           rating: number | null
@@ -465,6 +468,7 @@ export type Database = {
         }
         Insert: {
           availability_notes?: string | null
+          awards_recognitions?: string | null
           business_address?: string | null
           business_category?: string | null
           business_city?: string | null
@@ -490,10 +494,12 @@ export type Database = {
           insurance_info?: string | null
           is_address_public?: boolean | null
           operating_hours?: string | null
+          other_qualifications?: string | null
           postcode_area?: string | null
           postcode_full?: string | null
           postcode_verified_at?: string | null
           pricing_info?: string | null
+          professional_memberships?: string | null
           profile_published?: boolean | null
           profile_visibility?: string | null
           rating?: number | null
@@ -508,6 +514,7 @@ export type Database = {
         }
         Update: {
           availability_notes?: string | null
+          awards_recognitions?: string | null
           business_address?: string | null
           business_category?: string | null
           business_city?: string | null
@@ -533,10 +540,12 @@ export type Database = {
           insurance_info?: string | null
           is_address_public?: boolean | null
           operating_hours?: string | null
+          other_qualifications?: string | null
           postcode_area?: string | null
           postcode_full?: string | null
           postcode_verified_at?: string | null
           pricing_info?: string | null
+          professional_memberships?: string | null
           profile_published?: boolean | null
           profile_visibility?: string | null
           rating?: number | null

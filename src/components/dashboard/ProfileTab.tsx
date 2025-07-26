@@ -63,6 +63,9 @@ interface BusinessData {
   certifications: string;
   insurance_info: string;
   certification_files: string[];
+  awards_recognitions: string;
+  professional_memberships: string;
+  other_qualifications: string;
   pricing_info: string;
   
   profile_published: boolean;
@@ -117,6 +120,9 @@ const ProfileTab = () => {
     certifications: '',
     insurance_info: '',
     certification_files: [],
+    awards_recognitions: '',
+    professional_memberships: '',
+    other_qualifications: '',
     pricing_info: '',
     
     profile_published: false,
@@ -245,6 +251,9 @@ const ProfileTab = () => {
             certifications: businessDetails.certifications || '',
             insurance_info: businessDetails.insurance_info || '',
             certification_files: businessDetails.certification_files || [],
+            awards_recognitions: businessDetails.awards_recognitions || '',
+            professional_memberships: businessDetails.professional_memberships || '',
+            other_qualifications: businessDetails.other_qualifications || '',
             pricing_info: businessDetails.pricing_info || '',
             
             profile_published: businessDetails.profile_published || false,
@@ -339,7 +348,10 @@ const ProfileTab = () => {
                 data={{
                   certifications: businessData.certifications,
                   insurance_info: businessData.insurance_info,
-                  certification_files: businessData.certification_files
+                  certification_files: businessData.certification_files,
+                  awards_recognitions: businessData.awards_recognitions || '',
+                  professional_memberships: businessData.professional_memberships || '',
+                  other_qualifications: businessData.other_qualifications || ''
                 }}
                 userId={profile?.user_id || ''}
                 onUpdate={handleBusinessUpdate}
