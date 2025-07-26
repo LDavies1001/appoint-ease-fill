@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { 
   MapPin, 
@@ -40,7 +41,10 @@ import {
   FileText,
   Copy,
   Plus,
-  X
+  X,
+  Bell,
+  Settings,
+  BarChart3
 } from 'lucide-react';
 import Header from '@/components/ui/header';
 
@@ -150,6 +154,7 @@ const Profile = () => {
   const [providerServices, setProviderServices] = useState<ProviderService[]>([]);
   const [businessCategories, setBusinessCategories] = useState<BusinessCategory[]>([]);
   const [socialConnections, setSocialConnections] = useState<SocialConnection[]>([]);
+  const [customerProfile, setCustomerProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   // Use route protection to handle auth state and redirects
@@ -161,6 +166,8 @@ const Profile = () => {
   useEffect(() => {
     if (user && profile?.active_role === 'provider') {
       fetchProviderData();
+    } else if (user && profile?.active_role === 'customer') {
+      fetchCustomerData();
     } else {
       setLoading(false);
     }
@@ -181,6 +188,30 @@ const Profile = () => {
       }, 100);
     }
   }, [loading, providerDetails]); // Run after data is loaded
+
+  const fetchCustomerData = async () => {
+    try {
+      setLoading(true);
+
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user?.id)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+      setCustomerProfile(profileData);
+    } catch (error) {
+      console.error('Error fetching customer data:', error);
+      toast({
+        title: "Error loading profile",
+        description: "Could not load your profile",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchProviderData = async () => {
     try {
@@ -355,36 +386,193 @@ const Profile = () => {
   // Customer Profile View
   if (profile.active_role === 'customer') {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
         <div className="container mx-auto px-4 py-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <User className="h-5 w-5 mr-2" />
-                My Profile
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CustomerProfileForm
-                initialData={{
-                  full_name: profile.name || '',
-                  email: profile.email,
-                  phone: profile.phone || '',
-                  location: profile.location || '',
-                  bio: profile.bio || '',
-                  privacy_settings: profile.privacy_settings || {
-                    phone_visible: true,
-                    email_visible: false,
-                    location_visible: true,
-                  },
-                  gdpr_consent: profile.gdpr_consent || false,
-                  terms_accepted: profile.terms_accepted || false,
-                }}
-                onSubmit={handleCustomerProfileSubmit}
-                isEdit={true}
-              />
-            </CardContent>
-          </Card>
+          <div className="max-w-4xl mx-auto">
+            {/* Profile Header */}
+            <div className="text-center mb-8">
+              <div className="relative inline-block mb-4">
+                <Avatar className="w-32 h-32 border-4 border-primary/20">
+                  <AvatarImage src={customerProfile?.avatar_url} />
+                  <AvatarFallback className="text-2xl bg-gradient-to-br from-primary/10 to-primary/20">
+                    {customerProfile?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'C'}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">{customerProfile?.name || 'Customer'}</h1>
+              <p className="text-muted-foreground">Member since {new Date(customerProfile?.created_at || '').toLocaleDateString()}</p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Personal Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Personal Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">Email</Label>
+                    <p className="text-foreground">{customerProfile?.email}</p>
+                  </div>
+                  {customerProfile?.phone && (
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Phone</Label>
+                      <p className="text-foreground">{customerProfile.phone}</p>
+                    </div>
+                  )}
+                  {customerProfile?.location && (
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Location</Label>
+                      <p className="text-foreground">{customerProfile.location}</p>
+                    </div>
+                  )}
+                  {customerProfile?.bio && (
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Bio</Label>
+                      <p className="text-foreground">{customerProfile.bio}</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Privacy Settings */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    Privacy Settings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Email Visibility</span>
+                    <Badge variant={customerProfile?.privacy_settings?.email_visible ? "default" : "secondary"}>
+                      {customerProfile?.privacy_settings?.email_visible ? "Visible" : "Private"}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Phone Visibility</span>
+                    <Badge variant={customerProfile?.privacy_settings?.phone_visible ? "default" : "secondary"}>
+                      {customerProfile?.privacy_settings?.phone_visible ? "Visible" : "Private"}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Location Visibility</span>
+                    <Badge variant={customerProfile?.privacy_settings?.location_visible ? "default" : "secondary"}>
+                      {customerProfile?.privacy_settings?.location_visible ? "Visible" : "Private"}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Notification Preferences */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="h-5 w-5" />
+                    Notification Preferences
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Email Notifications</span>
+                    <Badge variant={customerProfile?.notification_preferences?.email_notifications ? "default" : "secondary"}>
+                      {customerProfile?.notification_preferences?.email_notifications ? "Enabled" : "Disabled"}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">SMS Notifications</span>
+                    <Badge variant={customerProfile?.notification_preferences?.sms_notifications ? "default" : "secondary"}>
+                      {customerProfile?.notification_preferences?.sms_notifications ? "Enabled" : "Disabled"}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Marketing Communications</span>
+                    <Badge variant={customerProfile?.notification_preferences?.marketing_communications ? "default" : "secondary"}>
+                      {customerProfile?.notification_preferences?.marketing_communications ? "Enabled" : "Disabled"}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Booking Reminders</span>
+                    <Badge variant={customerProfile?.notification_preferences?.booking_reminders ? "default" : "secondary"}>
+                      {customerProfile?.notification_preferences?.booking_reminders ? "Enabled" : "Disabled"}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Service Preferences */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Star className="h-5 w-5" />
+                    Service Preferences
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground mb-2 block">
+                      Preferred Service Categories
+                    </Label>
+                    <div className="flex flex-wrap gap-2">
+                      {['Lash Extensions', 'Nail Care', 'Hair Styling', 'Skincare', 'Massage', 'Makeup'].map((category) => (
+                        <Badge key={category} variant="outline">
+                          {category}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">Budget Range</Label>
+                    <p className="text-foreground">£25 - £100</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Account Statistics */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  Account Statistics
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center p-4 bg-muted/50 rounded-lg">
+                    <div className="text-2xl font-bold text-primary">0</div>
+                    <div className="text-sm text-muted-foreground">Total Bookings</div>
+                  </div>
+                  <div className="text-center p-4 bg-muted/50 rounded-lg">
+                    <div className="text-2xl font-bold text-primary">0</div>
+                    <div className="text-sm text-muted-foreground">Favorite Businesses</div>
+                  </div>
+                  <div className="text-center p-4 bg-muted/50 rounded-lg">
+                    <div className="text-2xl font-bold text-primary">0</div>
+                    <div className="text-sm text-muted-foreground">Reviews Written</div>
+                  </div>
+                  <div className="text-center p-4 bg-muted/50 rounded-lg">
+                    <div className="text-2xl font-bold text-primary">
+                      {customerProfile?.notification_preferences?.marketing_communications ? '✓' : '✗'}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Marketing Enabled</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <div className="flex justify-center mt-8">
+              <Button onClick={() => navigate('/dashboard')} size="lg" className="bg-primary hover:bg-primary/90">
+                <Settings className="h-4 w-4 mr-2" />
+                Edit Profile Settings
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     );
