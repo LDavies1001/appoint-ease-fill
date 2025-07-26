@@ -553,128 +553,119 @@ const Profile = () => {
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* About Our Business */}
+            {/* Business Performance Stats */}
             <Card className="card-elegant overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                    <Building className="h-5 w-5 text-provider" />
+                    <Star className="h-5 w-5 text-provider" />
                   </div>
-                  <h2 className="text-2xl font-semibold">About Our Business</h2>
+                  <h2 className="text-2xl font-semibold">Business Performance</h2>
                 </div>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="space-y-6">
-                  {/* Business Description */}
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3">Our Story</h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {providerDetails.business_description || "Welcome to our business! We're dedicated to providing exceptional service."}
-                    </p>
-                  </div>
-
-                  {/* Connect With Us */}
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3 flex items-center">
-                      <Globe className="h-4 w-4 mr-2" />
-                      Connect With Us
-                    </h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {(() => {
-                        const socialMedia = providerDetails.social_media_links || {};
-                        const platforms = [
-                          { name: 'Instagram', key: 'instagram', icon: Instagram, color: 'text-pink-600' },
-                          { name: 'Facebook', key: 'facebook', icon: Facebook, color: 'text-blue-600' }
-                        ];
-                        
-                        return platforms.map(platform => {
-                          const IconComponent = platform.icon;
-                          const hasAccount = socialMedia[platform.key];
-                          
-                          return hasAccount ? (
-                            <a
-                              key={platform.key}
-                              href={`https://${platform.key}.com/${socialMedia[platform.key].replace('@', '')}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center p-3 bg-muted rounded-lg hover:bg-muted/80 transition-all group"
-                            >
-                              <IconComponent className={`h-5 w-5 mr-3 ${platform.color}`} />
-                              <div className="flex-1 min-w-0">
-                                <p className="font-medium text-sm">{platform.name}</p>
-                                <p className="text-xs text-muted-foreground truncate">@{socialMedia[platform.key].replace('@', '')}</p>
-                              </div>
-                            </a>
-                          ) : (
-                            <div key={platform.key} className="flex items-center p-3 bg-muted/30 rounded-lg">
-                              <IconComponent className="h-5 w-5 mr-3 text-muted-foreground" />
-                              <div className="flex-1 min-w-0">
-                                <p className="font-medium text-sm text-muted-foreground">{platform.name}</p>
-                                <p className="text-xs text-muted-foreground">Not connected</p>
-                              </div>
-                            </div>
-                          );
-                        });
-                      })()}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center space-x-1 mb-2">
+                      <Star className="h-6 w-6 text-yellow-500" />
+                      <span className="text-3xl font-bold text-provider">
+                        {providerDetails.rating > 0 ? providerDetails.rating.toFixed(1) : '5.0'}
+                      </span>
                     </div>
+                    <p className="text-sm text-muted-foreground">Average Rating</p>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-provider mb-2">
+                      {providerDetails.total_reviews || 0}
+                    </div>
+                    <p className="text-sm text-muted-foreground">Customer Reviews</p>
                   </div>
 
-                  {/* Certifications */}
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3 flex items-center">
-                      <Award className="h-4 w-4 mr-2" />
-                      Certifications & Specialties
-                    </h4>
-                    
-                    {providerDetails.certifications ? (
-                      <div className="flex flex-wrap gap-2">
-                        {providerDetails.certifications.split(',').map((cert: string, index: number) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
-                            {cert.trim()}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-muted-foreground text-sm italic">
-                        Professional certifications coming soon
-                      </p>
-                    )}
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-provider mb-2">
+                      {providerServices.length || 0}
+                    </div>
+                    <p className="text-sm text-muted-foreground">Services Offered</p>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-provider mb-2">
+                      {providerDetails.years_experience || 0}
+                    </div>
+                    <p className="text-sm text-muted-foreground">Years Experience</p>
+                  </div>
+                </div>
+                
+                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <Award className="h-5 w-5 text-provider" />
+                    <span className="font-medium">
+                      Profile Status: {providerDetails.profile_published ? (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+                          Published & Active
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200">
+                          Draft Mode
+                        </Badge>
+                      )}
+                    </span>
                   </div>
                 </div>
               </CardContent>
             </Card>
-
-            {/* Portfolio Section */}
+            
+            {/* About Section */}
             <Card className="card-elegant overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                    <Camera className="h-5 w-5 text-provider" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                      <User className="h-5 w-5 text-provider" />
+                    </div>
+                    <h2 className="text-2xl font-semibold">About {providerProfile.name || 'Business'}</h2>
                   </div>
-                  <h2 className="text-2xl font-semibold">Portfolio</h2>
+                  {isOwner && (
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="p-6">
-                {portfolioItems.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {portfolioItems.slice(0, 6).map((item) => (
-                      <div key={item.id} className="relative group overflow-hidden rounded-lg">
-                        <img
-                          src={item.image_url}
-                          alt={item.title}
-                          className="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                          <p className="text-white text-sm font-medium">{item.title}</p>
-                        </div>
-                      </div>
-                    ))}
+                {providerProfile.bio ? (
+                  <div className="mb-6">
+                    <p className="text-muted-foreground leading-relaxed">{providerProfile.bio}</p>
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <Camera className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Portfolio coming soon</p>
+                  <div className="mb-6 text-center py-8 border-2 border-dashed border-border rounded-lg">
+                    <User className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground">No bio added yet</p>
+                    {isOwner && (
+                      <p className="text-xs text-muted-foreground mt-2">Add a personal bio to help customers get to know you</p>
+                    )}
+                  </div>
+                )}
+                
+                {providerDetails.service_area ? (
+                  <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                    <MapPin className="h-5 w-5 text-provider mt-0.5" />
+                    <div>
+                      <h4 className="font-medium mb-1">Service Area</h4>
+                      <p className="text-muted-foreground">{providerDetails.service_area}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                    <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                    <div>
+                      <h4 className="font-medium mb-1">Service Area</h4>
+                      <p className="text-muted-foreground">Not specified</p>
+                      {isOwner && (
+                        <p className="text-xs text-muted-foreground mt-1">Add your service area to help customers find you</p>
+                      )}
+                    </div>
                   </div>
                 )}
               </CardContent>
@@ -683,38 +674,193 @@ const Profile = () => {
             {/* Services Section */}
             <Card className="card-elegant overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
-                    <PoundSterling className="h-5 w-5 text-provider" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                      <Building className="h-5 w-5 text-provider" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-semibold">Services & Pricing</h2>
+                      {providerServices.length > 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                          {providerServices.length} services • Total value £{totalServiceValue.toFixed(2)}
+                        </p>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No services added yet</p>
+                      )}
+                    </div>
                   </div>
-                  <h2 className="text-2xl font-semibold">Services & Pricing</h2>
+                  {!isOwner && providerServices.length > 0 && (
+                    <Button variant="provider" onClick={handleBookNow}>
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Book Now
+                    </Button>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="p-6">
                 {providerServices.length > 0 ? (
-                  <div className="space-y-4">
-                    {providerServices.map((service) => (
-                      <div key={service.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
-                        <div>
-                          <h4 className="font-semibold">{service.service_name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {service.description || 'Professional service tailored to your needs'}
-                          </p>
-                          <div className="flex items-center text-sm text-muted-foreground mt-1">
-                            <Clock className="h-4 w-4 mr-1" />
-                            {service.duration_minutes ? `${service.duration_minutes} min` : 'Contact for duration'}
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {providerServices.map((service) => (
+                        <div key={service.id} className="group relative p-5 border border-border rounded-xl hover:shadow-lg hover:border-provider/30 transition-all duration-300">
+                          <div className="flex flex-col h-full">
+                            <div className="flex items-start justify-between mb-3">
+                              <h3 className="font-semibold text-foreground text-lg leading-tight">
+                                {service.service_name}
+                              </h3>
+                              <div className="text-right flex-shrink-0 ml-4">
+                                <div className="text-2xl font-bold text-provider">
+                                  £{service.discount_price || service.base_price}
+                                </div>
+                                {service.discount_price && service.base_price > service.discount_price && (
+                                  <div className="text-sm text-muted-foreground line-through">
+                                    £{service.base_price}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {service.description ? (
+                              <p className="text-muted-foreground mb-3 text-sm leading-relaxed flex-grow">
+                                {service.description}
+                              </p>
+                            ) : (
+                              <p className="text-muted-foreground mb-3 text-sm italic flex-grow">
+                                No description provided
+                              </p>
+                            )}
+                            
+                            <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                <Clock className="h-4 w-4" />
+                                {service.duration_text || `${service.duration_minutes} min`}
+                              </div>
+                              {!isOwner && (
+                                <Button variant="provider" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                  Book
+                                </Button>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <Badge className="bg-provider/10 text-provider">
-                          £{service.base_price}
-                        </Badge>
+                      ))}
+                    </div>
+                    
+                    {providerDetails.pricing_info && (
+                      <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium mb-2 flex items-center gap-2">
+                          <PoundSterling className="h-4 w-4 text-provider" />
+                          Additional Pricing Information
+                        </h4>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                          {providerDetails.pricing_info}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                    <Building className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No Services Added</h3>
+                    <p className="text-muted-foreground mb-4">
+                      {isOwner 
+                        ? "Add your services and pricing to attract customers" 
+                        : "This business hasn't added any services yet"
+                      }
+                    </p>
+                    {isOwner && (
+                      <Button variant="provider" onClick={() => navigate('/dashboard')}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Services
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Portfolio Section */}
+            <Card className="card-elegant overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-provider/5 to-provider/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-provider/20 rounded-lg flex items-center justify-center">
+                      <ImageIcon className="h-5 w-5 text-provider" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-semibold">Portfolio Gallery</h2>
+                      {portfolioItems.filter(item => item.is_public || isOwner).length > 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                          Showcasing our best work
+                        </p>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No portfolio items yet</p>
+                      )}
+                    </div>
+                  </div>
+                  {isOwner && (
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                {portfolioItems.filter(item => item.is_public || isOwner).length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {portfolioItems
+                      .filter(item => item.is_public || isOwner)
+                      .map((item) => (
+                      <div key={item.id} className="relative group overflow-hidden rounded-xl">
+                        <div className="aspect-square relative">
+                          <img 
+                            src={item.image_url} 
+                            alt={item.title}
+                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute bottom-3 left-3 right-3 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <h4 className="font-medium text-sm mb-1">{item.title}</h4>
+                            {item.description && (
+                              <p className="text-xs opacity-90 line-clamp-2">{item.description}</p>
+                            )}
+                          </div>
+                          {item.featured && (
+                            <div className="absolute top-2 right-2">
+                              <Badge variant="secondary" className="bg-yellow-500/90 text-yellow-900 border-0">
+                                <Star className="h-3 w-3 mr-1" />
+                                Featured
+                              </Badge>
+                            </div>
+                          )}
+                          {!item.is_public && isOwner && (
+                            <div className="absolute top-2 left-2">
+                              <Badge variant="secondary" className="bg-red-500/90 text-white border-0">
+                                Private
+                              </Badge>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <PoundSterling className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Services coming soon</p>
+                  <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                    <ImageIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No Portfolio Items</h3>
+                    <p className="text-muted-foreground mb-4">
+                      {isOwner 
+                        ? "Upload photos to showcase your work and attract customers" 
+                        : "This business hasn't added any portfolio items yet"
+                      }
+                    </p>
+                    {isOwner && (
+                      <Button variant="provider" onClick={() => navigate('/dashboard')}>
+                        <ImageIcon className="h-4 w-4 mr-2" />
+                        Add Portfolio Items
+                      </Button>
+                    )}
                   </div>
                 )}
               </CardContent>
@@ -724,35 +870,56 @@ const Profile = () => {
           {/* Right Sidebar */}
           <div className="space-y-6">
             
-            {/* Contact Details */}
+            {/* Contact Information */}
             <Card className="card-elegant">
               <CardHeader>
-                <CardTitle className="flex items-center text-lg">
-                  <Phone className="h-5 w-5 mr-2 text-provider" />
-                  Contact Details
-                </CardTitle>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
+                    <Phone className="h-5 w-5 text-provider" />
+                  </div>
+                  <h3 className="text-lg font-semibold">Contact</h3>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {providerDetails.business_phone && (
-                  <div className="flex items-center">
-                    <Phone className="h-4 w-4 text-muted-foreground mr-3" />
-                    <span className="text-sm">{providerDetails.business_phone}</span>
-                  </div>
-                )}
-                
-                {providerDetails.business_email && (
-                  <div className="flex items-center">
-                    <Mail className="h-4 w-4 text-muted-foreground mr-3" />
-                    <span className="text-sm">{providerDetails.business_email}</span>
-                  </div>
-                )}
-                
-                {providerDetails.business_website && (
-                  <div className="flex items-center">
-                    <Globe className="h-4 w-4 text-muted-foreground mr-3" />
-                    <a href={providerDetails.business_website} target="_blank" rel="noopener noreferrer" className="text-sm text-provider hover:underline">
-                      Website
+                {providerDetails.business_phone ? (
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <a href={`tel:${providerDetails.business_phone}`} className="text-sm hover:text-provider transition-colors">
+                      {providerDetails.business_phone}
                     </a>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
+                    <Phone className="h-4 w-4" />
+                    <span className="text-sm">No phone number provided</span>
+                  </div>
+                )}
+                
+                {providerDetails.business_email ? (
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <a href={`mailto:${providerDetails.business_email}`} className="text-sm hover:text-provider transition-colors">
+                      {providerDetails.business_email}
+                    </a>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
+                    <Mail className="h-4 w-4" />
+                    <span className="text-sm">No email provided</span>
+                  </div>
+                )}
+                
+                {providerDetails.business_website ? (
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                    <Globe className="h-4 w-4 text-muted-foreground" />
+                    <a href={providerDetails.business_website} target="_blank" rel="noopener noreferrer" className="text-sm hover:text-provider transition-colors">
+                      Visit Website
+                    </a>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 p-3 rounded-lg text-muted-foreground">
+                    <Globe className="h-4 w-4" />
+                    <span className="text-sm">No website provided</span>
                   </div>
                 )}
               </CardContent>
@@ -762,10 +929,12 @@ const Profile = () => {
             {providerDetails.business_address && (
               <Card className="card-elegant">
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <MapPin className="h-5 w-5 mr-2 text-provider" />
-                    Location
-                  </CardTitle>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
+                      <MapPin className="h-5 w-5 text-provider" />
+                    </div>
+                    <h3 className="text-lg font-semibold">Location</h3>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">{providerDetails.business_address}</p>
@@ -777,10 +946,12 @@ const Profile = () => {
             {providerDetails.operating_hours && (
               <Card className="card-elegant">
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Clock className="h-5 w-5 mr-2 text-provider" />
-                    Operating Hours
-                  </CardTitle>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-provider" />
+                    </div>
+                    <h3 className="text-lg font-semibold">Operating Hours</h3>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
@@ -798,10 +969,12 @@ const Profile = () => {
             {/* Credentials */}
             <Card className="card-elegant">
               <CardHeader>
-                <CardTitle className="flex items-center text-lg">
-                  <Shield className="h-5 w-5 mr-2 text-provider" />
-                  Credentials
-                </CardTitle>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
+                    <Shield className="h-5 w-5 text-provider" />
+                  </div>
+                  <h3 className="text-lg font-semibold">Credentials</h3>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {providerDetails.years_experience > 0 && (
@@ -824,6 +997,23 @@ const Profile = () => {
                   <div className="flex items-center">
                     <Shield className="h-4 w-4 text-provider mr-3" />
                     <span className="text-sm">Insured Professional</span>
+                  </div>
+                )}
+
+                {/* Certifications */}
+                {providerDetails.certifications && (
+                  <div>
+                    <h4 className="font-medium mb-2 flex items-center">
+                      <Award className="h-4 w-4 mr-2" />
+                      Certifications
+                    </h4>
+                    <div className="flex flex-wrap gap-1">
+                      {providerDetails.certifications.split(',').map((cert: string, index: number) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {cert.trim()}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 )}
               </CardContent>
