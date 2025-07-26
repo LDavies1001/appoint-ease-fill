@@ -386,191 +386,243 @@ const Profile = () => {
   // Customer Profile View
   if (profile.active_role === 'customer') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            {/* Profile Header */}
-            <div className="text-center mb-8">
-              <div className="relative inline-block mb-4">
-                <Avatar className="w-32 h-32 border-4 border-primary/20">
-                  <AvatarImage src={customerProfile?.avatar_url} />
-                  <AvatarFallback className="text-2xl bg-gradient-to-br from-primary/10 to-primary/20">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-3xl"></div>
+          <div className="relative container mx-auto px-4 py-16">
+            <div className="text-center animate-fade-in">
+              <div className="relative inline-block mb-6">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-full blur-2xl opacity-30 scale-110"></div>
+                <Avatar className="w-40 h-40 border-4 border-white/20 shadow-2xl relative z-10">
+                  <AvatarImage src={customerProfile?.avatar_url} className="object-cover" />
+                  <AvatarFallback className="text-4xl bg-gradient-to-br from-primary to-accent text-white">
                     {customerProfile?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'C'}
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <h1 className="text-3xl font-bold mb-2">{customerProfile?.name || 'Customer'}</h1>
-              <p className="text-muted-foreground">Member since {new Date(customerProfile?.created_at || '').toLocaleDateString()}</p>
+              <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                {customerProfile?.name || 'Your Profile'}
+              </h1>
+              <p className="text-xl text-muted-foreground mb-2">
+                Beauty Enthusiast & Valued Customer
+              </p>
+              <Badge variant="outline" className="text-sm px-4 py-2 bg-white/10 border-white/20 text-foreground">
+                Member since {new Date(customerProfile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-6xl mx-auto">
+            {/* Stats Overview */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 animate-scale-in">
+              <div className="text-center group hover-scale">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                  <Calendar className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-foreground">0</div>
+                <div className="text-sm text-muted-foreground">Total Bookings</div>
+              </div>
+              <div className="text-center group hover-scale">
+                <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                  <Heart className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-foreground">0</div>
+                <div className="text-sm text-muted-foreground">Favorite Businesses</div>
+              </div>
+              <div className="text-center group hover-scale">
+                <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                  <Star className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-foreground">0</div>
+                <div className="text-sm text-muted-foreground">Reviews Given</div>
+              </div>
+              <div className="text-center group hover-scale">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                  <Bell className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-foreground">
+                  {customerProfile?.notification_preferences?.marketing_communications ? '✓' : '✗'}
+                </div>
+                <div className="text-sm text-muted-foreground">Marketing Active</div>
+              </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              {/* Personal Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    Personal Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label className="text-sm font-medium text-muted-foreground">Email</Label>
-                    <p className="text-foreground">{customerProfile?.email}</p>
-                  </div>
-                  {customerProfile?.phone && (
-                    <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Phone</Label>
-                      <p className="text-foreground">{customerProfile.phone}</p>
+            {/* Main Content Grid */}
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Personal Showcase */}
+              <div className="lg:col-span-2 space-y-8">
+                {/* About Section */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-8 border border-border/50 shadow-xl animate-fade-in">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                      <User className="h-6 w-6 text-white" />
                     </div>
-                  )}
-                  {customerProfile?.location && (
-                    <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Location</Label>
-                      <p className="text-foreground">{customerProfile.location}</p>
+                    <h2 className="text-2xl font-bold">About Me</h2>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    {customerProfile?.bio ? (
+                      <div className="bg-muted/30 rounded-2xl p-6">
+                        <p className="text-lg leading-relaxed text-foreground/90 italic">
+                          "{customerProfile.bio}"
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="bg-muted/30 rounded-2xl p-6 text-center">
+                        <p className="text-muted-foreground">No bio added yet</p>
+                      </div>
+                    )}
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <Mail className="h-5 w-5 text-primary" />
+                          <div>
+                            <p className="text-sm text-muted-foreground">Email</p>
+                            <p className="font-medium">{customerProfile?.email}</p>
+                          </div>
+                        </div>
+                        {customerProfile?.phone && (
+                          <div className="flex items-center gap-3">
+                            <Phone className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="text-sm text-muted-foreground">Phone</p>
+                              <p className="font-medium">{customerProfile.phone}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="space-y-4">
+                        {customerProfile?.location && (
+                          <div className="flex items-center gap-3">
+                            <MapPin className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="text-sm text-muted-foreground">Location</p>
+                              <p className="font-medium">{customerProfile.location}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                  {customerProfile?.bio && (
-                    <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Bio</Label>
-                      <p className="text-foreground">{customerProfile.bio}</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Privacy Settings */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5" />
-                    Privacy Settings
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Email Visibility</span>
-                    <Badge variant={customerProfile?.privacy_settings?.email_visible ? "default" : "secondary"}>
-                      {customerProfile?.privacy_settings?.email_visible ? "Visible" : "Private"}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Phone Visibility</span>
-                    <Badge variant={customerProfile?.privacy_settings?.phone_visible ? "default" : "secondary"}>
-                      {customerProfile?.privacy_settings?.phone_visible ? "Visible" : "Private"}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Location Visibility</span>
-                    <Badge variant={customerProfile?.privacy_settings?.location_visible ? "default" : "secondary"}>
-                      {customerProfile?.privacy_settings?.location_visible ? "Visible" : "Private"}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Notification Preferences */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Bell className="h-5 w-5" />
-                    Notification Preferences
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Email Notifications</span>
-                    <Badge variant={customerProfile?.notification_preferences?.email_notifications ? "default" : "secondary"}>
-                      {customerProfile?.notification_preferences?.email_notifications ? "Enabled" : "Disabled"}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">SMS Notifications</span>
-                    <Badge variant={customerProfile?.notification_preferences?.sms_notifications ? "default" : "secondary"}>
-                      {customerProfile?.notification_preferences?.sms_notifications ? "Enabled" : "Disabled"}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Marketing Communications</span>
-                    <Badge variant={customerProfile?.notification_preferences?.marketing_communications ? "default" : "secondary"}>
-                      {customerProfile?.notification_preferences?.marketing_communications ? "Enabled" : "Disabled"}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Booking Reminders</span>
-                    <Badge variant={customerProfile?.notification_preferences?.booking_reminders ? "default" : "secondary"}>
-                      {customerProfile?.notification_preferences?.booking_reminders ? "Enabled" : "Disabled"}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Service Preferences */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Star className="h-5 w-5" />
-                    Service Preferences
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label className="text-sm font-medium text-muted-foreground mb-2 block">
-                      Preferred Service Categories
-                    </Label>
-                    <div className="flex flex-wrap gap-2">
-                      {['Lash Extensions', 'Nail Care', 'Hair Styling', 'Skincare', 'Massage', 'Makeup'].map((category) => (
-                        <Badge key={category} variant="outline">
-                          {category}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-muted-foreground">Budget Range</Label>
-                    <p className="text-foreground">£25 - £100</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Account Statistics */}
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
-                  Account Statistics
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-primary">0</div>
-                    <div className="text-sm text-muted-foreground">Total Bookings</div>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-primary">0</div>
-                    <div className="text-sm text-muted-foreground">Favorite Businesses</div>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-primary">0</div>
-                    <div className="text-sm text-muted-foreground">Reviews Written</div>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-primary">
-                      {customerProfile?.notification_preferences?.marketing_communications ? '✓' : '✗'}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Marketing Enabled</div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* Quick Actions */}
-            <div className="flex justify-center mt-8">
-              <Button onClick={() => navigate('/dashboard')} size="lg" className="bg-primary hover:bg-primary/90">
-                <Settings className="h-4 w-4 mr-2" />
-                Edit Profile Settings
-              </Button>
+                {/* Service Interests Showcase */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-8 border border-border/50 shadow-xl animate-fade-in">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                      <Sparkles className="h-6 w-6 text-white" />
+                    </div>
+                    <h2 className="text-2xl font-bold">Beauty Interests</h2>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-muted-foreground mb-4">Services I love</p>
+                      <div className="flex flex-wrap gap-3">
+                        {['Lash Extensions', 'Nail Care', 'Hair Styling', 'Skincare', 'Massage', 'Makeup'].map((category) => (
+                          <Badge 
+                            key={category} 
+                            variant="secondary" 
+                            className="px-4 py-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover-scale cursor-default"
+                          >
+                            {category}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-6">
+                      <div className="flex items-center gap-3">
+                        <PoundSterling className="h-5 w-5 text-primary" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">Preferred Budget Range</p>
+                          <p className="text-lg font-semibold">£25 - £100</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar */}
+              <div className="space-y-8">
+                {/* Privacy & Settings */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-6 border border-border/50 shadow-xl animate-scale-in">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                      <Shield className="h-5 w-5 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold">Privacy</h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
+                      <span className="text-sm font-medium">Email Visibility</span>
+                      <Badge variant={customerProfile?.privacy_settings?.email_visible ? "default" : "secondary"} className="text-xs">
+                        {customerProfile?.privacy_settings?.email_visible ? "Public" : "Private"}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
+                      <span className="text-sm font-medium">Phone Visibility</span>
+                      <Badge variant={customerProfile?.privacy_settings?.phone_visible ? "default" : "secondary"} className="text-xs">
+                        {customerProfile?.privacy_settings?.phone_visible ? "Public" : "Private"}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
+                      <span className="text-sm font-medium">Location Visibility</span>
+                      <Badge variant={customerProfile?.privacy_settings?.location_visible ? "default" : "secondary"} className="text-xs">
+                        {customerProfile?.privacy_settings?.location_visible ? "Public" : "Private"}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Notifications */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-6 border border-border/50 shadow-xl animate-scale-in">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                      <Bell className="h-5 w-5 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold">Notifications</h3>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Email Updates</span>
+                      <div className={`w-3 h-3 rounded-full ${customerProfile?.notification_preferences?.email_notifications ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">SMS Alerts</span>
+                      <div className={`w-3 h-3 rounded-full ${customerProfile?.notification_preferences?.sms_notifications ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Marketing</span>
+                      <div className={`w-3 h-3 rounded-full ${customerProfile?.notification_preferences?.marketing_communications ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Reminders</span>
+                      <div className={`w-3 h-3 rounded-full ${customerProfile?.notification_preferences?.booking_reminders ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="bg-gradient-to-br from-primary to-accent rounded-3xl p-6 text-white shadow-xl animate-scale-in">
+                  <h3 className="text-lg font-semibold mb-4">Manage Profile</h3>
+                  <Button 
+                    onClick={() => navigate('/dashboard')} 
+                    className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white backdrop-blur-sm"
+                    size="lg"
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Edit Settings
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
