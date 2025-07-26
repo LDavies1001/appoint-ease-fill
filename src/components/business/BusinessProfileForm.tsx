@@ -638,6 +638,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 onChange={(address) => handleInputChange('business_address', address)}
                 errors={{
                   address_line_1: errors.address_line_1,
+                  address_line_2: errors.address_line_2,
                   town_city: errors.town_city,
                   postcode: errors.postcode
                 }}
