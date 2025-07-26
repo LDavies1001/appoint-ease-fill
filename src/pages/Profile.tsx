@@ -39,7 +39,8 @@ import {
   Map,
   FileText,
   Copy,
-  Plus
+  Plus,
+  X
 } from 'lucide-react';
 import Header from '@/components/ui/header';
 
@@ -90,6 +91,21 @@ interface ProviderDetails {
   instagram_url: string;
   tiktok_url: string;
   profile_published: boolean;
+  // Verification fields
+  is_fully_verified?: boolean;
+  identity_verified?: boolean;
+  identity_verified_at?: string;
+  identity_documents?: any;
+  address_verified?: boolean;
+  address_verified_at?: string;
+  address_verification_method?: string;
+  insurance_verified?: boolean;
+  insurance_verified_at?: string;
+  insurance_documents?: any;
+  background_check_verified?: boolean;
+  background_check_verified_at?: string;
+  background_check_documents?: any;
+  verification_completed_at?: string;
 }
 
 interface PortfolioItem {
@@ -1000,10 +1016,51 @@ const Profile = () => {
                   </div>
                 )}
                 
-                {providerDetails.profile_published && (
+                {providerDetails.is_fully_verified && (
                   <div className="flex items-center">
                     <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                     <span className="text-sm">Verified Business</span>
+                  </div>
+                )}
+                
+                {/* Show verification progress if not fully verified */}
+                {!providerDetails.is_fully_verified && (
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-sm">Verification Progress</h4>
+                    <div className="space-y-1">
+                      <div className="flex items-center text-xs">
+                        {providerDetails.identity_verified ? (
+                          <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        ) : (
+                          <X className="h-3 w-3 text-red-500 mr-2" />
+                        )}
+                        <span>Identity Documents</span>
+                      </div>
+                      <div className="flex items-center text-xs">
+                        {providerDetails.address_verified ? (
+                          <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        ) : (
+                          <X className="h-3 w-3 text-red-500 mr-2" />
+                        )}
+                        <span>Address Verification</span>
+                      </div>
+                      <div className="flex items-center text-xs">
+                        {providerDetails.insurance_verified ? (
+                          <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        ) : (
+                          <X className="h-3 w-3 text-red-500 mr-2" />
+                        )}
+                        <span>Insurance & Licensing</span>
+                      </div>
+                      <div className="flex items-center text-xs">
+                        {providerDetails.background_check_verified ? (
+                          <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        ) : (
+                          <X className="h-3 w-3 text-red-500 mr-2" />
+                        )}
+                        <span>Background Check</span>
+                      </div>
+                    </div>
                   </div>
                 )}
                 
