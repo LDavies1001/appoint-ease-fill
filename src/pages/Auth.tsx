@@ -426,16 +426,6 @@ const Auth = () => {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="business-location">Business Location</Label>
-                  <LocationInput
-                    placeholder="Enter your postcode"
-                    value={location}
-                    onChange={setLocation}
-                    className="h-11"
-                  />
-                  <p className="text-xs text-muted-foreground">Enter your postcode or use location button to detect automatically</p>
-                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="business-password">Password</Label>
