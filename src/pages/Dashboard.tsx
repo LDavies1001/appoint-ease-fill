@@ -29,8 +29,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
-      <Header />
-      
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,119,198,0.1),_transparent_50%)]"></div>
