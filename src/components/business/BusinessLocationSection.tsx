@@ -10,6 +10,11 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface BusinessLocationData {
   business_address: string;
+  business_street: string;
+  business_city: string;
+  business_county: string;
+  business_postcode: string;
+  business_country: string;
   is_address_public: boolean;
 }
 
@@ -30,7 +35,14 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
 
-  const handleAddressChange = (value: string) => {
+  const handleAddressChange = (field: string, value: string) => {
+    setEditData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleFullAddressChange = (value: string) => {
     setEditData(prev => ({
       ...prev,
       business_address: value
@@ -42,6 +54,11 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
     try {
       const updateData = {
         business_address: editData.business_address,
+        business_street: editData.business_street,
+        business_city: editData.business_city,
+        business_county: editData.business_county,
+        business_postcode: editData.business_postcode,
+        business_country: editData.business_country,
         is_address_public: editData.is_address_public
       };
 
@@ -110,21 +127,84 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
       <CardContent className="space-y-6">
         {isEditing ? (
           <div className="space-y-6 animate-in slide-in-from-top-2 duration-300">
-            {/* Manual Address Input */}
+            {/* Full Address Input */}
             <div className="space-y-3">
               <Label htmlFor="business-address" className="text-green-800 font-medium">
-                Business Address
+                Full Business Address
               </Label>
               <p className="text-sm text-muted-foreground">
-                Enter your full business address
+                Enter your complete business address
               </p>
               
               <Input
                 id="business-address"
                 value={editData.business_address}
-                onChange={(e) => handleAddressChange(e.target.value)}
-                placeholder="e.g., 21 Chorlton Road, Wythenshawe, Manchester"
+                onChange={(e) => handleFullAddressChange(e.target.value)}
+                placeholder="e.g., 21 Chorlton Road, Wythenshawe, Manchester, M23 9NY"
               />
+            </div>
+
+            {/* Structured Address Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <Label htmlFor="business-street" className="text-green-800 font-medium">
+                  Street Address
+                </Label>
+                <Input
+                  id="business-street"
+                  value={editData.business_street}
+                  onChange={(e) => handleAddressChange('business_street', e.target.value)}
+                  placeholder="e.g., 21 Chorlton Road"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label htmlFor="business-city" className="text-green-800 font-medium">
+                  City/Town
+                </Label>
+                <Input
+                  id="business-city"
+                  value={editData.business_city}
+                  onChange={(e) => handleAddressChange('business_city', e.target.value)}
+                  placeholder="e.g., Manchester"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label htmlFor="business-county" className="text-green-800 font-medium">
+                  County/State
+                </Label>
+                <Input
+                  id="business-county"
+                  value={editData.business_county}
+                  onChange={(e) => handleAddressChange('business_county', e.target.value)}
+                  placeholder="e.g., Greater Manchester"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label htmlFor="business-postcode" className="text-green-800 font-medium">
+                  Postcode
+                </Label>
+                <Input
+                  id="business-postcode"
+                  value={editData.business_postcode}
+                  onChange={(e) => handleAddressChange('business_postcode', e.target.value)}
+                  placeholder="e.g., M23 9NY"
+                />
+              </div>
+
+              <div className="space-y-3 md:col-span-2">
+                <Label htmlFor="business-country" className="text-green-800 font-medium">
+                  Country
+                </Label>
+                <Input
+                  id="business-country"
+                  value={editData.business_country}
+                  onChange={(e) => handleAddressChange('business_country', e.target.value)}
+                  placeholder="e.g., United Kingdom"
+                />
+              </div>
             </div>
 
             {/* Address Privacy Settings */}
@@ -184,28 +264,42 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
         ) : (
           <div className="space-y-4">
             {/* Current Address Display */}
-            <div className="flex items-start space-x-3">
-              <Home className="h-4 w-4 text-muted-foreground mt-1" />
-              <div className="flex-1">
-                <p className="font-medium">
-                  {formatAddress(data.business_address)}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {data.is_address_public 
-                    ? "📍 Public address (visible to customers)" 
-                    : "🔒 Private address (area only visible to customers)"
-                  }
-                </p>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <Home className="h-4 w-4 text-muted-foreground mt-1" />
+                <div className="flex-1">
+                  <p className="font-medium">
+                    {formatAddress(data.business_address)}
+                  </p>
+                  
+                  {/* Structured address display */}
+                  {(data.business_street || data.business_city || data.business_county || data.business_postcode || data.business_country) && (
+                    <div className="mt-2 text-sm text-muted-foreground space-y-1">
+                      {data.business_street && <p>📍 {data.business_street}</p>}
+                      {data.business_city && <p>🏙️ {data.business_city}</p>}
+                      {data.business_county && <p>🗺️ {data.business_county}</p>}
+                      {data.business_postcode && <p>📮 {data.business_postcode}</p>}
+                      {data.business_country && <p>🌍 {data.business_country}</p>}
+                    </div>
+                  )}
+                  
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {data.is_address_public 
+                      ? "📍 Public address (visible to customers)" 
+                      : "🔒 Private address (area only visible to customers)"
+                    }
+                  </p>
+                </div>
               </div>
-            </div>
 
-            {!data.business_address && (
+            {(!data.business_address && !data.business_street && !data.business_city) && (
               <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <p className="text-sm text-yellow-800">
                   ⚠️ Add your business address to help customers find you.
                 </p>
               </div>
             )}
+            </div>
           </div>
         )}
       </CardContent>
