@@ -3,9 +3,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Building, Shield, Clock, MapPin, Star, Award, Camera } from 'lucide-react';
+import { Building, Shield, Clock, MapPin, Star, Award, Camera, ExternalLink } from 'lucide-react';
 
 import { PersonalInfoSection } from '@/components/business/PersonalInfoSection';
 import { BusinessInfoSection } from '@/components/business/BusinessInfoSection';
@@ -286,11 +287,25 @@ const ProfileTab = () => {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-2">Profile Settings</h2>
-        <p className="text-muted-foreground">
-          Manage your personal and business information. Click the edit button on any section to make changes.
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Profile Settings</h2>
+          <p className="text-muted-foreground">
+            Manage your personal and business information. Click the edit button on any section to make changes.
+          </p>
+        </div>
+        
+        {/* View Profile Button - Only show for providers */}
+        {profile?.active_role === 'provider' && (
+          <Button
+            variant="provider-outline"
+            onClick={() => window.open(`/portfolio/${profile.user_id}`, '_blank')}
+            className="flex items-center gap-2"
+          >
+            <ExternalLink className="h-4 w-4" />
+            View Public Profile
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
