@@ -22,6 +22,7 @@ import EnhancedBusinessProfile from "./pages/EnhancedBusinessProfile";
 import ProviderBooking from "./pages/ProviderBooking";
 import UserSettings from "./pages/UserSettings";
 import CustomerProfileView from "./pages/CustomerProfileView";
+import CustomerBusinessView from "./pages/CustomerBusinessView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
                   <Route path="/business/:providerId" element={<EnhancedBusinessProfile />} />
                   <Route path="/provider/:providerId/book" element={<ProviderBooking />} />
                   <Route path="/customer/:customerId" element={<CustomerProfileView />} />
+                  <Route path="/business/:providerId/view" element={<CustomerBusinessView />} />
                   <Route path="/settings" element={<UserSettings />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>

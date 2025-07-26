@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -7,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { MapPin, Clock, Star, Filter, Search, Calendar } from 'lucide-react';
+import { MapPin, Clock, Star, Filter, Search, Calendar, ExternalLink } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -47,6 +48,7 @@ interface SlotData {
 }
 
 const SlotCard: React.FC<{ slot: SlotData; onBook: (slot: SlotData) => void }> = ({ slot, onBook }) => {
+  const navigate = useNavigate();
   const businessName = slot.provider_details?.business_name || slot.profiles?.name || 'Business';
   const location = slot.provider_details?.business_city || 'Location';
   const rating = slot.provider_details?.rating || 0;
@@ -88,16 +90,30 @@ const SlotCard: React.FC<{ slot: SlotData; onBook: (slot: SlotData) => void }> =
             <span className="text-sm font-bold text-foreground">{slot.start_time} - {slot.end_time}</span>
           </div>
           <Separator />
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <div className="text-lg font-bold text-foreground">
               £{slot.price}
             </div>
-            <Button 
-              onClick={() => onBook(slot)}
-              className="bg-primary hover:bg-primary/90 text-foreground font-semibold px-6 group-hover:scale-105 transition-transform duration-300"
-            >
-              Book Now
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/business/${slot.provider_id}/view`);
+                }}
+                className="text-xs"
+              >
+                <ExternalLink className="h-3 w-3 mr-1" />
+                View Business
+              </Button>
+              <Button 
+                onClick={() => onBook(slot)}
+                className="bg-primary hover:bg-primary/90 text-foreground font-semibold px-6 group-hover:scale-105 transition-transform duration-300"
+              >
+                Book Now
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>
