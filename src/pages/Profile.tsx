@@ -159,7 +159,7 @@ const Profile = () => {
   const isOwner = profile?.user_id === user?.id;
 
   useEffect(() => {
-    if (user && profile?.role === 'provider') {
+    if (user && profile?.active_role === 'provider') {
       fetchProviderData();
     } else {
       setLoading(false);
@@ -354,7 +354,7 @@ const Profile = () => {
   }
 
   // Customer Profile View
-  if (profile.role === 'customer') {
+  if (profile.active_role === 'customer') {
     return (
       <div className="min-h-screen bg-background">
         <Header />
