@@ -203,15 +203,6 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                value={editData.location || ''}
-                onChange={(e) => setEditData({ ...editData, location: e.target.value })}
-                placeholder="e.g. London, UK"
-              />
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="bio">Bio</Label>
@@ -254,10 +245,9 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   {data.name?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
-              <div>
-                <h3 className="font-semibold text-lg">{data.name || 'Name not set'}</h3>
-                <p className="text-muted-foreground">{data.location || 'Location not set'}</p>
-              </div>
+               <div>
+                 <h3 className="font-semibold text-lg">{data.name || 'Name not set'}</h3>
+               </div>
             </div>
 
             <div>
