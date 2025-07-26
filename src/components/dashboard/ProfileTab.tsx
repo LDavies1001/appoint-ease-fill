@@ -299,7 +299,7 @@ const ProfileTab = () => {
         {profile?.active_role === 'provider' && (
           <Button
             variant="provider-outline"
-            onClick={() => window.open(`/portfolio/${profile.user_id}`, '_blank')}
+            onClick={() => window.open(`/business/${profile.user_id}`, '_blank')}
             className="flex items-center gap-2"
           >
             <ExternalLink className="h-4 w-4" />

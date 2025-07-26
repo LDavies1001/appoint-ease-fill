@@ -15,6 +15,7 @@ import NewBusinessProfile from "./pages/NewBusinessProfile";
 import CreateBusinessProfile from "./pages/CreateBusinessProfile";
 import Profile from "./pages/Profile";
 import PublicPortfolio from "./pages/PublicPortfolio";
+import EnhancedBusinessProfile from "./pages/EnhancedBusinessProfile";
 import ProviderBooking from "./pages/ProviderBooking";
 import NotFound from "./pages/NotFound";
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
+            <Route path="/business/:providerId" element={<EnhancedBusinessProfile />} />
             <Route path="/provider/:providerId/book" element={<ProviderBooking />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
