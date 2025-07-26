@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import BookingNotificationHelper from "@/components/notifications/BookingNotificationHelper";
+import Header from "@/components/ui/header";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import CustomerSignup from "./pages/CustomerSignup";
@@ -26,26 +28,33 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/signup/customer" element={<CustomerSignup />} />
-            <Route path="/signup/business" element={<BusinessSignup />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/business-profile" element={<NewBusinessProfile />} />
-            <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
-            <Route path="/business/:providerId" element={<EnhancedBusinessProfile />} />
-            <Route path="/provider/:providerId/book" element={<ProviderBooking />} />
-            <Route path="/settings" element={<UserSettings />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <BookingNotificationHelper>
+          <BrowserRouter>
+            <div className="min-h-screen bg-background">
+              <Header />
+              <main>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/signup/customer" element={<CustomerSignup />} />
+                  <Route path="/signup/business" element={<BusinessSignup />} />
+                  <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/business-profile" element={<NewBusinessProfile />} />
+                  <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
+                  <Route path="/business/:providerId" element={<EnhancedBusinessProfile />} />
+                  <Route path="/provider/:providerId/book" element={<ProviderBooking />} />
+                  <Route path="/settings" element={<UserSettings />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+            </div>
+            <Toaster />
+            <Sonner />
+          </BrowserRouter>
+        </BookingNotificationHelper>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

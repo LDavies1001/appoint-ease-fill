@@ -79,6 +79,8 @@ const UserSettingsPage = () => {
     marketing_communications: false,
   });
   
+  // Load notification preferences from database
+  
   const [passwordData, setPasswordData] = useState<PasswordChangeData>({
     currentPassword: '',
     newPassword: '',
@@ -137,11 +139,11 @@ const UserSettingsPage = () => {
         phone: profileData?.phone || '',
         location: profileData?.location || '',
         privacy_settings: privacySettings,
-        // Mock notification settings - in real app these would come from user preferences
-        email_notifications: true,
-        sms_notifications: false,
-        booking_reminders: true,
-        marketing_communications: false,
+        // Load notification preferences from database
+        email_notifications: (profileData?.notification_preferences as any)?.email_notifications ?? true,
+        sms_notifications: (profileData?.notification_preferences as any)?.sms_notifications ?? false,
+        booking_reminders: (profileData?.notification_preferences as any)?.booking_reminders ?? true,
+        marketing_communications: (profileData?.notification_preferences as any)?.marketing_communications ?? false,
       });
       
     } catch (error) {
@@ -164,6 +166,15 @@ const UserSettingsPage = () => {
         name: settings.name,
         phone: settings.phone,
         location: settings.location,
+        notification_preferences: {
+          email_notifications: settings.email_notifications,
+          sms_notifications: settings.sms_notifications,
+          booking_reminders: settings.booking_reminders,
+          marketing_communications: settings.marketing_communications,
+          booking_confirmations: true,
+          cancellation_notifications: true,
+          profile_update_notifications: true
+        }
       };
 
       // Include privacy settings for customers
@@ -179,15 +190,15 @@ const UserSettingsPage = () => {
       if (error) throw error;
 
       toast({
-        title: "Personal information updated",
-        description: "Your account details have been saved successfully",
+        title: "Settings updated",
+        description: "Your account settings have been saved successfully",
       });
       
     } catch (error) {
-      console.error('Error saving personal info:', error);
+      console.error('Error saving settings:', error);
       toast({
         title: "Error saving changes",
-        description: "Could not update your personal information",
+        description: "Could not update your settings",
         variant: "destructive"
       });
     } finally {
@@ -507,6 +518,94 @@ const UserSettingsPage = () => {
           </Card>
         )}
 
+        {/* Notification Preferences */}
+        <Card className="card-elegant">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="h-5 w-5" />
+              Notification Preferences
+            </CardTitle>
+            <CardDescription>
+              Choose how you'd like to receive updates and reminders
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label className="text-base">Email Notifications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive booking confirmations and updates via email
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.email_notifications}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, email_notifications: checked }))
+                  }
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label className="text-base">SMS Notifications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive booking confirmations and updates via SMS
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.sms_notifications}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, sms_notifications: checked }))
+                  }
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label className="text-base">Booking Reminders</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Get reminded about upcoming appointments
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.booking_reminders}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, booking_reminders: checked }))
+                  }
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label className="text-base">Marketing Communications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive updates about new features and promotions
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.marketing_communications}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, marketing_communications: checked }))
+                  }
+                />
+              </div>
+            </div>
+            
+            <Button 
+              onClick={savePersonalInfo} 
+              disabled={saving}
+              className={cn(
+                isCustomer && "bg-pink-600 hover:bg-pink-700",
+                isProvider && "bg-provider hover:bg-provider/90"
+              )}
+            >
+              <Save className="h-4 w-4 mr-2" />
+              Save Notification Preferences
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Password Change */}
         <Card className="card-elegant">
           <CardHeader>
@@ -601,81 +700,6 @@ const UserSettingsPage = () => {
           </CardContent>
         </Card>
 
-        {/* Notification Preferences */}
-        <Card className="card-elegant">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="h-5 w-5" />
-              Notification Preferences
-            </CardTitle>
-            <CardDescription>
-              Choose how you'd like to receive updates and reminders
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label className="text-base">Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Receive booking confirmations and updates via email
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.email_notifications}
-                  onCheckedChange={(checked) => 
-                    setSettings(prev => ({ ...prev, email_notifications: checked }))
-                  }
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label className="text-base">SMS Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Receive booking confirmations and updates via SMS
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.sms_notifications}
-                  onCheckedChange={(checked) => 
-                    setSettings(prev => ({ ...prev, sms_notifications: checked }))
-                  }
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label className="text-base">Booking Reminders</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Get reminded about upcoming appointments
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.booking_reminders}
-                  onCheckedChange={(checked) => 
-                    setSettings(prev => ({ ...prev, booking_reminders: checked }))
-                  }
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label className="text-base">Marketing Communications</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Receive updates about new features and promotions
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.marketing_communications}
-                  onCheckedChange={(checked) => 
-                    setSettings(prev => ({ ...prev, marketing_communications: checked }))
-                  }
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Data & Privacy */}
         <Card className="card-elegant">
