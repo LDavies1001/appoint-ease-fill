@@ -3,33 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Edit, Check, X, Loader2, Home, Navigation } from 'lucide-react';
+import { MapPin, Edit, Check, X, Home } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { cn } from '@/lib/utils';
-
-interface PostcodeResult {
-  postcode: string;
-  admin_district: string;
-  admin_ward: string;
-  parliamentary_constituency: string;
-  latitude: number;
-  longitude: number;
-  outcode: string;
-  incode: string;
-}
 
 interface BusinessLocationData {
   business_address: string;
   is_address_public: boolean;
-  postcode_latitude: number | null;
-  postcode_longitude: number | null;
-  postcode_admin_district: string | null;
-  postcode_admin_ward: string | null;
-  service_radius_miles: number | null;
-  nearby_towns: string[];
+  postcode_full: string | null;
+  postcode_area: string | null;
+  coverage_towns: string[];
 }
 
 interface BusinessLocationSectionProps {
@@ -37,6 +21,47 @@ interface BusinessLocationSectionProps {
   userId: string;
   onUpdate: (data: Partial<BusinessLocationData>) => void;
 }
+
+// Static mapping of postcode areas to nearby towns (5-mile radius examples)
+const POSTCODE_AREA_MAPPING: Record<string, string[]> = {
+  'M23': ['Wythenshawe', 'Baguley', 'Timperley', 'Brooklands', 'Northenden', 'Sale'],
+  'M22': ['Wythenshawe', 'Baguley', 'Northenden', 'Didsbury', 'Heald Green'],
+  'M21': ['Chorlton', 'Didsbury', 'Fallowfield', 'Withington', 'West Didsbury'],
+  'M20': ['Didsbury', 'Withington', 'Burnage', 'Fallowfield', 'Chorlton'],
+  'M19': ['Levenshulme', 'Burnage', 'Heaton Chapel', 'Stockport', 'Didsbury'],
+  'M14': ['Fallowfield', 'Moss Side', 'Rusholme', 'Withington', 'Chorlton'],
+  'M15': ['Hulme', 'Moss Side', 'Chorlton', 'Old Trafford', 'Stretford'],
+  'M16': ['Old Trafford', 'Firswood', 'Stretford', 'Chorlton', 'Sale'],
+  'M33': ['Sale', 'Timperley', 'Altrincham', 'Brooklands', 'Ashton upon Mersey'],
+  'WA14': ['Altrincham', 'Timperley', 'Hale', 'Sale', 'Bowdon'],
+  'WA15': ['Hale', 'Altrincham', 'Bowdon', 'Ashley', 'Mobberley'],
+  'SK8': ['Cheadle', 'Gatley', 'Heald Green', 'Cheadle Hulme', 'Bramhall'],
+  'SK7': ['Bramhall', 'Cheadle Hulme', 'Hazel Grove', 'Poynton', 'Woodford'],
+  'SK4': ['Stockport', 'Heaton Chapel', 'Heaton Moor', 'Heaton Mersey', 'Burnage'],
+  'SK3': ['Stockport', 'Edgeley', 'Cheadle Heath', 'Davenport', 'Adswood'],
+  'SK2': ['Stockport', 'Romiley', 'Bredbury', 'Woodley', 'Marple'],
+  'SK1': ['Stockport', 'Heaviley', 'Shaw Heath', 'Portwood', 'Edgeley'],
+  'SK6': ['Marple', 'Romiley', 'Bredbury', 'Compstall', 'Mellor'],
+  'OL1': ['Oldham', 'Chadderton', 'Derker', 'Hollinwood', 'Werneth'],
+  'OL2': ['Oldham', 'Shaw', 'Royton', 'Chadderton', 'Crompton'],
+  'BL1': ['Bolton', 'Chorley New Road', 'Heaton', 'Lostock', 'Markland Hill'],
+  'BL2': ['Bolton', 'Smithills', 'Halliwell', 'Heaton', 'Astley Bridge'],
+  'BL3': ['Bolton', 'Breightmet', 'Tonge Moor', 'Harwood', 'Ainsworth'],
+  'WN1': ['Wigan', 'Scholes', 'Swinley', 'Whelley', 'Marsh Green'],
+  'WN2': ['Wigan', 'Ince', 'Lower Ince', 'Rose Bridge', 'Platt Bridge'],
+  'L1': ['Liverpool City Centre', 'Vauxhall', 'Everton', 'Kirkdale', 'Bootle'],
+  'L2': ['Liverpool City Centre', 'Vauxhall', 'Everton', 'Scotland Road', 'Kirkdale'],
+  'L8': ['Toxteth', 'Dingle', 'Canning', 'Edge Hill', 'Sefton Park'],
+  'L15': ['Wavertree', 'Edge Hill', 'Smithdown', 'Picton', 'Childwall'],
+  'L18': ['Allerton', 'Mossley Hill', 'Woolton', 'Childwall', 'Gateacre'],
+  'PR1': ['Preston', 'Fulwood', 'Ribbleton', 'Ashton', 'Ingol'],
+  'PR2': ['Preston', 'Fulwood', 'Lea', 'Cottam', 'Ingol'],
+  'BB1': ['Blackburn', 'Mill Hill', 'Bastwell', 'Audley', 'Little Harwood'],
+  'BB2': ['Blackburn', 'Ewood', 'Fernhurst', 'Roe Lee', 'Pleasington'],
+};
+
+// UK Postcode regex pattern
+const UK_POSTCODE_REGEX = /([A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2})/i;
 
 export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = ({
   data,
@@ -46,186 +71,74 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(data);
   const [saving, setSaving] = useState(false);
-  const [addressInput, setAddressInput] = useState('');
-  const [isLoadingAddress, setIsLoadingAddress] = useState(false);
-  const [isLoadingNearby, setIsLoadingNearby] = useState(false);
-  const [addressSuggestions, setAddressSuggestions] = useState<string[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [validatedAddress, setValidatedAddress] = useState<PostcodeResult | null>(null);
+  const [addressInput, setAddressInput] = useState(data.business_address || '');
+  const [hasValidPostcode, setHasValidPostcode] = useState(false);
   const { toast } = useToast();
 
-  // Search for postcode suggestions (simplified approach)
-  const searchAddresses = async (query: string) => {
-    if (query.length < 2) {
-      setAddressSuggestions([]);
-      setShowSuggestions(false);
-      return;
+  // Extract and validate postcode from address
+  const extractAndValidatePostcode = (address: string) => {
+    const match = address.match(UK_POSTCODE_REGEX);
+    if (!match) {
+      setHasValidPostcode(false);
+      return null;
     }
+
+    const fullPostcode = match[1].toUpperCase().replace(/\s+/g, ' ').trim();
+    const postcodeArea = fullPostcode.split(' ')[0]; // e.g., "M23" from "M23 9NY"
     
-    setIsLoadingAddress(true);
-    try {
-      // Use postcodes.io autocomplete for postcode suggestions
-      const response = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(query)}/autocomplete`);
-      
-      if (response.ok) {
-        const result = await response.json();
-        if (result.result && Array.isArray(result.result)) {
-          setAddressSuggestions(result.result.slice(0, 8));
-          setShowSuggestions(true);
-        } else {
-          setAddressSuggestions([]);
-          setShowSuggestions(false);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching postcode suggestions:', error);
-      setAddressSuggestions([]);
-      setShowSuggestions(false);
-    } finally {
-      setIsLoadingAddress(false);
-    }
+    setHasValidPostcode(true);
+    return { fullPostcode, postcodeArea };
   };
 
-  // Validate and get full address details
-  const validateAddress = async (postcodeInput: string) => {
-    setIsLoadingAddress(true);
-    try {
-      // Clean the postcode (remove spaces, convert to uppercase)
-      const cleanPostcode = postcodeInput.replace(/\s/g, '').toUpperCase();
-      
-      const response = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(cleanPostcode)}`);
-      
-      if (response.ok) {
-        const result = await response.json();
-        if (result.result) {
-          setValidatedAddress(result.result);
-          
-          // Create a basic address template that user can edit
-          const basicAddress = `${result.result.admin_ward}, ${result.result.admin_district}, ${result.result.postcode}`;
-          
-          setEditData(prev => ({
-            ...prev,
-            business_address: basicAddress,
-            postcode_latitude: result.result.latitude,
-            postcode_longitude: result.result.longitude,
-            postcode_admin_district: result.result.admin_district,
-            postcode_admin_ward: result.result.admin_ward
-          }));
-          
-          // Don't auto-fill the input - let user add house number/street
-          setShowSuggestions(false);
-          
-          // Show a message that they can now edit the address
-          toast({
-            title: "Postcode validated ✅",
-            description: "Now add your house number and street name to the address field",
-            variant: "default"
-          });
-          return result.result;
-        }
-      } else if (response.status === 404) {
-        toast({
-          title: "Invalid postcode",
-          description: "Please check the postcode format and try again.",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      console.error('Error validating address:', error);
-      toast({
-        title: "Validation failed",
-        description: "Could not validate the postcode. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoadingAddress(false);
-    }
-    return null;
+  // Get coverage towns for a postcode area
+  const getCoverageTowns = (postcodeArea: string): string[] => {
+    return POSTCODE_AREA_MAPPING[postcodeArea] || [];
   };
 
-  // Fetch nearby towns based on radius
-  const fetchNearbyTowns = async (postcode: string, radiusMiles: number) => {
-    setIsLoadingNearby(true);
-    try {
-      const response = await fetch(
-        `https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}/nearest?radius=${radiusMiles * 1609}&limit=100`
-      );
-      
-      if (response.ok) {
-        const result = await response.json();
-        const nearbyPostcodes = result.result || [];
-        
-        const towns = new Set<string>();
-        
-        nearbyPostcodes.forEach((pc: PostcodeResult) => {
-          if (pc.admin_ward) towns.add(pc.admin_ward);
-          if (pc.admin_district) towns.add(pc.admin_district);
-          if (pc.parliamentary_constituency) {
-            const constituency = pc.parliamentary_constituency;
-            const constituencyTowns = constituency
-              .replace(/\s+(and|&)\s+/gi, ', ')
-              .split(', ')
-              .map(town => town.trim())
-              .filter(town => town && !town.match(/^(East|West|North|South|Central)$/i));
-            constituencyTowns.forEach(town => towns.add(town));
-          }
-        });
-        
-        const townArray = Array.from(towns).sort();
-        
-        setEditData(prev => ({
-          ...prev,
-          nearby_towns: townArray
-        }));
-      }
-    } catch (error) {
-      console.error('Error fetching nearby towns:', error);
-    } finally {
-      setIsLoadingNearby(false);
-    }
-  };
-
-  const handleAddressInputChange = (value: string) => {
+  const handleAddressChange = (value: string) => {
     setAddressInput(value);
     
-    // If postcode is already validated, update the address directly
-    if (validatedAddress) {
-      setEditData(prev => ({ ...prev, business_address: value }));
-    } else {
-      // Still searching for postcode
-      searchAddresses(value);
-    }
-  };
-
-  const handleSuggestionClick = async (suggestion: string) => {
-    const result = await validateAddress(suggestion);
-    if (result) {
-      // Clear the input so user can type their full address
-      setAddressInput('');
-    }
-  };
-
-  const handleRadiusChange = async (radius: string) => {
-    const radiusNum = parseInt(radius);
-    setEditData(prev => ({ ...prev, service_radius_miles: radiusNum }));
+    const postcodeData = extractAndValidatePostcode(value);
     
-    if (validatedAddress && validatedAddress.postcode) {
-      await fetchNearbyTowns(validatedAddress.postcode, radiusNum);
+    if (postcodeData) {
+      const coverageTowns = getCoverageTowns(postcodeData.postcodeArea);
+      
+      setEditData(prev => ({
+        ...prev,
+        business_address: value,
+        postcode_full: postcodeData.fullPostcode,
+        postcode_area: postcodeData.postcodeArea,
+        coverage_towns: coverageTowns
+      }));
+    } else {
+      setEditData(prev => ({
+        ...prev,
+        business_address: value,
+        postcode_full: null,
+        postcode_area: null,
+        coverage_towns: []
+      }));
     }
   };
 
   const handleSave = async () => {
+    if (!hasValidPostcode) {
+      toast({
+        title: "Invalid address",
+        description: "Please include a valid UK postcode in your address (e.g., M23 9NY)",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setSaving(true);
     try {
       const updateData = {
         business_address: editData.business_address,
         is_address_public: editData.is_address_public,
-        postcode_latitude: editData.postcode_latitude,
-        postcode_longitude: editData.postcode_longitude,
-        postcode_admin_district: editData.postcode_admin_district,
-        postcode_admin_ward: editData.postcode_admin_ward,
-        service_radius_miles: editData.service_radius_miles,
-        nearby_towns: editData.nearby_towns,
+        postcode_full: editData.postcode_full,
+        postcode_area: editData.postcode_area,
+        coverage_towns: editData.coverage_towns,
         postcode_verified_at: new Date().toISOString()
       };
 
@@ -238,9 +151,11 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
 
       onUpdate(editData);
       setIsEditing(false);
+      
       toast({
-        title: "Business location and coverage area saved successfully ✅",
-        description: "Your location settings have been updated"
+        title: "✅ Address saved successfully",
+        description: `You're now matched with nearby customers in: ${editData.coverage_towns.slice(0, 3).join(', ')}${editData.coverage_towns.length > 3 ? '...' : ''}`,
+        variant: "default"
       });
     } catch (error) {
       console.error('Error updating location:', error);
@@ -256,10 +171,15 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
 
   const handleCancel = () => {
     setEditData(data);
-    setAddressInput(data.business_address);
-    setValidatedAddress(null);
+    setAddressInput(data.business_address || '');
+    setHasValidPostcode(!!data.postcode_full);
     setIsEditing(false);
-    setShowSuggestions(false);
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setAddressInput(data.business_address || '');
+    extractAndValidatePostcode(data.business_address || '');
   };
 
   const formatAddress = (address: string) => {
@@ -267,23 +187,23 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
   };
 
   return (
-    <Card className="relative transition-all duration-300 hover:shadow-lg">
+    <Card className="relative transition-all duration-300 hover:shadow-lg border-l-4 border-l-green-500">
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-provider/10 rounded-lg flex items-center justify-center">
-            <MapPin className="h-5 w-5 text-provider" />
+          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+            <MapPin className="h-5 w-5 text-green-600" />
           </div>
-          <CardTitle className="text-xl">Business Location & Coverage Area</CardTitle>
+          <CardTitle className="text-xl text-green-800">Business Address & Matching Area</CardTitle>
         </div>
         
         {!isEditing && (
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => setIsEditing(true)}
-            className="h-8 w-8 p-0 hover:bg-provider/10"
+            onClick={handleEdit}
+            className="h-8 w-8 p-0 hover:bg-green-100"
           >
-            <Edit className="h-4 w-4" />
+            <Edit className="h-4 w-4 text-green-600" />
           </Button>
         )}
       </CardHeader>
@@ -291,77 +211,67 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
       <CardContent className="space-y-6">
         {isEditing ? (
           <div className="space-y-6 animate-in slide-in-from-top-2 duration-300">
-            {/* Smart Address Input */}
-            <div className="space-y-2">
-              <Label htmlFor="address-lookup">
-                Business Address <span className="text-destructive">*</span>
+            {/* Manual Address Input */}
+            <div className="space-y-3">
+              <Label htmlFor="business-address" className="text-green-800 font-medium">
+                Business Address (Required) <span className="text-destructive">*</span>
               </Label>
               <p className="text-sm text-muted-foreground">
-                {validatedAddress 
-                  ? "Enter your full address (house number, street, area, postcode)" 
-                  : "First, type your postcode to validate location (e.g., M23 9NY)"
-                }
+                Enter your full business address including a valid UK postcode
               </p>
               
               <div className="relative">
                 <Input
-                  id="address-lookup"
+                  id="business-address"
                   value={addressInput}
-                  onChange={(e) => handleAddressInputChange(e.target.value)}
-                  placeholder={validatedAddress 
-                    ? "e.g., 28 Brooklands Close, Brooklands, Manchester, M23 9NY" 
-                    : "Type your postcode (e.g., M23 9NY)"
-                  }
-                  className="pr-10"
+                  onChange={(e) => handleAddressChange(e.target.value)}
+                  placeholder="e.g., 21 Chorlton Road, Wythenshawe, M23 9NY"
+                  className={`pr-10 ${hasValidPostcode ? 'border-green-500 focus:border-green-600' : 'border-destructive focus:border-destructive'}`}
                 />
                 
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  {isLoadingAddress ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                  ) : validatedAddress ? (
+                  {hasValidPostcode ? (
                     <Check className="h-4 w-4 text-green-500" />
                   ) : (
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    <X className="h-4 w-4 text-destructive" />
                   )}
                 </div>
-
-                {/* Address/Postcode Suggestions */}
-                {showSuggestions && addressSuggestions.length > 0 && (
-                  <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-auto">
-                    {addressSuggestions.map((suggestion, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        className="w-full px-4 py-3 text-left hover:bg-provider/10 hover:text-provider focus:bg-provider/10 focus:text-provider focus:outline-none transition-colors border-b border-border last:border-b-0"
-                        onClick={() => handleSuggestionClick(suggestion)}
-                      >
-                        <div className="flex items-start space-x-2">
-                          <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                          <span className="text-sm leading-tight">{suggestion}</span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
+
+              {!hasValidPostcode && addressInput && (
+                <p className="text-sm text-destructive">
+                  ⚠️ Please include a valid UK postcode (e.g., M23 9NY, L1 8JQ, SK1 3XE)
+                </p>
+              )}
             </div>
 
-            {/* Visual Confirmation Preview */}
-            {validatedAddress && (
+            {/* Coverage Areas Preview */}
+            {hasValidPostcode && editData.coverage_towns.length > 0 && (
               <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-center space-x-2 mb-2">
+                <div className="flex items-center space-x-2 mb-3">
                   <Home className="h-4 w-4 text-green-600" />
-                  <span className="font-medium text-green-800">Saved Address:</span>
+                  <span className="font-medium text-green-800">Coverage Areas:</span>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {editData.coverage_towns.map((town, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="bg-green-100 text-green-800 text-xs border-green-200"
+                    >
+                      {town}
+                    </Badge>
+                  ))}
                 </div>
                 <p className="text-sm text-green-700">
-                  {editData.business_address}
+                  ✅ You will be visible to customers in these areas (Postcode: {editData.postcode_area})
                 </p>
               </div>
             )}
 
             {/* Address Privacy Settings */}
             <div className="space-y-3">
-              <Label>Address Visibility</Label>
+              <Label className="text-green-800 font-medium">Address Visibility</Label>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <input
@@ -370,7 +280,7 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
                     name="address-visibility"
                     checked={editData.is_address_public}
                     onChange={() => setEditData(prev => ({ ...prev, is_address_public: true }))}
-                    className="w-4 h-4 text-provider"
+                    className="w-4 h-4 text-green-600"
                   />
                   <Label htmlFor="address-public" className="text-sm">
                     📍 Show full address publicly (customers can see exact location)
@@ -383,7 +293,7 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
                     name="address-visibility"
                     checked={!editData.is_address_public}
                     onChange={() => setEditData(prev => ({ ...prev, is_address_public: false }))}
-                    className="w-4 h-4 text-provider"
+                    className="w-4 h-4 text-green-600"
                   />
                   <Label htmlFor="address-private" className="text-sm">
                     🔒 Keep address private (recommended - share only area/town)
@@ -392,76 +302,22 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
               </div>
             </div>
 
-            {/* Radius Selector */}
-            {validatedAddress && (
-              <div className="space-y-2">
-                <Label htmlFor="service-radius">Choose how far you travel for appointments</Label>
-                <Select onValueChange={handleRadiusChange} value={editData.service_radius_miles?.toString()}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select travel radius" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">1 mile</SelectItem>
-                    <SelectItem value="3">3 miles</SelectItem>
-                    <SelectItem value="5">5 miles</SelectItem>
-                    <SelectItem value="10">10 miles</SelectItem>
-                    <SelectItem value="15">15 miles</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            {/* Nearby Area Autogeneration */}
-            {editData.service_radius_miles && (
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Navigation className="h-4 w-4 text-provider" />
-                  <Label>Coverage Areas:</Label>
-                </div>
-                
-                {isLoadingNearby ? (
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Finding areas within {editData.service_radius_miles} miles...</span>
-                  </div>
-                ) : editData.nearby_towns.length > 0 ? (
-                  <div className="max-h-32 overflow-y-auto">
-                    <div className="flex flex-wrap gap-2">
-                      {editData.nearby_towns.map((town, index) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="bg-provider/10 text-provider text-xs"
-                        >
-                          {town}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    Select a radius to see coverage areas
-                  </p>
-                )}
-              </div>
-            )}
-
             <div className="flex space-x-2 pt-4">
               <Button
                 onClick={handleSave}
-                disabled={saving || !validatedAddress}
-                className="flex-1"
+                disabled={saving || !hasValidPostcode}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                 size="sm"
-                variant="provider"
               >
                 <Check className="h-4 w-4 mr-2" />
-                Save Location & Coverage
+                Save Address & Activate Matching
               </Button>
               <Button
                 variant="outline"
                 onClick={handleCancel}
                 disabled={saving}
                 size="sm"
+                className="border-green-300 hover:bg-green-50"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -482,36 +338,49 @@ export const BusinessLocationSection: React.FC<BusinessLocationSectionProps> = (
                     : "🔒 Private address (area only visible to customers)"
                   }
                 </p>
+                {data.postcode_area && (
+                  <p className="text-sm text-green-600 mt-1">
+                    Postcode Area: {data.postcode_area}
+                  </p>
+                )}
               </div>
             </div>
 
-            {/* Service Coverage */}
-            {data.service_radius_miles && data.nearby_towns.length > 0 && (
+            {/* Coverage Areas */}
+            {data.coverage_towns.length > 0 && (
               <div className="flex items-start space-x-3">
-                <Navigation className="h-4 w-4 text-muted-foreground mt-1" />
+                <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
                 <div className="flex-1">
-                  <p className="font-medium">
-                    Service Coverage: {data.service_radius_miles} mile radius
+                  <p className="font-medium text-green-800">
+                    Customer Matching Areas:
                   </p>
                   <div className="mt-2">
                     <div className="flex flex-wrap gap-1">
-                      {data.nearby_towns.slice(0, 6).map((town, index) => (
+                      {data.coverage_towns.slice(0, 6).map((town, index) => (
                         <Badge
                           key={index}
                           variant="secondary"
-                          className="bg-muted/50 text-muted-foreground text-xs"
+                          className="bg-green-100 text-green-800 text-xs border-green-200"
                         >
                           {town}
                         </Badge>
                       ))}
-                      {data.nearby_towns.length > 6 && (
-                        <Badge variant="secondary" className="bg-muted/50 text-muted-foreground text-xs">
-                          +{data.nearby_towns.length - 6} more
+                      {data.coverage_towns.length > 6 && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs border-green-200">
+                          +{data.coverage_towns.length - 6} more
                         </Badge>
                       )}
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {!data.business_address && (
+              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  ⚠️ <strong>Required:</strong> Add your business address to activate customer matching and become discoverable in your area.
+                </p>
               </div>
             )}
           </div>

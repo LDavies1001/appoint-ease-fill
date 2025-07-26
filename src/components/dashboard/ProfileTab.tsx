@@ -36,10 +36,8 @@ interface BusinessData {
   business_website: string;
   business_address: string;
   is_address_public: boolean;
-  postcode_latitude: number | null;
-  postcode_longitude: number | null;
-  postcode_admin_district: string | null;
-  postcode_admin_ward: string | null;
+  postcode_full: string | null;
+  postcode_area: string | null;
   facebook_url: string;
   instagram_url: string;
   tiktok_url: string;
@@ -47,8 +45,7 @@ interface BusinessData {
   service_area: string;
   operating_hours: OperatingHours;
   availability_notes: string;
-  service_radius_miles: number | null;
-  nearby_towns: string[];
+  coverage_towns: string[];
 }
 
 const ProfileTab = () => {
@@ -78,10 +75,8 @@ const ProfileTab = () => {
     business_website: '',
     business_address: '',
     is_address_public: false,
-    postcode_latitude: null,
-    postcode_longitude: null,
-    postcode_admin_district: null,
-    postcode_admin_ward: null,
+    postcode_full: null,
+    postcode_area: null,
     facebook_url: '',
     instagram_url: '',
     tiktok_url: '',
@@ -89,8 +84,7 @@ const ProfileTab = () => {
     service_area: '',
     operating_hours: getDefaultOperatingHours(),
     availability_notes: '',
-    service_radius_miles: null,
-    nearby_towns: []
+    coverage_towns: []
   });
 
   const [loading, setLoading] = useState(true);
@@ -176,10 +170,8 @@ const ProfileTab = () => {
             business_website: businessDetails.business_website || '',
             business_address: businessDetails.business_address || '',
             is_address_public: businessDetails.is_address_public || false,
-            postcode_latitude: businessDetails.postcode_latitude || null,
-            postcode_longitude: businessDetails.postcode_longitude || null,
-            postcode_admin_district: businessDetails.postcode_admin_district || null,
-            postcode_admin_ward: businessDetails.postcode_admin_ward || null,
+            postcode_full: businessDetails.postcode_full || null,
+            postcode_area: businessDetails.postcode_area || null,
             facebook_url: businessDetails.facebook_url || '',
             instagram_url: businessDetails.instagram_url || '',
             tiktok_url: businessDetails.tiktok_url || '',
@@ -187,8 +179,7 @@ const ProfileTab = () => {
             service_area: businessDetails.service_area || '',
             operating_hours: parseOperatingHours(businessDetails.operating_hours),
             availability_notes: businessDetails.availability_notes || '',
-            service_radius_miles: businessDetails.service_radius_miles || null,
-            nearby_towns: businessDetails.nearby_towns || []
+            coverage_towns: businessDetails.coverage_towns || []
           });
         }
       }
@@ -290,12 +281,9 @@ const ProfileTab = () => {
                 data={{
                   business_address: businessData.business_address,
                   is_address_public: businessData.is_address_public,
-                  postcode_latitude: businessData.postcode_latitude,
-                  postcode_longitude: businessData.postcode_longitude,
-                  postcode_admin_district: businessData.postcode_admin_district,
-                  postcode_admin_ward: businessData.postcode_admin_ward,
-                  service_radius_miles: businessData.service_radius_miles,
-                  nearby_towns: businessData.nearby_towns
+                  postcode_full: businessData.postcode_full,
+                  postcode_area: businessData.postcode_area,
+                  coverage_towns: businessData.coverage_towns || []
                 }}
                 userId={profile?.user_id || ''}
                 onUpdate={handleBusinessUpdate}
