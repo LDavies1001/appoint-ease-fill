@@ -424,11 +424,16 @@ export type Database = {
           availability_notes: string | null
           business_address: string | null
           business_category: string | null
+          business_city: string | null
+          business_country: string | null
+          business_county: string | null
           business_description: string | null
           business_email: string | null
           business_logo_url: string | null
           business_name: string | null
           business_phone: string | null
+          business_postcode: string | null
+          business_street: string | null
           business_website: string | null
           certification_files: string[] | null
           certifications: string | null
@@ -462,11 +467,16 @@ export type Database = {
           availability_notes?: string | null
           business_address?: string | null
           business_category?: string | null
+          business_city?: string | null
+          business_country?: string | null
+          business_county?: string | null
           business_description?: string | null
           business_email?: string | null
           business_logo_url?: string | null
           business_name?: string | null
           business_phone?: string | null
+          business_postcode?: string | null
+          business_street?: string | null
           business_website?: string | null
           certification_files?: string[] | null
           certifications?: string | null
@@ -500,11 +510,16 @@ export type Database = {
           availability_notes?: string | null
           business_address?: string | null
           business_category?: string | null
+          business_city?: string | null
+          business_country?: string | null
+          business_county?: string | null
           business_description?: string | null
           business_email?: string | null
           business_logo_url?: string | null
           business_name?: string | null
           business_phone?: string | null
+          business_postcode?: string | null
+          business_street?: string | null
           business_website?: string | null
           certification_files?: string[] | null
           certifications?: string | null

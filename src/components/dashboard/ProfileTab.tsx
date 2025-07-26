@@ -35,6 +35,11 @@ interface BusinessData {
   business_phone: string;
   business_website: string;
   business_address: string;
+  business_street: string;
+  business_city: string;
+  business_county: string;
+  business_postcode: string;
+  business_country: string;
   is_address_public: boolean;
   facebook_url: string;
   instagram_url: string;
@@ -71,6 +76,11 @@ const ProfileTab = () => {
     business_phone: '',
     business_website: '',
     business_address: '',
+    business_street: '',
+    business_city: '',
+    business_county: '',
+    business_postcode: '',
+    business_country: '',
     is_address_public: false,
     facebook_url: '',
     instagram_url: '',
@@ -163,6 +173,11 @@ const ProfileTab = () => {
             business_phone: businessDetails.business_phone || '',
             business_website: businessDetails.business_website || '',
             business_address: businessDetails.business_address || '',
+            business_street: businessDetails.business_street || '',
+            business_city: businessDetails.business_city || '',
+            business_county: businessDetails.business_county || '',
+            business_postcode: businessDetails.business_postcode || '',
+            business_country: businessDetails.business_country || '',
             is_address_public: businessDetails.is_address_public || false,
             facebook_url: businessDetails.facebook_url || '',
             instagram_url: businessDetails.instagram_url || '',
@@ -271,6 +286,11 @@ const ProfileTab = () => {
               <BusinessLocationSection
                 data={{
                   business_address: businessData.business_address,
+                  business_street: businessData.business_street,
+                  business_city: businessData.business_city,
+                  business_county: businessData.business_county,
+                  business_postcode: businessData.business_postcode,
+                  business_country: businessData.business_country,
                   is_address_public: businessData.is_address_public
                 }}
                 userId={profile?.user_id || ''}
