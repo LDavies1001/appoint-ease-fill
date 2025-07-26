@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Shield, Edit2, Save, X, Upload, FileText, Trash2 } from 'lucide-react';
+import { Shield, Edit2, Save, X, Upload, FileText, Trash2, Plus } from 'lucide-react';
 
 interface CertificationsData {
   certifications: string;
@@ -26,30 +25,67 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
   onUpdate
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState(data);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  
+  // Parse string data into arrays for easier management
+  const [certificationsList, setCertificationsList] = useState<string[]>([]);
+  const [insuranceList, setInsuranceList] = useState<string[]>([]);
+  const [certificationFiles, setCertificationFiles] = useState<string[]>([]);
+  
   const { toast } = useToast();
 
   useEffect(() => {
-    setEditData(data);
+    // Parse existing string data into arrays
+    const parseCertifications = () => {
+      if (data.certifications) {
+        // Split by line breaks and filter out empty lines
+        const items = data.certifications.split('\n').filter(item => item.trim() !== '');
+        setCertificationsList(items.length > 0 ? items : ['']);
+      } else {
+        setCertificationsList(['']);
+      }
+    };
+
+    const parseInsurance = () => {
+      if (data.insurance_info) {
+        // Split by line breaks and filter out empty lines
+        const items = data.insurance_info.split('\n').filter(item => item.trim() !== '');
+        setInsuranceList(items.length > 0 ? items : ['']);
+      } else {
+        setInsuranceList(['']);
+      }
+    };
+
+    parseCertifications();
+    parseInsurance();
+    setCertificationFiles(data.certification_files || []);
   }, [data]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
+      // Convert arrays back to strings for database storage
+      const certificationsString = certificationsList.filter(item => item.trim() !== '').join('\n');
+      const insuranceString = insuranceList.filter(item => item.trim() !== '').join('\n');
+
       const { error } = await supabase
         .from('provider_details')
         .update({
-          certifications: editData.certifications,
-          insurance_info: editData.insurance_info,
-          certification_files: editData.certification_files
+          certifications: certificationsString,
+          insurance_info: insuranceString,
+          certification_files: certificationFiles
         })
         .eq('user_id', userId);
 
       if (error) throw error;
 
-      onUpdate(editData);
+      onUpdate({
+        certifications: certificationsString,
+        insurance_info: insuranceString,
+        certification_files: certificationFiles
+      });
+      
       setIsEditing(false);
       toast({
         title: "Certifications updated",
@@ -68,8 +104,46 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
   };
 
   const handleCancel = () => {
-    setEditData(data);
+    // Reset to original data
+    const parsedCertifications = data.certifications 
+      ? data.certifications.split('\n').filter(item => item.trim() !== '') 
+      : [''];
+    const parsedInsurance = data.insurance_info 
+      ? data.insurance_info.split('\n').filter(item => item.trim() !== '') 
+      : [''];
+    
+    setCertificationsList(parsedCertifications.length > 0 ? parsedCertifications : ['']);
+    setInsuranceList(parsedInsurance.length > 0 ? parsedInsurance : ['']);
+    setCertificationFiles(data.certification_files || []);
     setIsEditing(false);
+  };
+
+  const addCertificationItem = () => {
+    setCertificationsList([...certificationsList, '']);
+  };
+
+  const removeCertificationItem = (index: number) => {
+    setCertificationsList(certificationsList.filter((_, i) => i !== index));
+  };
+
+  const updateCertificationItem = (index: number, value: string) => {
+    const updated = [...certificationsList];
+    updated[index] = value;
+    setCertificationsList(updated);
+  };
+
+  const addInsuranceItem = () => {
+    setInsuranceList([...insuranceList, '']);
+  };
+
+  const removeInsuranceItem = (index: number) => {
+    setInsuranceList(insuranceList.filter((_, i) => i !== index));
+  };
+
+  const updateInsuranceItem = (index: number, value: string) => {
+    const updated = [...insuranceList];
+    updated[index] = value;
+    setInsuranceList(updated);
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,10 +184,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
       }
 
       if (uploadedUrls.length > 0) {
-        setEditData(prev => ({ 
-          ...prev, 
-          certification_files: [...prev.certification_files, ...uploadedUrls] 
-        }));
+        setCertificationFiles(prev => [...prev, ...uploadedUrls]);
         
         toast({
           title: "Files uploaded",
@@ -149,10 +220,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
       }
 
       // Remove from local state regardless of storage deletion result
-      setEditData(prev => ({
-        ...prev,
-        certification_files: prev.certification_files.filter((_, i) => i !== index)
-      }));
+      setCertificationFiles(prev => prev.filter((_, i) => i !== index));
 
       toast({
         title: "File removed",
@@ -167,6 +235,46 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
       });
     }
   };
+
+  const renderListItems = (
+    items: string[], 
+    updateItem: (index: number, value: string) => void, 
+    addItem: () => void, 
+    removeItem: (index: number) => void,
+    placeholder: string
+  ) => (
+    <div className="space-y-3">
+      {items.map((item, index) => (
+        <div key={index} className="flex items-center gap-2">
+          <Input
+            value={item}
+            onChange={(e) => updateItem(index, e.target.value)}
+            placeholder={placeholder}
+            className="flex-1"
+          />
+          {items.length > 1 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => removeItem(index)}
+              className="px-2"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      ))}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={addItem}
+        className="w-full border-dashed"
+      >
+        <Plus className="h-4 w-4 mr-2" />
+        Add Item
+      </Button>
+    </div>
+  );
 
   return (
     <Card className="p-6">
@@ -190,6 +298,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
                 Cancel
               </Button>
               <Button
+                variant="provider"
                 size="sm"
                 onClick={handleSave}
                 disabled={saving}
@@ -204,7 +313,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
             </>
           ) : (
             <Button
-              variant="outline"
+              variant="provider-outline"
               size="sm"
               onClick={() => setIsEditing(true)}
             >
@@ -219,38 +328,45 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
         <div className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="insurance_info" className="text-base font-medium">
+              <Label className="text-base font-medium mb-3 block">
                 Insurance Information
               </Label>
-              <Textarea
-                id="insurance_info"
-                value={editData.insurance_info}
-                onChange={(e) => setEditData(prev => ({ ...prev, insurance_info: e.target.value }))}
-                placeholder="DBS checked, public liability insurance, etc."
-                className="mt-2"
-                rows={3}
-              />
+              <p className="text-sm text-muted-foreground mb-3">
+                Add your insurance details, DBS checks, and safety certifications
+              </p>
+              {renderListItems(
+                insuranceList,
+                updateInsuranceItem,
+                addInsuranceItem,
+                removeInsuranceItem,
+                "e.g., DBS Checked, Public Liability Insurance"
+              )}
             </div>
             
             <div>
-              <Label htmlFor="certifications" className="text-base font-medium">
+              <Label className="text-base font-medium mb-3 block">
                 Certifications & Qualifications
               </Label>
-              <Textarea
-                id="certifications"
-                value={editData.certifications}
-                onChange={(e) => setEditData(prev => ({ ...prev, certifications: e.target.value }))}
-                placeholder="List your certifications, qualifications, awards, etc."
-                className="mt-2"
-                rows={3}
-              />
+              <p className="text-sm text-muted-foreground mb-3">
+                List your professional certifications and qualifications
+              </p>
+              {renderListItems(
+                certificationsList,
+                updateCertificationItem,
+                addCertificationItem,
+                removeCertificationItem,
+                "e.g., Level 3 Beauty Therapy, VTCT Diploma"
+              )}
             </div>
           </div>
 
           <div>
             <Label className="text-base font-medium mb-3 block">Certification Files</Label>
+            <p className="text-sm text-muted-foreground mb-3">
+              Upload certificates, diplomas, and other credential documents
+            </p>
             <div className="space-y-3">
-              <div className="border-2 border-dashed border-border rounded-lg p-4">
+              <div className="border-2 border-dashed border-border rounded-lg p-4 hover:border-provider/30 transition-colors">
                 <div className="text-center">
                   <input
                     type="file"
@@ -276,21 +392,25 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
                 </div>
               </div>
 
-              {editData.certification_files.length > 0 && (
+              {certificationFiles.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="font-medium">Uploaded Files</h4>
-                  {editData.certification_files.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm truncate">
-                          {file.split('/').pop()?.split('-').slice(1).join('-') || `File ${index + 1}`}
-                        </span>
+                  <h4 className="font-medium">Uploaded Files ({certificationFiles.length})</h4>
+                  {certificationFiles.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg border border-border">
+                      <div className="flex items-center space-x-3">
+                        <FileText className="h-5 w-5 text-provider" />
+                        <div>
+                          <span className="text-sm font-medium truncate">
+                            {file.split('/').pop()?.split('-').slice(1).join('-') || `Certificate ${index + 1}`}
+                          </span>
+                          <p className="text-xs text-muted-foreground">Uploaded certificate</p>
+                        </div>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => handleFileDelete(file, index)}
+                        className="text-destructive hover:text-destructive"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -300,24 +420,43 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
               )}
             </div>
           </div>
-
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium mb-2">Insurance Information</h4>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Shield className="h-4 w-4 text-provider" />
+                Insurance Information
+              </h4>
               {data.insurance_info ? (
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">{data.insurance_info}</p>
+                <div className="space-y-2">
+                  {data.insurance_info.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{item}</span>
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <p className="text-sm text-muted-foreground">No insurance information provided</p>
               )}
             </div>
             
             <div>
-              <h4 className="font-medium mb-2">Certifications</h4>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <FileText className="h-4 w-4 text-provider" />
+                Certifications & Qualifications
+              </h4>
               {data.certifications ? (
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">{data.certifications}</p>
+                <div className="space-y-2">
+                  {data.certifications.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{item}</span>
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <p className="text-sm text-muted-foreground">No certifications listed</p>
               )}
@@ -326,13 +465,31 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
           
           {data.certification_files && data.certification_files.length > 0 && (
             <div>
-              <h4 className="font-medium mb-2">Certification Files</h4>
-              <p className="text-sm text-muted-foreground">
-                {data.certification_files.length} file(s) uploaded
-              </p>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Upload className="h-4 w-4 text-provider" />
+                Certification Documents
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {data.certification_files.map((file, index) => (
+                  <a
+                    key={index}
+                    href={file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 p-3 border border-border rounded-lg hover:border-provider/30 hover:shadow-md transition-all"
+                  >
+                    <FileText className="h-5 w-5 text-provider" />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-medium truncate block">
+                        Certificate {index + 1}
+                      </span>
+                      <span className="text-xs text-muted-foreground">View document</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
             </div>
           )}
-          
         </div>
       )}
     </Card>
