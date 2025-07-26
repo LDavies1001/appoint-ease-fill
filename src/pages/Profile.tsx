@@ -388,160 +388,142 @@ const Profile = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
         {/* Hero Section */}
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-3xl"></div>
-          <div className="relative container mx-auto px-4 py-16">
-            <div className="text-center animate-fade-in">
-              <div className="relative inline-block mb-6">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-full blur-2xl opacity-30 scale-110"></div>
-                <Avatar className="w-40 h-40 border-4 border-white/20 shadow-2xl relative z-10">
+        <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5"></div>
+          <div className="relative container mx-auto px-4 py-20">
+            <div className="text-center animate-fade-in max-w-4xl mx-auto">
+              <div className="relative inline-block mb-8">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-full blur-3xl opacity-20 scale-150"></div>
+                <Avatar className="w-48 h-48 border-8 border-white/30 shadow-2xl relative z-10 mx-auto">
                   <AvatarImage src={customerProfile?.avatar_url} className="object-cover" />
-                  <AvatarFallback className="text-4xl bg-gradient-to-br from-primary to-accent text-white">
+                  <AvatarFallback className="text-6xl bg-gradient-to-br from-primary to-accent text-white font-bold">
                     {customerProfile?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'C'}
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                {customerProfile?.name || 'Your Profile'}
+              <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent">
+                {customerProfile?.name || 'Beauty Enthusiast'}
               </h1>
-              <p className="text-xl text-muted-foreground mb-2">
-                Beauty Enthusiast & Valued Customer
-              </p>
-              <Badge variant="outline" className="text-sm px-4 py-2 bg-white/10 border-white/20 text-foreground">
-                Member since {new Date(customerProfile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-              </Badge>
+              {customerProfile?.bio ? (
+                <p className="text-2xl text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+                  {customerProfile.bio}
+                </p>
+              ) : (
+                <p className="text-2xl text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+                  Beauty enthusiast exploring the world of wellness and self-care
+                </p>
+              )}
+              <div className="flex flex-wrap justify-center gap-4 mb-8">
+                <Badge variant="outline" className="text-lg px-6 py-3 bg-white/20 border-white/30 text-foreground backdrop-blur-sm">
+                  <MapPin className="h-4 w-4 mr-2" />
+                  {customerProfile?.location || 'Location not set'}
+                </Badge>
+                <Badge variant="outline" className="text-lg px-6 py-3 bg-white/20 border-white/30 text-foreground backdrop-blur-sm">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Member since {new Date(customerProfile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </Badge>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-16">
           <div className="max-w-6xl mx-auto">
-            {/* Stats Overview */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 animate-scale-in">
-              <div className="text-center group hover-scale">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                  <Calendar className="h-8 w-8 text-white" />
+            {/* Activity Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 animate-scale-in">
+              <div className="text-center group hover-scale bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <Calendar className="h-10 w-10 text-white" />
                 </div>
-                <div className="text-3xl font-bold text-foreground">0</div>
-                <div className="text-sm text-muted-foreground">Total Bookings</div>
+                <div className="text-4xl font-bold text-foreground mb-2">0</div>
+                <div className="text-muted-foreground font-medium">Appointments</div>
               </div>
-              <div className="text-center group hover-scale">
-                <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                  <Heart className="h-8 w-8 text-white" />
+              <div className="text-center group hover-scale bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <Heart className="h-10 w-10 text-white" />
                 </div>
-                <div className="text-3xl font-bold text-foreground">0</div>
-                <div className="text-sm text-muted-foreground">Favorite Businesses</div>
+                <div className="text-4xl font-bold text-foreground mb-2">0</div>
+                <div className="text-muted-foreground font-medium">Favorites</div>
               </div>
-              <div className="text-center group hover-scale">
-                <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                  <Star className="h-8 w-8 text-white" />
+              <div className="text-center group hover-scale bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <Star className="h-10 w-10 text-white" />
                 </div>
-                <div className="text-3xl font-bold text-foreground">0</div>
-                <div className="text-sm text-muted-foreground">Reviews Given</div>
+                <div className="text-4xl font-bold text-foreground mb-2">0</div>
+                <div className="text-muted-foreground font-medium">Reviews</div>
               </div>
-              <div className="text-center group hover-scale">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                  <Bell className="h-8 w-8 text-white" />
+              <div className="text-center group hover-scale bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <Award className="h-10 w-10 text-white" />
                 </div>
-                <div className="text-3xl font-bold text-foreground">
-                  {customerProfile?.notification_preferences?.marketing_communications ? '✓' : '✗'}
-                </div>
-                <div className="text-sm text-muted-foreground">Marketing Active</div>
+                <div className="text-4xl font-bold text-foreground mb-2">0</div>
+                <div className="text-muted-foreground font-medium">Experiences</div>
               </div>
             </div>
 
-            {/* Main Content Grid */}
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Personal Showcase */}
-              <div className="lg:col-span-2 space-y-8">
-                {/* About Section */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-8 border border-border/50 shadow-xl animate-fade-in">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-                      <User className="h-6 w-6 text-white" />
+            {/* Beauty Profile Sections */}
+            <div className="grid lg:grid-cols-3 gap-12">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-12">
+                {/* Beauty Interests */}
+                <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-10 border border-white/30 shadow-2xl animate-fade-in">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                      <Sparkles className="h-8 w-8 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold">About Me</h2>
+                    <div>
+                      <h2 className="text-3xl font-bold">Beauty Passions</h2>
+                      <p className="text-muted-foreground">Services and treatments I love</p>
+                    </div>
                   </div>
                   
-                  <div className="space-y-6">
-                    {customerProfile?.bio ? (
-                      <div className="bg-muted/30 rounded-2xl p-6">
-                        <p className="text-lg leading-relaxed text-foreground/90 italic">
-                          "{customerProfile.bio}"
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="bg-muted/30 rounded-2xl p-6 text-center">
-                        <p className="text-muted-foreground">No bio added yet</p>
-                      </div>
-                    )}
-                    
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {['Lash Extensions', 'Nail Care', 'Hair Styling', 'Skincare', 'Massage', 'Makeup'].map((category, index) => (
+                      <div 
+                        key={category} 
+                        className="group p-4 bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl border border-primary/10 hover:border-primary/30 transition-all duration-300 hover-scale"
+                      >
                         <div className="flex items-center gap-3">
-                          <Mail className="h-5 w-5 text-primary" />
-                          <div>
-                            <p className="text-sm text-muted-foreground">Email</p>
-                            <p className="font-medium">{customerProfile?.email}</p>
-                          </div>
+                          <div className="w-3 h-3 bg-gradient-to-r from-primary to-accent rounded-full"></div>
+                          <span className="font-semibold text-lg">{category}</span>
                         </div>
-                        {customerProfile?.phone && (
-                          <div className="flex items-center gap-3">
-                            <Phone className="h-5 w-5 text-primary" />
-                            <div>
-                              <p className="text-sm text-muted-foreground">Phone</p>
-                              <p className="font-medium">{customerProfile.phone}</p>
-                            </div>
-                          </div>
-                        )}
                       </div>
-                      <div className="space-y-4">
-                        {customerProfile?.location && (
-                          <div className="flex items-center gap-3">
-                            <MapPin className="h-5 w-5 text-primary" />
-                            <div>
-                              <p className="text-sm text-muted-foreground">Location</p>
-                              <p className="font-medium">{customerProfile.location}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Service Interests Showcase */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-8 border border-border/50 shadow-xl animate-fade-in">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                      <Sparkles className="h-6 w-6 text-white" />
+                {/* Preferences & Style */}
+                <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-10 border border-white/30 shadow-2xl animate-fade-in">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
+                      <Users className="h-8 w-8 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold">Beauty Interests</h2>
+                    <div>
+                      <h2 className="text-3xl font-bold">Style Profile</h2>
+                      <p className="text-muted-foreground">My beauty preferences and budget</p>
+                    </div>
                   </div>
                   
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-muted-foreground mb-4">Services I love</p>
-                      <div className="flex flex-wrap gap-3">
-                        {['Lash Extensions', 'Nail Care', 'Hair Styling', 'Skincare', 'Massage', 'Makeup'].map((category) => (
-                          <Badge 
-                            key={category} 
-                            variant="secondary" 
-                            className="px-4 py-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover-scale cursor-default"
-                          >
-                            {category}
-                          </Badge>
-                        ))}
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-6">
+                        <div className="flex items-center gap-3 mb-3">
+                          <PoundSterling className="h-6 w-6 text-primary" />
+                          <h3 className="text-xl font-semibold">Budget Range</h3>
+                        </div>
+                        <p className="text-2xl font-bold text-primary">£25 - £100</p>
+                        <p className="text-muted-foreground mt-2">Per service</p>
                       </div>
                     </div>
                     
-                    <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-6">
-                      <div className="flex items-center gap-3">
-                        <PoundSterling className="h-5 w-5 text-primary" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">Preferred Budget Range</p>
-                          <p className="text-lg font-semibold">£25 - £100</p>
+                    <div className="space-y-6">
+                      <div className="bg-gradient-to-br from-purple/10 to-pink/10 rounded-2xl p-6">
+                        <div className="flex items-center gap-3 mb-3">
+                          <Star className="h-6 w-6 text-purple-500" />
+                          <h3 className="text-xl font-semibold">Style Preference</h3>
                         </div>
+                        <p className="text-lg font-medium">Natural & Elegant</p>
+                        <p className="text-muted-foreground mt-2">Classic beauty with modern touches</p>
                       </div>
                     </div>
                   </div>
@@ -550,78 +532,67 @@ const Profile = () => {
 
               {/* Sidebar */}
               <div className="space-y-8">
-                {/* Privacy & Settings */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-6 border border-border/50 shadow-xl animate-scale-in">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                      <Shield className="h-5 w-5 text-white" />
+                {/* Quick Info */}
+                <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/30 shadow-2xl animate-scale-in">
+                  <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                      <User className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold">Privacy</h3>
-                  </div>
+                    About
+                  </h3>
                   
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
-                      <span className="text-sm font-medium">Email Visibility</span>
-                      <Badge variant={customerProfile?.privacy_settings?.email_visible ? "default" : "secondary"} className="text-xs">
-                        {customerProfile?.privacy_settings?.email_visible ? "Public" : "Private"}
-                      </Badge>
+                    <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
+                      <MapPin className="h-5 w-5 text-primary" />
+                      <span className="font-medium">{customerProfile?.location || 'Location not set'}</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
-                      <span className="text-sm font-medium">Phone Visibility</span>
-                      <Badge variant={customerProfile?.privacy_settings?.phone_visible ? "default" : "secondary"} className="text-xs">
-                        {customerProfile?.privacy_settings?.phone_visible ? "Public" : "Private"}
-                      </Badge>
+                    <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
+                      <Calendar className="h-5 w-5 text-primary" />
+                      <span className="font-medium">Joined {new Date(customerProfile?.created_at || '').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
-                      <span className="text-sm font-medium">Location Visibility</span>
-                      <Badge variant={customerProfile?.privacy_settings?.location_visible ? "default" : "secondary"} className="text-xs">
-                        {customerProfile?.privacy_settings?.location_visible ? "Public" : "Private"}
-                      </Badge>
+                    <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
+                      <Bell className="h-5 w-5 text-primary" />
+                      <span className="font-medium">
+                        {customerProfile?.notification_preferences?.marketing_communications ? 'Open to offers' : 'Private profile'}
+                      </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Notifications */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-6 border border-border/50 shadow-xl animate-scale-in">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                      <Bell className="h-5 w-5 text-white" />
+                {/* Activity Summary */}
+                <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-8 border border-primary/20 shadow-2xl animate-scale-in">
+                  <h3 className="text-2xl font-bold mb-6">Activity</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">This month</span>
+                      <Badge variant="secondary">0 bookings</Badge>
                     </div>
-                    <h3 className="text-lg font-semibold">Notifications</h3>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Email Updates</span>
-                      <div className={`w-3 h-3 rounded-full ${customerProfile?.notification_preferences?.email_notifications ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Favorite spots</span>
+                      <Badge variant="secondary">0 saved</Badge>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">SMS Alerts</span>
-                      <div className={`w-3 h-3 rounded-full ${customerProfile?.notification_preferences?.sms_notifications ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Marketing</span>
-                      <div className={`w-3 h-3 rounded-full ${customerProfile?.notification_preferences?.marketing_communications ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Reminders</span>
-                      <div className={`w-3 h-3 rounded-full ${customerProfile?.notification_preferences?.booking_reminders ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Reviews shared</span>
+                      <Badge variant="secondary">0 written</Badge>
                     </div>
                   </div>
                 </div>
 
-                {/* Quick Actions */}
-                <div className="bg-gradient-to-br from-primary to-accent rounded-3xl p-6 text-white shadow-xl animate-scale-in">
-                  <h3 className="text-lg font-semibold mb-4">Manage Profile</h3>
-                  <Button 
-                    onClick={() => navigate('/dashboard')} 
-                    className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white backdrop-blur-sm"
-                    size="lg"
-                  >
-                    <Settings className="h-4 w-4 mr-2" />
-                    Edit Settings
-                  </Button>
-                </div>
+                {/* Call to Action */}
+                {profile?.user_id === user?.id && (
+                  <div className="bg-gradient-to-br from-primary to-accent rounded-3xl p-8 text-white shadow-2xl animate-scale-in">
+                    <h3 className="text-xl font-bold mb-4">Customize Your Profile</h3>
+                    <p className="text-white/90 mb-6">Make your beauty profile stand out and connect with amazing businesses.</p>
+                    <Button 
+                      onClick={() => navigate('/dashboard')} 
+                      className="w-full bg-white/20 hover:bg-white/30 border-white/30 text-white backdrop-blur-sm"
+                      size="lg"
+                    >
+                      <Settings className="h-4 w-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
