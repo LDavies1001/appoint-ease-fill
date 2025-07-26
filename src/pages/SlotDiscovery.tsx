@@ -317,7 +317,7 @@ const SlotDiscovery: React.FC = () => {
                 <Search className="ml-2 h-5 w-5" />
               </Button>
               <p className="text-background/60 text-sm mt-3 font-medium">
-                No booking fees • Instant confirmation • Cancel anytime
+                Transparent pricing • Instant confirmation • Save with discounted slots
               </p>
             </div>
           </div>
