@@ -14,7 +14,7 @@ import { SocialMediaSection } from '@/components/business/SocialMediaSection';
 import { BusinessLocationSection } from '@/components/business/BusinessLocationSection';
 import { OperatingHoursSection } from '@/components/business/OperatingHoursSection';
 import { BusinessBrandingSection } from '@/components/business/BusinessBrandingSection';
-import { ServicesSection } from '@/components/business/ServicesSection';
+
 import { CertificationsSection } from '@/components/business/CertificationsSection';
 
 interface PersonalData {
@@ -317,18 +317,6 @@ const ProfileTab = () => {
               />
             </div>
 
-            {/* Services Section - Editable */}
-            <div className="lg:col-span-2">
-              <ServicesSection
-                data={{
-                  services_offered: businessData.services_offered,
-                  business_categories: businessData.business_categories,
-                  pricing_info: businessData.pricing_info
-                }}
-                userId={profile?.user_id || ''}
-                onUpdate={handleBusinessUpdate}
-              />
-            </div>
 
             {/* Certifications Section - Editable */}
             <div className="lg:col-span-2">

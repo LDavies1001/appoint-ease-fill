@@ -12,7 +12,7 @@ import LibraryTab from './LibraryTab';
 import ProfileTab from './ProfileTab';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import ServiceManager from '@/components/business/ServiceManager';
+import { ServicesSection } from '@/components/business/ServicesSection';
 import { 
   Plus, 
   Calendar, 
@@ -90,6 +90,7 @@ const ProviderDashboard = () => {
   const [providerServices, setProviderServices] = useState<ProviderService[]>([]);
   const [mySlots, setMySlots] = useState<AvailabilitySlot[]>([]);
   const [myBookings, setMyBookings] = useState<Booking[]>([]);
+  const [businessData, setBusinessData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   
   // Form state for adding slots
@@ -117,6 +118,7 @@ const ProviderDashboard = () => {
     fetchMySlots();
     fetchMyBookings();
     fetchProviderServices();
+    fetchBusinessData();
   }, []);
 
   const fetchServices = async () => {
@@ -208,6 +210,43 @@ const ProviderDashboard = () => {
     } catch (error) {
       console.error('Error fetching provider services:', error);
     }
+  };
+
+  const fetchBusinessData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('provider_details')
+        .select(`
+          *,
+          business_categories:business_categories(*)
+        `)
+        .eq('user_id', profile?.user_id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      
+      if (data) {
+        const categoriesData = data.services_offered
+          ? await supabase
+              .from('business_categories')
+              .select('*')
+              .in('id', data.services_offered)
+          : { data: [] };
+
+        setBusinessData({
+          ...data,
+          business_categories: categoriesData.data || []
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching business data:', error);
+    }
+  };
+
+  const handleBusinessUpdate = (updatedData: any) => {
+    setBusinessData(prev => ({ ...prev, ...updatedData }));
+    // Refetch services when business data changes
+    fetchProviderServices();
   };
 
   const handleAddSlot = async (e: React.FormEvent) => {
@@ -862,7 +901,15 @@ const ProviderDashboard = () => {
         )}
 
         {activeTab === 'services' && (
-          <ServiceManager onServiceUpdate={fetchProviderServices} />
+          <ServicesSection
+            data={{
+              services_offered: businessData.services_offered || [],
+              business_categories: businessData.business_categories || [],
+              pricing_info: businessData.pricing_info || ''
+            }}
+            userId={profile?.user_id || ''}
+            onUpdate={handleBusinessUpdate}
+          />
         )}
 
         {activeTab === 'bookings' && (
