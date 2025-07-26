@@ -72,14 +72,6 @@ const Header = () => {
                       Account Settings
                     </Link>
                   </DropdownMenuItem>
-                  {profile.active_role === 'provider' && (
-                    <DropdownMenuItem asChild>
-                      <Link to="/business-profile" className="flex items-center">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Business Settings
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={signOut} className="flex items-center text-destructive">
                     <LogOut className="h-4 w-4 mr-2" />
