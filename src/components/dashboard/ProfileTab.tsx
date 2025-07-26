@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { AddressData } from '@/components/ui/address-form';
+
 import { PersonalInfoSection } from '@/components/business/PersonalInfoSection';
 import { BusinessInfoSection } from '@/components/business/BusinessInfoSection';
 import { ContactInfoSection } from '@/components/business/ContactInfoSection';
 import { SocialMediaSection } from '@/components/business/SocialMediaSection';
-import { AddressSection } from '@/components/business/AddressSection';
+import { BusinessLocationSection } from '@/components/business/BusinessLocationSection';
 import { OperatingHoursSection } from '@/components/business/OperatingHoursSection';
 
 interface PersonalData {
@@ -34,7 +34,12 @@ interface BusinessData {
   business_email: string;
   business_phone: string;
   business_website: string;
-  business_address: AddressData;
+  business_address: string;
+  is_address_public: boolean;
+  postcode_latitude: number | null;
+  postcode_longitude: number | null;
+  postcode_admin_district: string | null;
+  postcode_admin_ward: string | null;
   facebook_url: string;
   instagram_url: string;
   tiktok_url: string;
@@ -71,13 +76,12 @@ const ProfileTab = () => {
     business_email: '',
     business_phone: '',
     business_website: '',
-    business_address: {
-      address_line_1: '',
-      address_line_2: '',
-      town_city: '',
-      postcode: '',
-      is_public: false
-    },
+    business_address: '',
+    is_address_public: false,
+    postcode_latitude: null,
+    postcode_longitude: null,
+    postcode_admin_district: null,
+    postcode_admin_ward: null,
     facebook_url: '',
     instagram_url: '',
     tiktok_url: '',
@@ -133,36 +137,6 @@ const ProfileTab = () => {
         if (businessError) throw businessError;
 
         if (businessDetails) {
-          // Parse address data
-          const parseAddressData = (addressStr?: string): AddressData => {
-            if (!addressStr) {
-              return {
-                address_line_1: '',
-                address_line_2: '',
-                town_city: '',
-                postcode: '',
-                is_public: businessDetails.is_address_public || false,
-                admin_district: businessDetails.postcode_admin_district || undefined,
-                admin_ward: businessDetails.postcode_admin_ward || undefined,
-                latitude: businessDetails.postcode_latitude || undefined,
-                longitude: businessDetails.postcode_longitude || undefined
-              };
-            }
-            
-            const parts = addressStr.split(', ');
-            return {
-              address_line_1: parts[0] || '',
-              address_line_2: parts[1] || '',
-              town_city: parts[2] || '',
-              postcode: parts[3] || '',
-              is_public: businessDetails.is_address_public || false,
-              admin_district: businessDetails.postcode_admin_district || undefined,
-              admin_ward: businessDetails.postcode_admin_ward || undefined,
-              latitude: businessDetails.postcode_latitude || undefined,
-              longitude: businessDetails.postcode_longitude || undefined
-            };
-          };
-
           // Parse operating hours
           const parseOperatingHours = (hoursStr?: string): OperatingHours => {
             if (!hoursStr) return getDefaultOperatingHours();
@@ -200,7 +174,12 @@ const ProfileTab = () => {
             business_email: businessDetails.business_email || '',
             business_phone: businessDetails.business_phone || '',
             business_website: businessDetails.business_website || '',
-            business_address: parseAddressData(businessDetails.business_address),
+            business_address: businessDetails.business_address || '',
+            is_address_public: businessDetails.is_address_public || false,
+            postcode_latitude: businessDetails.postcode_latitude || null,
+            postcode_longitude: businessDetails.postcode_longitude || null,
+            postcode_admin_district: businessDetails.postcode_admin_district || null,
+            postcode_admin_ward: businessDetails.postcode_admin_ward || null,
             facebook_url: businessDetails.facebook_url || '',
             instagram_url: businessDetails.instagram_url || '',
             tiktok_url: businessDetails.tiktok_url || '',
@@ -307,9 +286,16 @@ const ProfileTab = () => {
             </div>
 
             <div className="lg:col-span-2">
-              <AddressSection
+              <BusinessLocationSection
                 data={{
-                  business_address: businessData.business_address
+                  business_address: businessData.business_address,
+                  is_address_public: businessData.is_address_public,
+                  postcode_latitude: businessData.postcode_latitude,
+                  postcode_longitude: businessData.postcode_longitude,
+                  postcode_admin_district: businessData.postcode_admin_district,
+                  postcode_admin_ward: businessData.postcode_admin_ward,
+                  service_radius_miles: businessData.service_radius_miles,
+                  nearby_towns: businessData.nearby_towns
                 }}
                 userId={profile?.user_id || ''}
                 onUpdate={handleBusinessUpdate}
