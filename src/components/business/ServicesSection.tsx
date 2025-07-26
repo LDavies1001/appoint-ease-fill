@@ -287,7 +287,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               </div>
             ) : (
               <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
-                <DollarSign className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                <div className="h-12 w-12 text-muted-foreground mx-auto mb-3 flex items-center justify-center text-2xl font-bold">£</div>
                 <p className="text-muted-foreground mb-4">No services added yet</p>
                 <Button variant="provider" onClick={handleAddService}>
                   <Plus className="h-4 w-4" />
