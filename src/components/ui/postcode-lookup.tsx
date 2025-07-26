@@ -205,47 +205,90 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
     onChange(updatedAreas.join(', '));
   };
 
+  // Haversine formula to calculate distance between two points
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 3959; // Radius of Earth in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; // Distance in miles
+  };
+
   const fetchNearbyTowns = async (postcode: string, radiusMiles: number) => {
     setLoadingNearbyTowns(true);
     try {
-      // First get nearby postcodes within radius
+      // Get a larger radius to ensure we capture all potential areas
+      const searchRadiusMeters = radiusMiles * 1609 * 2; // Double the radius for initial search
+      
       const nearbyResponse = await fetch(
-        `https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}/nearest?radius=${radiusMiles * 1609}&limit=100`
+        `https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}/nearest?radius=${searchRadiusMeters}&limit=200`
       );
       
       if (nearbyResponse.ok) {
         const nearbyData = await nearbyResponse.json();
         const nearbyPostcodes = nearbyData.result || [];
         
-        // Extract unique towns/areas from nearby postcodes
-        const towns = new Set<string>();
+        // Filter postcodes by actual Haversine distance
+        const baseLocation = selectedLocation;
+        if (!baseLocation) return;
+        
+        const areasWithDistance: {area: string, distance: number}[] = [];
         
         nearbyPostcodes.forEach((pc: PostcodeResult) => {
-          if (pc.admin_ward) towns.add(pc.admin_ward);
-          if (pc.admin_district) towns.add(pc.admin_district);
-          if (pc.parliamentary_constituency) {
-            // Extract town names from constituency
-            const constituency = pc.parliamentary_constituency;
-            const constituencyTowns = constituency
-              .replace(/\s+(and|&)\s+/gi, ', ')
-              .split(', ')
-              .map(town => town.trim())
-              .filter(town => town && !town.match(/^(East|West|North|South|Central)$/i));
-            constituencyTowns.forEach(town => towns.add(town));
+          const distance = calculateDistance(
+            baseLocation.latitude,
+            baseLocation.longitude,
+            pc.latitude,
+            pc.longitude
+          );
+          
+          // Only include areas within the selected radius
+          if (distance <= radiusMiles) {
+            // Add admin ward with distance
+            if (pc.admin_ward && !areasWithDistance.some(item => item.area === pc.admin_ward)) {
+              areasWithDistance.push({area: pc.admin_ward, distance});
+            }
+            
+            // Add admin district with distance
+            if (pc.admin_district && !areasWithDistance.some(item => item.area === pc.admin_district)) {
+              areasWithDistance.push({area: pc.admin_district, distance});
+            }
+            
+            // Extract and add towns from parliamentary constituency
+            if (pc.parliamentary_constituency) {
+              const constituency = pc.parliamentary_constituency;
+              const constituencyTowns = constituency
+                .replace(/\s+(and|&)\s+/gi, ', ')
+                .split(', ')
+                .map(town => town.trim())
+                .filter(town => town && !town.match(/^(East|West|North|South|Central)$/i));
+              
+              constituencyTowns.forEach(town => {
+                if (!areasWithDistance.some(item => item.area === town)) {
+                  areasWithDistance.push({area: town, distance});
+                }
+              });
+            }
           }
         });
         
-        const townArray = Array.from(towns).sort();
-        setNearbyTowns(townArray);
+        // Sort areas by distance and extract names
+        const sortedAreas = areasWithDistance
+          .sort((a, b) => a.distance - b.distance) // Sort by distance
+          .map(item => item.area); // Extract area names
         
-        // Set these towns as the selected areas for user to customize
-        setSelectedAreas(townArray);
+        setNearbyTowns(sortedAreas);
+        setSelectedAreas(sortedAreas);
         
         // Update the service area input with the nearby towns
-        onChange(townArray.join(', '));
+        onChange(sortedAreas.join(', '));
         
         // Notify parent component
-        onServiceAreaUpdate?.(radiusMiles, townArray);
+        onServiceAreaUpdate?.(radiusMiles, sortedAreas);
       }
     } catch (error) {
       console.error('Error fetching nearby towns:', error);
@@ -345,94 +388,72 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
             </Select>
           </div>
 
-          {/* Nearby Towns Preview */}
-          {selectedRadius && (
-            <Card className="border border-provider/20">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center space-x-2">
-                  <Map className="h-4 w-4 text-provider" />
-                  <span>Your business will be visible to customers in these areas:</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {loadingNearbyTowns ? (
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Finding nearby areas...</span>
-                  </div>
-                ) : nearbyTowns.length > 0 ? (
-                  <div className="max-h-32 overflow-y-auto">
-                    <div className="flex flex-wrap gap-2">
-                      {nearbyTowns.map((town, index) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="bg-provider/10 text-provider text-xs"
-                        >
-                          {town}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">No nearby areas found for this radius.</p>
-                )}
-              </CardContent>
-            </Card>
-          )}
         </div>
       )}
 
-      {/* Location Areas - Removable Tags (only show after radius is selected) */}
-      {isValidated && selectedLocation && selectedRadius && selectedAreas.length > 0 && (
+      {/* Service Areas - Single Streamlined Box */}
+      {isValidated && selectedLocation && selectedRadius && (
         <div className="p-3 bg-provider/5 border border-provider/20 rounded-lg">
           <div className="flex items-start space-x-2 mb-3">
-            <Check className="h-4 w-4 text-provider mt-0.5" />
+            <Map className="h-4 w-4 text-provider mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-provider">Postcode verified!</p>
+              <p className="text-sm font-medium text-provider">
+                Service Areas ({selectedRadius} mile radius)
+              </p>
               <p className="text-xs text-muted-foreground">
-                Choose your service areas by removing unwanted locations:
+                Areas calculated using precise distance from your postcode. Remove unwanted locations or add custom areas:
               </p>
             </div>
           </div>
           
-          <div className="flex flex-wrap gap-2">
-            {selectedAreas.map((area, index) => (
-              <Badge
-                key={index}
-                variant="secondary"
-                className="bg-provider/10 text-provider hover:bg-provider/20 pr-1"
-              >
-                {area}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveArea(area)}
-                  className="ml-1 hover:bg-provider/30 rounded-full p-0.5 transition-colors"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            ))}
-            
-            {/* Manual area addition */}
-            <div className="flex items-center gap-2">
-              <Input
-                placeholder="Add custom area"
-                className="h-6 text-xs px-2 min-w-24 w-auto"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && e.currentTarget.value.trim()) {
-                    const newArea = e.currentTarget.value.trim();
-                    if (!selectedAreas.includes(newArea)) {
-                      const updatedAreas = [...selectedAreas, newArea];
-                      setSelectedAreas(updatedAreas);
-                      onChange(updatedAreas.join(', '));
-                    }
-                    e.currentTarget.value = '';
-                  }
-                }}
-              />
+          {loadingNearbyTowns ? (
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Calculating nearby areas within {selectedRadius} miles...</span>
             </div>
-          </div>
+          ) : selectedAreas.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {selectedAreas.map((area, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="bg-provider/10 text-provider hover:bg-provider/20 pr-1"
+                >
+                  {area}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveArea(area)}
+                    className="ml-1 hover:bg-provider/30 rounded-full p-0.5 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+              
+              {/* Manual area addition */}
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="Add custom area"
+                  className="h-6 text-xs px-2 min-w-24 w-auto"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                      const newArea = e.currentTarget.value.trim();
+                      if (!selectedAreas.includes(newArea)) {
+                        const updatedAreas = [...selectedAreas, newArea];
+                        setSelectedAreas(updatedAreas);
+                        onChange(updatedAreas.join(', '));
+                      }
+                      e.currentTarget.value = '';
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              No areas found within {selectedRadius} miles. Try increasing your radius or add custom areas.
+            </p>
+          )}
         </div>
       )}
 
