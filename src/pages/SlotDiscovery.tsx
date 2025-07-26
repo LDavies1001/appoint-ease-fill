@@ -72,7 +72,7 @@ const SlotCard: React.FC<{ slot: SlotData; onBook: (slot: SlotData) => void }> =
               </div>
             )}
           </div>
-          <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+          <Badge variant="secondary" className="bg-foreground/10 text-foreground border-foreground/20 font-semibold">
             {slot.custom_service_name || 'Service'}
           </Badge>
         </div>
