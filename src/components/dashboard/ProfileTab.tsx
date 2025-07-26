@@ -13,6 +13,9 @@ import { ContactInfoSection } from '@/components/business/ContactInfoSection';
 import { SocialMediaSection } from '@/components/business/SocialMediaSection';
 import { BusinessLocationSection } from '@/components/business/BusinessLocationSection';
 import { OperatingHoursSection } from '@/components/business/OperatingHoursSection';
+import { BusinessBrandingSection } from '@/components/business/BusinessBrandingSection';
+import { ServicesSection } from '@/components/business/ServicesSection';
+import { CertificationsSection } from '@/components/business/CertificationsSection';
 
 interface PersonalData {
   name: string;
@@ -301,134 +304,47 @@ const ProfileTab = () => {
         {/* Business Information - Only show for providers */}
         {profile?.active_role === 'provider' && (
           <>
-            {/* Business Logo & Cover Image Section */}
+            {/* Business Branding Section - Editable */}
             <div className="lg:col-span-2">
-              <Card className="p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Camera className="h-5 w-5 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Business Branding</h3>
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-medium mb-3">Business Logo</h4>
-                    <div className="flex items-center space-x-4">
-                      <Avatar className="h-16 w-16 border-2 border-border">
-                        <AvatarImage src={businessData.business_logo_url} />
-                        <AvatarFallback className="text-lg font-bold bg-primary/10">
-                          {businessData.business_name?.charAt(0) || 'B'}
-                        </AvatarFallback>
-                      </Avatar>
-                      {businessData.business_logo_url ? (
-                        <div>
-                          <p className="text-sm text-muted-foreground">Logo uploaded</p>
-                          <p className="text-xs text-muted-foreground">Click to change</p>
-                        </div>
-                      ) : (
-                        <div>
-                          <p className="text-sm text-muted-foreground">No logo uploaded</p>
-                          <p className="text-xs text-muted-foreground">Upload from business profile form</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-3">Cover Image</h4>
-                    <div className="h-16 bg-muted rounded-lg border-2 border-dashed border-border flex items-center justify-center">
-                      {businessData.cover_image_url ? (
-                        <img src={businessData.cover_image_url} alt="Cover" className="h-full w-full object-cover rounded" />
-                      ) : (
-                        <p className="text-xs text-muted-foreground">No cover image</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Card>
+              <BusinessBrandingSection
+                data={{
+                  business_logo_url: businessData.business_logo_url,
+                  cover_image_url: businessData.cover_image_url,
+                  business_name: businessData.business_name
+                }}
+                userId={profile?.user_id || ''}
+                onUpdate={handleBusinessUpdate}
+              />
             </div>
 
-            {/* Business Categories/Services Section */}
+            {/* Services Section - Editable */}
             <div className="lg:col-span-2">
-              <Card className="p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center">
-                    <Building className="h-5 w-5 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Services Offered</h3>
-                </div>
-                
-                {businessData.business_categories && businessData.business_categories.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {businessData.business_categories.map((category, index) => (
-                      <Badge key={index} variant="secondary" className="px-3 py-1">
-                        {category.name}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground">No services selected</p>
-                )}
-                
-                {businessData.pricing_info && (
-                  <div className="mt-4">
-                    <h4 className="font-medium mb-2">Pricing Information</h4>
-                    <p className="text-sm text-muted-foreground">{businessData.pricing_info}</p>
-                  </div>
-                )}
-              </Card>
+              <ServicesSection
+                data={{
+                  services_offered: businessData.services_offered,
+                  business_categories: businessData.business_categories,
+                  pricing_info: businessData.pricing_info
+                }}
+                userId={profile?.user_id || ''}
+                onUpdate={handleBusinessUpdate}
+              />
             </div>
 
-            {/* Certifications & Insurance Section */}
+            {/* Certifications Section - Editable */}
             <div className="lg:col-span-2">
-              <Card className="p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Shield className="h-5 w-5 text-green-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Certifications & Insurance</h3>
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-medium mb-2">Insurance Information</h4>
-                    {businessData.insurance_info ? (
-                      <p className="text-sm text-muted-foreground">{businessData.insurance_info}</p>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">No insurance information provided</p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-2">Certifications</h4>
-                    {businessData.certifications ? (
-                      <p className="text-sm text-muted-foreground">{businessData.certifications}</p>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">No certifications listed</p>
-                    )}
-                  </div>
-                </div>
-                
-                {businessData.certification_files && businessData.certification_files.length > 0 && (
-                  <div className="mt-4">
-                    <h4 className="font-medium mb-2">Certification Files</h4>
-                    <p className="text-sm text-muted-foreground">
-                      {businessData.certification_files.length} file(s) uploaded
-                    </p>
-                  </div>
-                )}
-                
-                <div className="mt-4 flex items-center space-x-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    Emergency availability: {businessData.emergency_available ? 'Available' : 'Not available'}
-                  </span>
-                </div>
-              </Card>
+              <CertificationsSection
+                data={{
+                  certifications: businessData.certifications,
+                  insurance_info: businessData.insurance_info,
+                  certification_files: businessData.certification_files,
+                  emergency_available: businessData.emergency_available
+                }}
+                userId={profile?.user_id || ''}
+                onUpdate={handleBusinessUpdate}
+              />
             </div>
 
-            {/* Business Rating & Stats Section */}
+            {/* Business Performance - Read-only stats */}
             <Card className="p-6">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -462,7 +378,7 @@ const ProfileTab = () => {
               </div>
             </Card>
 
-            {/* Enhanced Social Media Section */}
+            {/* Enhanced Social Media Section - Read-only display */}
             <Card className="p-6">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
