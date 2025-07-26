@@ -53,7 +53,7 @@ const SlotCard: React.FC<{ slot: SlotData; onBook: (slot: SlotData) => void }> =
   const reviewCount = slot.provider_details?.total_reviews || 0;
 
   return (
-    <Card className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 border-primary/10 hover:border-primary/30 bg-gradient-to-br from-white to-primary/5 hover:from-white hover:to-primary/10 hover:scale-[1.02] cursor-pointer">
+    <Card className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 border-primary/10 hover:border-muted-foreground/40 bg-gradient-to-br from-white to-primary/5 hover:from-white hover:to-primary/10 hover:scale-[1.02] cursor-pointer">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
           <div className="flex-1">
