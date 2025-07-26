@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Shield, Edit2, Save, X, Upload, FileText, Trash2 } from 'lucide-react';
@@ -13,7 +12,6 @@ interface CertificationsData {
   certifications: string;
   insurance_info: string;
   certification_files: string[];
-  emergency_available: boolean;
 }
 
 interface CertificationsSectionProps {
@@ -45,8 +43,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
         .update({
           certifications: editData.certifications,
           insurance_info: editData.insurance_info,
-          certification_files: editData.certification_files,
-          emergency_available: editData.emergency_available
+          certification_files: editData.certification_files
         })
         .eq('user_id', userId);
 
@@ -304,18 +301,6 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <Switch
-              id="emergency-available"
-              checked={editData.emergency_available}
-              onCheckedChange={(checked) => 
-                setEditData(prev => ({ ...prev, emergency_available: checked }))
-              }
-            />
-            <Label htmlFor="emergency-available" className="text-base font-medium">
-              Available for emergency/urgent bookings
-            </Label>
-          </div>
         </div>
       ) : (
         <div className="space-y-4">
@@ -348,12 +333,6 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
             </div>
           )}
           
-          <div className="flex items-center space-x-2 p-3 bg-muted rounded-lg">
-            <Shield className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">
-              Emergency availability: {data.emergency_available ? 'Available' : 'Not available'}
-            </span>
-          </div>
         </div>
       )}
     </Card>

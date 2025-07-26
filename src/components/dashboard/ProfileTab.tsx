@@ -63,7 +63,7 @@ interface BusinessData {
   insurance_info: string;
   certification_files: string[];
   pricing_info: string;
-  emergency_available: boolean;
+  
   profile_published: boolean;
   rating: number;
   total_reviews: number;
@@ -117,7 +117,7 @@ const ProfileTab = () => {
     insurance_info: '',
     certification_files: [],
     pricing_info: '',
-    emergency_available: false,
+    
     profile_published: false,
     rating: 0,
     total_reviews: 0,
@@ -245,7 +245,7 @@ const ProfileTab = () => {
             insurance_info: businessDetails.insurance_info || '',
             certification_files: businessDetails.certification_files || [],
             pricing_info: businessDetails.pricing_info || '',
-            emergency_available: businessDetails.emergency_available || false,
+            
             profile_published: businessDetails.profile_published || false,
             rating: businessDetails.rating || 0,
             total_reviews: businessDetails.total_reviews || 0,
@@ -324,8 +324,7 @@ const ProfileTab = () => {
                 data={{
                   certifications: businessData.certifications,
                   insurance_info: businessData.insurance_info,
-                  certification_files: businessData.certification_files,
-                  emergency_available: businessData.emergency_available
+                  certification_files: businessData.certification_files
                 }}
                 userId={profile?.user_id || ''}
                 onUpdate={handleBusinessUpdate}
