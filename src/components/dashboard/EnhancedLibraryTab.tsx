@@ -53,7 +53,7 @@ const EnhancedLibraryTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedBucket, setSelectedBucket] = useState<string>('all');
-  const [selectedFolder, setSelectedFolder] = useState<string>('');
+  const [selectedFolder, setSelectedFolder] = useState<string>('all');
   const [folders, setFolders] = useState<string[]>([]);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
@@ -164,10 +164,18 @@ const EnhancedLibraryTab = () => {
     }
 
     // Filter by folder
-    if (selectedFolder !== '') {
-      filtered = filtered.filter(item => 
-        (item as any).folder === selectedFolder
-      );
+    if (selectedFolder !== 'all') {
+      if (selectedFolder === 'none') {
+        // Show only items without folders
+        filtered = filtered.filter(item => 
+          !(item as any).folder || (item as any).folder === ''
+        );
+      } else {
+        // Show items in specific folder
+        filtered = filtered.filter(item => 
+          (item as any).folder === selectedFolder
+        );
+      }
     }
 
     // Sort: pinned first, then by date
@@ -362,7 +370,7 @@ const EnhancedLibraryTab = () => {
                     <SelectValue placeholder="Select folder (optional)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No folder</SelectItem>
+                    <SelectItem value="none">No folder</SelectItem>
                     {folders.map(folder => (
                       <SelectItem key={folder} value={folder}>
                         <div className="flex items-center gap-2">
@@ -419,7 +427,7 @@ const EnhancedLibraryTab = () => {
             <ImageDropzone 
               onUploadComplete={fetchMediaItems}
               bucket="portfolio"
-              folder={selectedFolder}
+              folder={selectedFolder === 'none' ? '' : selectedFolder}
               maxFiles={10}
               maxSizeInMB={5}
             />
@@ -462,7 +470,7 @@ const EnhancedLibraryTab = () => {
                   <SelectValue placeholder="All Folders" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Folders</SelectItem>
+                  <SelectItem value="all">All Folders</SelectItem>
                   {folders.map(folder => (
                     <SelectItem key={folder} value={folder}>
                       <div className="flex items-center gap-2">
