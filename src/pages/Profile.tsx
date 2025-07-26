@@ -3,43 +3,57 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Building, Shield, Clock, MapPin, Star, Award, Camera, ExternalLink, Calendar, User } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Globe, 
+  Star, 
+  Clock, 
+  Award,
+  Shield,
+  Edit2,
+  Camera,
+  Instagram,
+  Facebook,
+  Heart,
+  Share2,
+  MessageCircle,
+  Calendar,
+  PoundSterling,
+  CheckCircle,
+  Users,
+  Sparkles,
+  ExternalLink,
+  ChevronRight,
+  Building,
+  User,
+  Image as ImageIcon,
+  Map,
+  FileText,
+  Copy,
+  Plus
+} from 'lucide-react';
 import Header from '@/components/ui/header';
-
-import { PersonalInfoSection } from '@/components/business/PersonalInfoSection';
-import { BusinessInfoSection } from '@/components/business/BusinessInfoSection';
-import { ContactInfoSection } from '@/components/business/ContactInfoSection';
-import { SocialMediaSection } from '@/components/business/SocialMediaSection';
-import { BusinessLocationSection } from '@/components/business/BusinessLocationSection';
-import { OperatingHoursSection } from '@/components/business/OperatingHoursSection';
-import { BusinessBrandingSection } from '@/components/business/BusinessBrandingSection';
-import { CertificationsSection } from '@/components/business/CertificationsSection';
 import { CustomerProfileForm } from '@/components/customer/CustomerProfileForm';
 
-interface PersonalData {
+interface ProviderProfile {
+  user_id: string;
   name: string;
-  phone: string;
-  location: string;
   bio: string;
   avatar_url: string;
+  location: string;
+  phone: string;
+  email: string;
 }
 
-interface OperatingHours {
-  monday: { open: string; close: string; closed: boolean };
-  tuesday: { open: string; close: string; closed: boolean };
-  wednesday: { open: string; close: string; closed: boolean };
-  thursday: { open: string; close: string; closed: boolean };
-  friday: { open: string; close: string; closed: boolean };
-  saturday: { open: string; close: string; closed: boolean };
-  sunday: { open: string; close: string; closed: boolean };
-}
-
-interface BusinessData {
+interface ProviderDetails {
+  user_id: string;
   business_name: string;
   business_description: string;
   business_email: string;
@@ -49,20 +63,13 @@ interface BusinessData {
   business_street: string;
   business_city: string;
   business_county: string;
-  business_postcode: string;
   business_country: string;
-  is_address_public: boolean;
-  facebook_url: string;
-  instagram_url: string;
-  tiktok_url: string;
-  years_experience: number;
-  service_area: string;
-  operating_hours: OperatingHours;
-  availability_notes: string;
+  business_postcode: string;
+  postcode_area: string;
+  coverage_towns: string[];
   business_logo_url: string;
   cover_image_url: string;
-  services_offered: string[];
-  business_categories: any[];
+  operating_hours: string;
   certifications: string;
   insurance_info: string;
   certification_files: string[];
@@ -70,193 +77,165 @@ interface BusinessData {
   professional_memberships: string;
   other_qualifications: string;
   pricing_info: string;
-  profile_published: boolean;
+  years_experience: number;
+  services_offered: string[];
+  business_category: string;
   rating: number;
   total_reviews: number;
-  social_media_connections: any[];
+  profile_published: boolean;
+  profile_visibility: string;
+  is_address_public: boolean;
+  emergency_available: boolean;
+  social_media_links: any;
+  instagram_url: string;
+  facebook_url: string;
+  tiktok_url: string;
+}
+
+interface PortfolioItem {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  category: string;
+  tags: string[];
+  featured: boolean;
+  is_public: boolean;
+  view_count: number;
+  public_slug: string;
+}
+
+interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+  reviewer: {
+    name: string;
+  };
+}
+
+interface Service {
+  id: string;
+  service_name: string;
+  description: string;
+  base_price: number;
+  discount_price: number;
+  duration_minutes: number;
+  duration_text: string;
+  is_active: boolean;
+}
+
+interface SocialConnection {
+  id: string;
+  platform: string;
+  handle: string;
+  profile_url: string;
+  profile_picture_url: string;
+  is_active: boolean;
 }
 
 const Profile = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  const [personalData, setPersonalData] = useState<PersonalData>({
-    name: '',
-    phone: '',
-    location: '',
-    bio: '',
-    avatar_url: ''
-  });
-
-  const getDefaultOperatingHours = (): OperatingHours => ({
-    monday: { open: '09:00', close: '17:00', closed: false },
-    tuesday: { open: '09:00', close: '17:00', closed: false },
-    wednesday: { open: '09:00', close: '17:00', closed: false },
-    thursday: { open: '09:00', close: '17:00', closed: false },
-    friday: { open: '09:00', close: '17:00', closed: false },
-    saturday: { open: '09:00', close: '17:00', closed: true },
-    sunday: { open: '09:00', close: '17:00', closed: true }
-  });
-
-  const [businessData, setBusinessData] = useState<BusinessData>({
-    business_name: '',
-    business_description: '',
-    business_email: '',
-    business_phone: '',
-    business_website: '',
-    business_address: '',
-    business_street: '',
-    business_city: '',
-    business_county: '',
-    business_postcode: '',
-    business_country: '',
-    is_address_public: false,
-    facebook_url: '',
-    instagram_url: '',
-    tiktok_url: '',
-    years_experience: 0,
-    service_area: '',
-    operating_hours: getDefaultOperatingHours(),
-    availability_notes: '',
-    business_logo_url: '',
-    cover_image_url: '',
-    services_offered: [],
-    business_categories: [],
-    certifications: '',
-    insurance_info: '',
-    certification_files: [],
-    awards_recognitions: '',
-    professional_memberships: '',
-    other_qualifications: '',
-    pricing_info: '',
-    profile_published: false,
-    rating: 0,
-    total_reviews: 0,
-    social_media_connections: []
-  });
+  const [providerProfile, setProviderProfile] = useState<ProviderProfile | null>(null);
+  const [providerDetails, setProviderDetails] = useState<ProviderDetails | null>(null);
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [socialConnections, setSocialConnections] = useState<SocialConnection[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Use route protection to handle auth state and redirects
   useRouteProtection();
 
   useEffect(() => {
     if (user && profile) {
-      fetchProfileData();
+      if (profile.role === 'provider') {
+        fetchProviderData();
+      } else {
+        setLoading(false);
+      }
     }
   }, [user, profile]);
 
-  const fetchProfileData = async () => {
+  const fetchProviderData = async () => {
     if (!user?.id) return;
 
+    setLoading(true);
     try {
-      // Fetch personal profile data
-      const { data: profileData, error: profileError } = await supabase
+      // Fetch provider profile
+      const { data: profileData } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (profileError) throw profileError;
+      setProviderProfile(profileData);
 
-      if (profileData) {
-        setPersonalData({
-          name: profileData.name || '',
-          phone: profileData.phone || '',
-          location: profileData.location || '',
-          bio: profileData.bio || '',
-          avatar_url: profileData.avatar_url || ''
-        });
-      }
+      // Fetch provider details
+      const { data: detailsData } = await supabase
+        .from('provider_details')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-      // For providers, also fetch business data
-      if (profile?.role === 'provider') {
-        const { data: businessDetails, error: businessError } = await supabase
-          .from('provider_details')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
+      setProviderDetails(detailsData);
 
-        if (businessError) throw businessError;
+      // Fetch portfolio items
+      const { data: portfolioData } = await supabase
+        .from('portfolio_items')
+        .select('*')
+        .eq('provider_id', user.id)
+        .eq('featured', true)
+        .order('created_at', { ascending: false })
+        .limit(6);
 
-        if (businessDetails) {
-          // Parse operating hours safely
-          let parsedOperatingHours = getDefaultOperatingHours();
-          if (businessDetails.operating_hours) {
-            try {
-              parsedOperatingHours = JSON.parse(businessDetails.operating_hours);
-            } catch (e) {
-              console.warn('Failed to parse operating hours:', e);
-            }
-          }
+      setPortfolioItems(portfolioData || []);
 
-          // Fetch social media connections
-          const { data: socialConnections, error: socialError } = await supabase
-            .from('social_media_connections')
-            .select('*')
-            .eq('provider_id', user.id)
-            .eq('is_active', true);
+      // Fetch reviews
+      const { data: reviewsData } = await supabase
+        .from('reviews')
+        .select(`
+          *,
+          reviewer:profiles!reviews_reviewer_id_fkey(name)
+        `)
+        .eq('reviewee_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
 
-          if (socialError) {
-            console.warn('Failed to fetch social connections:', socialError);
-          }
+      setReviews(reviewsData || []);
 
-          setBusinessData({
-            business_name: businessDetails.business_name || '',
-            business_description: businessDetails.business_description || '',
-            business_email: businessDetails.business_email || '',
-            business_phone: businessDetails.business_phone || '',
-            business_website: businessDetails.business_website || '',
-            business_address: businessDetails.business_address || '',
-            business_street: businessDetails.business_street || '',
-            business_city: businessDetails.business_city || '',
-            business_county: businessDetails.business_county || '',
-            business_postcode: businessDetails.business_postcode || '',
-            business_country: businessDetails.business_country || '',
-            is_address_public: businessDetails.is_address_public || false,
-            facebook_url: businessDetails.facebook_url || '',
-            instagram_url: businessDetails.instagram_url || '',
-            tiktok_url: businessDetails.tiktok_url || '',
-            years_experience: businessDetails.years_experience || 0,
-            service_area: businessDetails.service_area || '',
-            operating_hours: parsedOperatingHours,
-            availability_notes: businessDetails.availability_notes || '',
-            business_logo_url: businessDetails.business_logo_url || '',
-            cover_image_url: businessDetails.cover_image_url || '',
-            services_offered: businessDetails.services_offered || [],
-            business_categories: [],
-            certifications: businessDetails.certifications || '',
-            insurance_info: businessDetails.insurance_info || '',
-            certification_files: businessDetails.certification_files || [],
-            awards_recognitions: businessDetails.awards_recognitions || '',
-            professional_memberships: businessDetails.professional_memberships || '',
-            other_qualifications: businessDetails.other_qualifications || '',
-            pricing_info: businessDetails.pricing_info || '',
-            profile_published: businessDetails.profile_published || false,
-            rating: businessDetails.rating || 0,
-            total_reviews: businessDetails.total_reviews || 0,
-            social_media_connections: socialConnections || []
-          });
-        }
-      }
+      // Fetch services
+      const { data: servicesData } = await supabase
+        .from('provider_services')
+        .select('*')
+        .eq('provider_id', user.id)
+        .eq('is_active', true)
+        .order('created_at', { ascending: true });
+
+      setServices(servicesData || []);
+
+      // Fetch social connections
+      const { data: socialData } = await supabase
+        .from('social_media_connections')
+        .select('*')
+        .eq('provider_id', user.id)
+        .eq('is_active', true);
+
+      setSocialConnections(socialData || []);
 
     } catch (error) {
-      console.error('Error fetching profile data:', error);
+      console.error('Error fetching provider data:', error);
       toast({
         title: "Error",
         description: "Failed to load profile data. Please refresh the page.",
         variant: "destructive"
       });
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handlePersonalUpdate = async (updatedData: Partial<PersonalData>) => {
-    setPersonalData(prev => ({ ...prev, ...updatedData }));
-    await fetchProfileData(); // Refresh data after update
-  };
-
-  const handleBusinessUpdate = async (updatedData: Partial<BusinessData>) => {
-    setBusinessData(prev => ({ ...prev, ...updatedData }));
-    await fetchProfileData(); // Refresh data after update
   };
 
   const handleCustomerProfileSubmit = async (data: any) => {
@@ -295,6 +274,45 @@ const Profile = () => {
     }
   };
 
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`h-4 w-4 ${
+          i < Math.floor(rating)
+            ? 'fill-yellow-400 text-yellow-400'
+            : i < rating
+            ? 'fill-yellow-400/50 text-yellow-400'
+            : 'text-gray-300'
+        }`}
+      />
+    ));
+  };
+
+  const formatOperatingHours = (hoursString: string) => {
+    if (!hoursString) return null;
+    try {
+      return JSON.parse(hoursString);
+    } catch {
+      return null;
+    }
+  };
+
+  const getDayName = (dayKey: string | number) => {
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const numericKey = typeof dayKey === 'string' ? parseInt(dayKey) : dayKey;
+    
+    if (typeof numericKey === 'number' && numericKey >= 0 && numericKey <= 6) {
+      return dayNames[numericKey];
+    }
+    
+    if (typeof dayKey === 'string') {
+      return dayKey.charAt(0).toUpperCase() + dayKey.slice(1).toLowerCase();
+    }
+    
+    return 'Unknown Day';
+  };
+
   if (!user || !profile) {
     return (
       <div className="min-h-screen bg-background">
@@ -315,8 +333,8 @@ const Profile = () => {
         <Header />
         <div className="container mx-auto px-4 py-8">
           <Card>
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
+            <CardHeader>
+              <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold flex items-center">
                   <User className="h-6 w-6 mr-2" />
                   My Profile
@@ -330,7 +348,8 @@ const Profile = () => {
                   Dashboard
                 </Button>
               </div>
-              
+            </CardHeader>
+            <CardContent>
               <CustomerProfileForm
                 initialData={{
                   full_name: profile.name || '',
@@ -349,166 +368,533 @@ const Profile = () => {
                 onSubmit={handleCustomerProfileSubmit}
                 isEdit={true}
               />
-            </div>
+            </CardContent>
           </Card>
         </div>
       </div>
     );
   }
 
-  // Provider Profile View - Full Dashboard Interface
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">My Business Profile</h1>
-            <p className="text-muted-foreground">Manage your business information and settings</p>
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center"
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Dashboard
-            </Button>
-            <Button 
-              variant="outline"
-              onClick={() => navigate(`/business/${user?.id}`)}
-              className="flex items-center"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Public View
-            </Button>
+  // Loading state for providers
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         </div>
+      </div>
+    );
+  }
 
-        {/* Profile Overview Card */}
-        <Card className="mb-8 p-6">
-          <div className="flex items-center space-x-6">
-            <Avatar className="w-20 h-20">
-              <AvatarImage src={personalData.avatar_url} alt={personalData.name} />
-              <AvatarFallback className="text-xl">{personalData.name?.charAt(0)?.toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold">{businessData.business_name || personalData.name}</h2>
-              <p className="text-muted-foreground">{businessData.business_description || personalData.bio}</p>
-              <div className="flex items-center gap-4 mt-2">
-                <Badge variant={businessData.profile_published ? "default" : "secondary"}>
-                  {businessData.profile_published ? "Published" : "Draft"}
-                </Badge>
-                {businessData.rating > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-semibold">{businessData.rating.toFixed(1)}</span>
-                    <span className="text-muted-foreground">({businessData.total_reviews} reviews)</span>
+  // Provider Profile View - Enhanced Business Profile
+  const isOwner = true; // This is always the user's own profile
+  const businessEmail = providerDetails?.business_email || providerProfile?.email;
+  const operatingHours = formatOperatingHours(providerDetails?.operating_hours || '');
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/50 to-primary/5">
+      <Header />
+      
+      {/* Hero Section */}
+      <div className="relative">
+        {/* Cover Image */}
+        <div className="h-80 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 relative overflow-hidden">
+          {providerDetails?.cover_image_url && (
+            <img
+              src={providerDetails.cover_image_url}
+              alt="Cover"
+              className="w-full h-full object-cover"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        </div>
+
+        {/* Profile Info Overlay */}
+        <div className="relative -mt-24 container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row items-start lg:items-end gap-6 mb-8">
+            {/* Avatar */}
+            <div className="relative">
+              <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
+                <AvatarImage
+                  src={providerProfile?.avatar_url}
+                  alt={providerProfile?.name}
+                />
+                <AvatarFallback className="text-3xl font-bold bg-primary text-primary-foreground">
+                  {providerProfile?.name?.charAt(0)?.toUpperCase() || 'B'}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+
+            {/* Business Info */}
+            <div className="flex-1 lg:pb-4">
+              <div className="bg-white/95 backdrop-blur-sm rounded-lg p-6 shadow-lg">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                      {providerDetails?.business_name || providerProfile?.name || 'Business Name'}
+                    </h1>
+                    <div className="flex items-center gap-4 mb-3">
+                      {providerDetails?.rating && providerDetails.rating > 0 && (
+                        <div className="flex items-center gap-2">
+                          <div className="flex">{renderStars(providerDetails.rating)}</div>
+                          <span className="font-semibold">{providerDetails.rating.toFixed(1)}</span>
+                          <span className="text-muted-foreground">
+                            ({providerDetails.total_reviews || 0} reviews)
+                          </span>
+                        </div>
+                      )}
+                      {providerDetails?.profile_published && (
+                        <Badge className="bg-green-100 text-green-800 border-green-200">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Verified
+                        </Badge>
+                      )}
+                    </div>
+                    {providerProfile?.location && (
+                      <div className="flex items-center text-muted-foreground mb-2">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        {providerProfile.location}
+                      </div>
+                    )}
                   </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={() => navigate('/dashboard')}
+                      className="flex items-center"
+                    >
+                      <Edit2 className="h-4 w-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => navigate(`/business/${user?.id}`)}
+                      className="flex items-center"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Public View
+                    </Button>
+                  </div>
+                </div>
+                
+                {providerDetails?.business_description && (
+                  <p className="text-muted-foreground leading-relaxed">
+                    {providerDetails.business_description}
+                  </p>
                 )}
               </div>
             </div>
           </div>
-        </Card>
+        </div>
+      </div>
 
-        {/* Editable Sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Personal Information */}
-          <PersonalInfoSection
-            data={personalData}
-            userId={profile?.user_id || ''}
-            onUpdate={handlePersonalUpdate}
-          />
+      {/* Main Content */}
+      <div className="container mx-auto px-4 pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Main Info */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Business Performance Stats */}
+            <Card>
+              <CardHeader>
+                <h2 className="text-xl font-semibold flex items-center">
+                  <Sparkles className="h-5 w-5 mr-2 text-primary" />
+                  Business Performance
+                </h2>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
+                    <div className="text-2xl font-bold text-blue-600">{providerDetails?.total_reviews || 0}</div>
+                    <div className="text-sm text-blue-600">Reviews</div>
+                  </div>
+                  <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
+                    <div className="text-2xl font-bold text-green-600">{providerDetails?.rating?.toFixed(1) || '0.0'}</div>
+                    <div className="text-sm text-green-600">Rating</div>
+                  </div>
+                  <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
+                    <div className="text-2xl font-bold text-purple-600">{portfolioItems.length}</div>
+                    <div className="text-sm text-purple-600">Portfolio</div>
+                  </div>
+                  <div className="text-center p-4 bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg">
+                    <div className="text-2xl font-bold text-amber-600">{services.length}</div>
+                    <div className="text-sm text-amber-600">Services</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Business Branding Section - Editable */}
-          <div className="lg:col-span-2">
-            <BusinessBrandingSection
-              data={{
-                business_logo_url: businessData.business_logo_url,
-                cover_image_url: businessData.cover_image_url,
-                business_name: businessData.business_name
-              }}
-              userId={profile?.user_id || ''}
-              onUpdate={handleBusinessUpdate}
-            />
+            {/* About Section */}
+            {providerProfile?.bio && (
+              <Card>
+                <CardHeader>
+                  <h2 className="text-xl font-semibold flex items-center">
+                    <User className="h-5 w-5 mr-2 text-primary" />
+                    About
+                  </h2>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed">{providerProfile.bio}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Services */}
+            {services.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <h2 className="text-xl font-semibold flex items-center">
+                    <Sparkles className="h-5 w-5 mr-2 text-primary" />
+                    Services Offered
+                  </h2>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4">
+                    {services.map((service) => (
+                      <div key={service.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="font-semibold">{service.service_name}</h3>
+                          <div className="text-right">
+                            {service.discount_price && service.discount_price !== service.base_price ? (
+                              <div className="flex flex-col items-end">
+                                <span className="text-lg font-bold text-primary">£{service.discount_price}</span>
+                                <span className="text-sm text-muted-foreground line-through">£{service.base_price}</span>
+                              </div>
+                            ) : (
+                              <span className="text-lg font-bold text-primary">£{service.base_price}</span>
+                            )}
+                          </div>
+                        </div>
+                        {service.description && (
+                          <p className="text-muted-foreground text-sm mb-2">{service.description}</p>
+                        )}
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Clock className="h-4 w-4 mr-1" />
+                          {service.duration_text || `${service.duration_minutes} minutes`}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Portfolio */}
+            {portfolioItems.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold flex items-center">
+                      <Camera className="h-5 w-5 mr-2 text-primary" />
+                      Featured Portfolio
+                    </h2>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => navigate(`/portfolio/${user?.id}`)}
+                    >
+                      View All
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {portfolioItems.map((item) => (
+                      <div key={item.id} className="group cursor-pointer">
+                        <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-2">
+                          <img
+                            src={item.image_url}
+                            alt={item.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        </div>
+                        <h3 className="font-medium text-sm">{item.title}</h3>
+                        {item.category && (
+                          <p className="text-xs text-muted-foreground">{item.category}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Reviews */}
+            {reviews.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <h2 className="text-xl font-semibold flex items-center">
+                    <MessageCircle className="h-5 w-5 mr-2 text-primary" />
+                    Recent Reviews
+                  </h2>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {reviews.map((review) => (
+                      <div key={review.id} className="border-b last:border-b-0 pb-4 last:pb-0">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{review.reviewer?.name || 'Anonymous'}</span>
+                            <div className="flex">{renderStars(review.rating)}</div>
+                          </div>
+                          <span className="text-sm text-muted-foreground">
+                            {new Date(review.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                        {review.comment && (
+                          <p className="text-muted-foreground">{review.comment}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
-          {/* Certifications Section - Editable */}
-          <div className="lg:col-span-2">
-            <CertificationsSection
-              data={{
-                certifications: businessData.certifications || '',
-                insurance_info: businessData.insurance_info || '',
-                certification_files: businessData.certification_files || [],
-                awards_recognitions: businessData.awards_recognitions || '',
-                professional_memberships: businessData.professional_memberships || '',
-                other_qualifications: businessData.other_qualifications || ''
-              }}
-              userId={profile?.user_id || ''}
-              userEmail={profile?.email}
-              onUpdate={handleBusinessUpdate}
-            />
-          </div>
+          {/* Right Column - Contact & Details */}
+          <div className="space-y-6">
+            {/* Contact Information */}
+            <Card>
+              <CardHeader>
+                <h3 className="font-semibold flex items-center">
+                  <Phone className="h-4 w-4 mr-2 text-primary" />
+                  Contact Information
+                </h3>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {businessEmail && (
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <p className="font-medium">{businessEmail}</p>
+                      {providerDetails?.business_email !== providerProfile?.email && (
+                        <Badge variant="secondary" className="text-xs">Account Email</Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
 
-          {/* Business Information */}
-          <BusinessInfoSection
-            data={{
-              business_name: businessData.business_name,
-              business_description: businessData.business_description,
-              years_experience: businessData.years_experience,
-              service_area: businessData.service_area
-            }}
-            userId={profile?.user_id || ''}
-            onUpdate={handleBusinessUpdate}
-          />
+                {providerDetails?.business_phone && (
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Phone</p>
+                      <p className="font-medium">{providerDetails.business_phone}</p>
+                    </div>
+                  </div>
+                )}
 
-          <ContactInfoSection
-            data={{
-              business_email: businessData.business_email,
-              business_phone: businessData.business_phone,
-              business_website: businessData.business_website
-            }}
-            userId={profile?.user_id || ''}
-            userEmail={profile?.email}
-            onUpdate={handleBusinessUpdate}
-          />
+                {providerDetails?.business_website && (
+                  <div className="flex items-center gap-3">
+                    <Globe className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Website</p>
+                      <a 
+                        href={providerDetails.business_website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-primary hover:underline"
+                      >
+                        {providerDetails.business_website}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-          <BusinessLocationSection
-            data={{
-              business_address: businessData.business_address,
-              business_street: businessData.business_street,
-              business_city: businessData.business_city,
-              business_county: businessData.business_county,
-              business_postcode: businessData.business_postcode,
-              business_country: businessData.business_country,
-              is_address_public: businessData.is_address_public
-            }}
-            userId={profile?.user_id || ''}
-            onUpdate={handleBusinessUpdate}
-          />
+            {/* Location */}
+            {(providerDetails?.business_address || providerProfile?.location) && (
+              <Card>
+                <CardHeader>
+                  <h3 className="font-semibold flex items-center">
+                    <MapPin className="h-4 w-4 mr-2 text-primary" />
+                    Location
+                  </h3>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {providerDetails?.business_address && (
+                      <p className="text-sm">{providerDetails.business_address}</p>
+                    )}
+                    {providerDetails?.business_city && (
+                      <p className="text-sm">
+                        {providerDetails.business_city}
+                        {providerDetails.business_postcode && `, ${providerDetails.business_postcode}`}
+                      </p>
+                    )}
+                    {providerDetails?.coverage_towns && providerDetails.coverage_towns.length > 0 && (
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Service Areas:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {providerDetails.coverage_towns.map((town, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {town}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-          <OperatingHoursSection
-            data={{
-              operating_hours: businessData.operating_hours,
-              availability_notes: businessData.availability_notes
-            }}
-            userId={profile?.user_id || ''}
-            onUpdate={handleBusinessUpdate}
-          />
+            {/* Operating Hours */}
+            {operatingHours && (
+              <Card>
+                <CardHeader>
+                  <h3 className="font-semibold flex items-center">
+                    <Clock className="h-4 w-4 mr-2 text-primary" />
+                    Operating Hours
+                  </h3>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {Object.entries(operatingHours).map(([day, hours]: [string, any]) => (
+                      <div key={day} className="flex justify-between items-center text-sm">
+                        <span className="font-medium">{getDayName(day)}</span>
+                        <span className="text-muted-foreground">
+                          {hours.closed ? 'Closed' : `${hours.open} - ${hours.close}`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-          <div className="lg:col-span-2">
-            <SocialMediaSection
-              data={{
-                facebook_url: businessData.facebook_url,
-                instagram_url: businessData.instagram_url,
-                tiktok_url: businessData.tiktok_url,
-                social_media_connections: businessData.social_media_connections
-              }}
-              userId={profile?.user_id || ''}
-              onUpdate={handleBusinessUpdate}
-            />
+            {/* Credentials */}
+            {(providerDetails?.certifications || providerDetails?.insurance_info || 
+              providerDetails?.awards_recognitions || providerDetails?.professional_memberships || 
+              providerDetails?.other_qualifications) && (
+              <Card>
+                <CardHeader>
+                  <h3 className="font-semibold flex items-center">
+                    <Shield className="h-4 w-4 mr-2 text-primary" />
+                    Credentials & Certifications
+                  </h3>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {providerDetails?.insurance_info && (
+                    <div>
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-provider" />
+                        Insurance Information
+                      </h4>
+                      <div className="space-y-1">
+                        {providerDetails.insurance_info.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                          <div key={index} className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {providerDetails?.certifications && (
+                    <div>
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-provider" />
+                        Certifications & Qualifications
+                      </h4>
+                      <div className="space-y-1">
+                        {providerDetails.certifications.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                          <div key={index} className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {providerDetails?.awards_recognitions && (
+                    <div>
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <Award className="h-4 w-4 text-provider" />
+                        Awards & Recognitions
+                      </h4>
+                      <div className="space-y-1">
+                        {providerDetails.awards_recognitions.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                          <div key={index} className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {providerDetails?.professional_memberships && (
+                    <div>
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <Users className="h-4 w-4 text-provider" />
+                        Professional Memberships
+                      </h4>
+                      <div className="space-y-1">
+                        {providerDetails.professional_memberships.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                          <div key={index} className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {providerDetails?.other_qualifications && (
+                    <div>
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-provider" />
+                        Other Training & Qualifications
+                      </h4>
+                      <div className="space-y-1">
+                        {providerDetails.other_qualifications.split('\n').filter(item => item.trim() !== '').map((item, index) => (
+                          <div key={index} className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-provider rounded-full flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Social Media */}
+            {socialConnections.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <h3 className="font-semibold flex items-center">
+                    <Share2 className="h-4 w-4 mr-2 text-primary" />
+                    Social Media
+                  </h3>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {socialConnections.map((connection) => (
+                      <a
+                        key={connection.id}
+                        href={connection.profile_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-2 bg-muted rounded-md hover:bg-muted/80 transition-colors"
+                      >
+                        {connection.platform === 'instagram' && <Instagram className="h-4 w-4" />}
+                        {connection.platform === 'facebook' && <Facebook className="h-4 w-4" />}
+                        <span className="text-sm font-medium">@{connection.handle}</span>
+                      </a>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
