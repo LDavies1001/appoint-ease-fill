@@ -654,26 +654,22 @@ export type Database = {
           background_check_documents: Json | null
           background_check_verified: boolean | null
           background_check_verified_at: string | null
-          business_address: string | null
           business_category: string | null
-          business_city: string | null
-          business_country: string | null
-          business_county: string | null
           business_description: string | null
           business_email: string | null
           business_logo_url: string | null
           business_name: string | null
           business_phone: string | null
           business_postcode: string | null
-          business_street: string | null
           business_website: string | null
           certification_files: string[] | null
           certifications: string | null
           cover_image_url: string | null
-          coverage_towns: string[] | null
+          coverage_areas: Json | null
           created_at: string
           emergency_available: boolean | null
           facebook_url: string | null
+          formatted_address: string | null
           id: string
           identity_documents: Json | null
           identity_verified: boolean | null
@@ -685,9 +681,12 @@ export type Database = {
           insurance_verified_at: string | null
           is_address_public: boolean | null
           is_fully_verified: boolean | null
+          latitude: number | null
+          longitude: number | null
           operating_hours: string | null
           other_qualifications: string | null
           postcode_area: string | null
+          postcode_data: Json | null
           postcode_full: string | null
           postcode_verified_at: string | null
           pricing_info: string | null
@@ -695,7 +694,7 @@ export type Database = {
           profile_published: boolean | null
           profile_visibility: string | null
           rating: number | null
-          service_area: string | null
+          service_radius_miles: number | null
           services_offered: string[] | null
           social_media_links: Json | null
           tiktok_url: string | null
@@ -714,26 +713,22 @@ export type Database = {
           background_check_documents?: Json | null
           background_check_verified?: boolean | null
           background_check_verified_at?: string | null
-          business_address?: string | null
           business_category?: string | null
-          business_city?: string | null
-          business_country?: string | null
-          business_county?: string | null
           business_description?: string | null
           business_email?: string | null
           business_logo_url?: string | null
           business_name?: string | null
           business_phone?: string | null
           business_postcode?: string | null
-          business_street?: string | null
           business_website?: string | null
           certification_files?: string[] | null
           certifications?: string | null
           cover_image_url?: string | null
-          coverage_towns?: string[] | null
+          coverage_areas?: Json | null
           created_at?: string
           emergency_available?: boolean | null
           facebook_url?: string | null
+          formatted_address?: string | null
           id?: string
           identity_documents?: Json | null
           identity_verified?: boolean | null
@@ -745,9 +740,12 @@ export type Database = {
           insurance_verified_at?: string | null
           is_address_public?: boolean | null
           is_fully_verified?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
           operating_hours?: string | null
           other_qualifications?: string | null
           postcode_area?: string | null
+          postcode_data?: Json | null
           postcode_full?: string | null
           postcode_verified_at?: string | null
           pricing_info?: string | null
@@ -755,7 +753,7 @@ export type Database = {
           profile_published?: boolean | null
           profile_visibility?: string | null
           rating?: number | null
-          service_area?: string | null
+          service_radius_miles?: number | null
           services_offered?: string[] | null
           social_media_links?: Json | null
           tiktok_url?: string | null
@@ -774,26 +772,22 @@ export type Database = {
           background_check_documents?: Json | null
           background_check_verified?: boolean | null
           background_check_verified_at?: string | null
-          business_address?: string | null
           business_category?: string | null
-          business_city?: string | null
-          business_country?: string | null
-          business_county?: string | null
           business_description?: string | null
           business_email?: string | null
           business_logo_url?: string | null
           business_name?: string | null
           business_phone?: string | null
           business_postcode?: string | null
-          business_street?: string | null
           business_website?: string | null
           certification_files?: string[] | null
           certifications?: string | null
           cover_image_url?: string | null
-          coverage_towns?: string[] | null
+          coverage_areas?: Json | null
           created_at?: string
           emergency_available?: boolean | null
           facebook_url?: string | null
+          formatted_address?: string | null
           id?: string
           identity_documents?: Json | null
           identity_verified?: boolean | null
@@ -805,9 +799,12 @@ export type Database = {
           insurance_verified_at?: string | null
           is_address_public?: boolean | null
           is_fully_verified?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
           operating_hours?: string | null
           other_qualifications?: string | null
           postcode_area?: string | null
+          postcode_data?: Json | null
           postcode_full?: string | null
           postcode_verified_at?: string | null
           pricing_info?: string | null
@@ -815,7 +812,7 @@ export type Database = {
           profile_published?: boolean | null
           profile_visibility?: string | null
           rating?: number | null
-          service_area?: string | null
+          service_radius_miles?: number | null
           services_offered?: string[] | null
           social_media_links?: Json | null
           tiktok_url?: string | null
@@ -1087,6 +1084,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_distance: {
+        Args: { lat1: number; lon1: number; lat2: number; lon2: number }
+        Returns: number
+      }
+      find_providers_within_radius: {
+        Args: { search_lat: number; search_lon: number; radius_miles?: number }
+        Returns: {
+          provider_id: string
+          business_name: string
+          business_postcode: string
+          distance_miles: number
+          latitude: number
+          longitude: number
+        }[]
+      }
       generate_portfolio_slug: {
         Args: { title: string; provider_id: string }
         Returns: string
