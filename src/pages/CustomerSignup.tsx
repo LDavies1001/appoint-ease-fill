@@ -189,17 +189,6 @@ const CustomerSignup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
-      <div className="absolute top-4 left-4 z-[60]">
-        <Button
-          variant="outline" 
-          size="sm"
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 bg-background border-2 border-primary/20 hover:bg-primary/5 shadow-lg"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Home
-        </Button>
-      </div>
       
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
         <div className="w-full max-w-md animate-fade-in">
@@ -219,6 +208,17 @@ const CustomerSignup = () => {
           </div>
 
           <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/10">
+            <div className="mb-6">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground -ml-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+              </Button>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="full-name">Full Name</Label>
