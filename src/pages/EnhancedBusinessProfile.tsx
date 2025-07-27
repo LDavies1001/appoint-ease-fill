@@ -39,7 +39,7 @@ import {
   Copy,
   Plus
 } from 'lucide-react';
-import Header from '@/components/ui/header';
+
 
 interface ProviderProfile {
   user_id: string;
@@ -272,7 +272,6 @@ const EnhancedBusinessProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
-        <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-provider mx-auto mb-4"></div>
@@ -286,7 +285,6 @@ const EnhancedBusinessProfile = () => {
   if (!providerProfile || !providerDetails) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
-        <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
           <div className="text-center">
             <Building className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -303,7 +301,7 @@ const EnhancedBusinessProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
-      <Header />
+      
       
       {/* Hero/Cover Section */}
       <div className="relative">

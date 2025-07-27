@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
-import Header from '@/components/ui/header';
+
 import { sanitizeInput, validateEmail, validatePhone, validatePassword, rateLimitCheck } from '@/utils/validation';
 
 const CustomerSignup = () => {
@@ -144,7 +144,6 @@ const CustomerSignup = () => {
   if (showSuccessMessage) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
-        <Header />
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md animate-fade-in">
             <div className="text-center mb-8">
@@ -190,7 +189,7 @@ const CustomerSignup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
-      <Header />
+      
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
         <div className="w-full max-w-md animate-fade-in">
           <div className="text-center mb-8">

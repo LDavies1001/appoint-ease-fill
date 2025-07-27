@@ -6,7 +6,7 @@ import { Star, Award, Users, Building } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import Header from '@/components/ui/header';
+
 import { BusinessInfoSection } from '@/components/business/BusinessInfoSection';
 import { ContactInfoSection } from '@/components/business/ContactInfoSection';
 import { SocialMediaSection } from '@/components/business/SocialMediaSection';
@@ -88,7 +88,6 @@ const NewBusinessProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -102,7 +101,6 @@ const NewBusinessProfile = () => {
   if (!details) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
           <div className="text-center">
             <Building className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -116,7 +114,7 @@ const NewBusinessProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
-      <Header />
+      
       
       {/* Hero Section with Integrated Cover Photo */}
       <div className="relative h-80 bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50 overflow-hidden">

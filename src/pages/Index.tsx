@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Star, Shield, User, Building, ArrowRight, Heart, Sparkles, CheckCircle, Search } from 'lucide-react';
-import Header from '@/components/ui/header';
+
 import heroImage from '@/assets/hero-lash-extension.jpg';
 
 const Index = () => {

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
-import Header from '@/components/ui/header';
+
 
 const Onboarding = () => {
   const { user, profile } = useAuth();
@@ -29,7 +29,6 @@ const Onboarding = () => {
   if (!user || !profile) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -44,7 +43,6 @@ const Onboarding = () => {
   if (profile.is_profile_complete) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -62,7 +60,7 @@ const Onboarding = () => {
 
   return (
     <>
-      <Header />
+      
       <OnboardingFlow initialRole={initialRole} />
     </>
   );

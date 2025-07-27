@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouteProtection } from '@/hooks/useRouteProtection';
 import CustomerDashboard from '@/components/dashboard/CustomerDashboard';
 import ProviderDashboard from '@/components/dashboard/ProviderDashboard';
-import Header from '@/components/ui/header';
+
 
 const Dashboard = () => {
   const { user, profile, loading } = useRouteProtection();

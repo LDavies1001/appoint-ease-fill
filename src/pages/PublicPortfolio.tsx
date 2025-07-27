@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Star, MapPin, Phone, Mail, Globe, Instagram, Facebook, Clock, Shield, Image, Calendar, Wrench, User, ExternalLink, Award, CheckCircle, Heart, MessageCircle, Camera } from 'lucide-react';
-import Header from '@/components/ui/header';
+
 import { SocialMediaLinks } from '@/components/portfolio/SocialMediaLinks';
 import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
 
@@ -165,7 +165,6 @@ const PublicPortfolio = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex justify-center items-center py-20">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
@@ -176,7 +175,6 @@ const PublicPortfolio = () => {
   if (!providerProfile) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="max-w-4xl mx-auto px-4 py-20 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">Provider Not Found</h1>
           <p className="text-muted-foreground mb-6">The provider profile you're looking for doesn't exist.</p>
@@ -222,7 +220,7 @@ const PublicPortfolio = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      
       
       {/* Hero Section with Cover Photo */}
       <div className="relative">

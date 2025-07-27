@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { User, UserCheck, Mail, Lock, Eye, EyeOff, Building, TrendingUp, Clock, CheckCircle, PoundSterling, Users, Search, Phone, Upload, AlertCircle } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
-import Header from '@/components/ui/header';
+
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -191,7 +191,6 @@ const Auth = () => {
   if (showRoleSelection) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <Header />
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-2xl">
             <div className="text-center mb-8">
@@ -286,7 +285,6 @@ const Auth = () => {
   if (showSuccessMessage) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <Header />
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
@@ -334,7 +332,6 @@ const Auth = () => {
   if (selectedRole === 'provider') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <Header />
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
@@ -520,7 +517,6 @@ const Auth = () => {
     // Business Info Page (original provider page)
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <Header />
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
@@ -653,7 +649,7 @@ const Auth = () => {
   // Customer Signup Form or Login (default)
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <Header />
+      
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">

@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Building, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, User, MapPin, Check } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
-import Header from '@/components/ui/header';
+
 
 const BusinessSignup = () => {
   const [email, setEmail] = useState('');
@@ -194,7 +194,6 @@ const BusinessSignup = () => {
   if (showSuccessMessage) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <Header />
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
@@ -240,7 +239,7 @@ const BusinessSignup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-provider/5 via-background to-provider/10">
-      <Header />
+      
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
         <div className="w-full max-w-7xl animate-fade-in">
           {/* Two-column layout on desktop, single column on mobile */}

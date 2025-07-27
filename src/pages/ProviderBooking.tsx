@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { ArrowLeft, Calendar as CalendarIcon, Clock, PoundSterling, MapPin, Star, Phone, User } from 'lucide-react';
-import Header from '@/components/ui/header';
+
 import { format } from 'date-fns';
 
 interface AvailableSlot {
@@ -206,7 +206,6 @@ const ProviderBooking = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex justify-center items-center py-20">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
@@ -217,7 +216,6 @@ const ProviderBooking = () => {
   if (!providerProfile) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="max-w-4xl mx-auto px-4 py-20 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">Provider Not Found</h1>
           <p className="text-muted-foreground mb-6">The provider you're looking for doesn't exist.</p>
@@ -239,7 +237,7 @@ const ProviderBooking = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      
       
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Back Navigation */}

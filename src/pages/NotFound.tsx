@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import Header from '@/components/ui/header';
+
 import { useAuth } from '@/contexts/AuthContext';
 
 const NotFound = () => {
@@ -16,7 +16,7 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4 text-foreground">404</h1>
