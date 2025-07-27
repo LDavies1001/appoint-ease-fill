@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart, ArrowLeft } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 
 import { sanitizeInput, validateEmail, validatePhone, validatePassword, rateLimitCheck } from '@/utils/validation';
@@ -189,6 +189,17 @@ const CustomerSignup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
+      <div className="absolute top-4 left-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Home
+        </Button>
+      </div>
       
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
         <div className="w-full max-w-md animate-fade-in">
