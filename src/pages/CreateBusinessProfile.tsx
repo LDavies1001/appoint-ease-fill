@@ -121,38 +121,33 @@ const CreateBusinessProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5 overflow-x-hidden w-full">
       {/* Provider Hero Banner */}
-      <div className="relative bg-gradient-to-r from-provider via-provider/95 to-provider-glow/20 text-white overflow-hidden w-full">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,198,140,0.1),_transparent_50%)]"></div>
-        <div className="relative w-full px-4 py-8 sm:py-12 lg:py-16">
-          <div className="text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
-            <div className="space-y-3 sm:space-y-4">
-              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 sm:px-4 sm:py-2 border border-white/30">
-                <span className="text-xs sm:text-sm font-medium">Provider Setup</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white drop-shadow-lg leading-tight">
-                {hasExistingProfile ? 'Edit Your Business Profile' : 'Create Your Business Profile'}
-              </h1>
-              <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-white/90 leading-relaxed mx-auto font-medium px-4">
-                {hasExistingProfile 
-                  ? 'Update your business information and reach more customers'
-                  : 'Set up your business profile and start filling empty slots with new customers'
-                }
-              </p>
+      <div className="bg-provider text-white w-full overflow-hidden">
+        <div className="px-4 py-8 text-center">
+          <div className="space-y-4">
+            <div className="bg-white/20 rounded-full px-3 py-1 text-xs font-medium inline-block">
+              Provider Setup
             </div>
-            <div className="pt-2 sm:pt-4">
-              <div className="inline-flex items-center gap-2 text-white/80 flex-wrap justify-center">
-                <div className="w-2 h-2 rounded-full bg-provider-glow animate-pulse"></div>
-                <span className="text-xs sm:text-sm font-medium text-center">Fill empty slots • Grow your business • Instant bookings</span>
-              </div>
+            <h1 className="text-2xl sm:text-3xl font-bold leading-tight break-words">
+              {hasExistingProfile ? 'Edit Your Business Profile' : 'Create Your Business Profile'}
+            </h1>
+            <p className="text-sm sm:text-base text-white/90 leading-relaxed break-words">
+              {hasExistingProfile 
+                ? 'Update your business information and reach more customers'
+                : 'Set up your business profile and start filling empty slots with new customers'
+              }
+            </p>
+            <div className="text-xs text-white/80">
+              <div className="w-2 h-2 rounded-full bg-white/60 inline-block mr-2"></div>
+              <span>Fill empty slots • Grow your business</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Profile Form */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 -mt-8 relative z-10 max-w-6xl mx-auto">
+      <div className="px-4 -mt-4 relative z-10">
         <BusinessProfileForm 
           mode={hasExistingProfile ? 'edit' : 'create'}
           existingData={existingProfile}
