@@ -123,9 +123,9 @@ const CreateBusinessProfile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
       {/* Provider Hero Banner */}
-      <div className="relative bg-gradient-to-r from-provider via-provider/95 to-provider-glow/20 text-white overflow-hidden">
+      <div className="relative bg-gradient-to-r from-provider via-provider/95 to-provider-glow/20 text-white overflow-hidden w-full">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,198,140,0.1),_transparent_50%)]"></div>
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
           <div className="text-center space-y-6">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
@@ -152,7 +152,7 @@ const CreateBusinessProfile = () => {
       </div>
 
       {/* Profile Form */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
         <BusinessProfileForm 
           mode={hasExistingProfile ? 'edit' : 'create'}
           existingData={existingProfile}
