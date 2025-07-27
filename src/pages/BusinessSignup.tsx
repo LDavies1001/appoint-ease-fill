@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Building, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, User, MapPin, Check } from 'lucide-react';
+import { Building, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, User, MapPin, Check, ArrowLeft } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 
 
@@ -319,6 +319,17 @@ const BusinessSignup = () => {
 
               {/* Form Card */}
               <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-provider/10">
+                <div className="mb-6">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate('/')}
+                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground -ml-2"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Home
+                  </Button>
+                </div>
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {/* Business Name */}
                   <div className="space-y-2">
