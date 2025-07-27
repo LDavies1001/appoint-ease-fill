@@ -28,11 +28,11 @@ const Dashboard = () => {
   // Route protection handles redirects, so if we're here, user is authenticated and profile is complete
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 overflow-x-hidden w-full">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50">
+      <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50 w-full overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,119,198,0.1),_transparent_50%)]"></div>
-        <div className="relative max-w-6xl mx-auto px-8 py-16">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center space-y-6">
             <div className="space-y-4">
               <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground via-foreground to-primary/80 bg-clip-text text-transparent">
@@ -50,7 +50,7 @@ const Dashboard = () => {
       </div>
 
       {/* Dashboard Content */}
-      <div className="max-w-6xl mx-auto px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-gradient-to-r from-card via-card/95 to-card/90 rounded-3xl p-8 shadow-xl border border-border/50 backdrop-blur-sm">
           {profile.active_role === 'customer' ? (
             <CustomerDashboard />

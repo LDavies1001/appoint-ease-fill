@@ -191,7 +191,7 @@ const Auth = () => {
   // Role Selection Page
   if (showRoleSelection) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
         <div className="absolute top-4 left-4">
           <Button
             variant="ghost"
@@ -296,7 +296,7 @@ const Auth = () => {
   // Show success message after signup
   if (showSuccessMessage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
@@ -343,7 +343,7 @@ const Auth = () => {
   // Business Signup Form
   if (selectedRole === 'provider') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
         <div className="absolute top-4 left-4">
           <Button
             variant="ghost"
