@@ -956,6 +956,42 @@ export type Database = {
           },
         ]
       }
+      role_change_audit: {
+        Row: {
+          business_name: string | null
+          changed_by: string | null
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          new_role: string
+          old_role: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          business_name?: string | null
+          changed_by?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          new_role: string
+          old_role?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          business_name?: string | null
+          changed_by?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          new_role?: string
+          old_role?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           category: string
