@@ -265,22 +265,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const switchRole = async (role: 'customer' | 'provider') => {
     if (!user || !profile) return { error: new Error('No user logged in') };
     
-    // Check if user has this role
-    const hasRole = userRoles.some(userRole => userRole.role === role);
-    if (!hasRole) {
-      return { error: new Error('User does not have this role') };
+    try {
+      // Use the secure role switching function
+      const { data, error } = await supabase.rpc('secure_role_switch', {
+        target_role: role,
+        business_name: role === 'provider' ? profile.business_name : null
+      });
+
+      if (error) throw error;
+
+      const result = data as { success?: boolean; error?: string; role?: string };
+      
+      if (result.error) {
+        return { error: new Error(result.error) };
+      }
+
+      if (result.success) {
+        // Refresh user profile to get updated role
+        await fetchUserProfile(user.id);
+        return { error: null };
+      }
+
+      return { error: new Error('Unknown error occurred') };
+    } catch (error) {
+      console.error('Role switch error:', error);
+      return { error: error as Error };
     }
-
-    const { error } = await supabase
-      .from('profiles')
-      .update({ active_role: role })
-      .eq('user_id', user.id);
-
-    if (!error) {
-      setProfile(prev => prev ? { ...prev, active_role: role } : null);
-    }
-
-    return { error };
   };
 
   const addRole = async (role: 'customer' | 'provider', businessName?: string) => {

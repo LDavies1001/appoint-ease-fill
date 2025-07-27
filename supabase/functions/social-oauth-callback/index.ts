@@ -21,9 +21,38 @@ serve(async (req) => {
       throw new Error('Missing required parameters')
     }
 
-    // Parse state to get user ID and redirect URL
-    const stateData = JSON.parse(atob(state))
-    const { userId, redirectUrl } = stateData
+    // Parse and validate state
+    let stateData;
+    try {
+      stateData = JSON.parse(atob(state));
+    } catch (error) {
+      throw new Error('Invalid state parameter');
+    }
+
+    const { userId, redirectUrl, timestamp, nonce } = stateData;
+    
+    // Validate state parameters
+    if (!userId || !redirectUrl || !timestamp || !nonce) {
+      throw new Error('Invalid state data');
+    }
+
+    // Check state timestamp (5 minutes max)
+    const stateAge = Date.now() - timestamp;
+    if (stateAge > 5 * 60 * 1000) {
+      throw new Error('OAuth state expired');
+    }
+
+    // Validate redirect URL again
+    const allowedRedirectUrls = [
+      Deno.env.get('SITE_URL'),
+      `${Deno.env.get('SITE_URL')}/`,
+      `${Deno.env.get('SITE_URL')}/create-business-profile`,
+      `${Deno.env.get('SITE_URL')}/dashboard`
+    ];
+    
+    if (!allowedRedirectUrls.some(url => redirectUrl?.startsWith(url || ''))) {
+      throw new Error('Invalid redirect URL');
+    }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!

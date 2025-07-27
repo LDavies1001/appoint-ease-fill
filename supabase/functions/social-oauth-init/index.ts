@@ -17,7 +17,34 @@ serve(async (req) => {
       throw new Error('Platform and userId are required')
     }
 
-    const state = btoa(JSON.stringify({ userId, redirectUrl: redirectUrl || Deno.env.get('SITE_URL') }))
+    // Validate platform
+    const allowedPlatforms = ['facebook', 'twitter', 'instagram', 'tiktok'];
+    if (!allowedPlatforms.includes(platform)) {
+      throw new Error('Invalid platform');
+    }
+
+    // Validate and whitelist redirect URL
+    const allowedRedirectUrls = [
+      Deno.env.get('SITE_URL'),
+      `${Deno.env.get('SITE_URL')}/`,
+      `${Deno.env.get('SITE_URL')}/create-business-profile`,
+      `${Deno.env.get('SITE_URL')}/dashboard`
+    ];
+    
+    const finalRedirectUrl = redirectUrl || Deno.env.get('SITE_URL');
+    if (!allowedRedirectUrls.some(url => finalRedirectUrl?.startsWith(url || ''))) {
+      throw new Error('Invalid redirect URL');
+    }
+
+    // Add timestamp for state validation
+    const stateData = {
+      userId,
+      redirectUrl: finalRedirectUrl,
+      timestamp: Date.now(),
+      nonce: crypto.randomUUID()
+    };
+
+    const state = btoa(JSON.stringify(stateData));
     const callbackUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1/social-oauth-callback?platform=${platform}`
     
     let authUrl = ''

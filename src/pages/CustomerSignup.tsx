@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 import Header from '@/components/ui/header';
+import { sanitizeInput, validateEmail, validatePhone, validatePassword, rateLimitCheck } from '@/utils/validation';
 
 const CustomerSignup = () => {
   const [email, setEmail] = useState('');
@@ -35,36 +36,50 @@ const CustomerSignup = () => {
     }
   }, [user, profile, navigate]);
 
-  const validatePhone = (phone: string) => {
-    // Basic UK phone number validation
-    const phoneRegex = /^(\+44\s?|0)[0-9]{10}$/;
-    return phoneRegex.test(phone.replace(/\s/g, ''));
-  };
-
   const getPasswordStrength = () => {
-    if (!password) return 0;
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/\d/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-    return strength;
+    const validation = validatePassword(password);
+    return validation.score;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!fullName.trim()) {
+    // Rate limiting check
+    if (!rateLimitCheck('signup', 3, 10 * 60 * 1000)) { // 3 attempts per 10 minutes
       toast({
-        title: "Full name required",
-        description: "Please enter your full name",
+        title: "Too many attempts",
+        description: "Please wait before trying again",
         variant: "destructive"
       });
       return;
     }
 
-    if (phone && !validatePhone(phone)) {
+    // Sanitize inputs
+    const sanitizedFullName = sanitizeInput(fullName);
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedPhone = sanitizeInput(phone);
+    const sanitizedLocation = sanitizeInput(location);
+
+    // Validate inputs
+    if (!sanitizedFullName.trim() || sanitizedFullName.length < 2) {
+      toast({
+        title: "Invalid name",
+        description: "Please enter a valid full name (at least 2 characters)",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!validateEmail(sanitizedEmail)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (sanitizedPhone && !validatePhone(sanitizedPhone)) {
       toast({
         title: "Invalid phone number",
         description: "Please enter a valid UK phone number",
@@ -82,25 +97,12 @@ const CustomerSignup = () => {
       return;
     }
 
-    if (password.length < 8) {
+    // Enhanced password validation
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
       toast({
         title: "Password too weak",
-        description: "Password must be at least 8 characters",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Check for password strength requirements
-    const hasUppercase = /[A-Z]/.test(password);
-    const hasLowercase = /[a-z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
-    
-    if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecialChar) {
-      toast({
-        title: "Password too weak",
-        description: "Password must contain uppercase, lowercase, number, and special character",
+        description: passwordValidation.errors[0],
         variant: "destructive"
       });
       return;
@@ -109,7 +111,14 @@ const CustomerSignup = () => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(email, password, 'customer', fullName, phone, location);
+      const { error } = await signUp(
+        sanitizedEmail, 
+        password, 
+        'customer', 
+        sanitizedFullName, 
+        sanitizedPhone, 
+        sanitizedLocation
+      );
       
       if (error) {
         toast({
