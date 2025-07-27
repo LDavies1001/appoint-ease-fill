@@ -261,7 +261,7 @@ const SlotDiscovery: React.FC = () => {
       
       const { data: providerDetailsData, error: providerError } = await supabase
         .from('provider_details')
-        .select('user_id, business_name, business_address, business_city, business_postcode, rating, total_reviews')
+        .select('user_id, business_name, business_postcode, formatted_address, rating, total_reviews')
         .in('user_id', providerIds);
 
       const { data: profilesData, error: profilesError } = await supabase
@@ -281,11 +281,10 @@ const SlotDiscovery: React.FC = () => {
         // Apply location filter if provided
         if (searchLocation.trim() && searchLocation !== 'Current Location') {
           const locationLower = searchLocation.toLowerCase();
-          const cityMatch = providerDetails?.business_city?.toLowerCase().includes(locationLower);
           const postcodeMatch = providerDetails?.business_postcode?.toLowerCase().includes(locationLower);
-          const addressMatch = providerDetails?.business_address?.toLowerCase().includes(locationLower);
+          const addressMatch = providerDetails?.formatted_address?.toLowerCase().includes(locationLower);
           
-          if (!cityMatch && !postcodeMatch && !addressMatch) {
+          if (!postcodeMatch && !addressMatch) {
             return null;
           }
         }

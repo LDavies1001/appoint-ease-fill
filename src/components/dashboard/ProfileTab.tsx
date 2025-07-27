@@ -49,18 +49,17 @@ interface BusinessData {
   business_email: string;
   business_phone: string;
   business_website: string;
-  business_address: string;
-  business_street: string;
-  business_city: string;
-  business_county: string;
   business_postcode: string;
-  business_country: string;
+  formatted_address: string;
+  latitude: number | null;
+  longitude: number | null;
+  service_radius_miles: number;
+  coverage_areas: any[];
   is_address_public: boolean;
   facebook_url: string;
   instagram_url: string;
   tiktok_url: string;
   years_experience: number;
-  service_area: string;
   operating_hours: OperatingHours;
   availability_notes: string;
   business_logo_url: string;
@@ -108,18 +107,17 @@ const ProfileTab = () => {
     business_email: '',
     business_phone: '',
     business_website: '',
-    business_address: '',
-    business_street: '',
-    business_city: '',
-    business_county: '',
     business_postcode: '',
-    business_country: '',
+    formatted_address: '',
+    latitude: null,
+    longitude: null,
+    service_radius_miles: 5,
+    coverage_areas: [],
     is_address_public: false,
     facebook_url: '',
     instagram_url: '',
     tiktok_url: '',
     years_experience: 0,
-    service_area: '',
     operating_hours: getDefaultOperatingHours(),
     availability_notes: '',
     business_logo_url: '',
@@ -241,18 +239,12 @@ const ProfileTab = () => {
             business_email: businessDetails.business_email || '',
             business_phone: businessDetails.business_phone || '',
             business_website: businessDetails.business_website || '',
-            business_address: businessDetails.business_address || '',
-            business_street: businessDetails.business_street || '',
-            business_city: businessDetails.business_city || '',
-            business_county: businessDetails.business_county || '',
             business_postcode: businessDetails.business_postcode || '',
-            business_country: businessDetails.business_country || '',
-            is_address_public: businessDetails.is_address_public || false,
-            facebook_url: businessDetails.facebook_url || '',
-            instagram_url: businessDetails.instagram_url || '',
-            tiktok_url: businessDetails.tiktok_url || '',
-            years_experience: businessDetails.years_experience || 0,
-            service_area: businessDetails.service_area || '',
+            formatted_address: businessDetails.formatted_address || '',
+            latitude: businessDetails.latitude || null,
+            longitude: businessDetails.longitude || null,
+            service_radius_miles: businessDetails.service_radius_miles || 5,
+            coverage_areas: Array.isArray(businessDetails.coverage_areas) ? businessDetails.coverage_areas : [],
             operating_hours: parseOperatingHours(businessDetails.operating_hours),
             availability_notes: businessDetails.availability_notes || '',
             business_logo_url: businessDetails.business_logo_url || '',
@@ -671,7 +663,7 @@ const ProfileTab = () => {
                 business_name: businessData.business_name,
                 business_description: businessData.business_description,
                 years_experience: businessData.years_experience,
-                service_area: businessData.service_area
+                coverage_areas: businessData.coverage_areas
               }}
               userId={profile?.user_id || ''}
               onUpdate={handleBusinessUpdate}
@@ -702,12 +694,12 @@ const ProfileTab = () => {
             <div className="lg:col-span-2">
               <BusinessLocationSection
                 data={{
-                  business_address: businessData.business_address,
-                  business_street: businessData.business_street,
-                  business_city: businessData.business_city,
-                  business_county: businessData.business_county,
                   business_postcode: businessData.business_postcode,
-                  business_country: businessData.business_country,
+                  formatted_address: businessData.formatted_address,
+                  latitude: businessData.latitude,
+                  longitude: businessData.longitude,
+                  service_radius_miles: businessData.service_radius_miles,
+                  coverage_areas: businessData.coverage_areas,
                   is_address_public: businessData.is_address_public
                 }}
                 userId={profile?.user_id || ''}
