@@ -69,29 +69,18 @@ const Index = () => {
                 </Link>
               </div>
 
-              {/* Discovery CTA */}
-              <div className="text-center">
-                <p className="text-muted-foreground mb-4">Or browse available appointments right now</p>
-                <Link to="/discover">
-                  <Button variant="outline" size="lg" className="group">
-                    Discover Available Slots
-                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Both Section */}
-            <div className="bg-gradient-to-r from-muted/40 to-muted/20 border border-border/30 rounded-2xl p-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-tertiary to-background rounded-xl flex items-center justify-center flex-shrink-0 border border-border/50">
-                  <User className="h-5 w-5 text-foreground" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">Dual Benefits</h3>
-                  <p className="text-muted-foreground text-sm">
-                    Business owners automatically get customer access—book appointments while managing your own slots.
-                  </p>
+              {/* Both Section */}
+              <div className="bg-gradient-to-r from-muted/40 to-muted/20 border border-border/30 rounded-2xl p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-tertiary to-background rounded-xl flex items-center justify-center flex-shrink-0 border border-border/50">
+                    <User className="h-5 w-5 text-foreground" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-2">Dual Benefits</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Business owners automatically get customer access—book appointments while managing your own slots.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
