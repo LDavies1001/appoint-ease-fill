@@ -36,7 +36,7 @@ const Index = () => {
               <div className="grid md:grid-cols-2 gap-4">
                 {/* Customer CTA */}
                 <Link to="/signup/customer" className="group">
-                  <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-2xl p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+                  <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-2xl p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 h-full flex flex-col">
                     <div className="flex items-center justify-between mb-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                         <Heart className="h-6 w-6 text-white" />
@@ -44,8 +44,8 @@ const Index = () => {
                       <ArrowRight className="h-5 w-5 text-primary group-hover:translate-x-1 transition-transform" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-2">Join as a Customer</h3>
-                    <p className="text-sm text-muted-foreground mb-4">Book last-minute beauty appointments with trusted local providers</p>
-                    <Button variant="hero" size="lg" className="w-full">
+                    <p className="text-sm text-muted-foreground mb-4 flex-grow">Book last-minute beauty appointments with trusted local providers</p>
+                    <Button variant="hero" size="lg" className="w-full mt-auto">
                       Get Started
                     </Button>
                   </div>
@@ -53,7 +53,7 @@ const Index = () => {
 
                 {/* Business CTA */}
                 <Link to="/signup/business" className="group">
-                  <div className="bg-gradient-to-br from-provider/10 to-provider/5 border-2 border-provider/20 rounded-2xl p-6 hover:border-provider/40 transition-all duration-300 hover:shadow-lg hover:shadow-provider/10 hover:-translate-y-1">
+                  <div className="bg-gradient-to-br from-provider/10 to-provider/5 border-2 border-provider/20 rounded-2xl p-6 hover:border-provider/40 transition-all duration-300 hover:shadow-lg hover:shadow-provider/10 hover:-translate-y-1 h-full flex flex-col">
                     <div className="flex items-center justify-between mb-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-provider to-provider-glow rounded-xl flex items-center justify-center">
                         <Building className="h-6 w-6 text-white" />
@@ -61,8 +61,8 @@ const Index = () => {
                       <ArrowRight className="h-5 w-5 text-provider group-hover:translate-x-1 transition-transform" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-2">Sign Up as Business</h3>
-                    <p className="text-sm text-muted-foreground mb-4">Fill empty slots and grow your business with instant bookings</p>
-                    <Button variant="provider-hero" size="lg" className="w-full">
+                    <p className="text-sm text-muted-foreground mb-4 flex-grow">Fill empty slots and grow your business with instant bookings</p>
+                    <Button variant="provider-hero" size="lg" className="w-full mt-auto">
                       Join Now
                     </Button>
                   </div>
