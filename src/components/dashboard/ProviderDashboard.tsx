@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
-
+import { useIsMobile } from '@/hooks/use-mobile';
+import MobileOptimizedDashboard from './MobileOptimizedDashboard';
 import EnhancedLibraryTab from './EnhancedLibraryTab';
 import ProfileTab from './ProfileTab';
 import AnalyticsTab from './AnalyticsTab';
@@ -119,6 +120,7 @@ const ProviderDashboard = () => {
   const { profile, signOut } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetchServices();
