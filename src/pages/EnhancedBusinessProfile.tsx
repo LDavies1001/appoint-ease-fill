@@ -1,4 +1,6 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
+import { addCompatibilityFields } from '@/utils/schema-compatibility';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';

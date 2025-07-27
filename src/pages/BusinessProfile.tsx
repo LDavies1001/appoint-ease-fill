@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { addCompatibilityFields } from '@/utils/schema-compatibility';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/custom-button';
@@ -98,7 +99,7 @@ const BusinessProfile = () => {
       if (error) throw error;
 
       if (data) {
-        setDetails(data);
+        setDetails(addCompatibilityFields(data));
       }
     } catch (error) {
       console.error('Error fetching business details:', error);

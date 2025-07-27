@@ -15,6 +15,12 @@ export const addCompatibilityFields = (data: any) => {
     service_area: Array.isArray(data.coverage_areas) 
       ? data.coverage_areas.map((area: any) => area.area_name || area).join(', ')
       : (data.coverage_areas || ''),
+    // Ensure all required fields exist
+    is_address_public: data.is_address_public !== undefined ? data.is_address_public : false,
+    facebook_url: data.facebook_url || '',
+    instagram_url: data.instagram_url || '',
+    tiktok_url: data.tiktok_url || '',
+    years_experience: data.years_experience || 0,
   };
 };
 
