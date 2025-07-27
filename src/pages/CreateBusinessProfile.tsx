@@ -123,18 +123,18 @@ const CreateBusinessProfile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
       {/* Provider Hero Banner */}
-      <div className="relative bg-gradient-to-r from-provider via-provider/95 to-provider-glow/20 text-white">
+      <div className="relative bg-gradient-to-r from-provider via-provider/95 to-provider-glow/20 text-white overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,198,140,0.1),_transparent_50%)]"></div>
-        <div className="relative max-w-6xl mx-auto px-8 py-16">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
           <div className="text-center space-y-6">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
                 <span className="text-sm font-medium">Provider Setup</span>
               </div>
-              <h1 className="text-5xl font-bold text-white drop-shadow-lg">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg">
                 {hasExistingProfile ? 'Edit Your Business Profile' : 'Create Your Business Profile'}
               </h1>
-              <p className="text-xl text-white/90 leading-relaxed max-w-2xl mx-auto font-medium">
+              <p className="text-base sm:text-lg lg:text-xl text-white/90 leading-relaxed max-w-2xl mx-auto font-medium">
                 {hasExistingProfile 
                   ? 'Update your business information and reach more customers'
                   : 'Set up your business profile and start filling empty slots with new customers'
@@ -144,7 +144,7 @@ const CreateBusinessProfile = () => {
             <div className="pt-4">
               <div className="inline-flex items-center gap-2 text-white/80">
                 <div className="w-2 h-2 rounded-full bg-provider-glow animate-pulse"></div>
-                <span className="text-sm font-medium">Fill empty slots • Grow your business • Instant bookings</span>
+                <span className="text-xs sm:text-sm font-medium">Fill empty slots • Grow your business • Instant bookings</span>
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@ const CreateBusinessProfile = () => {
       </div>
 
       {/* Profile Form */}
-      <div className="max-w-6xl mx-auto px-8 -mt-8 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
         <BusinessProfileForm 
           mode={hasExistingProfile ? 'edit' : 'create'}
           existingData={existingProfile}
