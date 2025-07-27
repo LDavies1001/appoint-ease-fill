@@ -4,6 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Upload, Camera, X, Loader2 } from 'lucide-react';
+import { ImageCropUpload } from '@/components/ui/image-crop-upload';
 
 interface PhotoUploadProps {
   onUpload: (url: string) => void;
@@ -13,6 +14,10 @@ interface PhotoUploadProps {
   maxSize?: number; // in MB
   children?: React.ReactNode;
   className?: string;
+  aspectRatio?: number; // width/height ratio for cropping
+  enableCrop?: boolean; // whether to enable crop functionality
+  title?: string;
+  description?: string;
 }
 
 export const PhotoUpload = ({ 
@@ -22,7 +27,11 @@ export const PhotoUpload = ({
   accept = 'image/*',
   maxSize = 5,
   children,
-  className = ''
+  className = '',
+  aspectRatio,
+  enableCrop = false,
+  title,
+  description
 }: PhotoUploadProps) => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -82,6 +91,23 @@ export const PhotoUpload = ({
   const triggerFileSelect = () => {
     fileInputRef.current?.click();
   };
+
+  // If crop is enabled, use the new crop component
+  if (enableCrop) {
+    return (
+      <ImageCropUpload
+        onUpload={onUpload}
+        bucket={bucket}
+        folder={folder}
+        aspectRatio={aspectRatio}
+        className={className}
+        title={title}
+        description={description}
+      >
+        {children}
+      </ImageCropUpload>
+    );
+  }
 
   return (
     <>

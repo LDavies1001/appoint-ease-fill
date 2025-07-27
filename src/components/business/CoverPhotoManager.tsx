@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Camera, Upload, X, Edit, Trash2, Maximize2, RotateCcw } from 'lucide-react';
+import { ImageCropUpload } from '@/components/ui/image-crop-upload';
 
 interface CoverPhotoManagerProps {
   coverImageUrl?: string | null;
@@ -31,60 +32,21 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
   const [imagePositionY, setImagePositionY] = useState([50]);
   const { toast } = useToast();
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please choose an image under 5MB",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please choose an image file",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setUploading(true);
+  const handleCoverUpload = async (url: string) => {
     try {
-      const fileExt = file.name.split('.').pop()?.toLowerCase();
-      const fileName = `cover-${providerId}-${Date.now()}.${fileExt}`;
-      
-      // Upload to Supabase Storage
-      const { error: uploadError } = await supabase.storage
-        .from('business-photos')
-        .upload(fileName, file);
-        
-      if (uploadError) throw uploadError;
-      
-      // Get public URL
-      const { data } = supabase.storage
-        .from('business-photos')
-        .getPublicUrl(fileName);
-        
       // Update provider_details with the new cover image URL
       const { error: updateError } = await supabase
         .from('provider_details')
         .upsert({ 
           user_id: providerId,
-          cover_image_url: data.publicUrl 
+          cover_image_url: url 
         }, {
           onConflict: 'user_id'
         });
 
       if (updateError) throw updateError;
 
-      onCoverImageUpdate(data.publicUrl);
+      onCoverImageUpdate(url);
       setDialogOpen(false);
 
       toast({
@@ -92,16 +54,12 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
         description: "Your cover photo has been uploaded successfully"
       });
     } catch (error) {
-      console.error('Error uploading cover photo:', error);
+      console.error('Error updating cover photo:', error);
       toast({
         title: "Upload failed",
-        description: "Could not upload the cover photo. Please try again.",
+        description: "Could not update the cover photo. Please try again.",
         variant: "destructive"
       });
-    } finally {
-      setUploading(false);
-      // Reset the input
-      event.target.value = '';
     }
   };
 
@@ -244,32 +202,29 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
               </DialogHeader>
               
               <div className="space-y-4">
-                {/* File Upload */}
+                {/* Image Upload with Crop */}
                 <div>
-                  <Label htmlFor="cover-upload" className="text-sm font-medium">
-                    Choose Image
+                  <Label className="text-sm font-medium mb-2 block">
+                    Choose Cover Image
                   </Label>
-                  <div className="mt-2">
-                    <Label htmlFor="cover-upload" className="cursor-pointer">
-                      <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
-                        <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-sm text-muted-foreground">
-                          Click to upload or drag and drop
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Recommended: 1200x400px, max 5MB
-                        </p>
-                      </div>
-                    </Label>
-                    <Input
-                      id="cover-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileUpload}
-                      disabled={uploading}
-                      className="hidden"
-                    />
-                  </div>
+                  <ImageCropUpload
+                    onUpload={handleCoverUpload}
+                    bucket="business-photos"
+                    folder="covers"
+                    aspectRatio={3} // 3:1 aspect ratio for cover photos
+                    title="Upload Cover Photo"
+                    description="Recommended: 1200x400px for best results"
+                  >
+                    <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors cursor-pointer">
+                      <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">
+                        Click to upload and crop your cover photo
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Recommended: 1200x400px, max 10MB
+                      </p>
+                    </div>
+                  </ImageCropUpload>
                 </div>
 
                 {/* Alt Text (Optional) */}

@@ -13,6 +13,7 @@ import { Stepper } from '@/components/ui/stepper';
 import { CategorySelector } from '@/components/ui/category-selector';
 import { AddressForm, AddressData } from '@/components/ui/address-form';
 import { SocialMediaConnector } from './SocialMediaConnector';
+import { ImageCropUpload } from '@/components/ui/image-crop-upload';
 import { 
   Building, 
   Phone, 
@@ -277,60 +278,13 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
     }
   };
 
-  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please upload a JPEG or PNG image",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please choose an image under 2MB",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setUploadingLogo(true);
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user?.id}/logo-${Date.now()}.${fileExt}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('business-photos')
-        .upload(fileName, file);
-        
-      if (uploadError) throw uploadError;
-      
-      const { data } = supabase.storage
-        .from('business-photos')
-        .getPublicUrl(fileName);
-
-      setFormData(prev => ({ ...prev, business_logo_url: data.publicUrl }));
-      
-      toast({
-        title: "Logo uploaded successfully",
-        description: "Your business logo has been uploaded"
-      });
-    } catch (error) {
-      console.error('Error uploading logo:', error);
-      toast({
-        title: "Upload failed",
-        description: "Could not upload the logo. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setUploadingLogo(false);
-      event.target.value = '';
-    }
+  const handleLogoUpload = async (url: string) => {
+    setFormData(prev => ({ ...prev, business_logo_url: url }));
+    
+    toast({
+      title: "Logo uploaded successfully",
+      description: "Your business logo has been uploaded and cropped"
+    });
   };
 
   const handleCertificationUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -552,27 +506,22 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-3 -right-3">
-                    <div className="relative">
-                      <input
-                        type="file"
-                        accept="image/jpeg,image/png"
-                        onChange={handleLogoUpload}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                        disabled={uploadingLogo}
-                      />
+                    <ImageCropUpload
+                      onUpload={handleLogoUpload}
+                      bucket="business-photos"
+                      folder="logos"
+                      aspectRatio={1} // Square aspect ratio for logos
+                      title="Upload Business Logo"
+                      description="Upload and crop your business logo. Square format works best."
+                    >
                       <Button
                         type="button"
                         size="sm"
-                        disabled={uploadingLogo}
                         className="h-12 w-12 rounded-full bg-gradient-to-r from-accent to-accent-glow hover:from-accent/90 hover:to-accent-glow/90 shadow-lg hover:shadow-xl transition-all duration-300"
                       >
-                        {uploadingLogo ? (
-                          <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
-                        ) : (
-                          <Upload className="h-5 w-5" />
-                        )}
+                        <Upload className="h-5 w-5 text-white" />
                       </Button>
-                    </div>
+                    </ImageCropUpload>
                   </div>
                 </div>
               </div>

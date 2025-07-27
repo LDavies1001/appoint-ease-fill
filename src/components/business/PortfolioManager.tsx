@@ -12,6 +12,7 @@ import { Plus, Edit, Trash2, Star, StarOff, Upload, Share2, Copy, CheckCircle, S
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ImageCropUpload } from '@/components/ui/image-crop-upload';
 
 interface PortfolioItem {
   id: string;
@@ -111,36 +112,13 @@ const PortfolioManager = () => {
     }
   };
 
-  const handleImageUpload = async (file: File) => {
-    if (!user) return null;
-
-    setUploadingImage(true);
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('portfolio')
-        .upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('portfolio')
-        .getPublicUrl(fileName);
-
-      return publicUrl;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      toast({
-        title: "Error",
-        description: "Failed to upload image.",
-        variant: "destructive",
-      });
-      return null;
-    } finally {
-      setUploadingImage(false);
-    }
+  const handlePortfolioImageUpload = async (url: string) => {
+    setFormData({ ...formData, image_url: url });
+    
+    toast({
+      title: "Image uploaded",
+      description: "Your portfolio image has been processed and is ready to use."
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -574,33 +552,43 @@ const PortfolioManager = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="image">Image *</Label>
+                  <Label>Portfolio Image *</Label>
                   <div className="mt-2">
-                    <Input
-                      id="image"
-                      type="file"
-                      accept="image/*"
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const imageUrl = await handleImageUpload(file);
-                          if (imageUrl) {
-                            setFormData({ ...formData, image_url: imageUrl });
-                          }
-                        }
-                      }}
-                      disabled={uploadingImage}
-                    />
-                    {uploadingImage && (
-                      <p className="text-sm text-muted-foreground mt-1">Uploading image...</p>
-                    )}
+                    <ImageCropUpload
+                      onUpload={handlePortfolioImageUpload}
+                      bucket="portfolio"
+                      folder="items"
+                      aspectRatio={1} // Square aspect ratio for portfolio items
+                      title="Upload Portfolio Image"
+                      description="Upload and crop your portfolio image. Square format works best for portfolio grids."
+                    >
+                      <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors cursor-pointer">
+                        <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground">
+                          Click to upload and crop portfolio image
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Square format recommended, max 10MB
+                        </p>
+                      </div>
+                    </ImageCropUpload>
+                    
                     {formData.image_url && (
-                      <div className="mt-2">
+                      <div className="mt-3 relative">
                         <img 
                           src={formData.image_url} 
-                          alt="Preview" 
-                          className="w-full h-32 object-cover rounded-lg"
+                          alt="Portfolio preview" 
+                          className="w-full h-48 object-cover rounded-lg border"
                         />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setFormData({ ...formData, image_url: '' })}
+                          className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm"
+                        >
+                          Remove
+                        </Button>
                       </div>
                     )}
                   </div>
