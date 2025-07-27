@@ -1091,6 +1091,14 @@ export type Database = {
         Args: { title: string; provider_id: string }
         Returns: string
       }
+      secure_role_switch: {
+        Args: { target_role: string; business_name?: string }
+        Returns: Json
+      }
+      verify_business_ownership: {
+        Args: { user_id: string; business_name: string }
+        Returns: boolean
+      }
     }
     Enums: {
       business_category_type:
