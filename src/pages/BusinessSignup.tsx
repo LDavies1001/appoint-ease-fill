@@ -313,7 +313,7 @@ const BusinessSignup = () => {
                   Grow Your Business, One Booking at a Time
                 </h1>
                 <p className="text-muted-foreground text-lg">
-                  Join the OpenSlot community and start filling last-minute cancellations with local customers who are ready to book.
+                  Join the OpenSlot community and start filling your empty slots with local customers who are ready to book.
                 </p>
               </div>
 
