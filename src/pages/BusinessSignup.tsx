@@ -199,8 +199,8 @@ const BusinessSignup = () => {
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-accent to-accent-glow rounded-xl flex items-center justify-center">
-                  <CheckCircle className="h-5 w-5 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-br from-provider to-provider-glow rounded-xl flex items-center justify-center">
+                  <CheckCircle className="h-6 w-6 text-white" />
                 </div>
                 <span className="text-2xl font-bold text-foreground">Open-Slot</span>
               </div>
@@ -212,19 +212,19 @@ const BusinessSignup = () => {
               </p>
             </div>
 
-            <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
+            <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-provider/10">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                  <Mail className="h-8 w-8 text-green-600" />
+                <div className="w-16 h-16 bg-provider/10 border border-provider/20 rounded-full flex items-center justify-center mx-auto">
+                  <Mail className="h-8 w-8 text-provider" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Check Your Email</h3>
                 <p className="text-sm text-muted-foreground">
-                  We've sent a verification email to <strong>{email}</strong>. 
+                  We've sent a verification email to <strong className="text-provider">{email}</strong>. 
                   Please click the link in the email to verify your account before logging in.
                 </p>
                 <Button
                   onClick={() => navigate('/auth')}
-                  variant="accent"
+                  variant="provider-hero"
                   size="lg"
                   className="w-full mt-6"
                 >
@@ -239,17 +239,17 @@ const BusinessSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50/30 via-background to-muted/10">
+    <div className="min-h-screen bg-gradient-to-br from-provider/5 via-background to-provider/10">
       <Header />
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
-        <div className="w-full max-w-7xl">
+        <div className="w-full max-w-7xl animate-fade-in">
           {/* Two-column layout on desktop, single column on mobile */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
             {/* Left column - Inspirational content (hidden on mobile) */}
             <div className="hidden lg:flex flex-col justify-center space-y-8 pl-8">
               <div className="space-y-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-2xl flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-provider to-provider-glow rounded-2xl flex items-center justify-center">
                   <Building className="h-8 w-8 text-white" />
                 </div>
                 
@@ -319,7 +319,7 @@ const BusinessSignup = () => {
               </div>
 
               {/* Form Card */}
-              <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl">
+              <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-provider/10">
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {/* Business Name */}
                   <div className="space-y-2">
@@ -332,7 +332,7 @@ const BusinessSignup = () => {
                         placeholder="Enter your business name"
                         value={businessName}
                         onChange={(e) => setBusinessName(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
                         required
                       />
                       {businessName && isFieldValid('businessName', businessName) && (
@@ -354,7 +354,7 @@ const BusinessSignup = () => {
                         placeholder="Enter your full name"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
                         required
                       />
                       {fullName && isFieldValid('fullName', fullName) && (
@@ -376,7 +376,7 @@ const BusinessSignup = () => {
                         placeholder="Enter your business email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
                         required
                       />
                       {email && isFieldValid('email', email) && (
@@ -398,7 +398,7 @@ const BusinessSignup = () => {
                         placeholder="07123456789"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
                         required
                       />
                       {phone && isFieldValid('phone', phone) && (
@@ -419,7 +419,7 @@ const BusinessSignup = () => {
                         placeholder="Enter your business postcode"
                         value={location}
                         onChange={setLocation}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
                       />
                       {location && isFieldValid('location', location) && (
                         <div className="absolute right-3 top-3 text-green-600 z-20">
@@ -441,7 +441,7 @@ const BusinessSignup = () => {
                         placeholder="Create a password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 pr-12 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
+                        className="pl-10 pr-12 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
                         required
                       />
                       <button
@@ -487,7 +487,7 @@ const BusinessSignup = () => {
                         placeholder="Confirm your password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-border/50 focus:border-accent transition-colors"
+                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
                         required
                       />
                       {confirmPassword && isFieldValid('confirmPassword', confirmPassword) && (
@@ -502,7 +502,7 @@ const BusinessSignup = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    variant="accent"
+                    variant="provider-hero"
                     size="lg"
                     className="w-full mt-8 h-12 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                   >
@@ -513,15 +513,15 @@ const BusinessSignup = () => {
                   <div className="text-center space-y-3 pt-4">
                     <p className="text-sm text-muted-foreground">
                       Already have an account?{' '}
-                      <Link to="/auth" className="text-primary hover:underline font-medium">
+                      <Link to="/auth" className="text-provider hover:underline font-medium">
                         Sign in here
                       </Link>
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Want to join as a customer?{' '}
-                      <Link to="/signup/customer" className="text-primary hover:underline font-medium">
-                        Create customer account
-                      </Link>
+                    Want to join as a customer?{' '}
+                    <Link to="/signup/customer" className="text-provider hover:underline font-medium">
+                      Create customer account
+                    </Link>
                     </p>
                   </div>
                 </form>

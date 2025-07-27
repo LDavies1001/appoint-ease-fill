@@ -2,148 +2,97 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
-import { Calendar, Star, Shield, User, Building, ArrowRight } from 'lucide-react';
+import { Calendar, Star, Shield, User, Building, ArrowRight, Heart, Sparkles, CheckCircle, Search } from 'lucide-react';
 import Header from '@/components/ui/header';
 import heroImage from '@/assets/hero-lash-extension.jpg';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <Header />
 
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center py-16 lg:py-24">
+        <div className="grid lg:grid-cols-2 gap-16 items-center py-12 lg:py-20 min-h-[85vh]">
           {/* Left Side - Content */}
-          <div className="space-y-8">
-            <div>
-              <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-4 leading-tight">
-                Book Last-Minute
-                <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  Appointments
-                </span>
+          <div className="space-y-10 animate-fade-in">
+            {/* Badge */}
+            <div className="inline-flex items-center space-x-2 bg-muted/50 border border-border/50 rounded-full px-4 py-2 backdrop-blur-sm">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">Last-minute beauty appointments made easy</span>
+            </div>
+
+            {/* Main Headline */}
+            <div className="space-y-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+                Find & fill beauty appointments with <span className="text-primary">OpenSlot</span>
               </h1>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Find available appointment slots in seconds. Get the services you need, when you need them.
+              
+              <p className="text-xl text-muted-foreground leading-relaxed max-w-lg">
+                Connect instantly with local beauty providers. Book last-minute slots or fill your empty calendar—all in one platform.
               </p>
             </div>
 
-            {/* Sign Up Sections */}
+            {/* Enhanced Dual CTA Section */}
             <div className="space-y-6">
-              {/* Customer and Business Side by Side */}
-              <div className="grid md:grid-cols-2 gap-6 items-stretch">
-                {/* Customer Section */}
-                <div className="bg-card rounded-2xl p-8 border border-border/40 flex flex-col h-full">
-                  <div className="text-center mb-6">
-                    <User className="h-12 w-12 text-primary mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-foreground mb-2">For Customers</h3>
-                    <p className="text-muted-foreground mb-6">Book last-minute appointments instantly</p>
-                  </div>
-
-                  {/* How It Works for Customers */}
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-start space-x-3">
-                      <Calendar className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                      <div>
-                        <h4 className="font-semibold text-foreground text-sm">Browse Available Slots</h4>
-                        <p className="text-xs text-muted-foreground">See real-time availability from verified providers near you</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                {/* Customer CTA */}
+                <Link to="/signup/customer" className="group">
+                  <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-2xl p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
+                        <Heart className="h-6 w-6 text-white" />
                       </div>
+                      <ArrowRight className="h-5 w-5 text-primary group-hover:translate-x-1 transition-transform" />
                     </div>
-                    
-                    <div className="flex items-start space-x-3">
-                      <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                      <div>
-                        <h4 className="font-semibold text-foreground text-sm">Book Instantly</h4>
-                        <p className="text-xs text-muted-foreground">No waiting for approval - book available slots immediately</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-3">
-                      <Star className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                      <div>
-                        <h4 className="font-semibold text-foreground text-sm">Read Reviews</h4>
-                        <p className="text-xs text-muted-foreground">Check ratings and reviews from real customers before booking</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 mt-auto">
-                    <Link to="/discover" className="block">
-                      <Button className="w-full px-8 py-4 text-lg font-medium bg-primary hover:bg-primary/90 text-primary-foreground">
-                        <Calendar className="mr-2 h-5 w-5" />
-                        Find Available Slots
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                      </Button>
-                    </Link>
-                    <Link to="/signup/customer" className="block">
-                      <Button variant="outline" className="w-full px-8 py-3 text-base font-medium border-primary/20 text-primary hover:bg-primary/5">
-                        <User className="mr-2 h-4 w-4" />
-                        Sign Up as Customer
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Business Section */}
-                <div className="bg-card rounded-2xl p-8 border border-border/40 flex flex-col h-full">
-                  <div className="text-center mb-6">
-                    <Building className="h-12 w-12 text-accent mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-foreground mb-2">For Businesses</h3>
-                    <p className="text-muted-foreground mb-6">Fill empty slots and maximize revenue</p>
-                  </div>
-
-                  {/* How It Works for Businesses */}
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-start space-x-3">
-                      <Calendar className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
-                      <div>
-                        <h4 className="font-semibold text-foreground text-sm">Set Your Availability</h4>
-                        <p className="text-xs text-muted-foreground">Add last-minute slots or cancellations to fill your schedule</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-3">
-                      <Shield className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
-                      <div>
-                        <h4 className="font-semibold text-foreground text-sm">Get Instant Bookings</h4>
-                        <p className="text-xs text-muted-foreground">Customers can book immediately without back-and-forth messaging</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-3">
-                      <Star className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
-                      <div>
-                        <h4 className="font-semibold text-foreground text-sm">Build Your Reputation</h4>
-                        <p className="text-xs text-muted-foreground">Earn reviews and grow your customer base organically</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Link to="/signup/business" className="block mt-auto">
-                    <Button variant="accent" className="w-full px-8 py-4 text-lg font-medium">
-                      <Building className="mr-2 h-5 w-5" />
-                      Join as Business
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                    <h3 className="text-xl font-bold text-foreground mb-2">Join as a Customer</h3>
+                    <p className="text-sm text-muted-foreground mb-4">Book last-minute beauty appointments with trusted local providers</p>
+                    <Button variant="hero" size="lg" className="w-full">
+                      Get Started
                     </Button>
-                  </Link>
-                </div>
+                  </div>
+                </Link>
+
+                {/* Business CTA */}
+                <Link to="/signup/business" className="group">
+                  <div className="bg-gradient-to-br from-provider/10 to-provider/5 border-2 border-provider/20 rounded-2xl p-6 hover:border-provider/40 transition-all duration-300 hover:shadow-lg hover:shadow-provider/10 hover:-translate-y-1">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-provider to-provider-glow rounded-xl flex items-center justify-center">
+                        <Building className="h-6 w-6 text-white" />
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-provider group-hover:translate-x-1 transition-transform" />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-2">Sign Up as Business</h3>
+                    <p className="text-sm text-muted-foreground mb-4">Fill empty slots and grow your business with instant bookings</p>
+                    <Button variant="provider-hero" size="lg" className="w-full">
+                      Join Now
+                    </Button>
+                  </div>
+                </Link>
               </div>
 
-              {/* Both Section - Full Width Below */}
-              <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8 border border-border/40">
-                <div className="text-center">
-                  <div className="flex justify-center items-center gap-2 mb-4">
-                    <User className="h-8 w-8 text-primary" />
-                    <span className="text-2xl font-bold text-muted-foreground">+</span>
-                    <Building className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">Are You Both?</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Sign up as a business and you'll automatically get customer functionality too. 
-                    Easily switch between managing your business and booking services for yourself.
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Perfect for business owners who also want to book services from other providers.
+              {/* Discovery CTA */}
+              <div className="text-center">
+                <p className="text-muted-foreground mb-4">Or browse available appointments right now</p>
+                <Link to="/discover">
+                  <Button variant="outline" size="lg" className="group">
+                    Discover Available Slots
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Both Section */}
+            <div className="bg-gradient-to-r from-muted/40 to-muted/20 border border-border/30 rounded-2xl p-6">
+              <div className="flex items-start space-x-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-tertiary to-background rounded-xl flex items-center justify-center flex-shrink-0 border border-border/50">
+                  <User className="h-5 w-5 text-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground mb-2">Dual Benefits</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Business owners automatically get customer access—book appointments while managing your own slots.
                   </p>
                 </div>
               </div>
@@ -151,13 +100,70 @@ const Index = () => {
           </div>
 
           {/* Right Side - Hero Image */}
-          <div className="lg:pl-8 mt-32">
-            <div className="w-full bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-3xl overflow-hidden relative">
-              <img src={heroImage} alt="Professional eyelash extension service" className="w-full h-auto object-cover" />
+          <div className="lg:order-last order-first animate-scale-in">
+            <div className="relative">
+              <img 
+                src={heroImage} 
+                alt="Professional beauty appointment" 
+                className="w-full h-auto rounded-3xl shadow-elegant"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl"></div>
+              
+              {/* Floating testimonial */}
+              <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4 border border-white/20 shadow-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  <span className="text-sm font-medium text-gray-800">4.9/5 from 1000+ bookings</span>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">"Found the perfect last-minute slot for my nails!"</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* How It Works Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">How OpenSlot Works</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Simple, fast, and effective for both customers and business owners
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Customer Flow */}
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary-glow rounded-2xl flex items-center justify-center mx-auto">
+                <Search className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground">Browse & Discover</h3>
+              <p className="text-muted-foreground">Find available appointment slots near you in real-time</p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary-glow rounded-2xl flex items-center justify-center mx-auto">
+                <Calendar className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground">Book Instantly</h3>
+              <p className="text-muted-foreground">Secure your slot with one click—no waiting for confirmation</p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-provider to-provider-glow rounded-2xl flex items-center justify-center mx-auto">
+                <CheckCircle className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground">Grow Your Business</h3>
+              <p className="text-muted-foreground">Fill empty slots automatically and build your client base</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 import Header from '@/components/ui/header';
 import { sanitizeInput, validateEmail, validatePhone, validatePassword, rateLimitCheck } from '@/utils/validation';
@@ -143,33 +143,33 @@ const CustomerSignup = () => {
   // Show success message after signup
   if (showSuccessMessage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
         <Header />
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-          <div className="w-full max-w-md">
+          <div className="w-full max-w-md animate-fade-in">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                  <CheckCircle className="h-5 w-5 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
+                  <CheckCircle className="h-6 w-6 text-white" />
                 </div>
                 <span className="text-2xl font-bold text-foreground">Open-Slot</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                Account Created Successfully!
+                Welcome to OpenSlot!
               </h1>
               <p className="text-muted-foreground">
-                Please check your email for verification before logging in
+                Your customer account has been created successfully
               </p>
             </div>
 
-            <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
+            <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/10">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                  <Mail className="h-8 w-8 text-green-600" />
+                <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mx-auto">
+                  <Mail className="h-8 w-8 text-primary" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Check Your Email</h3>
                 <p className="text-sm text-muted-foreground">
-                  We've sent a verification email to <strong>{email}</strong>. 
+                  We've sent a verification email to <strong className="text-primary">{email}</strong>. 
                   Please click the link in the email to verify your account before logging in.
                 </p>
                 <Button
@@ -189,26 +189,26 @@ const CustomerSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
       <Header />
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md animate-fade-in">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                <User className="h-5 w-5 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
+                <Heart className="h-6 w-6 text-white" />
               </div>
               <span className="text-2xl font-bold text-foreground">Open-Slot</span>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Create Your Customer Account
+              Join as a Customer
             </h1>
             <p className="text-muted-foreground">
-              We'll use this info to find you great local deals and help you book amazing services instantly.
+              Discover and book last-minute beauty appointments with trusted local providers.
             </p>
           </div>
 
-          <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8">
+          <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/10">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="full-name">Full Name</Label>
@@ -220,7 +220,7 @@ const CustomerSignup = () => {
                     placeholder="Enter your full name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
                     required
                   />
                 </div>
@@ -236,7 +236,7 @@ const CustomerSignup = () => {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
                     required
                   />
                 </div>
@@ -252,7 +252,7 @@ const CustomerSignup = () => {
                     placeholder="07123456789"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">We'll use this to send booking confirmations</p>
@@ -264,7 +264,7 @@ const CustomerSignup = () => {
                   placeholder="Enter your postcode"
                   value={location}
                   onChange={setLocation}
-                  className="h-11"
+                  className="h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
                 />
                 <p className="text-xs text-muted-foreground">Help us find services near you</p>
               </div>
@@ -279,7 +279,7 @@ const CustomerSignup = () => {
                     placeholder="Create a password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10"
+                    className="pl-10 pr-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
                     required
                   />
                   <button
@@ -319,7 +319,7 @@ const CustomerSignup = () => {
                     placeholder="Confirm your password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
                     required
                   />
                 </div>
