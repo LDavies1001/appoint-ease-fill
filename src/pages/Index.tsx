@@ -10,8 +10,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center py-12 lg:py-20 min-h-[85vh]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center py-12 lg:py-20 min-h-[85vh]">
           {/* Left Side - Content */}
           <div className="space-y-10 animate-fade-in">
             {/* Enhanced Badge with Role Styling */}
@@ -33,7 +33,7 @@ const Index = () => {
 
             {/* Enhanced Dual CTA Section */}
             <div className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Customer CTA */}
                 <Link to="/signup/customer" className="group">
                   <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-2xl p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 h-full flex flex-col">
@@ -115,7 +115,7 @@ const Index = () => {
 
       {/* How It Works Section */}
       <section className="py-16 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">How OpenSlot Works</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -123,7 +123,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Customer Flow */}
             <div className="text-center space-y-4">
               <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary-glow rounded-2xl flex items-center justify-center mx-auto">
