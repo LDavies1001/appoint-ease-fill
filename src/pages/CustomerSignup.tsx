@@ -189,12 +189,12 @@ const CustomerSignup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
-      <div className="absolute top-4 left-4 z-10">
+      <div className="absolute top-4 left-4 z-[60]">
         <Button
-          variant="outline"
+          variant="outline" 
           size="sm"
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 bg-background/80 backdrop-blur-sm hover:bg-background"
+          className="flex items-center gap-2 bg-background border-2 border-primary/20 hover:bg-primary/5 shadow-lg"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home
