@@ -62,8 +62,8 @@ const MobileOptimizedDashboard: React.FC<MobileOptimizedDashboardProps> = ({
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Mobile-First Tab Navigation - Sticky */}
         <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/50">
-          <TabsList className="w-full h-auto p-2 bg-transparent justify-start overflow-x-auto">
-            <div className="flex gap-2 min-w-max px-2">
+          <TabsList className="w-full h-auto p-2 bg-transparent justify-start">
+            <div className="flex flex-wrap gap-2 w-full px-2">
               <TabsTrigger 
                 value="overview" 
                 className="flex-shrink-0 h-12 px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
