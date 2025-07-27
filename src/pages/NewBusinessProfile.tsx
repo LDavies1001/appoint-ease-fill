@@ -114,7 +114,7 @@ const NewBusinessProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 overflow-x-hidden w-full">
       
       
       {/* Hero Section with Integrated Cover Photo */}

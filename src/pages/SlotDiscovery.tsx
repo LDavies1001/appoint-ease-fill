@@ -355,7 +355,7 @@ const SlotDiscovery: React.FC = () => {
   }, [selectedCategory, selectedTimeRange, selectedTimeOfDay, selectedDistance, searchLocation]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-white to-primary/10">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-white to-primary/10 overflow-x-hidden w-full">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-foreground via-foreground/95 to-primary/20 text-background">
         {/* Background Pattern */}

@@ -236,7 +236,7 @@ const ProviderBooking = () => {
   const filteredSlots = availableSlots;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden w-full">
       
       
       <div className="max-w-6xl mx-auto px-4 py-8">

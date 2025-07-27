@@ -188,7 +188,7 @@ const CustomerSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 overflow-x-hidden w-full">
       
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
         <div className="w-full max-w-md animate-fade-in">

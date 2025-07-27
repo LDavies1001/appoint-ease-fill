@@ -338,7 +338,8 @@ const UserSettingsPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-4xl">
+    <div className="min-h-screen bg-background overflow-x-hidden w-full">
+      <div className="container mx-auto py-8 px-4 max-w-4xl">
       {/* Header with Back Button */}
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
@@ -789,6 +790,7 @@ const UserSettingsPage = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );

@@ -302,7 +302,7 @@ const EnhancedBusinessProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5 overflow-x-hidden w-full">
       
       
       {/* Hero/Cover Section */}

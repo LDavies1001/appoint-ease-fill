@@ -220,7 +220,7 @@ const PublicPortfolio = () => {
   const operatingHours = parseOperatingHours(providerDetails?.operating_hours);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden w-full">
       
       
       {/* Hero Section with Cover Photo */}
