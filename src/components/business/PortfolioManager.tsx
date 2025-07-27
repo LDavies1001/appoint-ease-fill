@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ImageCropUpload } from '@/components/ui/image-crop-upload';
+import { getGridClasses, getImageContainerClasses, getImageClasses } from '@/lib/image-utils';
 
 interface PortfolioItem {
   id: string;
@@ -575,11 +576,13 @@ const PortfolioManager = () => {
                     
                     {formData.image_url && (
                       <div className="mt-3 relative">
-                        <img 
-                          src={formData.image_url} 
-                          alt="Portfolio preview" 
-                          className="w-full h-48 object-cover rounded-lg border"
-                        />
+                        <div className={getImageContainerClasses('square', true, true)}>
+                          <img 
+                            src={formData.image_url} 
+                            alt="Portfolio preview" 
+                            className={getImageClasses('cover', false)}
+                          />
+                        </div>
                         <Button
                           type="button"
                           variant="outline"
@@ -721,7 +724,7 @@ const PortfolioManager = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={getGridClasses('portfolio')}>
           {filteredItems.map((item) => (
             <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative">
@@ -734,11 +737,13 @@ const PortfolioManager = () => {
                   />
                 </div>
 
-                <img
-                  src={item.image_url}
-                  alt={item.title}
-                  className="w-full h-48 object-cover"
-                />
+                <div className={getImageContainerClasses('square', true, true)}>
+                  <img
+                    src={item.image_url}
+                    alt={item.title}
+                    className={getImageClasses('cover', true)}
+                  />
+                </div>
                 
                 {/* Status badges */}
                 <div className="absolute top-2 left-10 flex gap-1">

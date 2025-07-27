@@ -211,7 +211,7 @@ export const CoverPhotoManager: React.FC<CoverPhotoManagerProps> = ({
                     onUpload={handleCoverUpload}
                     bucket="business-photos"
                     folder="covers"
-                    aspectRatio={3} // 3:1 aspect ratio for cover photos
+                    aspectRatio={3} // 3:1 aspect ratio for cover photos (standardized)
                     title="Upload Cover Photo"
                     description="Recommended: 1200x400px for best results"
                   >

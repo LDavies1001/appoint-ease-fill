@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { getGridClasses, getImageContainerClasses, getImageClasses } from '@/lib/image-utils';
 
 interface BeautyJourneyPhoto {
   id: string;
@@ -200,14 +201,14 @@ export const CustomerPortfolio: React.FC<CustomerPortfolioProps> = ({ customerId
         </div>
 
         {journeyPhotos.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className={getGridClasses('gallery')}>
             {journeyPhotos.map((photo) => (
               <div key={photo.id} className="group relative">
-                <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-primary/5 to-accent/5 border border-border/50">
+                <div className={`${getImageContainerClasses('square', true, false)} bg-gradient-to-br from-primary/5 to-accent/5 border border-border/50`}>
                   <img
                     src={photo.image_url}
                     alt={photo.description}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className={getImageClasses('cover', true)}
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
                   <Badge 
@@ -253,10 +254,10 @@ export const CustomerPortfolio: React.FC<CustomerPortfolioProps> = ({ customerId
         </div>
 
         {inspirationBoards.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className={getGridClasses('cards')}>
             {inspirationBoards.map((board) => (
               <Card key={board.id} className="group hover-scale cursor-pointer overflow-hidden">
-                <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 relative">
+                <div className="aspect-[4/3] bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden rounded-t-lg">{/* Standardized 4:3 ratio for boards */}
                   {board.items?.length > 0 ? (
                     <div className="grid grid-cols-2 h-full">
                       {board.items.slice(0, 4).map((item, index) => (
@@ -264,7 +265,7 @@ export const CustomerPortfolio: React.FC<CustomerPortfolioProps> = ({ customerId
                           <img
                             src={item.image_url}
                             alt={item.title}
-                            className="w-full h-full object-cover"
+                            className={getImageClasses('cover', false)}
                           />
                         </div>
                       ))}

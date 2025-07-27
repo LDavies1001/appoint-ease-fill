@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { getGridClasses } from '@/lib/image-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -388,10 +389,10 @@ const EnhancedLibraryTab = () => {
       <div className="space-y-6">
         <div className="animate-pulse">
           <div className="h-8 bg-muted rounded w-1/4 mb-4"></div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="aspect-square bg-muted rounded-lg"></div>
-            ))}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="aspect-square bg-muted rounded-lg"></div>
+          ))}
           </div>
         </div>
       </div>
@@ -651,8 +652,8 @@ const EnhancedLibraryTab = () => {
           ) : (
             <div className={
               viewMode === 'grid' 
-                ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" 
-                : "space-y-4"
+                ? getGridClasses('gallery')
+                : "space-y-3"
             }>
               {filteredItems.map((item) => (
                 <ImageCard

@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Eye, Trash2, Edit, Star, Pin, Heart, Check, X, FolderOpen, Move } from 'lucide-react';
 import { UploadedImage } from '@/hooks/useImageLibrary';
+import { getImageContainerClasses, getImageClasses } from '@/lib/image-utils';
 
 interface ImageCardProps {
   image: UploadedImage;
@@ -93,7 +94,7 @@ const ImageCard: React.FC<ImageCardProps> = ({
         >
           <div className="flex gap-4 p-4">
             {/* Image Thumbnail */}
-            <div className="relative w-24 h-24 flex-shrink-0 overflow-hidden bg-muted/50 rounded-lg">
+            <div className={`relative w-20 h-20 flex-shrink-0 ${getImageContainerClasses('square', true, true)}`}>
               {!imageError ? (
                 <>
                   {imageLoading && (
@@ -104,8 +105,8 @@ const ImageCard: React.FC<ImageCardProps> = ({
                   <img
                     src={image.url}
                     alt={image.name}
-                    className={`w-full h-full object-cover transition-all duration-300 cursor-pointer ${
-                      imageLoading ? 'opacity-0' : 'opacity-100 group-hover:scale-110'
+                    className={`${getImageClasses('cover', true)} cursor-pointer transition-opacity duration-300 ${
+                      imageLoading ? 'opacity-0' : 'opacity-100'
                     }`}
                     onClick={() => window.open(image.url, '_blank')}
                     onLoad={handleImageLoad}
@@ -304,7 +305,7 @@ const ImageCard: React.FC<ImageCardProps> = ({
         onDragStart={handleDragStart}
       >
         {/* Image Container */}
-        <div className="relative aspect-square overflow-hidden bg-muted/50">
+        <div className={`relative ${getImageContainerClasses('square', true, true)}`}>
           {!imageError ? (
             <>
               {imageLoading && (
@@ -315,8 +316,8 @@ const ImageCard: React.FC<ImageCardProps> = ({
               <img
                 src={image.url}
                 alt={image.name}
-                className={`w-full h-full object-cover transition-all duration-300 cursor-pointer ${
-                  imageLoading ? 'opacity-0' : 'opacity-100 group-hover:scale-110'
+                className={`${getImageClasses('cover', true)} cursor-pointer transition-opacity duration-300 ${
+                  imageLoading ? 'opacity-0' : 'opacity-100'
                 }`}
                 onClick={() => window.open(image.url, '_blank')}
                 onLoad={handleImageLoad}
