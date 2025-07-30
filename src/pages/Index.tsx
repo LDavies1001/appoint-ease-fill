@@ -10,8 +10,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12 xl:gap-16 items-center py-8 lg:py-16 xl:py-20 min-h-[85vh]">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-12 xl:gap-16 items-center py-6 sm:py-8 lg:py-16 xl:py-20 min-h-[85vh] w-full">
           {/* Left Side - Content */}
           <div className="space-y-6 lg:space-y-8 xl:space-y-10 animate-fade-in w-full">
             {/* Enhanced Badge with Role Styling */}
@@ -114,8 +114,8 @@ const Index = () => {
       </div>
 
       {/* How It Works Section */}
-      <section className="py-8 lg:py-16 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
+      <section className="py-8 lg:py-16 bg-muted/30 w-full overflow-hidden">
+        <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
           <div className="text-center mb-8 lg:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 lg:mb-4 break-words">How OpenSlot Works</h2>
             <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
