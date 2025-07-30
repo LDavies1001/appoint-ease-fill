@@ -8,13 +8,13 @@ import heroImage from '@/assets/hero-lash-extension.jpg';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full max-w-full">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
       {/* Hero Section */}
-      <div className="w-full px-1 sm:px-2 md:px-4 lg:px-6 xl:px-8 max-w-full overflow-hidden">
+      <div className="w-full px-1 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto w-full">
-          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:gap-12 xl:gap-16 items-center py-4 sm:py-6 md:py-8 lg:py-16 xl:py-20 min-h-[85vh] w-full max-w-full">
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 xl:gap-16 items-center py-4 sm:py-8 lg:py-16 xl:py-20 min-h-[85vh] w-full">
             {/* Left Side - Content */}
-            <div className="space-y-4 sm:space-y-6 lg:space-y-8 xl:space-y-10 animate-fade-in w-full max-w-full px-2 sm:px-0">
+            <div className="space-y-3 sm:space-y-6 lg:space-y-8 xl:space-y-10 animate-fade-in w-full px-1 sm:px-0">
               {/* Enhanced Badge with Role Styling */}
               <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/10 to-provider/10 border border-primary/20 rounded-full px-2 py-1.5 sm:px-4 sm:py-2 backdrop-blur-sm max-w-full">
                 <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
@@ -33,20 +33,20 @@ const Index = () => {
               </div>
 
               {/* Enhanced Dual CTA Section */}
-              <div className="space-y-4 lg:space-y-6 w-full">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-3 lg:space-y-6 w-full">
+                <div className="flex flex-col gap-3 w-full">
                   {/* Customer CTA */}
                   <Link to="/signup/customer" className="group w-full">
-                    <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 h-full flex flex-col w-full">
-                      <div className="flex items-center justify-between mb-2 sm:mb-3 lg:mb-4">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-primary to-primary-glow rounded-lg lg:rounded-xl flex items-center justify-center">
-                          <Heart className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
+                    <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-lg lg:rounded-2xl p-2.5 sm:p-4 lg:p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 h-full flex flex-col w-full min-w-0">
+                      <div className="flex items-center justify-between mb-2 lg:mb-4">
+                        <div className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-primary to-primary-glow rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Heart className="h-3.5 w-3.5 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                         </div>
-                        <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-primary group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-primary group-hover:translate-x-1 transition-transform flex-shrink-0" />
                       </div>
-                      <h3 className="font-bold text-foreground mb-2" style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)' }}>Join as a Customer</h3>
-                      <p className="text-muted-foreground mb-3 lg:mb-4 flex-grow" style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)' }}>Book last-minute beauty appointments with trusted local providers</p>
-                      <Button variant="hero" size="lg" className="w-full mt-auto" style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1rem)' }}>
+                      <h3 className="font-bold text-foreground mb-1.5" style={{ fontSize: 'clamp(0.9rem, 2.8vw, 1.25rem)' }}>Join as a Customer</h3>
+                      <p className="text-muted-foreground mb-2.5 lg:mb-4 flex-grow leading-snug" style={{ fontSize: 'clamp(0.7rem, 2.2vw, 0.875rem)' }}>Book last-minute beauty appointments with trusted local providers</p>
+                      <Button variant="hero" className="w-full mt-auto py-2" style={{ fontSize: 'clamp(0.8rem, 2.3vw, 1rem)' }}>
                         Get Started
                       </Button>
                     </div>
@@ -54,16 +54,16 @@ const Index = () => {
 
                   {/* Business CTA */}
                   <Link to="/signup/business" className="group w-full">
-                    <div className="bg-gradient-to-br from-provider/10 to-provider/5 border-2 border-provider/20 rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 hover:border-provider/40 transition-all duration-300 hover:shadow-lg hover:shadow-provider/10 hover:-translate-y-1 h-full flex flex-col w-full">
-                      <div className="flex items-center justify-between mb-2 sm:mb-3 lg:mb-4">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-provider to-provider-glow rounded-lg lg:rounded-xl flex items-center justify-center">
-                          <Building className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
+                    <div className="bg-gradient-to-br from-provider/10 to-provider/5 border-2 border-provider/20 rounded-lg lg:rounded-2xl p-2.5 sm:p-4 lg:p-6 hover:border-provider/40 transition-all duration-300 hover:shadow-lg hover:shadow-provider/10 hover:-translate-y-1 h-full flex flex-col w-full min-w-0">
+                      <div className="flex items-center justify-between mb-2 lg:mb-4">
+                        <div className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-provider to-provider-glow rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Building className="h-3.5 w-3.5 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                         </div>
-                        <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-provider group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-provider group-hover:translate-x-1 transition-transform flex-shrink-0" />
                       </div>
-                      <h3 className="font-bold text-foreground mb-2" style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)' }}>Sign Up as Business</h3>
-                      <p className="text-muted-foreground mb-3 lg:mb-4 flex-grow" style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)' }}>Fill empty slots and grow your business with instant bookings</p>
-                      <Button variant="provider-hero" size="lg" className="w-full mt-auto" style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1rem)' }}>
+                      <h3 className="font-bold text-foreground mb-1.5" style={{ fontSize: 'clamp(0.9rem, 2.8vw, 1.25rem)' }}>Sign Up as Business</h3>
+                      <p className="text-muted-foreground mb-2.5 lg:mb-4 flex-grow leading-snug" style={{ fontSize: 'clamp(0.7rem, 2.2vw, 0.875rem)' }}>Fill empty slots and grow your business with instant bookings</p>
+                      <Button variant="provider-hero" className="w-full mt-auto py-2" style={{ fontSize: 'clamp(0.8rem, 2.3vw, 1rem)' }}>
                         Join Now
                       </Button>
                     </div>
