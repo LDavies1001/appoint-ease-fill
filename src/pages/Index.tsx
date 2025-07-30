@@ -8,105 +8,107 @@ import heroImage from '@/assets/hero-lash-extension.jpg';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full max-w-full">
       {/* Hero Section */}
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-12 xl:gap-16 items-center py-6 sm:py-8 lg:py-16 xl:py-20 min-h-[85vh] w-full">
-          {/* Left Side - Content */}
-          <div className="space-y-6 lg:space-y-8 xl:space-y-10 animate-fade-in w-full">
-            {/* Enhanced Badge with Role Styling */}
-            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/10 to-provider/10 border border-primary/20 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 backdrop-blur-sm max-w-full">
-              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
-              <span className="text-xs sm:text-sm font-medium bg-gradient-to-r from-primary to-provider bg-clip-text text-transparent truncate">Last-minute beauty appointments made easy</span>
-            </div>
-
-            {/* Main Headline */}
-            <div className="space-y-4 lg:space-y-6">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight break-words">
-                Find & fill beauty appointments with <span className="text-primary">OpenSlot</span>
-              </h1>
-              
-              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-full lg:max-w-lg">
-                Connect instantly with local beauty providers. Book last-minute slots or fill your empty calendar—all in one platform.
-              </p>
-            </div>
-
-            {/* Enhanced Dual CTA Section */}
-            <div className="space-y-4 lg:space-y-6 w-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                {/* Customer CTA */}
-                <Link to="/signup/customer" className="group w-full">
-                  <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-xl lg:rounded-2xl p-4 lg:p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 h-full flex flex-col w-full">
-                    <div className="flex items-center justify-between mb-3 lg:mb-4">
-                      <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-primary to-primary-glow rounded-lg lg:rounded-xl flex items-center justify-center">
-                        <Heart className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-                      </div>
-                      <ArrowRight className="h-4 w-4 lg:h-5 lg:w-5 text-primary group-hover:translate-x-1 transition-transform" />
-                    </div>
-                    <h3 className="text-lg lg:text-xl font-bold text-foreground mb-2">Join as a Customer</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-3 lg:mb-4 flex-grow">Book last-minute beauty appointments with trusted local providers</p>
-                    <Button variant="hero" size="lg" className="w-full mt-auto text-sm lg:text-base">
-                      Get Started
-                    </Button>
-                  </div>
-                </Link>
-
-                {/* Business CTA */}
-                <Link to="/signup/business" className="group w-full">
-                  <div className="bg-gradient-to-br from-provider/10 to-provider/5 border-2 border-provider/20 rounded-xl lg:rounded-2xl p-4 lg:p-6 hover:border-provider/40 transition-all duration-300 hover:shadow-lg hover:shadow-provider/10 hover:-translate-y-1 h-full flex flex-col w-full">
-                    <div className="flex items-center justify-between mb-3 lg:mb-4">
-                      <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-provider to-provider-glow rounded-lg lg:rounded-xl flex items-center justify-center">
-                        <Building className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-                      </div>
-                      <ArrowRight className="h-4 w-4 lg:h-5 lg:w-5 text-provider group-hover:translate-x-1 transition-transform" />
-                    </div>
-                    <h3 className="text-lg lg:text-xl font-bold text-foreground mb-2">Sign Up as Business</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-3 lg:mb-4 flex-grow">Fill empty slots and grow your business with instant bookings</p>
-                    <Button variant="provider-hero" size="lg" className="w-full mt-auto text-sm lg:text-base">
-                      Join Now
-                    </Button>
-                  </div>
-                </Link>
+      <div className="w-full px-1 sm:px-2 md:px-4 lg:px-6 xl:px-8 max-w-full overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:gap-12 xl:gap-16 items-center py-4 sm:py-6 md:py-8 lg:py-16 xl:py-20 min-h-[85vh] w-full max-w-full">
+            {/* Left Side - Content */}
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8 xl:space-y-10 animate-fade-in w-full max-w-full px-2 sm:px-0">
+              {/* Enhanced Badge with Role Styling */}
+              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/10 to-provider/10 border border-primary/20 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 backdrop-blur-sm max-w-full">
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium bg-gradient-to-r from-primary to-provider bg-clip-text text-transparent truncate">Last-minute beauty appointments made easy</span>
               </div>
 
-              {/* Both Section */}
-              <div className="bg-gradient-to-r from-muted/40 to-muted/20 border border-border/30 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
-                <div className="flex items-start space-x-3 lg:space-x-4">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-tertiary to-background rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0 border border-border/50">
-                    <User className="h-4 w-4 lg:h-5 lg:w-5 text-foreground" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-semibold text-foreground mb-1 lg:mb-2 text-sm lg:text-base">Dual Benefits</h3>
-                    <p className="text-muted-foreground text-xs lg:text-sm">
-                      Business owners automatically get customer access—book appointments while managing your own slots.
-                    </p>
+              {/* Main Headline */}
+              <div className="space-y-4 lg:space-y-6">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight break-words">
+                  Find & fill beauty appointments with <span className="text-primary">OpenSlot</span>
+                </h1>
+                
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-full lg:max-w-lg">
+                  Connect instantly with local beauty providers. Book last-minute slots or fill your empty calendar—all in one platform.
+                </p>
+              </div>
+
+              {/* Enhanced Dual CTA Section */}
+              <div className="space-y-4 lg:space-y-6 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {/* Customer CTA */}
+                  <Link to="/signup/customer" className="group w-full">
+                    <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-xl lg:rounded-2xl p-4 lg:p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 h-full flex flex-col w-full">
+                      <div className="flex items-center justify-between mb-3 lg:mb-4">
+                        <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-primary to-primary-glow rounded-lg lg:rounded-xl flex items-center justify-center">
+                          <Heart className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+                        </div>
+                        <ArrowRight className="h-4 w-4 lg:h-5 lg:w-5 text-primary group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <h3 className="text-lg lg:text-xl font-bold text-foreground mb-2">Join as a Customer</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-3 lg:mb-4 flex-grow">Book last-minute beauty appointments with trusted local providers</p>
+                      <Button variant="hero" size="lg" className="w-full mt-auto text-sm lg:text-base">
+                        Get Started
+                      </Button>
+                    </div>
+                  </Link>
+
+                  {/* Business CTA */}
+                  <Link to="/signup/business" className="group w-full">
+                    <div className="bg-gradient-to-br from-provider/10 to-provider/5 border-2 border-provider/20 rounded-xl lg:rounded-2xl p-4 lg:p-6 hover:border-provider/40 transition-all duration-300 hover:shadow-lg hover:shadow-provider/10 hover:-translate-y-1 h-full flex flex-col w-full">
+                      <div className="flex items-center justify-between mb-3 lg:mb-4">
+                        <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-provider to-provider-glow rounded-lg lg:rounded-xl flex items-center justify-center">
+                          <Building className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+                        </div>
+                        <ArrowRight className="h-4 w-4 lg:h-5 lg:w-5 text-provider group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <h3 className="text-lg lg:text-xl font-bold text-foreground mb-2">Sign Up as Business</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-3 lg:mb-4 flex-grow">Fill empty slots and grow your business with instant bookings</p>
+                      <Button variant="provider-hero" size="lg" className="w-full mt-auto text-sm lg:text-base">
+                        Join Now
+                      </Button>
+                    </div>
+                  </Link>
+                </div>
+
+                {/* Both Section */}
+                <div className="bg-gradient-to-r from-muted/40 to-muted/20 border border-border/30 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
+                  <div className="flex items-start space-x-3 lg:space-x-4">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-tertiary to-background rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0 border border-border/50">
+                      <User className="h-4 w-4 lg:h-5 lg:w-5 text-foreground" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-foreground mb-1 lg:mb-2 text-sm lg:text-base">Dual Benefits</h3>
+                      <p className="text-muted-foreground text-xs lg:text-sm">
+                        Business owners automatically get customer access—book appointments while managing your own slots.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Side - Hero Image */}
-          <div className="lg:order-last order-first animate-scale-in w-full">
-            <div className="relative max-w-full">
-              <img 
-                src={heroImage} 
-                alt="Professional beauty appointment" 
-                className="w-full h-auto rounded-2xl lg:rounded-3xl shadow-elegant max-w-full"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl lg:rounded-3xl"></div>
-              
-              {/* Floating testimonial */}
-              <div className="absolute bottom-3 left-3 right-3 lg:bottom-6 lg:left-6 lg:right-6 bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 border border-white/20 shadow-lg">
-                <div className="flex items-center space-x-2 lg:space-x-3">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-3 w-3 lg:h-4 lg:w-4 text-yellow-400 fill-current" />
-                    ))}
+            {/* Right Side - Hero Image */}
+            <div className="lg:order-last order-first animate-scale-in w-full max-w-full px-2 sm:px-0">
+              <div className="relative max-w-full">
+                <img 
+                  src={heroImage} 
+                  alt="Professional beauty appointment" 
+                  className="w-full h-auto rounded-2xl lg:rounded-3xl shadow-elegant max-w-full"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl lg:rounded-3xl"></div>
+                
+                {/* Floating testimonial */}
+                <div className="absolute bottom-3 left-3 right-3 lg:bottom-6 lg:left-6 lg:right-6 bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 border border-white/20 shadow-lg">
+                  <div className="flex items-center space-x-2 lg:space-x-3">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-3 w-3 lg:h-4 lg:w-4 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <span className="text-xs lg:text-sm font-medium text-gray-800 truncate">4.9/5 from 1000+ bookings</span>
                   </div>
-                  <span className="text-xs lg:text-sm font-medium text-gray-800 truncate">4.9/5 from 1000+ bookings</span>
+                  <p className="text-xs lg:text-sm text-gray-600 mt-1 lg:mt-2 line-clamp-2">"Found the perfect last-minute slot for my nails!"</p>
                 </div>
-                <p className="text-xs lg:text-sm text-gray-600 mt-1 lg:mt-2 line-clamp-2">"Found the perfect last-minute slot for my nails!"</p>
               </div>
             </div>
           </div>
