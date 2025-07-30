@@ -23,11 +23,11 @@ const Index = () => {
 
               {/* Main Headline */}
               <div className="space-y-4 lg:space-y-6">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight break-words">
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight break-words">
                   Find & fill beauty appointments with <span className="text-primary">OpenSlot</span>
                 </h1>
                 
-                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-full lg:max-w-lg">
+                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed max-w-full lg:max-w-lg">
                   Connect instantly with local beauty providers. Book last-minute slots or fill your empty calendar—all in one platform.
                 </p>
               </div>
