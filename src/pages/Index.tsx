@@ -16,18 +16,18 @@ const Index = () => {
             {/* Left Side - Content */}
             <div className="space-y-4 sm:space-y-6 lg:space-y-8 xl:space-y-10 animate-fade-in w-full max-w-full px-2 sm:px-0">
               {/* Enhanced Badge with Role Styling */}
-              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/10 to-provider/10 border border-primary/20 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 backdrop-blur-sm max-w-full">
+              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/10 to-provider/10 border border-primary/20 rounded-full px-2 py-1.5 sm:px-4 sm:py-2 backdrop-blur-sm max-w-full">
                 <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-medium bg-gradient-to-r from-primary to-provider bg-clip-text text-transparent truncate">Last-minute beauty appointments made easy</span>
+                <span className="font-medium bg-gradient-to-r from-primary to-provider bg-clip-text text-transparent" style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)' }}>Last-minute beauty appointments made easy</span>
               </div>
 
               {/* Main Headline */}
               <div className="space-y-4 lg:space-y-6">
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight break-words">
+                <h1 className="font-bold text-foreground leading-tight" style={{ fontSize: 'clamp(1.25rem, 5vw, 3rem)' }}>
                   Find & fill beauty appointments with <span className="text-primary">OpenSlot</span>
                 </h1>
                 
-                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed max-w-full lg:max-w-lg">
+                <p className="text-muted-foreground leading-relaxed max-w-full lg:max-w-lg" style={{ fontSize: 'clamp(0.875rem, 3vw, 1.125rem)' }}>
                   Connect instantly with local beauty providers. Book last-minute slots or fill your empty calendar—all in one platform.
                 </p>
               </div>
