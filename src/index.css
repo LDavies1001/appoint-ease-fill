@@ -2,6 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global Mobile Responsiveness */
+html, body {
+  overflow-x: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Prevent horizontal scroll on all elements */
+img, video, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure containers don't overflow */
+.container, div, section, main, aside, nav, header, footer {
+  max-width: 100%;
+}
+
+/* Mobile-first responsive utilities */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Stack flex items vertically on mobile */
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  /* Ensure text doesn't cause overflow */
+  h1, h2, h3, h4, h5, h6, p, span, div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  /* Ensure inputs and buttons are mobile-friendly */
+  input, textarea, select, button {
+    max-width: 100%;
+    min-height: 44px; /* Touch-friendly minimum */
+  }
+  
+  /* Ensure tables are responsive */
+  table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Ensure grid layouts are mobile-friendly */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

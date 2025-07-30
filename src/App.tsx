@@ -33,9 +33,9 @@ const App = () => (
       <AuthProvider>
         <BookingNotificationHelper>
           <BrowserRouter>
-            <div className="min-h-screen bg-background">
+            <div className="min-h-screen bg-background overflow-x-hidden w-full">
               <Header />
-              <main>
+              <main className="overflow-x-hidden w-full">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
