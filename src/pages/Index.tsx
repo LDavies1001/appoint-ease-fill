@@ -18,7 +18,7 @@ const Index = () => {
               {/* Main Headline */}
               <div className="space-y-4 lg:space-y-6">
                 <h1 className="font-bold text-foreground leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 3.5rem)' }}>
-                  Fill Your Empty Appointments — <span className="text-sage-600">Automatically</span>.
+                  Fill Your Empty Appointments — <span className="text-sage-300">Automatically</span>.
                 </h1>
                 
                 <p className="text-muted-foreground leading-relaxed max-w-full lg:max-w-2xl" style={{ fontSize: 'clamp(1rem, 3.5vw, 1.25rem)' }}>
@@ -53,28 +53,28 @@ const Index = () => {
                 {/* Trust Badges */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
                   <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <MapPin className="h-4 w-4 text-sage-600" />
+                    <MapPin className="h-4 w-4 text-sage-300" />
                     <span>Made in the UK</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Lock className="h-4 w-4 text-sage-600" />
+                    <Lock className="h-4 w-4 text-sage-300" />
                     <span>Secure booking platform</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Award className="h-4 w-4 text-sage-600" />
+                    <Award className="h-4 w-4 text-sage-300" />
                     <span>No app needed</span>
                   </div>
                 </div>
 
                 {/* Founder Quote */}
-                <div className="bg-gradient-to-r from-sage-50 to-rose-50 border border-sage-200/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
+                <div className="bg-gradient-to-r from-sage-100 via-sage-50 to-rose-100 border border-sage-200/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
                   <div className="text-center space-y-3">
                     <blockquote className="text-foreground font-medium leading-relaxed italic" style={{ fontSize: 'clamp(0.875rem, 2.8vw, 1.125rem)' }}>
                       "Built for small business owners who deserve better than DMs and no-shows."
                     </blockquote>
                     <div className="flex items-center justify-center gap-2">
-                      <div className="w-8 h-8 bg-sage-600 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">L</span>
+                      <div className="w-8 h-8 bg-gradient-to-br from-sage-200 to-sage-300 rounded-full flex items-center justify-center">
+                        <span className="text-sage-800 font-bold text-sm">L</span>
                       </div>
                       <span className="text-sage-700 font-medium text-sm">— Laura, Founder of OpenSlot</span>
                     </div>
