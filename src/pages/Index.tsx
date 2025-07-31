@@ -94,33 +94,34 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Trust Badges */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <MapPin className="h-4 w-4 text-sage-200" />
-                  <span>Made in the UK</span>
+                {/* Trust Badges */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <MapPin className="h-4 w-4 text-sage-200" />
+                    <span>Made in the UK</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Lock className="h-4 w-4 text-sage-200" />
+                    <span>Secure booking platform</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Award className="h-4 w-4 text-sage-200" />
+                    <span>Instant bookings</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <Lock className="h-4 w-4 text-sage-200" />
-                  <span>Secure booking platform</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <Award className="h-4 w-4 text-sage-200" />
-                  <span>Instant bookings</span>
-                </div>
-              </div>
 
-              {/* Founder Quote */}
-              <div className="bg-gradient-to-r from-sage-50 via-background to-rose-50 border border-sage-100/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
-                <div className="text-center space-y-3">
-                  <blockquote className="text-foreground font-medium leading-relaxed italic" style={{ fontSize: 'clamp(0.875rem, 2.8vw, 1.125rem)' }}>
-                    "Built for small business owners who deserve better than DMs and no-shows."
-                  </blockquote>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-sage-100 to-sage-200 rounded-full flex items-center justify-center">
-                      <span className="text-sage-700 font-bold text-sm">L</span>
+                {/* Founder Quote */}
+                <div className="bg-gradient-to-r from-sage-50 via-background to-rose-50 border border-sage-100/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
+                  <div className="text-center space-y-3">
+                    <blockquote className="text-foreground font-medium leading-relaxed italic" style={{ fontSize: 'clamp(0.875rem, 2.8vw, 1.125rem)' }}>
+                      "Built for small business owners who deserve better than DMs and no-shows."
+                    </blockquote>
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-sage-100 to-sage-200 rounded-full flex items-center justify-center">
+                        <span className="text-sage-700 font-bold text-sm">L</span>
+                      </div>
+                      <span className="text-sage-600 font-medium text-sm">— Laura, Founder of OpenSlot</span>
                     </div>
-                    <span className="text-sage-600 font-medium text-sm">— Laura, Founder of OpenSlot</span>
                   </div>
                 </div>
               </div>
