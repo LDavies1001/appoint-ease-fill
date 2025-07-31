@@ -31,7 +31,7 @@ const Index = () => {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
                   {/* Business CTA */}
                   <Link to="/signup/business" className="group flex-1">
-                    <Button className="w-full h-auto p-4 lg:p-6 bg-sage-600 hover:bg-sage-700 text-white border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-600/25 hover:-translate-y-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-sage-300 hover:bg-sage-400 text-sage-800 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-300/25 hover:-translate-y-1">
                       <div className="flex flex-col items-center text-center space-y-2">
                         <Building className="h-6 w-6 lg:h-8 lg:w-8" />
                         <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
