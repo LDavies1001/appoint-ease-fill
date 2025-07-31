@@ -110,7 +110,7 @@ const Index = () => {
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-sm">
                     <Award className="h-4 w-4 text-sage-200" />
-                    <span>No app needed</span>
+                    <span>Instant bookings</span>
                   </div>
                 </div>
 
