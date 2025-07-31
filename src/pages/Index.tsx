@@ -31,7 +31,7 @@ const Index = () => {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
                   {/* Business CTA */}
                   <Link to="/signup/business" className="group flex-1">
-                    <Button className="w-full h-auto p-4 lg:p-6 bg-sage-300 hover:bg-sage-400 text-sage-800 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-300/25 hover:-translate-y-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-sage-200 via-sage-300 to-sage-400 hover:from-sage-300 hover:via-sage-400 hover:to-sage-500 text-sage-800 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-300/25 hover:-translate-y-1">
                       <div className="flex flex-col items-center text-center space-y-2">
                         <Building className="h-6 w-6 lg:h-8 lg:w-8" />
                         <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
@@ -41,7 +41,7 @@ const Index = () => {
 
                   {/* Customer CTA */}
                   <Link to="/signup/customer" className="group flex-1">
-                    <Button className="w-full h-auto p-4 lg:p-6 bg-rose-300 hover:bg-rose-400 text-rose-900 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-300/25 hover:-translate-y-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-rose-200 via-rose-300 to-rose-400 hover:from-rose-300 hover:via-rose-400 hover:to-rose-500 text-rose-800 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-300/25 hover:-translate-y-1">
                       <div className="flex flex-col items-center text-center space-y-2">
                         <Heart className="h-6 w-6 lg:h-8 lg:w-8" />
                         <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
