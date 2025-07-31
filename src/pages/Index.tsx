@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Star, Shield, User, Building, ArrowRight, Heart, Sparkles, CheckCircle, Search, MapPin, Lock, Award } from 'lucide-react';
 
-import heroImage from '@/assets/hero-lash-extension.jpg';
+import heroImage from '@/assets/hero-booking-neutral.jpg';
 
 const Index = () => {
   return (
@@ -18,7 +18,7 @@ const Index = () => {
               {/* Main Headline */}
               <div className="space-y-4 lg:space-y-6">
                 <h1 className="font-bold text-foreground leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 3.5rem)' }}>
-                  Fill Your Empty Appointments — <span className="text-sage-300">Automatically</span>.
+                  Fill Your Empty Appointments — <span className="text-sage-200">Automatically</span>.
                 </h1>
                 
                 <p className="text-muted-foreground leading-relaxed max-w-full lg:max-w-2xl" style={{ fontSize: 'clamp(1rem, 3.5vw, 1.25rem)' }}>
@@ -31,7 +31,7 @@ const Index = () => {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
                   {/* Business CTA */}
                   <Link to="/signup/business" className="group flex-1">
-                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-sage-100 via-sage-200 to-sage-300 hover:from-sage-200 hover:via-sage-300 hover:to-sage-400 text-sage-800 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-200/25 hover:-translate-y-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-sage-50 via-sage-100 to-sage-200 hover:from-sage-100 hover:via-sage-200 hover:to-sage-300 text-sage-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-100/25 hover:-translate-y-1">
                       <div className="flex flex-col items-center text-center space-y-2">
                         <Building className="h-6 w-6 lg:h-8 lg:w-8" />
                         <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
@@ -41,7 +41,7 @@ const Index = () => {
 
                   {/* Customer CTA */}
                   <Link to="/signup/customer" className="group flex-1">
-                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-rose-100 via-rose-200 to-rose-300 hover:from-rose-200 hover:via-rose-300 hover:to-rose-400 text-rose-800 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-200/25 hover:-translate-y-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-rose-50 via-rose-100 to-rose-200 hover:from-rose-100 hover:via-rose-200 hover:to-rose-300 text-rose-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-100/25 hover:-translate-y-1">
                       <div className="flex flex-col items-center text-center space-y-2">
                         <Heart className="h-6 w-6 lg:h-8 lg:w-8" />
                         <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
@@ -53,30 +53,30 @@ const Index = () => {
                 {/* Trust Badges */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
                   <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <MapPin className="h-4 w-4 text-sage-300" />
+                    <MapPin className="h-4 w-4 text-sage-200" />
                     <span>Made in the UK</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Lock className="h-4 w-4 text-sage-300" />
+                    <Lock className="h-4 w-4 text-sage-200" />
                     <span>Secure booking platform</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Award className="h-4 w-4 text-sage-300" />
+                    <Award className="h-4 w-4 text-sage-200" />
                     <span>No app needed</span>
                   </div>
                 </div>
 
                 {/* Founder Quote */}
-                <div className="bg-gradient-to-r from-sage-100 via-sage-50 to-rose-100 border border-sage-200/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
+                <div className="bg-gradient-to-r from-sage-50 via-background to-rose-50 border border-sage-100/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
                   <div className="text-center space-y-3">
                     <blockquote className="text-foreground font-medium leading-relaxed italic" style={{ fontSize: 'clamp(0.875rem, 2.8vw, 1.125rem)' }}>
                       "Built for small business owners who deserve better than DMs and no-shows."
                     </blockquote>
                     <div className="flex items-center justify-center gap-2">
-                      <div className="w-8 h-8 bg-gradient-to-br from-sage-200 to-sage-300 rounded-full flex items-center justify-center">
-                        <span className="text-sage-800 font-bold text-sm">L</span>
+                      <div className="w-8 h-8 bg-gradient-to-br from-sage-100 to-sage-200 rounded-full flex items-center justify-center">
+                        <span className="text-sage-700 font-bold text-sm">L</span>
                       </div>
-                      <span className="text-sage-700 font-medium text-sm">— Laura, Founder of OpenSlot</span>
+                      <span className="text-sage-600 font-medium text-sm">— Laura, Founder of OpenSlot</span>
                     </div>
                   </div>
                 </div>
@@ -123,27 +123,27 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
             {/* Instant Availability */}
-            <div className="bg-white/60 backdrop-blur-sm border border-rose-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-100/50 transition-all duration-300">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-200 to-rose-300 rounded-xl flex items-center justify-center mx-auto">
-                <Calendar className="h-6 w-6 lg:h-8 lg:w-8 text-rose-800" />
+            <div className="bg-white/60 backdrop-blur-sm border border-rose-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-50/50 transition-all duration-300">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl flex items-center justify-center mx-auto">
+                <Calendar className="h-6 w-6 lg:h-8 lg:w-8 text-rose-700" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-foreground">Real-Time Availability</h3>
               <p className="text-sm lg:text-base text-muted-foreground">See exactly what's available right now - no waiting for callbacks or confirmations</p>
             </div>
 
             {/* Discover Local */}
-            <div className="bg-white/60 backdrop-blur-sm border border-rose-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-100/50 transition-all duration-300">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-200 to-rose-300 rounded-xl flex items-center justify-center mx-auto">
-                <MapPin className="h-6 w-6 lg:h-8 lg:w-8 text-rose-800" />
+            <div className="bg-white/60 backdrop-blur-sm border border-rose-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-50/50 transition-all duration-300">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl flex items-center justify-center mx-auto">
+                <MapPin className="h-6 w-6 lg:h-8 lg:w-8 text-rose-700" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-foreground">Discover Local Gems</h3>
               <p className="text-sm lg:text-base text-muted-foreground">Find amazing local providers you might never have discovered otherwise</p>
             </div>
 
             {/* Better Prices */}
-            <div className="bg-white/60 backdrop-blur-sm border border-rose-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-100/50 transition-all duration-300 md:col-span-2 lg:col-span-1">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-200 to-rose-300 rounded-xl flex items-center justify-center mx-auto">
-                <Star className="h-6 w-6 lg:h-8 lg:w-8 text-rose-800" />
+            <div className="bg-white/60 backdrop-blur-sm border border-rose-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-50/50 transition-all duration-300 md:col-span-2 lg:col-span-1">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl flex items-center justify-center mx-auto">
+                <Star className="h-6 w-6 lg:h-8 lg:w-8 text-rose-700" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-foreground">Great Last-Minute Deals</h3>
               <p className="text-sm lg:text-base text-muted-foreground">Providers often offer special rates for last-minute bookings - win-win!</p>
@@ -151,20 +151,20 @@ const Index = () => {
           </div>
 
           {/* Customer Testimonial */}
-          <div className="bg-gradient-to-r from-rose-100 to-rose-200 border border-rose-300/50 rounded-xl lg:rounded-2xl p-6 lg:p-8 text-center">
+          <div className="bg-gradient-to-r from-rose-50 to-rose-100 border border-rose-200/50 rounded-xl lg:rounded-2xl p-6 lg:p-8 text-center">
             <div className="flex justify-center mb-4">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-5 w-5 text-rose-600 fill-current" />
+                <Star key={i} className="h-5 w-5 text-rose-500 fill-current" />
               ))}
             </div>
-            <blockquote className="text-lg lg:text-xl font-medium text-rose-900 italic mb-4">
+            <blockquote className="text-lg lg:text-xl font-medium text-rose-800 italic mb-4">
               "I got a last-minute nail appointment for tonight's date - saved my evening!"
             </blockquote>
             <div className="flex items-center justify-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-rose-300 to-rose-400 rounded-full flex items-center justify-center">
-                <span className="text-rose-900 font-bold">S</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-rose-200 to-rose-300 rounded-full flex items-center justify-center">
+                <span className="text-rose-800 font-bold">S</span>
               </div>
-              <span className="text-rose-800 font-medium">— Sarah, OpenSlot Customer</span>
+              <span className="text-rose-700 font-medium">— Sarah, OpenSlot Customer</span>
             </div>
           </div>
         </div>
@@ -182,25 +182,25 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Auto-Fill */}
-            <div className="bg-white/60 backdrop-blur-sm border border-sage-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-100/50 transition-all duration-300">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-200 to-sage-300 rounded-xl flex items-center justify-center mx-auto">
-                <Search className="h-6 w-6 lg:h-8 lg:w-8 text-sage-800" />
+            <div className="bg-white/60 backdrop-blur-sm border border-sage-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-50/50 transition-all duration-300">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-100 to-sage-200 rounded-xl flex items-center justify-center mx-auto">
+                <Search className="h-6 w-6 lg:h-8 lg:w-8 text-sage-700" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-foreground">Auto-Fill Empty Slots</h3>
               <p className="text-sm lg:text-base text-muted-foreground">Customers find and book your availability automatically - no more manual work</p>
             </div>
 
-            <div className="bg-white/60 backdrop-blur-sm border border-sage-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-100/50 transition-all duration-300">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-200 to-sage-300 rounded-xl flex items-center justify-center mx-auto">
-                <Building className="h-6 w-6 lg:h-8 lg:w-8 text-sage-800" />
+            <div className="bg-white/60 backdrop-blur-sm border border-sage-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-50/50 transition-all duration-300">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-100 to-sage-200 rounded-xl flex items-center justify-center mx-auto">
+                <Building className="h-6 w-6 lg:h-8 lg:w-8 text-sage-700" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-foreground">Grow Your Business</h3>
               <p className="text-sm lg:text-base text-muted-foreground">Reach new customers who are actively looking for services like yours</p>
             </div>
 
-            <div className="bg-white/60 backdrop-blur-sm border border-sage-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-100/50 transition-all duration-300 md:col-span-2 lg:col-span-1">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-200 to-sage-300 rounded-xl flex items-center justify-center mx-auto">
-                <CheckCircle className="h-6 w-6 lg:h-8 lg:w-8 text-sage-800" />
+            <div className="bg-white/60 backdrop-blur-sm border border-sage-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-50/50 transition-all duration-300 md:col-span-2 lg:col-span-1">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-100 to-sage-200 rounded-xl flex items-center justify-center mx-auto">
+                <CheckCircle className="h-6 w-6 lg:h-8 lg:w-8 text-sage-700" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-foreground">No More No-Shows</h3>
               <p className="text-sm lg:text-base text-muted-foreground">Instant bookings mean committed customers - reduce cancellations and no-shows</p>
