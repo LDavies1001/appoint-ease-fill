@@ -35,7 +35,7 @@ const Index = () => {
                     <Heart className="h-6 w-6 text-rose-600" />
                     <h3 className="font-bold text-lg text-foreground">For Customers</h3>
                   </div>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
+                  <ul className="space-y-2 text-sm text-muted-foreground mb-4">
                     <li className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
                       <span>Book instantly, no waiting</span>
@@ -49,6 +49,16 @@ const Index = () => {
                       <span>Great last-minute deals</span>
                     </li>
                   </ul>
+                  
+                  {/* Customer CTA */}
+                  <Link to="/signup/customer" className="group block">
+                    <Button className="w-full h-auto p-3 lg:p-4 bg-gradient-to-br from-rose-50 via-rose-100 to-rose-200 hover:from-rose-100 hover:via-rose-200 hover:to-rose-300 text-rose-700 border-0 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-100/25 hover:-translate-y-1">
+                      <div className="flex items-center justify-center gap-2">
+                        <Heart className="h-5 w-5" />
+                        <span className="font-bold text-base">I'm a Customer</span>
+                      </div>
+                    </Button>
+                  </Link>
                 </div>
 
                 {/* Business Value */}
@@ -57,7 +67,7 @@ const Index = () => {
                     <Building className="h-6 w-6 text-sage-600" />
                     <h3 className="font-bold text-lg text-foreground">For Businesses</h3>
                   </div>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
+                  <ul className="space-y-2 text-sm text-muted-foreground mb-4">
                     <li className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-sage-500 flex-shrink-0" />
                       <span>Fill empty slots automatically</span>
@@ -71,32 +81,18 @@ const Index = () => {
                       <span>Reduce no-shows</span>
                     </li>
                   </ul>
+                  
+                  {/* Business CTA */}
+                  <Link to="/signup/business" className="group block">
+                    <Button className="w-full h-auto p-3 lg:p-4 bg-gradient-to-br from-sage-50 via-sage-100 to-sage-200 hover:from-sage-100 hover:via-sage-200 hover:to-sage-300 text-sage-700 border-0 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-100/25 hover:-translate-y-1">
+                      <div className="flex items-center justify-center gap-2">
+                        <Building className="h-5 w-5" />
+                        <span className="font-bold text-base">I'm a Business</span>
+                      </div>
+                    </Button>
+                  </Link>
                 </div>
               </div>
-
-              {/* Dual CTA Section */}
-              <div className="space-y-4 lg:space-y-6 w-full">
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
-                  {/* Business CTA */}
-                  <Link to="/signup/business" className="group flex-1">
-                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-sage-50 via-sage-100 to-sage-200 hover:from-sage-100 hover:via-sage-200 hover:to-sage-300 text-sage-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-100/25 hover:-translate-y-1">
-                      <div className="flex flex-col items-center text-center space-y-2">
-                        <Building className="h-6 w-6 lg:h-8 lg:w-8" />
-                        <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
-                      </div>
-                    </Button>
-                  </Link>
-
-                  {/* Customer CTA */}
-                  <Link to="/signup/customer" className="group flex-1">
-                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-rose-50 via-rose-100 to-rose-200 hover:from-rose-100 hover:via-rose-200 hover:to-rose-300 text-rose-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-100/25 hover:-translate-y-1">
-                      <div className="flex flex-col items-center text-center space-y-2">
-                        <Heart className="h-6 w-6 lg:h-8 lg:w-8" />
-                        <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
-                      </div>
-                    </Button>
-                  </Link>
-                </div>
 
                 {/* Trust Badges */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
