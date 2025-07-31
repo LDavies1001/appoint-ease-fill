@@ -51,6 +51,30 @@ export default {
 					secondary: 'hsl(var(--provider-secondary))',
 					'secondary-foreground': 'hsl(var(--provider-secondary-foreground))'
 				},
+				sage: {
+					50: 'hsl(var(--sage-50))',
+					100: 'hsl(var(--sage-100))',
+					200: 'hsl(var(--sage-200))',
+					300: 'hsl(var(--sage-300))',
+					400: 'hsl(var(--sage-400))',
+					500: 'hsl(var(--sage-500))',
+					600: 'hsl(var(--sage-600))',
+					700: 'hsl(var(--sage-700))',
+					800: 'hsl(var(--sage-800))',
+					900: 'hsl(var(--sage-900))'
+				},
+				rose: {
+					50: 'hsl(var(--rose-50))',
+					100: 'hsl(var(--rose-100))',
+					200: 'hsl(var(--rose-200))',
+					300: 'hsl(var(--rose-300))',
+					400: 'hsl(var(--rose-400))',
+					500: 'hsl(var(--rose-500))',
+					600: 'hsl(var(--rose-600))',
+					700: 'hsl(var(--rose-700))',
+					800: 'hsl(var(--rose-800))',
+					900: 'hsl(var(--rose-900))'
+				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'

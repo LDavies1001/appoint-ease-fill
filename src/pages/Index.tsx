@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
-import { Calendar, Star, Shield, User, Building, ArrowRight, Heart, Sparkles, CheckCircle, Search } from 'lucide-react';
+import { Calendar, Star, Shield, User, Building, ArrowRight, Heart, Sparkles, CheckCircle, Search, MapPin, Lock, Award } from 'lucide-react';
 
 import heroImage from '@/assets/hero-lash-extension.jpg';
 
@@ -14,73 +14,69 @@ const Index = () => {
         <div className="max-w-7xl mx-auto w-full">
           <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 xl:gap-16 items-center py-4 sm:py-8 lg:py-16 xl:py-20 min-h-[85vh] w-full">
             {/* Left Side - Content */}
-            <div className="space-y-3 sm:space-y-6 lg:space-y-8 xl:space-y-10 animate-fade-in w-full px-1 sm:px-0">
-              {/* Enhanced Badge with Role Styling */}
-              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/10 to-provider/10 border border-primary/20 rounded-full px-2 py-1.5 sm:px-4 sm:py-2 backdrop-blur-sm max-w-full">
-                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
-                <span className="font-medium bg-gradient-to-r from-primary to-provider bg-clip-text text-transparent" style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)' }}>Last-minute beauty appointments made easy</span>
-              </div>
-
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8 animate-fade-in w-full px-1 sm:px-0">
               {/* Main Headline */}
               <div className="space-y-4 lg:space-y-6">
-                <h1 className="font-bold text-foreground leading-tight" style={{ fontSize: 'clamp(1.25rem, 5vw, 3rem)' }}>
-                  Find & fill beauty appointments with <span className="text-primary">OpenSlot</span>
+                <h1 className="font-bold text-foreground leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 3.5rem)' }}>
+                  Fill Your Empty Appointments — <span className="text-sage-600">Automatically</span>.
                 </h1>
                 
-                <p className="text-muted-foreground leading-relaxed max-w-full lg:max-w-lg" style={{ fontSize: 'clamp(0.875rem, 3vw, 1.125rem)' }}>
-                  Connect instantly with local beauty providers. Book last-minute slots or fill your empty calendar—all in one platform.
+                <p className="text-muted-foreground leading-relaxed max-w-full lg:max-w-2xl" style={{ fontSize: 'clamp(1rem, 3.5vw, 1.25rem)' }}>
+                  OpenSlot connects your last-minute availability with real, local customers — no more chasing bookings through DMs.
                 </p>
               </div>
 
-              {/* Enhanced Dual CTA Section */}
-              <div className="space-y-3 lg:space-y-6 w-full">
-                <div className="flex flex-col gap-3 w-full">
-                  {/* Customer CTA */}
-                  <Link to="/signup/customer" className="group w-full">
-                    <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 rounded-lg lg:rounded-2xl p-2.5 sm:p-4 lg:p-6 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 h-full flex flex-col w-full min-w-0">
-                      <div className="flex items-center justify-between mb-2 lg:mb-4">
-                        <div className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-primary to-primary-glow rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0">
-                          <Heart className="h-3.5 w-3.5 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
-                        </div>
-                        <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-primary group-hover:translate-x-1 transition-transform flex-shrink-0" />
+              {/* Dual CTA Section */}
+              <div className="space-y-4 lg:space-y-6 w-full">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
+                  {/* Business CTA */}
+                  <Link to="/signup/business" className="group flex-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-sage-600 hover:bg-sage-700 text-white border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-600/25 hover:-translate-y-1">
+                      <div className="flex flex-col items-center text-center space-y-2">
+                        <Building className="h-6 w-6 lg:h-8 lg:w-8" />
+                        <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
                       </div>
-                      <h3 className="font-bold text-foreground mb-1.5" style={{ fontSize: 'clamp(0.9rem, 2.8vw, 1.25rem)' }}>Join as a Customer</h3>
-                      <p className="text-muted-foreground mb-2.5 lg:mb-4 flex-grow leading-snug" style={{ fontSize: 'clamp(0.7rem, 2.2vw, 0.875rem)' }}>Book last-minute beauty appointments with trusted local providers</p>
-                      <Button variant="hero" className="w-full mt-auto py-2" style={{ fontSize: 'clamp(0.8rem, 2.3vw, 1rem)' }}>
-                        Get Started
-                      </Button>
-                    </div>
+                    </Button>
                   </Link>
 
-                  {/* Business CTA */}
-                  <Link to="/signup/business" className="group w-full">
-                    <div className="bg-gradient-to-br from-provider/10 to-provider/5 border-2 border-provider/20 rounded-lg lg:rounded-2xl p-2.5 sm:p-4 lg:p-6 hover:border-provider/40 transition-all duration-300 hover:shadow-lg hover:shadow-provider/10 hover:-translate-y-1 h-full flex flex-col w-full min-w-0">
-                      <div className="flex items-center justify-between mb-2 lg:mb-4">
-                        <div className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-provider to-provider-glow rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0">
-                          <Building className="h-3.5 w-3.5 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
-                        </div>
-                        <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-provider group-hover:translate-x-1 transition-transform flex-shrink-0" />
+                  {/* Customer CTA */}
+                  <Link to="/signup/customer" className="group flex-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-rose-300 hover:bg-rose-400 text-rose-900 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-300/25 hover:-translate-y-1">
+                      <div className="flex flex-col items-center text-center space-y-2">
+                        <Heart className="h-6 w-6 lg:h-8 lg:w-8" />
+                        <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
                       </div>
-                      <h3 className="font-bold text-foreground mb-1.5" style={{ fontSize: 'clamp(0.9rem, 2.8vw, 1.25rem)' }}>Sign Up as Business</h3>
-                      <p className="text-muted-foreground mb-2.5 lg:mb-4 flex-grow leading-snug" style={{ fontSize: 'clamp(0.7rem, 2.2vw, 0.875rem)' }}>Fill empty slots and grow your business with instant bookings</p>
-                      <Button variant="provider-hero" className="w-full mt-auto py-2" style={{ fontSize: 'clamp(0.8rem, 2.3vw, 1rem)' }}>
-                        Join Now
-                      </Button>
-                    </div>
+                    </Button>
                   </Link>
                 </div>
 
-                {/* Both Section */}
-                <div className="bg-gradient-to-r from-muted/40 to-muted/20 border border-border/30 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
-                  <div className="flex items-start space-x-3 lg:space-x-4">
-                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-tertiary to-background rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0 border border-border/50">
-                      <User className="h-4 w-4 lg:h-5 lg:w-5 text-foreground" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-foreground mb-1 lg:mb-2 text-sm lg:text-base">Dual Benefits</h3>
-                      <p className="text-muted-foreground text-xs lg:text-sm">
-                        Business owners automatically get customer access—book appointments while managing your own slots.
-                      </p>
+                {/* Trust Badges */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <MapPin className="h-4 w-4 text-sage-600" />
+                    <span>Made in the UK</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Lock className="h-4 w-4 text-sage-600" />
+                    <span>Secure booking platform</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Award className="h-4 w-4 text-sage-600" />
+                    <span>No app needed</span>
+                  </div>
+                </div>
+
+                {/* Founder Quote */}
+                <div className="bg-gradient-to-r from-sage-50 to-rose-50 border border-sage-200/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
+                  <div className="text-center space-y-3">
+                    <blockquote className="text-foreground font-medium leading-relaxed italic" style={{ fontSize: 'clamp(0.875rem, 2.8vw, 1.125rem)' }}>
+                      "Built for small business owners who deserve better than DMs and no-shows."
+                    </blockquote>
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-8 h-8 bg-sage-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">L</span>
+                      </div>
+                      <span className="text-sage-700 font-medium text-sm">— Laura, Founder of OpenSlot</span>
                     </div>
                   </div>
                 </div>

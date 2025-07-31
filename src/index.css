@@ -98,6 +98,28 @@ All colors MUST be HSL.
     --muted-foreground: 215 16% 47%;
 
     /* Enhanced Sage Green as accent */
+    --sage-50: 120 25% 96%;
+    --sage-100: 120 20% 90%;
+    --sage-200: 120 15% 80%;
+    --sage-300: 120 12% 70%;
+    --sage-400: 120 10% 60%;
+    --sage-500: 120 8% 50%;
+    --sage-600: 120 10% 40%;
+    --sage-700: 120 12% 30%;
+    --sage-800: 120 15% 20%;
+    --sage-900: 120 20% 10%;
+
+    /* Soft rose colors for customer theme */
+    --rose-50: 350 100% 97%;
+    --rose-100: 350 90% 95%;
+    --rose-200: 350 80% 90%;
+    --rose-300: 350 70% 85%;
+    --rose-400: 350 60% 75%;
+    --rose-500: 350 50% 65%;
+    --rose-600: 350 45% 55%;
+    --rose-700: 350 40% 45%;
+    --rose-800: 350 35% 35%;
+    --rose-900: 350 30% 25%;
     --accent: 120 30% 75%; /* Richer Sage Green #C5D9C5 */
     --accent-foreground: 222 15% 15%;
     --accent-glow: 120 30% 85%;
