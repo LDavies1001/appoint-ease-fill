@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/custom-button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Star, Shield, User, Building, ArrowRight, Heart, Sparkles, CheckCircle, Search, MapPin, Lock, Award } from 'lucide-react';
 
-import heroImage from '@/assets/hero-booking-neutral.jpg';
+import heroImage from '@/assets/hero-marketplace-scene.jpg';
 
 const Index = () => {
   return (
@@ -18,12 +18,60 @@ const Index = () => {
               {/* Main Headline */}
               <div className="space-y-4 lg:space-y-6">
                 <h1 className="font-bold text-foreground leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 3.5rem)' }}>
-                  Fill Your Empty Appointments — <span className="text-sage-200">Automatically</span>.
+                  Find & Fill Last-Minute <span className="text-sage-200">Appointments</span>
                 </h1>
                 
                 <p className="text-muted-foreground leading-relaxed max-w-full lg:max-w-2xl" style={{ fontSize: 'clamp(1rem, 3.5vw, 1.25rem)' }}>
-                  OpenSlot connects your last-minute availability with real, local customers — no more chasing bookings through DMs.
+                  <span className="font-semibold">Customers:</span> Discover available slots near you instantly<br/>
+                  <span className="font-semibold">Businesses:</span> Fill empty appointments automatically
                 </p>
+              </div>
+
+              {/* Dual Value Proposition */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-6">
+                {/* Customer Value */}
+                <div className="bg-gradient-to-br from-rose-50 to-rose-100 border border-rose-200/50 rounded-xl p-4 lg:p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Heart className="h-6 w-6 text-rose-600" />
+                    <h3 className="font-bold text-lg text-foreground">For Customers</h3>
+                  </div>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                      <span>Book instantly, no waiting</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                      <span>Discover local providers</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                      <span>Great last-minute deals</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Business Value */}
+                <div className="bg-gradient-to-br from-sage-50 to-sage-100 border border-sage-200/50 rounded-xl p-4 lg:p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Building className="h-6 w-6 text-sage-600" />
+                    <h3 className="font-bold text-lg text-foreground">For Businesses</h3>
+                  </div>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-sage-500 flex-shrink-0" />
+                      <span>Fill empty slots automatically</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-sage-500 flex-shrink-0" />
+                      <span>No more chasing bookings</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-sage-500 flex-shrink-0" />
+                      <span>Reduce no-shows</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
 
               {/* Dual CTA Section */}
@@ -95,15 +143,15 @@ const Index = () => {
                 
                 {/* Floating testimonial */}
                 <div className="absolute bottom-3 left-3 right-3 lg:bottom-6 lg:left-6 lg:right-6 bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 border border-white/20 shadow-lg">
-                  <div className="flex items-center space-x-2 lg:space-x-3">
+                  <div className="flex items-center space-x-2 lg:space-x-3 mb-2">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="h-3 w-3 lg:h-4 lg:w-4 text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    <span className="text-xs lg:text-sm font-medium text-gray-800 truncate">4.9/5 from 1000+ bookings</span>
+                    <span className="text-xs lg:text-sm font-medium text-gray-800">4.9/5 rating</span>
                   </div>
-                  <p className="text-xs lg:text-sm text-gray-600 mt-1 lg:mt-2 line-clamp-2">"Found the perfect last-minute slot for my nails!"</p>
+                  <p className="text-xs lg:text-sm text-gray-600 italic">"Perfect for busy schedules - found exactly what I needed!"</p>
                 </div>
               </div>
             </div>
