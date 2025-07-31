@@ -111,40 +111,99 @@ const Index = () => {
         </div>
       </div>
 
-      {/* How It Works Section */}
-      <section className="py-8 lg:py-16 bg-muted/30 w-full overflow-hidden">
+      {/* Customer Benefits Section */}
+      <section className="py-8 lg:py-16 bg-gradient-to-br from-rose-50 via-rose-25 to-background w-full overflow-hidden">
         <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
           <div className="text-center mb-8 lg:mb-12">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 lg:mb-4 break-words">How OpenSlot Works</h2>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 lg:mb-4">Perfect for Last-Minute Bookings</h2>
             <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-              Simple, fast, and effective for both customers and business owners
+              Get the appointment you need, when you need it
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {/* Customer Flow */}
-            <div className="text-center space-y-3 lg:space-y-4 px-2">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-primary to-primary-glow rounded-xl lg:rounded-2xl flex items-center justify-center mx-auto">
-                <Search className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
+            {/* Instant Availability */}
+            <div className="bg-white/60 backdrop-blur-sm border border-rose-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-100/50 transition-all duration-300">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-200 to-rose-300 rounded-xl flex items-center justify-center mx-auto">
+                <Calendar className="h-6 w-6 lg:h-8 lg:w-8 text-rose-800" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground">Browse & Discover</h3>
-              <p className="text-sm sm:text-base text-muted-foreground">Find available appointment slots near you in real-time</p>
+              <h3 className="text-lg lg:text-xl font-semibold text-foreground">Real-Time Availability</h3>
+              <p className="text-sm lg:text-base text-muted-foreground">See exactly what's available right now - no waiting for callbacks or confirmations</p>
             </div>
 
-            <div className="text-center space-y-3 lg:space-y-4 px-2">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-primary to-primary-glow rounded-xl lg:rounded-2xl flex items-center justify-center mx-auto">
-                <Calendar className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white" />
+            {/* Discover Local */}
+            <div className="bg-white/60 backdrop-blur-sm border border-rose-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-100/50 transition-all duration-300">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-200 to-rose-300 rounded-xl flex items-center justify-center mx-auto">
+                <MapPin className="h-6 w-6 lg:h-8 lg:w-8 text-rose-800" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground">Book Instantly</h3>
-              <p className="text-sm sm:text-base text-muted-foreground">Secure your slot with one click—no waiting for confirmation</p>
+              <h3 className="text-lg lg:text-xl font-semibold text-foreground">Discover Local Gems</h3>
+              <p className="text-sm lg:text-base text-muted-foreground">Find amazing local providers you might never have discovered otherwise</p>
             </div>
 
-            <div className="text-center space-y-3 lg:space-y-4 px-2 sm:col-span-2 lg:col-span-1">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-provider to-provider-glow rounded-xl lg:rounded-2xl flex items-center justify-center mx-auto">
-                <CheckCircle className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white" />
+            {/* Better Prices */}
+            <div className="bg-white/60 backdrop-blur-sm border border-rose-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-100/50 transition-all duration-300 md:col-span-2 lg:col-span-1">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-200 to-rose-300 rounded-xl flex items-center justify-center mx-auto">
+                <Star className="h-6 w-6 lg:h-8 lg:w-8 text-rose-800" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground">Grow Your Business</h3>
-              <p className="text-sm sm:text-base text-muted-foreground">Fill empty slots automatically and build your client base</p>
+              <h3 className="text-lg lg:text-xl font-semibold text-foreground">Great Last-Minute Deals</h3>
+              <p className="text-sm lg:text-base text-muted-foreground">Providers often offer special rates for last-minute bookings - win-win!</p>
+            </div>
+          </div>
+
+          {/* Customer Testimonial */}
+          <div className="bg-gradient-to-r from-rose-100 to-rose-200 border border-rose-300/50 rounded-xl lg:rounded-2xl p-6 lg:p-8 text-center">
+            <div className="flex justify-center mb-4">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-5 w-5 text-rose-600 fill-current" />
+              ))}
+            </div>
+            <blockquote className="text-lg lg:text-xl font-medium text-rose-900 italic mb-4">
+              "I got a last-minute nail appointment for tonight's date - saved my evening!"
+            </blockquote>
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-rose-300 to-rose-400 rounded-full flex items-center justify-center">
+                <span className="text-rose-900 font-bold">S</span>
+              </div>
+              <span className="text-rose-800 font-medium">— Sarah, OpenSlot Customer</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Business Benefits Section */}
+      <section className="py-8 lg:py-16 bg-gradient-to-br from-sage-50 via-sage-25 to-background w-full overflow-hidden">
+        <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
+          <div className="text-center mb-8 lg:mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 lg:mb-4">Turn Empty Slots Into Revenue</h2>
+            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
+              Stop chasing bookings through DMs and social media
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {/* Auto-Fill */}
+            <div className="bg-white/60 backdrop-blur-sm border border-sage-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-100/50 transition-all duration-300">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-200 to-sage-300 rounded-xl flex items-center justify-center mx-auto">
+                <Search className="h-6 w-6 lg:h-8 lg:w-8 text-sage-800" />
+              </div>
+              <h3 className="text-lg lg:text-xl font-semibold text-foreground">Auto-Fill Empty Slots</h3>
+              <p className="text-sm lg:text-base text-muted-foreground">Customers find and book your availability automatically - no more manual work</p>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur-sm border border-sage-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-100/50 transition-all duration-300">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-200 to-sage-300 rounded-xl flex items-center justify-center mx-auto">
+                <Building className="h-6 w-6 lg:h-8 lg:w-8 text-sage-800" />
+              </div>
+              <h3 className="text-lg lg:text-xl font-semibold text-foreground">Grow Your Business</h3>
+              <p className="text-sm lg:text-base text-muted-foreground">Reach new customers who are actively looking for services like yours</p>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur-sm border border-sage-200/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-sage-100/50 transition-all duration-300 md:col-span-2 lg:col-span-1">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-sage-200 to-sage-300 rounded-xl flex items-center justify-center mx-auto">
+                <CheckCircle className="h-6 w-6 lg:h-8 lg:w-8 text-sage-800" />
+              </div>
+              <h3 className="text-lg lg:text-xl font-semibold text-foreground">No More No-Shows</h3>
+              <p className="text-sm lg:text-base text-muted-foreground">Instant bookings mean committed customers - reduce cancellations and no-shows</p>
             </div>
           </div>
         </div>
