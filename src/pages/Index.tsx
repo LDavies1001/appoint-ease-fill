@@ -1,24 +1,47 @@
 import React from 'react';
 import { Calendar, Star, Search, MapPin, Building, CheckCircle } from 'lucide-react';
+import { StickyHeader } from '@/components/landing/StickyHeader';
 import { HeroContainer } from '@/components/hero/HeroContainer';
 import { HeroContent } from '@/components/hero/HeroContent';
 import { HeroImage } from '@/components/hero/HeroImage';
+import { FeaturesSection } from '@/components/landing/FeaturesSection';
+import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
+import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
+import { PricingSection } from '@/components/landing/PricingSection';
+import { FinalCTASection } from '@/components/landing/FinalCTASection';
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
-      {/* Hero Section */}
-      <HeroContainer>
-        <div className="flex flex-col lg:grid lg:grid-cols-[1.1fr,0.9fr] gap-12 lg:gap-20 xl:gap-24 items-center py-12 sm:py-16 lg:py-24 xl:py-32 min-h-[95vh] w-full">
-          {/* Left Side - Content */}
-          <HeroContent />
+      {/* Sticky Header */}
+      <StickyHeader />
 
-          {/* Right Side - Hero Image */}
-          <div className="lg:order-last order-first w-full">
-            <HeroImage />
+      {/* Hero Section - with top padding for sticky header */}
+      <div className="pt-16 lg:pt-20">
+        <HeroContainer>
+          <div className="flex flex-col lg:grid lg:grid-cols-[1.1fr,0.9fr] gap-12 lg:gap-20 xl:gap-24 items-center py-12 sm:py-16 lg:py-24 xl:py-32 min-h-[95vh] w-full">
+            {/* Left Side - Content */}
+            <HeroContent />
+
+            {/* Right Side - Hero Image */}
+            <div className="lg:order-last order-first w-full">
+              <HeroImage />
+            </div>
           </div>
-        </div>
-      </HeroContainer>
+        </HeroContainer>
+      </div>
+
+      {/* Features Section */}
+      <FeaturesSection />
+
+      {/* How It Works Section */}
+      <HowItWorksSection />
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
+
+      {/* Pricing Section */}
+      <PricingSection />
 
       {/* Customer Benefits Section */}
       <section className="py-8 lg:py-16 bg-gradient-to-br from-rose-50 via-rose-25 to-background w-full overflow-hidden">
@@ -100,6 +123,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Final CTA Section */}
+      <FinalCTASection />
     </div>
   );
 };
