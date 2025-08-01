@@ -542,7 +542,7 @@ const BusinessSignup = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-16 rounded-2xl text-lg font-bold bg-gradient-to-r from-sage-600 to-sage-700 hover:from-sage-700 hover:to-sage-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]"
+                    className="w-full h-16 rounded-2xl text-lg font-bold bg-gradient-to-r from-provider to-provider-glow hover:from-provider-glow hover:to-provider text-provider-foreground shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]"
                   >
                     {loading ? (
                       <div className="flex items-center gap-3">
