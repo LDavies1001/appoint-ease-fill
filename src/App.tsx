@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import BookingNotificationHelper from "@/components/notifications/BookingNotificationHelper";
-import Header from "@/components/ui/header";
+
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import CustomerSignup from "./pages/CustomerSignup";
@@ -34,7 +34,7 @@ const App = () => (
         <BookingNotificationHelper>
           <BrowserRouter>
             <div className="min-h-screen bg-background overflow-x-hidden w-full">
-              <Header />
+              
               <main className="overflow-x-hidden w-full">
                 <Routes>
                   <Route path="/" element={<Index />} />
