@@ -67,12 +67,6 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
               >
                 Reviews
               </button>
-              <button 
-                onClick={() => scrollToSection('pricing')}
-                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-              >
-                Pricing
-              </button>
             </nav>
 
             {/* CTA Buttons */}
@@ -126,12 +120,6 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
                   className="text-left text-muted-foreground hover:text-foreground transition-colors font-medium"
                 >
                   Reviews
-                </button>
-                <button 
-                  onClick={() => scrollToSection('pricing')}
-                  className="text-left text-muted-foreground hover:text-foreground transition-colors font-medium"
-                >
-                  Pricing
                 </button>
                 
                 <hr className="border-border/40" />

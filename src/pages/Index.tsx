@@ -6,7 +6,7 @@ import { HeroImage } from '@/components/hero/HeroImage';
 import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
-import { PricingSection } from '@/components/landing/PricingSection';
+
 import { FinalCTASection } from '@/components/landing/FinalCTASection';
 
 const Index = () => {
@@ -33,9 +33,6 @@ const Index = () => {
 
       {/* Testimonials Section */}
       <TestimonialsSection />
-
-      {/* Pricing Section */}
-      <PricingSection />
 
       {/* Customer Benefits Section */}
       <section className="py-6 lg:py-12 bg-gradient-to-br from-rose-50 via-rose-25 to-background w-full overflow-hidden">
