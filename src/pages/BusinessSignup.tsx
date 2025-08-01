@@ -414,7 +414,7 @@ const BusinessSignup = () => {
                         </div>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">Enter your postcode so customers can find you nearby</p>
+                    <p className="text-sm text-muted-foreground">Enter your town or city so we can match you with nearby customers</p>
                   </div>
                 </div>
 
