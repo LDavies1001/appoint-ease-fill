@@ -11,7 +11,7 @@ import { FinalCTASection } from '@/components/landing/FinalCTASection';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
+    <div className="w-full">
       {/* Hero Section with integrated sticky header */}
       <HeroContainer>
         <div className="flex flex-col lg:grid lg:grid-cols-[1.1fr,0.9fr] gap-12 lg:gap-20 xl:gap-24 items-center py-12 sm:py-16 lg:py-24 xl:py-32 min-h-[95vh] w-full">
