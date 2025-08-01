@@ -171,23 +171,6 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Customer Testimonial */}
-          <div className="bg-gradient-to-r from-rose-50 to-rose-100 border border-rose-200/50 rounded-xl lg:rounded-2xl p-6 lg:p-8 text-center">
-            <div className="flex justify-center mb-4">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-5 w-5 text-rose-500 fill-current" />
-              ))}
-            </div>
-            <blockquote className="text-lg lg:text-xl font-medium text-rose-800 italic mb-4">
-              "I got a last-minute nail appointment for tonight's date - saved my evening!"
-            </blockquote>
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-rose-200 to-rose-300 rounded-full flex items-center justify-center">
-                <span className="text-rose-800 font-bold">S</span>
-              </div>
-              <span className="text-rose-700 font-medium">— Sarah, OpenSlot Customer</span>
-            </div>
-          </div>
         </div>
       </section>
 
