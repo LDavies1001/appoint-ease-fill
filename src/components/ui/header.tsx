@@ -238,7 +238,7 @@ const Header = () => {
                   </Button>
                 </Link>
                 <Link to="/auth?tab=signup">
-                  <Button size="sm" className="text-sm bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white shadow-sm">
+                  <Button size="sm" className="text-sm bg-gradient-to-r from-rose-200 to-rose-300 hover:from-rose-300 hover:to-rose-400 text-rose-800 shadow-sm">
                     Sign Up
                   </Button>
                 </Link>
