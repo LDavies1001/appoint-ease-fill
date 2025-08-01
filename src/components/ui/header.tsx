@@ -228,7 +228,7 @@ const Header = () => {
                   </Button>
                 </Link>
                 <Link to="/auth?tab=provider">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-rose-600 hover:bg-rose-50 text-sm transition-colors">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-provider hover:bg-provider/10 text-sm transition-colors">
                     For Your Business
                   </Button>
                 </Link>
