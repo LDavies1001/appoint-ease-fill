@@ -77,22 +77,22 @@ const Index = () => {
               {/* Dual CTA Section */}
               <div className="space-y-4 lg:space-y-6 w-full">
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
-                  {/* Business CTA */}
-                  <Link to="/signup/business" className="group flex-1">
-                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-sage-50 via-sage-100 to-sage-200 hover:from-sage-100 hover:via-sage-200 hover:to-sage-300 text-sage-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-100/25 hover:-translate-y-1">
-                      <div className="flex flex-col items-center text-center space-y-2">
-                        <Building className="h-6 w-6 lg:h-8 lg:w-8" />
-                        <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
-                      </div>
-                    </Button>
-                  </Link>
-
                   {/* Customer CTA */}
                   <Link to="/signup/customer" className="group flex-1">
                     <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-rose-50 via-rose-100 to-rose-200 hover:from-rose-100 hover:via-rose-200 hover:to-rose-300 text-rose-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-100/25 hover:-translate-y-1">
                       <div className="flex flex-col items-center text-center space-y-2">
                         <Heart className="h-6 w-6 lg:h-8 lg:w-8" />
                         <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
+                      </div>
+                    </Button>
+                  </Link>
+
+                  {/* Business CTA */}
+                  <Link to="/signup/business" className="group flex-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-sage-50 via-sage-100 to-sage-200 hover:from-sage-100 hover:via-sage-200 hover:to-sage-300 text-sage-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-100/25 hover:-translate-y-1">
+                      <div className="flex flex-col items-center text-center space-y-2">
+                        <Building className="h-6 w-6 lg:h-8 lg:w-8" />
+                        <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
                       </div>
                     </Button>
                   </Link>
