@@ -240,61 +240,55 @@ const BusinessSignup = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-provider/5 via-background to-provider/10 overflow-x-hidden w-full">
       
+      {/* Header section - moved up */}
+      <div className="w-full max-w-4xl mx-auto pt-12 pb-8 px-4">
+        <div className="text-center space-y-6">
+          <div className="w-16 h-16 bg-gradient-to-br from-provider to-provider-glow rounded-2xl flex items-center justify-center mx-auto">
+            <Building className="h-8 w-8 text-white" />
+          </div>
+          
+          <div className="space-y-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
+              Turn empty appointment slots into revenue
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Connect with local customers who are looking for last-minute bookings. 
+              Fill your cancellations and grow your business effortlessly.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <Check className="h-3 w-3 text-green-600" />
+              </div>
+              <p className="font-medium text-foreground">Instant bookings</p>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <Check className="h-3 w-3 text-green-600" />
+              </div>
+              <p className="font-medium text-foreground">Zero commission</p>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <Check className="h-3 w-3 text-green-600" />
+              </div>
+              <p className="font-medium text-foreground">Local customers</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
         <div className="w-full max-w-7xl animate-fade-in">
           {/* Two-column layout on desktop, single column on mobile */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
-            {/* Left column - Inspirational content (hidden on mobile) */}
-            <div className="hidden lg:flex flex-col justify-center space-y-8 pl-8">
-              <div className="space-y-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-provider to-provider-glow rounded-2xl flex items-center justify-center">
-                  <Building className="h-8 w-8 text-white" />
-                </div>
-                
-                <div className="space-y-4">
-                  <h2 className="text-4xl font-bold text-foreground leading-tight">
-                    Turn empty appointment slots into revenue
-                  </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    Connect with local customers who are looking for last-minute bookings. 
-                    Fill your cancellations and grow your business effortlessly.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-3 w-3 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Instant bookings</p>
-                      <p className="text-sm text-muted-foreground">Get notified immediately when customers book</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-3 w-3 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Zero commission</p>
-                      <p className="text-sm text-muted-foreground">Keep 100% of your earnings</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-3 w-3 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Local customers</p>
-                      <p className="text-sm text-muted-foreground">Connect with customers in your area</p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
+            {/* Left column - Now empty since content moved up */}
+            <div className="hidden lg:block">
             </div>
 
             {/* Right column - Form */}
