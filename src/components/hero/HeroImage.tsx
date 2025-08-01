@@ -19,12 +19,6 @@ export const HeroImage = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/10 rounded-3xl"></div>
           
           {/* Floating elements for added depth */}
-          
-          <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-lg opacity-90">
-            <div className="text-sm font-medium text-gray-700">
-              <span className="text-sage-600">500+</span> providers
-            </div>
-          </div>
         </div>
       </div>
     </div>
