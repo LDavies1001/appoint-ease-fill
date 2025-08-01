@@ -354,3 +354,11 @@ All colors MUST be HSL.
     background-size: 16px 16px;
     background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
   }
+
+/* Grid pattern for subtle background */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, hsl(var(--muted)) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--muted)) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
