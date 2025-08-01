@@ -406,54 +406,55 @@ const BusinessSignup = () => {
                     </h3>
                   </div>
                   
-                  <div className="space-y-6">
-                    {/* Postcode Lookup */}
+                  {/* Postcode Lookup */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-sage-600" />
+                      Business Postcode
+                    </Label>
+                    <PostcodeLookup
+                      value={postcode}
+                      onChange={(data) => {
+                        setPostcode(data.postcode);
+                        setLocation(data.formattedAddress);
+                        setLatitude(data.latitude);
+                        setLongitude(data.longitude);
+                        setPostcodeData(data.postcodeData);
+                      }}
+                      placeholder="Enter your business postcode (e.g. SW1A 1AA)"
+                      className="h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                      showCoverageRadius={false}
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      We need your exact postcode to match you with nearby customers
+                    </p>
+                  </div>
+
+                  {/* Service Radius */}
+                  {postcode && latitude && longitude && (
                     <div className="space-y-3">
-                      <Label className="text-sm font-semibold text-foreground">Business Postcode</Label>
-                      <PostcodeLookup
-                        value={postcode}
-                        onChange={(data) => {
-                          setPostcode(data.postcode);
-                          setLocation(data.formattedAddress);
-                          setLatitude(data.latitude);
-                          setLongitude(data.longitude);
-                          setPostcodeData(data.postcodeData);
-                        }}
-                        placeholder="Enter your business postcode (e.g. SW1A 1AA)"
-                        className="h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
-                        showCoverageRadius={false}
-                      />
+                      <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                        <Target className="h-4 w-4 text-sage-600" />
+                        How far will you travel for appointments?
+                      </Label>
+                      <Select value={serviceRadius} onValueChange={setServiceRadius}>
+                        <SelectTrigger className="h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base">
+                          <SelectValue placeholder="Select service radius" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">1 mile radius</SelectItem>
+                          <SelectItem value="3">3 miles radius</SelectItem>
+                          <SelectItem value="5">5 miles radius</SelectItem>
+                          <SelectItem value="10">10 miles radius</SelectItem>
+                          <SelectItem value="15">15 miles radius</SelectItem>
+                          <SelectItem value="20">20+ miles radius</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <p className="text-sm text-muted-foreground">
-                        We need your exact postcode to match you with nearby customers
+                        This helps customers know if you can provide services in their area
                       </p>
                     </div>
-
-                    {/* Service Radius */}
-                    {postcode && latitude && longitude && (
-                      <div className="space-y-3">
-                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
-                          <Target className="h-4 w-4 text-sage-600" />
-                          How far will you travel for appointments?
-                        </Label>
-                        <Select value={serviceRadius} onValueChange={setServiceRadius}>
-                          <SelectTrigger className="h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base">
-                            <SelectValue placeholder="Select service radius" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">1 mile radius</SelectItem>
-                            <SelectItem value="3">3 miles radius</SelectItem>
-                            <SelectItem value="5">5 miles radius</SelectItem>
-                            <SelectItem value="10">10 miles radius</SelectItem>
-                            <SelectItem value="15">15 miles radius</SelectItem>
-                            <SelectItem value="20">20+ miles radius</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <p className="text-sm text-muted-foreground">
-                          This helps customers know if you can provide services in their area
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
 
                 {/* Security Section */}
