@@ -23,7 +23,7 @@ export const FinalCTASection = () => {
           <Link to="/signup/customer" className="group">
             <Button 
               size="lg"
-              className="bg-gradient-to-br from-rose-500 to-rose-600 text-white hover:from-rose-600 hover:to-rose-700 px-8 py-6 text-lg rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group-hover:scale-105"
+              className="bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 px-8 py-6 text-lg rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group-hover:scale-105"
             >
               <Heart className="h-6 w-6 mr-3" />
               Start as Customer
