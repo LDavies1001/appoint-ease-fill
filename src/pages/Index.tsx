@@ -74,24 +74,26 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-6">
+              {/* Primary Action Buttons */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8">
                 {/* Customer CTA */}
                 <Link to="/signup/customer" className="group block">
-                  <Button className="w-full h-auto p-3 lg:p-4 bg-gradient-to-br from-rose-50 via-rose-100 to-rose-200 hover:from-rose-100 hover:via-rose-200 hover:to-rose-300 text-rose-700 border-0 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-100/25 hover:-translate-y-1">
-                    <div className="flex items-center justify-center gap-2">
-                      <Heart className="h-5 w-5" />
-                      <span className="font-bold text-base">I'm a Customer</span>
+                  <Button className="w-full h-auto p-5 lg:p-6 bg-gradient-to-br from-rose-500 via-rose-600 to-rose-700 hover:from-rose-600 hover:via-rose-700 hover:to-rose-800 text-white border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-rose-500/25 hover:-translate-y-2 shadow-lg">
+                    <div className="flex items-center justify-center gap-3">
+                      <Heart className="h-6 w-6" />
+                      <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
                   </Button>
                 </Link>
 
                 {/* Business CTA */}
                 <Link to="/signup/business" className="group block">
-                  <Button className="w-full h-auto p-3 lg:p-4 bg-gradient-to-br from-sage-50 via-sage-100 to-sage-200 hover:from-sage-100 hover:via-sage-200 hover:to-sage-300 text-sage-700 border-0 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-100/25 hover:-translate-y-1">
-                    <div className="flex items-center justify-center gap-2">
-                      <Building className="h-5 w-5" />
-                      <span className="font-bold text-base">I'm a Business</span>
+                  <Button className="w-full h-auto p-5 lg:p-6 bg-gradient-to-br from-sage-500 via-sage-600 to-sage-700 hover:from-sage-600 hover:via-sage-700 hover:to-sage-800 text-white border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-sage-500/25 hover:-translate-y-2 shadow-lg">
+                    <div className="flex items-center justify-center gap-3">
+                      <Building className="h-6 w-6" />
+                      <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
                   </Button>
                 </Link>
