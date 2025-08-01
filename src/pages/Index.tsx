@@ -74,58 +74,58 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Primary Action Buttons */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8">
-                {/* Customer CTA */}
-                <Link to="/signup/customer" className="group block">
-                  <Button className="w-full h-auto p-5 lg:p-6 bg-gradient-to-br from-rose-500 via-rose-600 to-rose-700 hover:from-rose-600 hover:via-rose-700 hover:to-rose-800 text-white border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-rose-500/25 hover:-translate-y-2 shadow-lg">
-                    <div className="flex items-center justify-center gap-3">
-                      <Heart className="h-6 w-6" />
-                      <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
-                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                    </div>
-                  </Button>
-                </Link>
+              {/* Dual CTA Section */}
+              <div className="space-y-4 lg:space-y-6 w-full">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
+                  {/* Business CTA */}
+                  <Link to="/signup/business" className="group flex-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-sage-50 via-sage-100 to-sage-200 hover:from-sage-100 hover:via-sage-200 hover:to-sage-300 text-sage-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-100/25 hover:-translate-y-1">
+                      <div className="flex flex-col items-center text-center space-y-2">
+                        <Building className="h-6 w-6 lg:h-8 lg:w-8" />
+                        <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
+                      </div>
+                    </Button>
+                  </Link>
 
-                {/* Business CTA */}
-                <Link to="/signup/business" className="group block">
-                  <Button className="w-full h-auto p-5 lg:p-6 bg-gradient-to-br from-sage-500 via-sage-600 to-sage-700 hover:from-sage-600 hover:via-sage-700 hover:to-sage-800 text-white border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-sage-500/25 hover:-translate-y-2 shadow-lg">
-                    <div className="flex items-center justify-center gap-3">
-                      <Building className="h-6 w-6" />
-                      <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
-                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                    </div>
-                  </Button>
-                </Link>
-              </div>
+                  {/* Customer CTA */}
+                  <Link to="/signup/customer" className="group flex-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-rose-50 via-rose-100 to-rose-200 hover:from-rose-100 hover:via-rose-200 hover:to-rose-300 text-rose-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-100/25 hover:-translate-y-1">
+                      <div className="flex flex-col items-center text-center space-y-2">
+                        <Heart className="h-6 w-6 lg:h-8 lg:w-8" />
+                        <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
+                      </div>
+                    </Button>
+                  </Link>
+                </div>
 
-              {/* Trust Badges */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <MapPin className="h-4 w-4 text-sage-200" />
-                  <span>Made in the UK</span>
+                {/* Trust Badges */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <MapPin className="h-4 w-4 text-sage-200" />
+                    <span>Made in the UK</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Lock className="h-4 w-4 text-sage-200" />
+                    <span>Secure booking platform</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Award className="h-4 w-4 text-sage-200" />
+                    <span>Instant bookings</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <Lock className="h-4 w-4 text-sage-200" />
-                  <span>Secure booking platform</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <Award className="h-4 w-4 text-sage-200" />
-                  <span>Instant bookings</span>
-                </div>
-              </div>
 
-              {/* Founder Quote */}
-              <div className="bg-gradient-to-r from-sage-50 via-background to-rose-50 border border-sage-100/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
-                <div className="text-center space-y-3">
-                  <blockquote className="text-foreground font-medium leading-relaxed italic" style={{ fontSize: 'clamp(0.875rem, 2.8vw, 1.125rem)' }}>
-                    "Built for small business owners who deserve better than DMs and no-shows."
-                  </blockquote>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-sage-100 to-sage-200 rounded-full flex items-center justify-center">
-                      <span className="text-sage-700 font-bold text-sm">L</span>
+                {/* Founder Quote */}
+                <div className="bg-gradient-to-r from-sage-50 via-background to-rose-50 border border-sage-100/50 rounded-xl lg:rounded-2xl p-4 lg:p-6 w-full">
+                  <div className="text-center space-y-3">
+                    <blockquote className="text-foreground font-medium leading-relaxed italic" style={{ fontSize: 'clamp(0.875rem, 2.8vw, 1.125rem)' }}>
+                      "Built for small business owners who deserve better than DMs and no-shows."
+                    </blockquote>
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-sage-100 to-sage-200 rounded-full flex items-center justify-center">
+                        <span className="text-sage-700 font-bold text-sm">L</span>
+                      </div>
+                      <span className="text-sage-600 font-medium text-sm">— Laura, Founder of OpenSlot</span>
                     </div>
-                    <span className="text-sage-600 font-medium text-sm">— Laura, Founder of OpenSlot</span>
                   </div>
                 </div>
               </div>
