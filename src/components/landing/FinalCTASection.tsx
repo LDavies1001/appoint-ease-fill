@@ -23,7 +23,7 @@ export const FinalCTASection = () => {
           <Link to="/signup/customer" className="group">
             <Button 
               size="lg"
-              className="bg-sage-600 text-white hover:bg-sage-700 px-8 py-6 text-lg rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group-hover:scale-105"
+              className="bg-gradient-to-br from-rose-500 to-rose-600 text-white hover:from-rose-600 hover:to-rose-700 px-8 py-6 text-lg rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group-hover:scale-105"
             >
               <Heart className="h-6 w-6 mr-3" />
               Start as Customer
@@ -34,8 +34,7 @@ export const FinalCTASection = () => {
           <Link to="/signup/business" className="group">
             <Button 
               size="lg"
-              variant="outline"
-              className="border-2 border-sage-600 text-sage-700 bg-white/80 hover:bg-sage-600 hover:text-white px-8 py-6 text-lg rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group-hover:scale-105"
+              className="bg-gradient-to-br from-sage-500 to-sage-600 text-white hover:from-sage-600 hover:to-sage-700 px-8 py-6 text-lg rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group-hover:scale-105"
             >
               <Building className="h-6 w-6 mr-3" />
               Start as Business
