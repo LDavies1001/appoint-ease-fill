@@ -19,12 +19,6 @@ export const HeroImage = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/10 rounded-3xl"></div>
           
           {/* Floating elements for added depth */}
-          <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-lg opacity-90">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-gray-700">Live bookings</span>
-            </div>
-          </div>
           
           <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-lg opacity-90">
             <div className="text-sm font-medium text-gray-700">
