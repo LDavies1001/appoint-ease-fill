@@ -223,22 +223,22 @@ const Header = () => {
             ) : (
               <div className="flex items-center space-x-2 lg:space-x-4">
                 <Link to="/discover">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground text-sm">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-rose-600 hover:bg-rose-50 text-sm transition-colors">
                     Find Slots
                   </Button>
                 </Link>
                 <Link to="/auth?tab=provider">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground text-sm">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-rose-600 hover:bg-rose-50 text-sm transition-colors">
                     For Your Business
                   </Button>
                 </Link>
                 <Link to="/auth">
-                  <Button variant="outline" size="sm" className="text-sm">
+                  <Button variant="outline" size="sm" className="text-sm border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300">
                     Log In
                   </Button>
                 </Link>
                 <Link to="/auth?tab=signup">
-                  <Button variant="default" size="sm" className="text-sm">
+                  <Button size="sm" className="text-sm bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white shadow-sm">
                     Sign Up
                   </Button>
                 </Link>
