@@ -24,9 +24,9 @@ export const HowItWorksSection = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-16 lg:py-24 bg-gradient-to-br from-sage-50/50 to-background">
+    <section id="how-it-works" className="py-12 lg:py-16 bg-gradient-to-br from-sage-50/50 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
             How It Works
           </h2>
@@ -35,7 +35,7 @@ export const HowItWorksSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {steps.map((step, index) => (
             <div key={index} className="relative">
               <div className="text-center">

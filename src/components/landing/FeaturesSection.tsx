@@ -42,9 +42,9 @@ export const FeaturesSection = () => {
   ];
 
   return (
-    <section id="features" className="py-16 lg:py-24 bg-gradient-to-br from-background to-muted/30">
+    <section id="features" className="py-12 lg:py-16 bg-gradient-to-br from-background to-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
             Why Choose OpenSlot?
           </h2>
@@ -53,11 +53,11 @@ export const FeaturesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="group bg-background/60 backdrop-blur-sm border border-border/50 rounded-2xl p-6 hover:shadow-lg hover:shadow-muted/25 transition-all duration-300 hover:-translate-y-1"
+              className="group bg-background/60 backdrop-blur-sm border border-border/50 rounded-2xl p-4 hover:shadow-lg hover:shadow-muted/25 transition-all duration-300 hover:-translate-y-1"
             >
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-${feature.color.split('-')[1]}-100 to-${feature.color.split('-')[1]}-200 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                 <feature.icon className={`h-6 w-6 ${feature.color}`} />

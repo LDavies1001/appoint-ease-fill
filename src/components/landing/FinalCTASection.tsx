@@ -5,7 +5,7 @@ import { Heart, Building, ArrowRight } from 'lucide-react';
 
 export const FinalCTASection = () => {
   return (
-    <section className="py-16 lg:py-24 bg-gradient-to-br from-sage-600 via-sage-700 to-sage-800 text-white relative overflow-hidden">
+    <section className="py-12 lg:py-16 bg-gradient-to-br from-sage-600 via-sage-700 to-sage-800 text-white relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
       
@@ -15,7 +15,7 @@ export const FinalCTASection = () => {
           <span className="text-sage-200"> Booking Experience?</span>
         </h2>
         
-        <p className="text-xl text-sage-100 mb-12 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xl text-sage-100 mb-8 max-w-2xl mx-auto leading-relaxed">
           Join thousands of customers and businesses already using OpenSlot to make booking appointments effortless.
         </p>
 
