@@ -34,48 +34,6 @@ const Index = () => {
       {/* Testimonials Section */}
       <TestimonialsSection />
 
-      {/* Customer Benefits Section */}
-      <section className="py-6 lg:py-12 bg-gradient-to-br from-rose-50 via-rose-25 to-background w-full overflow-hidden">
-        <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
-          <div className="text-center mb-6 lg:mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 lg:mb-4">Perfect for Last-Minute Bookings</h2>
-            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-              Get the appointment you need, when you need it
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
-            {/* Instant Availability */}
-            <div className="bg-white/60 backdrop-blur-sm border border-rose-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-50/50 transition-all duration-300">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl flex items-center justify-center mx-auto">
-                <Calendar className="h-6 w-6 lg:h-8 lg:w-8 text-rose-700" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-foreground">Real-Time Availability</h3>
-              <p className="text-sm lg:text-base text-muted-foreground">See exactly what's available right now - no waiting for callbacks or confirmations</p>
-            </div>
-
-            {/* Discover Local */}
-            <div className="bg-white/60 backdrop-blur-sm border border-rose-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-50/50 transition-all duration-300">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl flex items-center justify-center mx-auto">
-                <MapPin className="h-6 w-6 lg:h-8 lg:w-8 text-rose-700" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-foreground">Discover Local Gems</h3>
-              <p className="text-sm lg:text-base text-muted-foreground">Find amazing local providers you might never have discovered otherwise</p>
-            </div>
-
-            {/* Better Prices */}
-            <div className="bg-white/60 backdrop-blur-sm border border-rose-100/50 rounded-xl lg:rounded-2xl p-6 text-center space-y-4 hover:shadow-lg hover:shadow-rose-50/50 transition-all duration-300 md:col-span-2 lg:col-span-1">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl flex items-center justify-center mx-auto">
-                <Star className="h-6 w-6 lg:h-8 lg:w-8 text-rose-700" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-foreground">Great Last-Minute Deals</h3>
-              <p className="text-sm lg:text-base text-muted-foreground">Providers often offer special rates for last-minute bookings - win-win!</p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
       {/* Business Benefits Section */}
       <section className="py-6 lg:py-12 bg-gradient-to-br from-sage-50 via-sage-25 to-background w-full overflow-hidden">
         <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
