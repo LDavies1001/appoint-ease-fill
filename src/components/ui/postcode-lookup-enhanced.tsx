@@ -198,7 +198,7 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
     <div className="space-y-4">
       <div className="relative">
         <div className="relative">
-          <MapPin className="absolute right-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+          <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value.toUpperCase())}
