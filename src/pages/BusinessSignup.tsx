@@ -399,7 +399,7 @@ const BusinessSignup = () => {
                   </div>
                   
                   <div className="space-y-3">
-                    <Label htmlFor="business-location" className="text-sm font-semibold text-foreground">Business Postcode</Label>
+                    <Label htmlFor="business-location" className="text-sm font-semibold text-foreground">Business Town/City</Label>
                     <div className="relative">
                       <MapPin className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
                       <LocationInput
