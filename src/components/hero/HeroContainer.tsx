@@ -20,7 +20,15 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
   }, []);
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const element = document.getElementById(id);
+    if (element) {
+      const headerHeight = 80; // Account for sticky header height
+      const elementPosition = element.offsetTop - headerHeight;
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
     setIsMenuOpen(false);
   };
 
