@@ -41,7 +41,7 @@ interface AuthContextType {
   userRoles: UserRole[];
   availableRoles: ('customer' | 'provider')[];
   loading: boolean;
-  signUp: (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string, latitude?: number, longitude?: number, serviceRadius?: number, postcodeData?: any) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
@@ -172,7 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string) => {
+  const signUp = async (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string, latitude?: number, longitude?: number, serviceRadius?: number, postcodeData?: any) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
@@ -218,13 +218,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // If it's a provider, also create provider_details record
       if (role === 'provider' && businessName) {
+        const providerInsertData: any = {
+          user_id: data.user.id,
+          business_name: businessName,
+          business_phone: phone || null,
+          business_postcode: location || null
+        };
+
+        // Add geocoded location data if available
+        if (latitude && longitude) {
+          providerInsertData.latitude = latitude;
+          providerInsertData.longitude = longitude;
+        }
+
+        if (serviceRadius) {
+          providerInsertData.service_radius_miles = parseInt(serviceRadius.toString());
+        }
+
+        if (postcodeData) {
+          providerInsertData.postcode_data = postcodeData;
+        }
+
         const { error: providerError } = await supabase
           .from('provider_details')
-          .insert({
-            user_id: data.user.id,
-            business_name: businessName,
-            business_phone: phone || null
-          });
+          .insert(providerInsertData);
         
         if (providerError) {
           console.error('Error creating provider details:', providerError);

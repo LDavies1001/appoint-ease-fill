@@ -176,7 +176,7 @@ const BusinessSignup = () => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(email, password, 'provider', fullName, phone, postcode, businessName);
+      const { error } = await signUp(email, password, 'provider', fullName, phone, postcode, businessName, latitude, longitude, parseInt(serviceRadius), postcodeData);
       
       if (error) {
         toast({
