@@ -238,297 +238,340 @@ const BusinessSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-provider/5 via-background to-provider/10 overflow-x-hidden w-full">
-      
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
-        <div className="w-full max-w-7xl animate-fade-in">
-          {/* Two-column layout on desktop, single column on mobile */}
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
-            {/* Left column - Inspirational content (hidden on mobile) */}
-            <div className="hidden lg:flex flex-col justify-center space-y-8 pl-8">
-              <div className="space-y-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-provider to-provider-glow rounded-2xl flex items-center justify-center">
-                  <Building className="h-8 w-8 text-white" />
-                </div>
-                
-                <div className="space-y-4">
-                  <h2 className="text-4xl font-bold text-foreground leading-tight">
-                    Turn empty appointment slots into revenue
-                  </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    Connect with local customers who are looking for last-minute bookings. 
-                    Fill your cancellations and grow your business effortlessly.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-3 w-3 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Instant bookings</p>
-                      <p className="text-sm text-muted-foreground">Get notified immediately when customers book</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-3 w-3 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Zero commission</p>
-                      <p className="text-sm text-muted-foreground">Keep 100% of your earnings</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-3 w-3 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Local customers</p>
-                      <p className="text-sm text-muted-foreground">Connect with customers in your area</p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-sage-50 via-background to-sage-100">
+      {/* Sage Green Header Banner */}
+      <div className="bg-gradient-to-r from-sage-600 to-sage-700 text-white py-4 px-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <Building className="h-6 w-6 text-white" />
             </div>
+            <div>
+              <h1 className="text-xl font-bold">OpenSlot</h1>
+              <p className="text-sage-100 text-sm">Helping local businesses fill empty appointments</p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/')}
+            className="text-white hover:bg-white/10 flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Button>
+        </div>
+      </div>
 
-            {/* Right column - Form */}
-            <div className="w-full max-w-lg mx-auto lg:mx-0">
+      {/* Main Content */}
+      <div className="py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          {/* Progress Indicator */}
+          <div className="mb-8 text-center">
+            <div className="inline-flex items-center bg-sage-50 border border-sage-200 rounded-full px-4 py-2 text-sm text-sage-700">
+              <span className="w-6 h-6 bg-sage-600 text-white rounded-full flex items-center justify-center text-xs font-semibold mr-3">1</span>
+              Step 1 of 2: Business Details
+            </div>
+          </div>
 
-              {/* Main heading */}
-              <div className="text-center lg:text-left mb-8">
-                <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-3">
-                  Grow Your Business, One Booking at a Time
-                </h1>
-                <p className="text-muted-foreground text-lg">
-                  Join the OpenSlot community and start filling your empty slots with local customers who are ready to book.
-                </p>
-              </div>
+          {/* Main Headings */}
+          <div className="text-center mb-10">
+            <h1 className="text-4xl font-bold text-foreground mb-4">
+              Create Your Business Account
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              Get started in under 2 minutes – it's free
+            </p>
+          </div>
 
-              {/* Form Card */}
-              <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-provider/10">
-                <div className="mb-6">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => navigate('/')}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground -ml-2"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Back to Home
-                  </Button>
+          {/* Form Container */}
+          <Card className="bg-white shadow-xl rounded-3xl border border-sage-100 overflow-hidden">
+            <div className="p-8 lg:p-12">
+              <form onSubmit={handleSubmit} className="space-y-8">
+                
+                {/* Business Information Section */}
+                <div className="space-y-6">
+                  <div className="pb-3 border-b border-sage-100">
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <Building className="h-5 w-5 text-sage-600" />
+                      Business Information
+                    </h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Business Name */}
+                    <div className="space-y-3">
+                      <Label htmlFor="business-name" className="text-sm font-semibold text-foreground">Business Name</Label>
+                      <div className="relative">
+                        <Building className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
+                        <Input
+                          id="business-name"
+                          type="text"
+                          placeholder="e.g. Bella Beauty Salon"
+                          value={businessName}
+                          onChange={(e) => setBusinessName(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                          required
+                        />
+                        {businessName && isFieldValid('businessName', businessName) && (
+                          <div className="absolute right-4 top-4 text-sage-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Your Name */}
+                    <div className="space-y-3">
+                      <Label htmlFor="full-name" className="text-sm font-semibold text-foreground">Your Name</Label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
+                        <Input
+                          id="full-name"
+                          type="text"
+                          placeholder="e.g. Sarah Johnson"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                          required
+                        />
+                        {fullName && isFieldValid('fullName', fullName) && (
+                          <div className="absolute right-4 top-4 text-sage-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Business Name */}
-                  <div className="space-y-2">
-                    <Label htmlFor="business-name" className="text-sm font-medium">Business Name</Label>
-                    <div className="relative">
-                      <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                      <Input
-                        id="business-name"
-                        type="text"
-                        placeholder="Enter your business name"
-                        value={businessName}
-                        onChange={(e) => setBusinessName(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
-                        required
-                      />
-                      {businessName && isFieldValid('businessName', businessName) && (
-                        <div className="absolute right-3 top-3 text-green-600">
-                          <Check className="h-4 w-4" />
-                        </div>
-                      )}
+
+                {/* Contact Details Section */}
+                <div className="space-y-6">
+                  <div className="pb-3 border-b border-sage-100">
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <Mail className="h-5 w-5 text-sage-600" />
+                      Contact Details
+                    </h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Email */}
+                    <div className="space-y-3">
+                      <Label htmlFor="business-email" className="text-sm font-semibold text-foreground">Business Email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
+                        <Input
+                          id="business-email"
+                          type="email"
+                          placeholder="hello@bellasalon.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                          required
+                        />
+                        {email && isFieldValid('email', email) && (
+                          <div className="absolute right-4 top-4 text-sage-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Phone */}
+                    <div className="space-y-3">
+                      <Label htmlFor="phone" className="text-sm font-semibold text-foreground">Business Phone</Label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="07123 456789"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                          required
+                        />
+                        {phone && isFieldValid('phone', phone) && (
+                          <div className="absolute right-4 top-4 text-sage-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">Customers will use this to contact you</p>
                     </div>
                   </div>
+                </div>
 
-                  {/* Full Name */}
-                  <div className="space-y-2">
-                    <Label htmlFor="full-name" className="text-sm font-medium">Your Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                      <Input
-                        id="full-name"
-                        type="text"
-                        placeholder="Enter your full name"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
-                        required
-                      />
-                      {fullName && isFieldValid('fullName', fullName) && (
-                        <div className="absolute right-3 top-3 text-green-600">
-                          <Check className="h-4 w-4" />
-                        </div>
-                      )}
-                    </div>
+                {/* Location Section */}
+                <div className="space-y-6">
+                  <div className="pb-3 border-b border-sage-100">
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <MapPin className="h-5 w-5 text-sage-600" />
+                      Location
+                    </h3>
                   </div>
-
-                  {/* Email */}
-                  <div className="space-y-2">
-                    <Label htmlFor="business-email" className="text-sm font-medium">Business Email</Label>
+                  
+                  <div className="space-y-3">
+                    <Label htmlFor="business-location" className="text-sm font-semibold text-foreground">Business Postcode</Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                      <Input
-                        id="business-email"
-                        type="email"
-                        placeholder="Enter your business email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
-                        required
-                      />
-                      {email && isFieldValid('email', email) && (
-                        <div className="absolute right-3 top-3 text-green-600">
-                          <Check className="h-4 w-4" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Phone */}
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-sm font-medium">Business Phone Number</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="07123456789"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
-                        required
-                      />
-                      {phone && isFieldValid('phone', phone) && (
-                        <div className="absolute right-3 top-3 text-green-600">
-                          <Check className="h-4 w-4" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">Customers will use this to contact you</p>
-                  </div>
-
-                  {/* Location */}
-                  <div className="space-y-2">
-                    <Label htmlFor="business-location" className="text-sm font-medium">Business Location</Label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                      <MapPin className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
                       <LocationInput
-                        placeholder="Enter your business postcode"
+                        placeholder="e.g. SW1A 1AA"
                         value={location}
                         onChange={setLocation}
-                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
+                        className="pl-12 pr-12 h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
                       />
                       {location && isFieldValid('location', location) && (
-                        <div className="absolute right-3 top-3 text-green-600 z-20">
-                          <Check className="h-4 w-4" />
+                        <div className="absolute right-4 top-4 text-sage-600 z-20">
+                          <Check className="h-5 w-5" />
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground">Enter your postcode so customers can find you</p>
+                    <p className="text-sm text-muted-foreground">Enter your postcode so customers can find you nearby</p>
                   </div>
+                </div>
 
-                  {/* Password */}
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Create a password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 pr-12 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors z-20"
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                      {password && isFieldValid('password', password) && (
-                        <div className="absolute right-10 top-3 text-green-600">
-                          <Check className="h-4 w-4" />
-                        </div>
-                      )}
-                    </div>
-                    {password && (
-                      <div className="space-y-2">
-                        <div className="flex space-x-1">
-                          {[...Array(5)].map((_, i) => (
-                            <div
-                              key={i}
-                               className={`h-1.5 flex-1 rounded-full transition-colors ${
-                                 i < getPasswordStrength() ? 'bg-gradient-to-r from-accent to-accent-glow' : 'bg-muted'
-                               }`}
-                            />
-                          ))}
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          Password strength: {['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][getPasswordStrength() - 1] || 'Very Weak'}
-                        </p>
+                {/* Security Section */}
+                <div className="space-y-6">
+                  <div className="pb-3 border-b border-sage-100">
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <Lock className="h-5 w-5 text-sage-600" />
+                      Account Security
+                    </h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Password */}
+                    <div className="space-y-3">
+                      <Label htmlFor="password" className="text-sm font-semibold text-foreground">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Create a secure password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="pl-12 pr-14 h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-4 top-4 text-sage-400 hover:text-sage-600 transition-colors z-20"
+                        >
+                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                        {password && isFieldValid('password', password) && (
+                          <div className="absolute right-12 top-4 text-sage-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password" className="text-sm font-medium">Confirm Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                      <Input
-                        id="confirm-password"
-                        type="password"
-                        placeholder="Confirm your password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="pl-10 pr-10 h-12 rounded-xl border-provider/20 focus:border-provider focus:ring-provider/20"
-                        required
-                      />
-                      {confirmPassword && isFieldValid('confirmPassword', confirmPassword) && (
-                        <div className="absolute right-3 top-3 text-green-600">
-                          <Check className="h-4 w-4" />
+                      {password && (
+                        <div className="space-y-2">
+                          <div className="flex space-x-1">
+                            {[...Array(5)].map((_, i) => (
+                              <div
+                                key={i}
+                                className={`h-2 flex-1 rounded-full transition-colors ${
+                                  i < getPasswordStrength() ? 'bg-gradient-to-r from-sage-500 to-sage-600' : 'bg-sage-200'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Password strength: {['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][getPasswordStrength() - 1] || 'Very Weak'}
+                          </p>
                         </div>
                       )}
                     </div>
-                  </div>
 
-                  {/* Submit Button */}
+                    {/* Confirm Password */}
+                    <div className="space-y-3">
+                      <Label htmlFor="confirm-password" className="text-sm font-semibold text-foreground">Confirm Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
+                        <Input
+                          id="confirm-password"
+                          type="password"
+                          placeholder="Confirm your password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                          required
+                        />
+                        {confirmPassword && isFieldValid('confirmPassword', confirmPassword) && (
+                          <div className="absolute right-4 top-4 text-sage-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-6">
                   <Button
                     type="submit"
                     disabled={loading}
-                    variant="provider-hero"
-                    size="lg"
-                    className="w-full mt-8 h-12 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full h-16 rounded-2xl text-lg font-bold bg-gradient-to-r from-sage-600 to-sage-700 hover:from-sage-700 hover:to-sage-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]"
                   >
-                    {loading ? "Creating Your Free Business Account..." : "Create My Free Business Account"}
+                    {loading ? (
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Creating Your Account...
+                      </div>
+                    ) : (
+                      "Create Account"
+                    )}
                   </Button>
+                </div>
 
-                  {/* Footer Links */}
-                  <div className="text-center space-y-3 pt-4">
-                    <p className="text-sm text-muted-foreground">
-                      Already have an account?{' '}
-                      <Link to="/auth" className="text-provider hover:underline font-medium">
-                        Sign in here
-                      </Link>
-                    </p>
-                    <p className="text-sm text-muted-foreground">
+                {/* Footer Links */}
+                <div className="text-center space-y-4 pt-6 border-t border-sage-100">
+                  <p className="text-sm text-muted-foreground">
+                    Already have an account?{' '}
+                    <Link to="/auth" className="text-sage-600 hover:text-sage-700 hover:underline font-semibold">
+                      Sign in here
+                    </Link>
+                  </p>
+                  <p className="text-sm text-muted-foreground">
                     Want to join as a customer?{' '}
-                    <Link to="/signup/customer" className="text-provider hover:underline font-medium">
+                    <Link to="/signup/customer" className="text-sage-600 hover:text-sage-700 hover:underline font-semibold">
                       Create customer account
                     </Link>
-                    </p>
-                  </div>
-                </form>
-              </Card>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </Card>
+
+          {/* Benefits Section */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div className="p-6 bg-white/50 rounded-2xl border border-sage-100">
+              <div className="w-12 h-12 bg-sage-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="h-6 w-6 text-sage-600" />
+              </div>
+              <h4 className="font-semibold text-foreground mb-2">Instant Bookings</h4>
+              <p className="text-sm text-muted-foreground">Get notified immediately when customers book your available slots</p>
+            </div>
+            
+            <div className="p-6 bg-white/50 rounded-2xl border border-sage-100">
+              <div className="w-12 h-12 bg-sage-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="h-6 w-6 text-sage-600" />
+              </div>
+              <h4 className="font-semibold text-foreground mb-2">Zero Commission</h4>
+              <p className="text-sm text-muted-foreground">Keep 100% of your earnings - no hidden fees or commissions</p>
+            </div>
+            
+            <div className="p-6 bg-white/50 rounded-2xl border border-sage-100">
+              <div className="w-12 h-12 bg-sage-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="h-6 w-6 text-sage-600" />
+              </div>
+              <h4 className="font-semibold text-foreground mb-2">Local Customers</h4>
+              <p className="text-sm text-muted-foreground">Connect with customers in your area looking for appointments</p>
             </div>
           </div>
         </div>
