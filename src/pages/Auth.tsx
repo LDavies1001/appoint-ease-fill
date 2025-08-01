@@ -210,11 +210,11 @@ const Auth = () => {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                   <Building className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
+                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
               </div>
-               <h1 className="text-3xl font-bold text-foreground mb-2">
-                 Join OpenSlot
-               </h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2">
+                Join Open-Slot
+              </h1>
               <p className="text-muted-foreground">
                 Choose your account type to get started
               </p>
@@ -304,7 +304,7 @@ const Auth = () => {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
+                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Account Created Successfully!
@@ -359,8 +359,8 @@ const Auth = () => {
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-sage-100 to-sage-200 rounded-lg flex items-center justify-center">
-                  <Building className="h-4 w-4 md:h-5 md:w-5 text-sage-700" />
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg flex items-center justify-center">
+                  <Building className="h-4 w-4 md:h-5 md:w-5 text-rose-700" />
                 </div>
                 <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
@@ -557,7 +557,7 @@ const Auth = () => {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                   <Building className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
+                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Grow Your Business
@@ -651,7 +651,7 @@ const Auth = () => {
                     Get Started Today
                   </Button>
                   <p className="text-xs text-muted-foreground">
-                    Join hundreds of professionals already using OpenSlot
+                    Join hundreds of professionals already using Open-Slot
                   </p>
                 </div>
               </div>
@@ -700,7 +700,7 @@ const Auth = () => {
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                 <Building className="h-5 w-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-foreground">OpenSlot</span>
+              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Welcome Back
