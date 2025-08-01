@@ -197,9 +197,6 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
   return (
     <div className="space-y-4">
       <div className="relative">
-        <Label className="text-sm font-medium mb-2 block">
-          Business Postcode
-        </Label>
         <div className="relative">
           <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
           <Input
