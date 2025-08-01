@@ -294,13 +294,6 @@ const BusinessSignup = () => {
                   </div>
                 </div>
 
-                <blockquote className="border-l-4 border-accent pl-6 italic text-muted-foreground">
-                  "Since joining OpenSlot, I've filled 80% of my cancellations with new customers. 
-                  It's been amazing for my business growth."
-                  <footer className="text-sm font-medium text-foreground mt-2">
-                    — Sarah M., Nail Technician
-                  </footer>
-                </blockquote>
               </div>
             </div>
 
