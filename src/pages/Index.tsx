@@ -140,19 +140,6 @@ const Index = () => {
                   className="w-full h-auto rounded-2xl lg:rounded-3xl shadow-elegant max-w-full"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl lg:rounded-3xl"></div>
-                
-                {/* Floating testimonial */}
-                <div className="absolute bottom-3 left-3 right-3 lg:bottom-6 lg:left-6 lg:right-6 bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 border border-white/20 shadow-lg">
-                  <div className="flex items-center space-x-2 lg:space-x-3 mb-2">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-3 w-3 lg:h-4 lg:w-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <span className="text-xs lg:text-sm font-medium text-gray-800">4.9/5 rating</span>
-                  </div>
-                  <p className="text-xs lg:text-sm text-gray-600 italic">"Perfect for busy schedules - found exactly what I needed!"</p>
-                </div>
               </div>
             </div>
           </div>
