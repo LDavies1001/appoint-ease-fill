@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Building, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, User, MapPin, Check, ArrowLeft, Calendar } from 'lucide-react';
-import { LocationInput } from '@/components/ui/location-input';
+import { Building, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, User, MapPin, Check, ArrowLeft, Calendar, Target } from 'lucide-react';
+import { PostcodeLookup } from '@/components/ui/postcode-lookup-enhanced';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 const BusinessSignup = () => {
@@ -17,6 +18,11 @@ const BusinessSignup = () => {
   const [fullName, setFullName] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [location, setLocation] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [serviceRadius, setServiceRadius] = useState('5');
+  const [postcodeData, setPostcodeData] = useState<any>(null);
   const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -75,6 +81,8 @@ const BusinessSignup = () => {
         return validatePhone(value);
       case 'location':
         return value.trim().length >= 3;
+      case 'postcode':
+        return value.trim().length >= 5 && latitude !== null && longitude !== null;
       case 'password':
         return getPasswordStrength() >= 4;
       case 'confirmPassword':
@@ -123,10 +131,10 @@ const BusinessSignup = () => {
       return;
     }
 
-    if (!location.trim()) {
+    if (!postcode.trim() || !latitude || !longitude) {
       toast({
-        title: "Location required",
-        description: "Please enter your business location",
+        title: "Postcode required",
+        description: "Please enter a valid UK postcode for your business location",
         variant: "destructive"
       });
       return;
@@ -168,7 +176,7 @@ const BusinessSignup = () => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(email, password, 'provider', fullName, phone, location, businessName);
+      const { error } = await signUp(email, password, 'provider', fullName, phone, postcode, businessName);
       
       if (error) {
         toast({
@@ -394,27 +402,57 @@ const BusinessSignup = () => {
                   <div className="pb-3 border-b border-sage-100">
                     <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
                       <MapPin className="h-5 w-5 text-sage-600" />
-                      Location
+                      Business Location & Service Area
                     </h3>
                   </div>
                   
-                  <div className="space-y-3">
-                    <Label htmlFor="business-location" className="text-sm font-semibold text-foreground">Business Town/City</Label>
-                    <div className="relative">
-                      <MapPin className="absolute left-4 top-4 h-5 w-5 text-sage-400 z-10" />
-                      <LocationInput
-                        placeholder="e.g. SW1A 1AA"
-                        value={location}
-                        onChange={setLocation}
-                        className="pl-12 pr-12 h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                  <div className="space-y-6">
+                    {/* Postcode Lookup */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-semibold text-foreground">Business Postcode</Label>
+                      <PostcodeLookup
+                        value={postcode}
+                        onChange={(data) => {
+                          setPostcode(data.postcode);
+                          setLocation(data.formattedAddress);
+                          setLatitude(data.latitude);
+                          setLongitude(data.longitude);
+                          setPostcodeData(data.postcodeData);
+                        }}
+                        placeholder="Enter your business postcode (e.g. SW1A 1AA)"
+                        className="h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base"
+                        showCoverageRadius={false}
                       />
-                      {location && isFieldValid('location', location) && (
-                        <div className="absolute right-4 top-4 text-sage-600 z-20">
-                          <Check className="h-5 w-5" />
-                        </div>
-                      )}
+                      <p className="text-sm text-muted-foreground">
+                        We need your exact postcode to match you with nearby customers
+                      </p>
                     </div>
-                    <p className="text-sm text-muted-foreground">Enter your town or city so we can match you with nearby customers</p>
+
+                    {/* Service Radius */}
+                    {postcode && latitude && longitude && (
+                      <div className="space-y-3">
+                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                          <Target className="h-4 w-4 text-sage-600" />
+                          How far will you travel for appointments?
+                        </Label>
+                        <Select value={serviceRadius} onValueChange={setServiceRadius}>
+                          <SelectTrigger className="h-14 rounded-2xl border-sage-200 focus:border-sage-500 focus:ring-sage-200 text-base">
+                            <SelectValue placeholder="Select service radius" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 mile radius</SelectItem>
+                            <SelectItem value="3">3 miles radius</SelectItem>
+                            <SelectItem value="5">5 miles radius</SelectItem>
+                            <SelectItem value="10">10 miles radius</SelectItem>
+                            <SelectItem value="15">15 miles radius</SelectItem>
+                            <SelectItem value="20">20+ miles radius</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <p className="text-sm text-muted-foreground">
+                          This helps customers know if you can provide services in their area
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
