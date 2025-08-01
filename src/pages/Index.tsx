@@ -12,7 +12,7 @@ const Index = () => {
       {/* Hero Section */}
       <div className="w-full px-1 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto w-full">
-          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 xl:gap-16 items-center py-4 sm:py-8 lg:py-16 xl:py-20 min-h-[85vh] w-full">
+          <div className="flex flex-col lg:grid lg:grid-cols-[1.1fr,0.9fr] gap-8 lg:gap-16 xl:gap-20 items-center py-8 sm:py-12 lg:py-20 xl:py-24 min-h-[90vh] w-full">
             {/* Left Side - Content */}
             <div className="space-y-4 sm:space-y-6 lg:space-y-8 animate-fade-in w-full px-1 sm:px-0">
               {/* Main Headline */}
