@@ -343,7 +343,7 @@ const Auth = () => {
   // Business Signup Form  
   if (selectedRole === 'provider') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sage-50 via-sage-25 to-background overflow-x-hidden w-full">
+      <div className="min-h-screen bg-gradient-to-br from-sage-50 via-sage-100 to-background overflow-x-hidden w-full">
         <div className="absolute top-4 left-4">
           <Button
             variant="ghost"
