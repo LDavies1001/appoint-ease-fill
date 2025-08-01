@@ -238,31 +238,6 @@ const BusinessSignup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sage-50 via-sage-25 to-background">
-      {/* Header with OpenSlot Logo */}
-      <div className="bg-gradient-to-br from-background via-background to-muted/20 py-6 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            {/* OpenSlot Logo - Calendar icon with rose gradient */}
-            <div className="w-8 h-8 bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg flex items-center justify-center">
-              <Calendar className="h-5 w-5 text-rose-700" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">OpenSlot</h1>
-              <p className="text-muted-foreground text-sm">Fill empty appointments automatically</p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/')}
-            className="text-muted-foreground hover:text-foreground flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Button>
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="py-8 px-4">
         <div className="max-w-2xl mx-auto">
@@ -287,6 +262,18 @@ const BusinessSignup = () => {
           {/* Form Container */}
           <Card className="bg-white/60 backdrop-blur-sm shadow-elegant rounded-2xl border border-sage-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
             <div className="p-8 lg:p-12">
+              {/* Back to Home Button */}
+              <div className="mb-8">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/')}
+                  className="text-muted-foreground hover:text-foreground flex items-center gap-2 -ml-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Home
+                </Button>
+              </div>
               <form onSubmit={handleSubmit} className="space-y-8">
                 
                 {/* Business Information Section */}
