@@ -210,11 +210,11 @@ const Auth = () => {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                   <Building className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">
-                Join Open-Slot
-              </h1>
+               <h1 className="text-3xl font-bold text-foreground mb-2">
+                 Join OpenSlot
+               </h1>
               <p className="text-muted-foreground">
                 Choose your account type to get started
               </p>
@@ -304,7 +304,7 @@ const Auth = () => {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Account Created Successfully!
@@ -343,13 +343,13 @@ const Auth = () => {
   // Business Signup Form  
   if (selectedRole === 'provider') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sage-50 via-sage-100 to-background overflow-x-hidden w-full">
+      <div className="min-h-screen bg-gradient-to-br from-provider/5 via-provider/10 to-background overflow-x-hidden w-full">
         <div className="absolute top-4 left-4">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-sage-700 hover:text-sage-800 hover:bg-sage-100/50"
+            className="flex items-center gap-2 text-provider hover:text-provider-glow hover:bg-provider/10"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Home
@@ -359,8 +359,8 @@ const Auth = () => {
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg flex items-center justify-center">
-                  <Building className="h-4 w-4 md:h-5 md:w-5 text-rose-700" />
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-provider to-provider-glow rounded-lg flex items-center justify-center">
+                  <Building className="h-4 w-4 md:h-5 md:w-5 text-white" />
                 </div>
                 <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
@@ -372,19 +372,19 @@ const Auth = () => {
               </p>
             </div>
 
-            <Card className="border border-sage-100/50 bg-white/60 backdrop-blur-sm shadow-elegant hover:shadow-lg transition-all duration-300 rounded-xl md:rounded-2xl p-6 md:p-8">
+            <Card className="border border-provider/20 bg-white/60 backdrop-blur-sm shadow-elegant hover:shadow-lg transition-all duration-300 rounded-xl md:rounded-2xl p-6 md:p-8">
               <form onSubmit={handleBusinessSignUp} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="business-name">Business Name</Label>
                   <div className="relative">
-                    <Building className="absolute left-3 top-3 h-4 w-4 text-sage-600" />
+                    <Building className="absolute left-3 top-3 h-4 w-4 text-provider" />
                     <Input
                       id="business-name"
                       type="text"
                       placeholder="Enter your business name"
                       value={businessName}
                       onChange={(e) => setBusinessName(e.target.value)}
-                      className="pl-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
+                      className="pl-10 border-provider/20 focus:border-provider focus:ring-provider/20"
                       required
                     />
                   </div>
@@ -393,14 +393,14 @@ const Auth = () => {
                 <div className="space-y-2">
                   <Label htmlFor="full-name">Your Name</Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-sage-600" />
+                    <User className="absolute left-3 top-3 h-4 w-4 text-provider" />
                     <Input
                       id="full-name"
                       type="text"
                       placeholder="Enter your full name"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="pl-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
+                      className="pl-10 border-provider/20 focus:border-provider focus:ring-provider/20"
                       required
                     />
                   </div>
@@ -409,14 +409,14 @@ const Auth = () => {
                 <div className="space-y-2">
                   <Label htmlFor="business-email">Business Email</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-sage-600" />
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-provider" />
                     <Input
                       id="business-email"
                       type="email"
                       placeholder="Enter your business email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
+                      className="pl-10 border-provider/20 focus:border-provider focus:ring-provider/20"
                       required
                     />
                   </div>
@@ -425,14 +425,14 @@ const Auth = () => {
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-3 h-4 w-4 text-sage-600" />
+                    <Phone className="absolute left-3 top-3 h-4 w-4 text-provider" />
                     <Input
                       id="phone"
                       type="tel"
                       placeholder="07123456789"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="pl-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
+                      className="pl-10 border-provider/20 focus:border-provider focus:ring-provider/20"
                       required
                     />
                   </div>
@@ -442,20 +442,20 @@ const Auth = () => {
                 <div className="space-y-2">
                   <Label htmlFor="business-password">Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-sage-600" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-provider" />
                     <Input
                       id="business-password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Create a password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 pr-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
+                      className="pl-10 pr-10 border-provider/20 focus:border-provider focus:ring-provider/20"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-sage-600 hover:text-sage-700"
+                      className="absolute right-3 top-3 text-provider hover:text-provider-glow"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -491,14 +491,14 @@ const Auth = () => {
                 <div className="space-y-2">
                   <Label htmlFor="confirm-business-password">Confirm Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-sage-600" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-provider" />
                     <Input
                       id="confirm-business-password"
                       type="password"
                       placeholder="Confirm your password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="pl-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
+                      className="pl-10 border-provider/20 focus:border-provider focus:ring-provider/20"
                       required
                     />
                   </div>
@@ -521,7 +521,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white shadow-sm transition-all duration-300"
+                  className="w-full bg-gradient-to-r from-provider to-provider-glow hover:from-provider-glow hover:to-provider text-white shadow-sm transition-all duration-300"
                   disabled={loading}
                 >
                   {loading ? "Creating account..." : "Create Business Account"}
@@ -557,7 +557,7 @@ const Auth = () => {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                   <Building className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Grow Your Business
@@ -651,7 +651,7 @@ const Auth = () => {
                     Get Started Today
                   </Button>
                   <p className="text-xs text-muted-foreground">
-                    Join hundreds of professionals already using Open-Slot
+                    Join hundreds of professionals already using OpenSlot
                   </p>
                 </div>
               </div>
@@ -700,7 +700,7 @@ const Auth = () => {
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
                 <Building className="h-5 w-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+              <span className="text-2xl font-bold text-foreground">OpenSlot</span>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Welcome Back
