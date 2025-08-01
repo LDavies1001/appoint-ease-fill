@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Building, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, User, MapPin, Check, ArrowLeft } from 'lucide-react';
+import { Building, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, User, MapPin, Check, ArrowLeft, Calendar } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 
 
@@ -197,11 +197,12 @@ const BusinessSignup = () => {
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-provider to-provider-glow rounded-xl flex items-center justify-center">
-                  <CheckCircle className="h-6 w-6 text-white" />
+              <div className="flex items-center justify-center space-x-3 mb-6">
+                {/* OpenSlot Logo */}
+                <div className="w-12 h-12 bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg flex items-center justify-center">
+                  <Calendar className="h-6 w-6 text-rose-700" />
                 </div>
-                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Business Account Created!
@@ -211,21 +212,19 @@ const BusinessSignup = () => {
               </p>
             </div>
 
-            <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-provider/10">
+            <Card className="bg-white/60 backdrop-blur-sm shadow-elegant p-8 rounded-2xl border border-sage-100/50">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-provider/10 border border-provider/20 rounded-full flex items-center justify-center mx-auto">
-                  <Mail className="h-8 w-8 text-provider" />
+                <div className="w-16 h-16 bg-sage-50 border border-sage-200 rounded-full flex items-center justify-center mx-auto">
+                  <Mail className="h-8 w-8 text-sage-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Check Your Email</h3>
                 <p className="text-sm text-muted-foreground">
-                  We've sent a verification email to <strong className="text-provider">{email}</strong>. 
+                  We've sent a verification email to <strong className="text-sage-600">{email}</strong>. 
                   Please click the link in the email to verify your account before logging in.
                 </p>
                 <Button
                   onClick={() => navigate('/auth')}
-                  variant="provider-hero"
-                  size="lg"
-                  className="w-full mt-6"
+                  className="w-full mt-6 bg-gradient-to-r from-sage-600 to-sage-700 hover:from-sage-700 hover:to-sage-800 text-white rounded-xl h-12 font-semibold"
                 >
                   Go to Login
                 </Button>
@@ -238,24 +237,25 @@ const BusinessSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sage-50 via-background to-sage-100">
-      {/* Sage Green Header Banner */}
-      <div className="bg-gradient-to-r from-sage-600 to-sage-700 text-white py-4 px-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-br from-sage-50 via-sage-25 to-background">
+      {/* Header with OpenSlot Logo */}
+      <div className="bg-gradient-to-br from-background via-background to-muted/20 py-6 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-              <Building className="h-6 w-6 text-white" />
+            {/* OpenSlot Logo - Calendar icon with rose gradient */}
+            <div className="w-8 h-8 bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg flex items-center justify-center">
+              <Calendar className="h-5 w-5 text-rose-700" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">OpenSlot</h1>
-              <p className="text-sage-100 text-sm">Helping local businesses fill empty appointments</p>
+              <h1 className="text-xl font-bold text-foreground">OpenSlot</h1>
+              <p className="text-muted-foreground text-sm">Fill empty appointments automatically</p>
             </div>
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate('/')}
-            className="text-white hover:bg-white/10 flex items-center gap-2"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Home
@@ -285,7 +285,7 @@ const BusinessSignup = () => {
           </div>
 
           {/* Form Container */}
-          <Card className="bg-white shadow-xl rounded-3xl border border-sage-100 overflow-hidden">
+          <Card className="bg-white/60 backdrop-blur-sm shadow-elegant rounded-2xl border border-sage-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
             <div className="p-8 lg:p-12">
               <form onSubmit={handleSubmit} className="space-y-8">
                 
@@ -550,27 +550,27 @@ const BusinessSignup = () => {
 
           {/* Benefits Section */}
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div className="p-6 bg-white/50 rounded-2xl border border-sage-100">
-              <div className="w-12 h-12 bg-sage-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-6 w-6 text-sage-600" />
+            <div className="p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-sage-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+              <div className="w-12 h-12 bg-sage-50 border border-sage-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="h-6 w-6 text-sage-600" />
               </div>
-              <h4 className="font-semibold text-foreground mb-2">Instant Bookings</h4>
+              <h4 className="text-lg font-semibold text-foreground mb-2">Instant Bookings</h4>
               <p className="text-sm text-muted-foreground">Get notified immediately when customers book your available slots</p>
             </div>
             
-            <div className="p-6 bg-white/50 rounded-2xl border border-sage-100">
-              <div className="w-12 h-12 bg-sage-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-6 w-6 text-sage-600" />
+            <div className="p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-sage-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+              <div className="w-12 h-12 bg-sage-50 border border-sage-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Building className="h-6 w-6 text-sage-600" />
               </div>
-              <h4 className="font-semibold text-foreground mb-2">Zero Commission</h4>
+              <h4 className="text-lg font-semibold text-foreground mb-2">Zero Commission</h4>
               <p className="text-sm text-muted-foreground">Keep 100% of your earnings - no hidden fees or commissions</p>
             </div>
             
-            <div className="p-6 bg-white/50 rounded-2xl border border-sage-100">
-              <div className="w-12 h-12 bg-sage-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-6 w-6 text-sage-600" />
+            <div className="p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-sage-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+              <div className="w-12 h-12 bg-sage-50 border border-sage-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="h-6 w-6 text-sage-600" />
               </div>
-              <h4 className="font-semibold text-foreground mb-2">Local Customers</h4>
+              <h4 className="text-lg font-semibold text-foreground mb-2">Local Customers</h4>
               <p className="text-sm text-muted-foreground">Connect with customers in your area looking for appointments</p>
             </div>
           </div>
