@@ -1,134 +1,131 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
-import { Calendar, Star, MapPin, Lock, Award, Heart, Building, CheckCircle, Clock, Users, ArrowRight, Sparkles, Zap, Search } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Calendar, Star, Shield, User, Building, ArrowRight, Heart, Sparkles, CheckCircle, Search, MapPin, Lock, Award } from 'lucide-react';
 
 import heroImage from '@/assets/hero-marketplace-scene.jpg';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 overflow-x-hidden w-full">
-      {/* Hero Banner */}
-      <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--primary)/0.1),transparent_70%)]"></div>
-        
-        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            
-            {/* Left Content - Hero Copy */}
-            <div className="space-y-8 text-center lg:text-left animate-fade-in">
-              {/* Attention Grabber */}
-              <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 text-sm font-medium text-primary">
-                <Sparkles className="h-4 w-4" />
-                <span>Fill Last-Minute Slots Instantly</span>
-              </div>
-
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden w-full">
+      {/* Hero Section */}
+      <div className="w-full px-1 sm:px-4 lg:px-6 xl:px-8 overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 xl:gap-16 items-center py-4 sm:py-8 lg:py-16 xl:py-20 min-h-[85vh] w-full">
+            {/* Left Side - Content */}
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8 animate-fade-in w-full px-1 sm:px-0">
               {/* Main Headline */}
-              <div className="space-y-4">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-foreground">
-                  Stop Chasing
-                  <span className="block text-primary">Bookings</span>
+              <div className="space-y-4 lg:space-y-6">
+                <h1 className="font-bold text-foreground leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 3.5rem)' }}>
+                  Find & Fill Last-Minute <span className="text-sage-200">Appointments</span>
                 </h1>
-                <p className="text-xl sm:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto lg:mx-0">
-                  The marketplace that connects customers with <span className="text-primary font-semibold">last-minute availability</span>
+                
+                <p className="text-muted-foreground leading-relaxed max-w-full lg:max-w-2xl" style={{ fontSize: 'clamp(1rem, 3.5vw, 1.25rem)' }}>
+                  <span className="font-semibold">Customers:</span> Discover available slots near you instantly<br/>
+                  <span className="font-semibold">Businesses:</span> Fill empty appointments automatically
                 </p>
               </div>
 
-              {/* Key Benefits */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Zap className="h-4 w-4 text-primary" />
+              {/* Dual Value Proposition */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-6">
+                {/* Customer Value */}
+                <div className="bg-gradient-to-br from-rose-50 to-rose-100 border border-rose-200/50 rounded-xl p-4 lg:p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Heart className="h-6 w-6 text-rose-600" />
+                    <h3 className="font-bold text-lg text-foreground">For Customers</h3>
                   </div>
-                  <span className="text-foreground font-medium">Instant bookings</span>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                      <span>Book instantly, no waiting</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                      <span>Discover local providers</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                      <span>Great last-minute deals</span>
+                    </li>
+                  </ul>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Users className="h-4 w-4 text-primary" />
+
+                {/* Business Value */}
+                <div className="bg-gradient-to-br from-sage-50 to-sage-100 border border-sage-200/50 rounded-xl p-4 lg:p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Building className="h-6 w-6 text-sage-600" />
+                    <h3 className="font-bold text-lg text-foreground">For Businesses</h3>
                   </div>
-                  <span className="text-foreground font-medium">Reach new customers</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Clock className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-foreground font-medium">Fill empty slots</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                    <CheckCircle className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-foreground font-medium">Reduce no-shows</span>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-sage-500 flex-shrink-0" />
+                      <span>Fill empty slots automatically</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-sage-500 flex-shrink-0" />
+                      <span>No more chasing bookings</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-sage-500 flex-shrink-0" />
+                      <span>Reduce no-shows</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
 
-              {/* Primary CTAs */}
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link to="/signup/business" className="group flex-1">
-                    <Button size="lg" className="w-full h-14 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl group-hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
-                      Start Filling Slots
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
+              {/* Dual CTA Section */}
+              <div className="space-y-4 lg:space-y-6 w-full">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
+                  {/* Customer CTA */}
                   <Link to="/signup/customer" className="group flex-1">
-                    <Button size="lg" variant="outline" className="w-full h-14 text-lg font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl group-hover:scale-105 transition-all duration-200">
-                      Find Appointments
-                      <Heart className="ml-2 h-5 w-5" />
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-rose-50 via-rose-100 to-rose-200 hover:from-rose-100 hover:via-rose-200 hover:to-rose-300 text-rose-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-rose-100/25 hover:-translate-y-1">
+                      <div className="flex flex-col items-center text-center space-y-2">
+                        <Heart className="h-6 w-6 lg:h-8 lg:w-8" />
+                        <span className="font-bold text-lg lg:text-xl">I'm a Customer</span>
+                      </div>
+                    </Button>
+                  </Link>
+
+                  {/* Business CTA */}
+                  <Link to="/signup/business" className="group flex-1">
+                    <Button className="w-full h-auto p-4 lg:p-6 bg-gradient-to-br from-sage-50 via-sage-100 to-sage-200 hover:from-sage-100 hover:via-sage-200 hover:to-sage-300 text-sage-700 border-0 rounded-xl lg:rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-sage-100/25 hover:-translate-y-1">
+                      <div className="flex flex-col items-center text-center space-y-2">
+                        <Building className="h-6 w-6 lg:h-8 lg:w-8" />
+                        <span className="font-bold text-lg lg:text-xl">I'm a Business</span>
+                      </div>
                     </Button>
                   </Link>
                 </div>
-                
-                {/* Social Proof */}
-                <div className="flex items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Lock className="h-4 w-4 text-primary" />
-                    <span>Secure & Trusted</span>
+
+                {/* Trust Badges */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-4">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <MapPin className="h-4 w-4 text-sage-200" />
+                    <span>Made in the UK</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    <span>UK Based</span>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Lock className="h-4 w-4 text-sage-200" />
+                    <span>Secure booking platform</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Award className="h-4 w-4 text-primary" />
-                    <span>Instant Setup</span>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Award className="h-4 w-4 text-sage-200" />
+                    <span>Instant bookings</span>
                   </div>
                 </div>
+
               </div>
             </div>
 
-            {/* Right Content - Hero Image */}
-            <div className="relative animate-scale-in order-first lg:order-last">
-              <div className="relative max-w-lg mx-auto lg:max-w-none">
-                {/* Main Image */}
-                <div className="relative">
-                  <img 
-                    src={heroImage} 
-                    alt="Professional service appointment" 
-                    className="w-full h-auto rounded-3xl shadow-2xl"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent rounded-3xl"></div>
-                </div>
-                
-                {/* Floating Stats Cards */}
-                <div className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white/20">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">24/7</div>
-                    <div className="text-sm text-muted-foreground">Instant Booking</div>
-                  </div>
-                </div>
-                
-                <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white/20">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground">Live Availability</div>
-                      <div className="text-xs text-muted-foreground">Real-time updates</div>
-                    </div>
-                  </div>
-                </div>
+            {/* Right Side - Hero Image */}
+            <div className="lg:order-last order-first animate-scale-in w-full max-w-full px-2 sm:px-0">
+              <div className="relative max-w-full">
+                <img 
+                  src={heroImage} 
+                  alt="Professional beauty appointment" 
+                  className="w-full h-auto rounded-2xl lg:rounded-3xl shadow-elegant max-w-full"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl lg:rounded-3xl"></div>
               </div>
             </div>
           </div>
