@@ -426,7 +426,7 @@ const BusinessSignup = () => {
                       showCoverageRadius={false}
                     />
                     <p className="text-sm text-muted-foreground">
-                      We need your exact postcode to match you with nearby customers
+                      You can add more service areas later in your profile settings
                     </p>
                   </div>
 
