@@ -759,46 +759,14 @@ const Auth = () => {
     <div className="min-h-screen bg-gradient-to-br from-sage-50/30 via-background to-rose-50/20">
       <div className="container mx-auto px-4 py-8 flex min-h-screen items-center">
         <div className="w-full max-w-4xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Engaging Content */}
-          <div className="space-y-6 lg:pr-8">
-            <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                Welcome Back to
-                <span className="text-sage-600 block">OpenSlot</span>
-              </h1>
-              <p className="text-xl text-muted-foreground">
-                Continue growing your beauty business with smart booking management.
-              </p>
-            </div>
-
-            {/* Quick Benefits */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-rose-400 rounded-full"></div>
-                <span className="text-muted-foreground">Fill empty slots with last-minute bookings</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-sage-500 rounded-full"></div>
-                <span className="text-muted-foreground">Automated scheduling & reminders</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-rose-400 rounded-full"></div>
-                <span className="text-muted-foreground">Professional portfolio showcase</span>
-              </div>
-            </div>
-
-            {/* New User CTA */}
-            <div className="bg-sage-50 border border-sage-200 rounded-lg p-4">
-              <p className="text-sm text-muted-foreground mb-3">
-                Don't have an account yet?
-              </p>
-              <Button
-                onClick={() => navigate('?tab=signup')}
-                variant="outline"
-                className="w-full border-rose-300 text-rose-600 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-400"
-              >
-                Start Free Trial
-              </Button>
+          {/* Left side - Hero Image */}
+          <div className="hidden lg:flex items-center justify-center">
+            <div className="w-full max-w-lg">
+              <img 
+                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&q=80" 
+                alt="OpenSlot booking platform" 
+                className="w-full h-auto rounded-2xl shadow-2xl"
+              />
             </div>
           </div>
 
