@@ -920,7 +920,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-6 shadow-lg">
             <Building className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl font-bold text-accent mb-4">
             Complete Your Profile
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
