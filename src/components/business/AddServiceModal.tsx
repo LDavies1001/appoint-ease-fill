@@ -55,6 +55,9 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
   const [customServiceName, setCustomServiceName] = useState('');
   const { toast } = useToast();
 
+  // Debug modal opening
+  console.log('AddServiceModal rendered with:', { isOpen, userId });
+
   // Fetch user's profile services
   useEffect(() => {
     const fetchProfileServices = async () => {
