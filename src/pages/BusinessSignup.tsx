@@ -576,32 +576,6 @@ const BusinessSignup = () => {
             </div>
           </Card>
 
-          {/* Benefits Section */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div className="p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-sage-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-12 h-12 bg-sage-50 border border-sage-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="h-6 w-6 text-sage-600" />
-              </div>
-              <h4 className="text-lg font-semibold text-foreground mb-2">Instant Bookings</h4>
-              <p className="text-sm text-muted-foreground">Get notified immediately when customers book your available slots</p>
-            </div>
-            
-            <div className="p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-sage-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-12 h-12 bg-sage-50 border border-sage-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Building className="h-6 w-6 text-sage-600" />
-              </div>
-              <h4 className="text-lg font-semibold text-foreground mb-2">Fill Empty Slots</h4>
-              <p className="text-sm text-muted-foreground">Turn your downtime into revenue by offering last-minute appointments</p>
-            </div>
-            
-            <div className="p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-sage-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-12 h-12 bg-sage-50 border border-sage-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="h-6 w-6 text-sage-600" />
-              </div>
-              <h4 className="text-lg font-semibold text-foreground mb-2">Local Customers</h4>
-              <p className="text-sm text-muted-foreground">Connect with customers in your area looking for appointments</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
