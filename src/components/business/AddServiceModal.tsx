@@ -61,7 +61,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
   // Debug modal opening
   console.log('AddServiceModal rendered with:', { isOpen, userId });
 
-  // Fetch user's onboarding services - these should be the detailed services from SimpleCategorySelector
+  // Fetch user's onboarding services - these should be the specific services they selected
   useEffect(() => {
     const fetchOnboardingServices = async () => {
       if (!userId) return;
@@ -75,50 +75,19 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
         
         const existingServices = providerServicesData?.map(s => s.service_name) || [];
         
-        // Get the categories and their specific services from provider_details
+        // Get the actual services selected during onboarding from provider_details
         const { data: providerDetails } = await supabase
           .from('provider_details')
           .select('services_offered')
           .eq('user_id', userId)
           .single();
         
-        const selectedCategories = providerDetails?.services_offered || [];
+        const onboardingServices = providerDetails?.services_offered || [];
         
-        // Map category IDs to their specific services from onboarding
-        const categoryToServices: Record<string, string[]> = {
-          'beauty': [
-            'Eyebrow Waxing', 'Threading', 'Tinting', 'Brow Lamination', 'Lash Lift',
-            'Classic Lashes', 'Hybrid Lashes', 'Volume Lashes', 'Lash Removal',
-            'Manicure', 'Gel Nails', 'Acrylic Nails', 'BIAB', 'Pedicure', 'Nail Art', 'Nail Removal', 'Callus Peel',
-            'Dry Cut', 'Wash & Blow Dry', 'Hair Colour', 'Highlights', 'Balayage', 'Hair Up / Occasion Styling', 'Hair Extensions', 'Hair Treatments',
-            'Express Facial', 'Luxury Facial', 'Dermaplaning', 'Chemical Peel', 'Microdermabrasion', 'LED Therapy',
-            'Leg Wax', 'Bikini / Hollywood', 'Underarm Wax', 'Arm / Face Wax', 'Chin / Lip Wax',
-            'Light Spray Tan', 'Medium / Dark Spray Tan', 'Tanning Booth',
-            'Back & Shoulder Massage', 'Full Body Massage', 'Hot Stone Massage', 'Pregnancy Massage', 'Indian Head Massage'
-          ],
-          'cleaning': [
-            'Regular Clean', 'Deep Clean', 'End-of-Tenancy', 'Post-Party Clean', 'Airbnb Turnaround', 'Spring Clean',
-            'Office Cleaning', 'Shop Cleaning', 'Salon / Clinic Cleaning', 'Restaurant / Kitchen Cleaning', 'Commercial End-of-Tenancy',
-            'Oven Cleaning', 'Carpet Cleaning', 'Upholstery Cleaning', 'Window Cleaning', 'Jet Washing', 'Mould Removal', 'Hoarder Cleaning', 'Disinfection / Antiviral',
-            'Ironing', 'Laundry Folding', 'Bed Changing', 'Cupboard / Fridge Cleaning', 'Internal Windows'
-          ],
-          'home': [
-            'Flatpack Assembly', 'Hanging Shelves / Mirrors', 'TV Mounting', 'Door / Lock Repairs', 'Curtain / Blind Fitting',
-            'Light Replacement', 'Socket / Switch Install', 'Fuse Box Work', 'Minor Rewiring', 'PAT Testing',
-            'Tap Repair', 'Sink / Toilet Unblocking', 'Shower Installation', 'Leak Detection', 'Radiator Bleeding',
-            'Lawn Mowing', 'Hedge Trimming', 'Weeding', 'General Garden Tidy', 'Jet Washing'
-          ]
-        };
+        // Combine existing services with onboarding services (and remove duplicates)
+        const allServices = [...new Set([...existingServices, ...onboardingServices])];
         
-        // Get all specific services based on selected categories
-        const availableServices = selectedCategories.flatMap(categoryId => 
-          categoryToServices[categoryId] || []
-        );
-        
-        // Combine existing services with available onboarding services
-        const allServices = [...new Set([...existingServices, ...availableServices])];
-        
-        console.log('Found user services:', { existingServices, selectedCategories, availableServices, allServices });
+        console.log('Found user services:', { existingServices, onboardingServices, allServices });
         setProfileServices(allServices);
         
       } catch (error) {
