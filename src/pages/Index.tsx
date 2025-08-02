@@ -8,6 +8,7 @@ import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
 
 import { FinalCTASection } from '@/components/landing/FinalCTASection';
+import Footer from '@/components/landing/Footer';
 
 const Index = () => {
   return (
@@ -36,6 +37,9 @@ const Index = () => {
 
       {/* Final CTA Section */}
       <FinalCTASection />
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
