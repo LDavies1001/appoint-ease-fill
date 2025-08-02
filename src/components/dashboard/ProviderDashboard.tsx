@@ -1141,7 +1141,14 @@ const ProviderDashboard = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
+                <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border justify-end">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowAddSlot(false)}
+                  >
+                    Cancel
+                  </Button>
                   <Button
                     type="submit"
                     variant="provider-hero"
@@ -1149,14 +1156,7 @@ const ProviderDashboard = () => {
                     disabled={uploading}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    {uploading ? "Creating..." : "Create Slot"}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setShowAddSlot(false)}
-                  >
-                    Cancel
+                    {uploading ? "Saving..." : "Save"}
                   </Button>
                 </div>
               </form>
