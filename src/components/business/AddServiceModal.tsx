@@ -340,26 +340,31 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
                   <SelectValue placeholder="Select a service or add custom..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white border shadow-lg z-[100] max-h-[200px] overflow-y-auto">
-                  {globalServices.length > 0 && (
-                    globalServices.map((service) => (
-                      <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
-                        {service}
-                      </SelectItem>
-                    ))
-                  )}
-                  {profileServices.length > 0 && profileServices.some(service => !globalServices.includes(service)) && (
+                  {/* Show user's services first (from onboarding + any they've already created) */}
+                  {profileServices.length > 0 && (
                     <>
-                      <div className="px-2 py-1 text-xs font-medium text-muted-foreground border-t">
-                        Your Custom Services
+                      <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
+                        Your Services
                       </div>
-                      {profileServices.filter(service => !globalServices.includes(service)).map((service) => (
+                      {profileServices.map((service) => (
                         <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
                           {service}
                         </SelectItem>
                       ))}
+                      <div className="px-2 py-1 text-xs font-medium text-muted-foreground border-t">
+                        Available Services
+                      </div>
                     </>
                   )}
-                  <SelectItem value="custom" className="font-medium text-primary cursor-pointer hover:bg-gray-100">
+                  
+                  {/* Show global services (filtered to not show duplicates) */}
+                  {globalServices.filter(service => !profileServices.includes(service)).map((service) => (
+                    <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
+                      {service}
+                    </SelectItem>
+                  ))}
+                  
+                  <SelectItem value="custom" className="font-medium text-primary cursor-pointer hover:bg-gray-100 border-t">
                     <div className="flex items-center gap-2">
                       <Plus className="h-4 w-4" />
                       Add Custom Service
