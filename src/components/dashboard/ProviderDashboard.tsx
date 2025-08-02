@@ -788,28 +788,49 @@ const ProviderDashboard = () => {
 
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">Start Time *</Label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-2">
+                    <div className="grid grid-cols-3 gap-3">
+                      {/* Hour Selection */}
+                      <div>
                         <Select
-                          value={slotForm.start_time.split(':')[0] || ''}
+                          value={(() => {
+                            const hour = parseInt(slotForm.start_time.split(':')[0] || '0');
+                            if (hour === 0) return '12';
+                            if (hour > 12) return (hour - 12).toString();
+                            return hour.toString();
+                          })()}
                           onValueChange={(hour) => {
+                            const currentHour = parseInt(slotForm.start_time.split(':')[0] || '0');
+                            const isAM = currentHour < 12;
                             const minutes = slotForm.start_time.split(':')[1] || '00';
-                            setSlotForm(prev => ({ ...prev, start_time: `${hour}:${minutes}` }));
+                            let newHour = parseInt(hour);
+                            
+                            if (hour === '12') {
+                              newHour = isAM ? 0 : 12;
+                            } else {
+                              newHour = isAM ? parseInt(hour) : parseInt(hour) + 12;
+                            }
+                            
+                            setSlotForm(prev => ({ 
+                              ...prev, 
+                              start_time: `${newHour.toString().padStart(2, '0')}:${minutes}` 
+                            }));
                           }}
                         >
                           <SelectTrigger className="h-11">
                             <SelectValue placeholder="Hour" />
                           </SelectTrigger>
                           <SelectContent>
-                            {Array.from({ length: 24 }, (_, i) => (
-                              <SelectItem key={i} value={i.toString().padStart(2, '0')}>
-                                {i.toString().padStart(2, '0')}
+                            {Array.from({ length: 12 }, (_, i) => (
+                              <SelectItem key={i + 1} value={(i + 1).toString()}>
+                                {i + 1}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-2">
+
+                      {/* Minute Selection */}
+                      <div>
                         <Select
                           value={slotForm.start_time.split(':')[1] || ''}
                           onValueChange={(minute) => {
@@ -818,7 +839,7 @@ const ProviderDashboard = () => {
                           }}
                         >
                           <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Minute" />
+                            <SelectValue placeholder="Min" />
                           </SelectTrigger>
                           <SelectContent>
                             {['00', '15', '30', '45'].map(minute => (
@@ -826,6 +847,40 @@ const ProviderDashboard = () => {
                                 {minute}
                               </SelectItem>
                             ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* AM/PM Selection */}
+                      <div>
+                        <Select
+                          value={(() => {
+                            const hour = parseInt(slotForm.start_time.split(':')[0] || '0');
+                            return hour < 12 ? 'AM' : 'PM';
+                          })()}
+                          onValueChange={(period) => {
+                            const currentHour = parseInt(slotForm.start_time.split(':')[0] || '0');
+                            const minutes = slotForm.start_time.split(':')[1] || '00';
+                            let newHour = currentHour;
+                            
+                            if (period === 'AM' && currentHour >= 12) {
+                              newHour = currentHour === 12 ? 0 : currentHour - 12;
+                            } else if (period === 'PM' && currentHour < 12) {
+                              newHour = currentHour === 0 ? 12 : currentHour + 12;
+                            }
+                            
+                            setSlotForm(prev => ({ 
+                              ...prev, 
+                              start_time: `${newHour.toString().padStart(2, '0')}:${minutes}` 
+                            }));
+                          }}
+                        >
+                          <SelectTrigger className="h-11">
+                            <SelectValue placeholder="AM/PM" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="AM">AM</SelectItem>
+                            <SelectItem value="PM">PM</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
