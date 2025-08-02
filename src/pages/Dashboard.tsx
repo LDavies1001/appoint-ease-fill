@@ -67,7 +67,7 @@ const Dashboard = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 bg-background border z-50" align="end">
                   <DropdownMenuItem asChild>
-                    <Link to="/public-portfolio" className="flex items-center">
+                    <Link to={`/public-portfolio/${profile?.user_id || user?.id}`} className="flex items-center">
                       <Eye className="h-4 w-4 mr-2" />
                       View Public Profile
                     </Link>
