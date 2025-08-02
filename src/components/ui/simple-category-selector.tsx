@@ -403,7 +403,7 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
           <Button 
             onClick={handleConfirmServices}
             disabled={selectedServices.length === 0}
-            className="flex-1"
+            className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground"
           >
             Add Services ({selectedServices.length})
           </Button>
