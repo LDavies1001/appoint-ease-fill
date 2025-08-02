@@ -920,7 +920,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         <img 
           src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
           alt="OpenSlot Logo" 
-          className="w-56 h-56 object-contain mb-6"
+          className="w-56 h-56 object-contain mb-6 mx-auto"
         />
           <h1 className="text-5xl font-bold text-accent mb-4">
             Complete Your Profile
