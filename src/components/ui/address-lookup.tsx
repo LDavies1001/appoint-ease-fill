@@ -141,7 +141,7 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
           const updatedAddress: AddressData = {
             ...value,
             postcode: locationData.postcode,
-            town_city: locationData.admin_district || locationData.admin_ward || '',
+            town_city: locationData.admin_district || locationData.admin_ward || locationData.parish || '',
             admin_district: locationData.admin_district,
             admin_ward: locationData.admin_ward,
             latitude: locationData.latitude,
@@ -340,13 +340,29 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
             <Label htmlFor="town_city">
               Town/City <span className="text-destructive">*</span>
             </Label>
-            <Input
-              id="town_city"
-              value={value.town_city}
-              onChange={(e) => handleFieldChange('town_city', e.target.value)}
-              placeholder="e.g., Manchester"
-              className={errors.town_city ? 'border-destructive' : ''}
-            />
+            <div className="relative">
+              <Input
+                id="town_city"
+                value={value.town_city}
+                onChange={(e) => handleFieldChange('town_city', e.target.value)}
+                placeholder="e.g., Manchester"
+                className={cn(
+                  errors.town_city ? 'border-destructive' : '',
+                  value.admin_district ? 'bg-green-50 border-green-200' : ''
+                )}
+                readOnly={!!value.admin_district}
+              />
+              {value.admin_district && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <Check className="h-4 w-4 text-green-600" />
+                </div>
+              )}
+            </div>
+            {value.admin_district && (
+              <p className="text-xs text-green-600 mt-1">
+                ✓ Auto-populated from postcode lookup
+              </p>
+            )}
             {errors.town_city && (
               <p className="text-sm text-destructive mt-1">{errors.town_city}</p>
             )}
