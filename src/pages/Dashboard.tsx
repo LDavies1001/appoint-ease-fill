@@ -3,6 +3,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouteProtection } from '@/hooks/useRouteProtection';
 import CustomerDashboard from '@/components/dashboard/CustomerDashboard';
 import ProviderDashboard from '@/components/dashboard/ProviderDashboard';
+import { Button } from '@/components/ui/button';
+import { Settings, User } from 'lucide-react';
 
 
 const Dashboard = () => {
@@ -33,15 +35,30 @@ const Dashboard = () => {
       {/* Banner Section with Logo */}
       <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50 w-full overflow-hidden">
         <div className="relative max-w-6xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-6 sm:py-8">
-          <div className="flex items-center justify-center space-x-4">
-            <img 
-              src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
-              alt="OpenSlot Logo" 
-              className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
-            />
-            <span className="font-bold text-2xl sm:text-3xl text-foreground">
-              OpenSlot
-            </span>
+          <div className="flex items-center justify-between">
+            {/* Logo Section - Left */}
+            <div className="flex items-center space-x-4">
+              <img 
+                src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+                alt="OpenSlot Logo" 
+                className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
+              />
+              <span className="font-bold text-2xl sm:text-3xl text-foreground">
+                OpenSlot
+              </span>
+            </div>
+
+            {/* Account Management Options - Right */}
+            <div className="flex items-center space-x-3">
+              <Button variant="outline" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </Button>
+              <Button variant="outline" size="sm">
+                <User className="h-4 w-4 mr-2" />
+                Profile
+              </Button>
+            </div>
           </div>
         </div>
       </div>
