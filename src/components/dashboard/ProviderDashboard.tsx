@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileOptimizedDashboard from './MobileOptimizedDashboard';
@@ -105,6 +106,7 @@ const ProviderDashboard = () => {
   const [showAddSlot, setShowAddSlot] = useState(false);
   const [showBulkCreator, setShowBulkCreator] = useState(false);
   const [editingSlot, setEditingSlot] = useState<AvailabilitySlot | null>(null);
+  const [customerViewSlot, setCustomerViewSlot] = useState<AvailabilitySlot | null>(null);
   const [slotForm, setSlotForm] = useState({
     provider_service_id: '',
     custom_service_name: '',
@@ -1374,6 +1376,102 @@ const ProviderDashboard = () => {
             </Card>
           )}
 
+          {/* Customer View Modal */}
+          <Dialog open={!!customerViewSlot} onOpenChange={() => setCustomerViewSlot(null)}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold text-foreground">
+                  Customer View - {customerViewSlot?.service?.name}
+                </DialogTitle>
+              </DialogHeader>
+              
+              {customerViewSlot && (
+                <div className="space-y-6">
+                  {/* Service Image */}
+                  {customerViewSlot.image_url && (
+                    <div className="w-full h-48 rounded-xl overflow-hidden border border-border">
+                      <img 
+                        src={customerViewSlot.image_url} 
+                        alt={customerViewSlot.service?.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Service Details */}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-2xl font-bold text-foreground mb-2">
+                        {customerViewSlot.service?.name}
+                      </h3>
+                      <p className="text-muted-foreground">
+                        Professional service appointment
+                      </p>
+                    </div>
+                    
+                    {/* Date and Time */}
+                    <div className="flex items-center gap-6 p-4 bg-muted/30 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-provider" />
+                        <span className="font-medium">{formatDate(customerViewSlot.date)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-5 w-5 text-provider" />
+                        <span className="font-medium">
+                          {formatTime(customerViewSlot.start_time)} - {formatTime(customerViewSlot.end_time)}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* Price */}
+                    <div className="flex items-center justify-between p-4 bg-provider/10 rounded-lg border border-provider/20">
+                      <span className="text-lg font-semibold text-foreground">Price:</span>
+                      <div className="text-right">
+                        {customerViewSlot.discount_price ? (
+                          <div className="space-y-1">
+                            <span className="text-lg line-through text-muted-foreground">£{customerViewSlot.price}</span>
+                            <div className="text-2xl font-bold text-destructive">£{customerViewSlot.discount_price}</div>
+                            <span className="text-sm text-provider">Special Offer!</span>
+                          </div>
+                        ) : (
+                          <span className="text-2xl font-bold text-provider">£{customerViewSlot.price}</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Duration */}
+                    <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                      <span className="font-medium text-foreground">Duration:</span>
+                      <span className="text-provider font-semibold">{customerViewSlot.duration} minutes</span>
+                    </div>
+                    
+                    {/* Notes */}
+                    {customerViewSlot.notes && (
+                      <div className="p-4 bg-accent/10 rounded-lg border border-accent/20">
+                        <h4 className="font-semibold text-foreground mb-2">Additional Information:</h4>
+                        <p className="text-muted-foreground">{customerViewSlot.notes}</p>
+                      </div>
+                    )}
+                    
+                    {/* Booking Button Preview */}
+                    <div className="pt-4 border-t border-border">
+                      <Button 
+                        className="w-full" 
+                        variant="provider-hero"
+                        disabled
+                      >
+                        <span className="opacity-60">Book This Appointment</span>
+                      </Button>
+                      <p className="text-xs text-muted-foreground text-center mt-2">
+                        This is how customers will see your slot
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
+
           {/* Bulk Slot Creator */}
           {showBulkCreator && (
             <BulkSlotCreator
@@ -1405,7 +1503,11 @@ const ProviderDashboard = () => {
                 </Card>
               ) : (
                 mySlots.map((slot) => (
-                  <Card key={slot.id} className="card-elegant p-4">
+                  <Card 
+                    key={slot.id} 
+                    className="card-elegant p-4 cursor-pointer hover:shadow-lg transition-shadow" 
+                    onClick={() => setCustomerViewSlot(slot)}
+                  >
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-2">
@@ -1456,7 +1558,10 @@ const ProviderDashboard = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setEditingSlot(slot)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingSlot(slot);
+                          }}
                           className="text-provider hover:text-provider"
                         >
                           <Edit className="h-4 w-4 mr-1" />
@@ -1465,7 +1570,10 @@ const ProviderDashboard = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleDeleteSlot(slot.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteSlot(slot.id);
+                          }}
                           className="text-destructive hover:text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-1" />
