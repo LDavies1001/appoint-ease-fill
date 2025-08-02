@@ -250,11 +250,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               <Label className="text-base font-medium">Service Pricing List</Label>
               {!isEditing && (
                 <div className="flex items-center gap-4">
-                  {activeServices.length > 0 && (
-                    <div className="flex items-center gap-1 text-sm text-provider">
-                      <span className="font-medium">Total Value: £{totalValue.toFixed(2)}</span>
-                    </div>
-                  )}
                   <Button variant="provider" size="sm" onClick={handleAddService}>
                     <Plus className="h-4 w-4" />
                     Add Service
