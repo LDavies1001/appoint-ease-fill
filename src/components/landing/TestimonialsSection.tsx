@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { MessageCircle } from 'lucide-react';
 
@@ -26,16 +27,14 @@ export const TestimonialsSection = () => {
               Your feedback will help shape the future of appointment booking.
             </p>
             
-            <Button 
-              className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-lg font-medium"
-              onClick={() => {
-                // This could open a modal or redirect to a review form
-                window.open('mailto:feedback@openslot.com?subject=OpenSlot Review', '_blank');
-              }}
-            >
-              <MessageCircle className="h-4 w-4 mr-2" />
-              Leave a Review
-            </Button>
+            <Link to="/review">
+              <Button 
+                className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-lg font-medium"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Leave a Review
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
