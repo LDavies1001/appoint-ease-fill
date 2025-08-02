@@ -139,7 +139,7 @@ export const SocialMediaConnector: React.FC = () => {
     }
   };
 
-  const extractHandle = (url: string, platform: SocialPlatform) => {
+  const extractHandle = (url: string) => {
     try {
       const urlObj = new URL(url);
       const pathname = urlObj.pathname.replace(/\/$/, ''); // Remove trailing slash
@@ -172,7 +172,7 @@ export const SocialMediaConnector: React.FC = () => {
     }
 
     try {
-      const handle = extractHandle(url, platform);
+      const handle = extractHandle(url);
 
       // First, check if a connection already exists and deactivate it
       const { error: deactivateError } = await supabase
@@ -284,7 +284,6 @@ export const SocialMediaConnector: React.FC = () => {
               )}
             >
               <div className="p-6">
-                {/* Platform Header */}
                 <div className="flex items-center gap-3 mb-4">
                   <div className={cn(
                     "p-3 rounded-xl shadow-sm",
@@ -297,7 +296,6 @@ export const SocialMediaConnector: React.FC = () => {
                     <p className="text-sm text-muted-foreground">{platform.description}</p>
                   </div>
                   
-                  {/* Status Badge */}
                   {connected && (
                     <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-provider/10 border border-provider/20">
                       <div className="w-2 h-2 rounded-full bg-provider"></div>
@@ -306,7 +304,6 @@ export const SocialMediaConnector: React.FC = () => {
                   )}
                 </div>
 
-                {/* URL Input */}
                 <div className="space-y-3">
                   <Label htmlFor={`${platform.id}-url`} className="text-sm font-medium">
                     {platform.name} URL
@@ -327,7 +324,6 @@ export const SocialMediaConnector: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex gap-2 mt-4">
                   <Button
                     onClick={() => handleSaveConnection(platform)}
@@ -363,7 +359,6 @@ export const SocialMediaConnector: React.FC = () => {
                 </div>
               </div>
 
-              {/* Connected indicator border */}
               {connected && (
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-provider to-provider-glow rounded-t-xl"></div>
               )}
@@ -372,7 +367,6 @@ export const SocialMediaConnector: React.FC = () => {
         })}
       </div>
 
-      {/* Privacy Section */}
       <div className="bg-gradient-to-r from-provider/5 to-provider-glow/5 rounded-xl p-6 border border-provider/20 max-w-2xl mx-auto">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0 w-12 h-12 bg-provider/10 rounded-full flex items-center justify-center">
