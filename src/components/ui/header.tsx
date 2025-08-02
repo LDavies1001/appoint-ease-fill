@@ -150,9 +150,11 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg flex items-center justify-center">
-              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-rose-700" />
-            </div>
+            <img 
+              src="/src/assets/openslot-logo.png" 
+              alt="OpenSlot Logo" 
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
+            />
             <span className="text-lg sm:text-xl font-bold text-foreground">OpenSlot</span>
           </Link>
           
