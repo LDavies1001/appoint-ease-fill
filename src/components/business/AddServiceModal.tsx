@@ -51,6 +51,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
   });
   const [saving, setSaving] = useState(false);
   const [profileServices, setProfileServices] = useState<string[]>([]);
+  const [globalServices, setGlobalServices] = useState<string[]>([]);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customServiceName, setCustomServiceName] = useState('');
   const { toast } = useToast();
@@ -90,6 +91,37 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
       fetchProfileServices();
     }
   }, [userId, isOpen]);
+
+  // Fetch global services from the services table
+  useEffect(() => {
+    const fetchGlobalServices = async () => {
+      console.log('Attempting to fetch global services');
+      try {
+        const { data, error } = await supabase
+          .from('services')
+          .select('name')
+          .order('name');
+        
+        console.log('Global services query result:', { data, error });
+        
+        if (data) {
+          const serviceNames = data.map(service => service.name);
+          console.log('Found global services:', serviceNames);
+          setGlobalServices(serviceNames);
+        } else {
+          console.log('No global services found');
+          setGlobalServices([]);
+        }
+      } catch (error) {
+        console.error('Error fetching global services:', error);
+        setGlobalServices([]);
+      }
+    };
+
+    if (isOpen) {
+      fetchGlobalServices();
+    }
+  }, [isOpen]);
 
   const parseDurationToMinutes = (durationText: string): number => {
     // Extract numbers from the text
@@ -301,12 +333,24 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
                   <SelectValue placeholder="Select a service or add custom..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white border shadow-lg z-[100] max-h-[200px] overflow-y-auto">
-                  {profileServices.length > 0 && (
-                    profileServices.map((service) => (
+                  {globalServices.length > 0 && (
+                    globalServices.map((service) => (
                       <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
                         {service}
                       </SelectItem>
                     ))
+                  )}
+                  {profileServices.length > 0 && profileServices.some(service => !globalServices.includes(service)) && (
+                    <>
+                      <div className="px-2 py-1 text-xs font-medium text-muted-foreground border-t">
+                        Your Custom Services
+                      </div>
+                      {profileServices.filter(service => !globalServices.includes(service)).map((service) => (
+                        <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
+                          {service}
+                        </SelectItem>
+                      ))}
+                    </>
                   )}
                   <SelectItem value="custom" className="font-medium text-primary cursor-pointer hover:bg-gray-100">
                     <div className="flex items-center gap-2">
