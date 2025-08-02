@@ -29,48 +29,48 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="relative py-16 lg:py-24 animate-fade-in">
+      <section id="features" className="relative py-8 lg:py-12 animate-fade-in">
         <div className="absolute top-0 left-8 lg:left-16">
-          <div className="text-6xl lg:text-8xl font-black text-primary/10 select-none">01</div>
+          <div className="text-4xl lg:text-6xl font-black text-primary/10 select-none">01</div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-8 lg:p-12">
+          <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-6 lg:p-8">
             <FeaturesSection />
           </div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="relative py-16 lg:py-24 bg-gradient-to-br from-muted/30 to-accent/10 animate-fade-in">
+      <section id="how-it-works" className="relative py-8 lg:py-12 bg-gradient-to-br from-muted/30 to-accent/10 animate-fade-in">
         <div className="absolute top-0 right-8 lg:right-16">
-          <div className="text-6xl lg:text-8xl font-black text-secondary/15 select-none">02</div>
+          <div className="text-4xl lg:text-6xl font-black text-secondary/15 select-none">02</div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-8 lg:p-12">
+          <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-6 lg:p-8">
             <HowItWorksSection />
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="relative py-16 lg:py-24 animate-fade-in">
+      <section id="testimonials" className="relative py-8 lg:py-12 animate-fade-in">
         <div className="absolute top-0 left-8 lg:left-16">
-          <div className="text-6xl lg:text-8xl font-black text-accent/15 select-none">03</div>
+          <div className="text-4xl lg:text-6xl font-black text-accent/15 select-none">03</div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-8 lg:p-12">
+          <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-6 lg:p-8">
             <TestimonialsSection />
           </div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="relative py-16 lg:py-24 bg-gradient-to-br from-primary/5 to-secondary/5 animate-fade-in">
+      <section className="relative py-8 lg:py-12 bg-gradient-to-br from-primary/5 to-secondary/5 animate-fade-in">
         <div className="absolute top-0 right-8 lg:right-16">
-          <div className="text-6xl lg:text-8xl font-black text-primary/15 select-none">04</div>
+          <div className="text-4xl lg:text-6xl font-black text-primary/15 select-none">04</div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-background/90 backdrop-blur-sm border border-border/50 rounded-3xl shadow-xl p-8 lg:p-12">
+          <div className="bg-background/90 backdrop-blur-sm border border-border/50 rounded-3xl shadow-xl p-6 lg:p-8">
             <FinalCTASection />
           </div>
         </div>
