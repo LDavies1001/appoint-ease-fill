@@ -63,13 +63,16 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
-  // Initialize search query from existing address
+  // Initialize search query from existing address and auto-populate city if needed
   useEffect(() => {
     if (value.postcode && !searchQuery) {
       setSearchQuery(value.postcode);
       if (value.address_line_1 && value.town_city) {
         setIsAddressSelected(true);
         setStep('privacy');
+      } else if (value.postcode && !value.town_city) {
+        // If we have a postcode but no town/city, fetch it automatically
+        validateAndGetPostcodeDetails(value.postcode);
       }
     }
   }, [value]);
