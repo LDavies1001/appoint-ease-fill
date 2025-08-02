@@ -298,7 +298,6 @@ const Auth = () => {
             <div className="text-center mb-12">
               <div className="flex items-center justify-center space-x-3 mb-6">
                 <BrandLogo className="w-[160px] h-[160px]" />
-                <span className="text-2xl lg:text-3xl font-bold text-foreground">OpenSlot</span>
               </div>
               <h1 className="font-bold text-foreground leading-[1.1] tracking-tight mb-4" 
                   style={{ fontSize: 'clamp(1.5rem, 6vw, 3.5rem)' }}>
