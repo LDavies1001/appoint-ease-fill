@@ -343,6 +343,9 @@ const CustomerDashboard = () => {
                          slot.provider.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          slot.provider.location.toLowerCase().includes(searchTerm.toLowerCase());
     
+    // Debug logging
+    console.log('Slot:', slot.id, 'Service category:', slot.service.category, 'Selected category:', selectedCategory);
+    
     const matchesCategory = selectedCategory === 'all' || slot.service.category === selectedCategory;
     
     return matchesSearch && matchesCategory;
