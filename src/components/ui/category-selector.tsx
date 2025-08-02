@@ -9,6 +9,7 @@ interface Category {
   id: string;
   name: string;
   description?: string;
+  category_type?: string;
   icon?: React.ReactNode;
 }
 
@@ -20,18 +21,33 @@ interface CategorySelectorProps {
   className?: string;
 }
 
-const getCategoryIcon = (categoryName: string) => {
-  const name = categoryName.toLowerCase();
-  if (name.includes('nail') || name.includes('manicure')) {
+const getCategoryIcon = (categoryType: string) => {
+  const type = categoryType.toLowerCase();
+  if (type.includes('beauty') || type === 'beauty_wellness') {
     return <Sparkles className="h-4 w-4" />;
   }
-  if (name.includes('lash') || name.includes('brow') || name.includes('beauty')) {
-    return <Scissors className="h-4 w-4" />;
-  }
-  if (name.includes('clean') || name.includes('domestic')) {
+  if (type.includes('home') || type === 'home_services') {
     return <Home className="h-4 w-4" />;
   }
-  if (name.includes('cloth') || name.includes('laundry')) {
+  if (type.includes('food') || type === 'food_beverage') {
+    return <Sparkles className="h-4 w-4" />;
+  }
+  if (type.includes('health') || type === 'health_fitness') {
+    return <Sparkles className="h-4 w-4" />;
+  }
+  if (type.includes('professional') || type === 'professional_services') {
+    return <Scissors className="h-4 w-4" />;
+  }
+  if (type.includes('automotive')) {
+    return <Scissors className="h-4 w-4" />;
+  }
+  if (type.includes('education') || type === 'education_training') {
+    return <Sparkles className="h-4 w-4" />;
+  }
+  if (type.includes('entertainment')) {
+    return <Sparkles className="h-4 w-4" />;
+  }
+  if (type.includes('retail') || type === 'retail_shopping') {
     return <ShirtIcon className="h-4 w-4" />;
   }
   return <Sparkles className="h-4 w-4" />;
@@ -124,7 +140,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                     "bg-muted text-muted-foreground": !isSelected,
                   }
                 )}>
-                  {getCategoryIcon(category.name)}
+                  {getCategoryIcon(category.category_type || category.name)}
                 </div>
                 
                 <div className="flex-1 min-w-0">

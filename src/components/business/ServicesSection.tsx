@@ -88,25 +88,26 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const handleSave = async () => {
     setSaving(true);
     try {
+      // Convert selected category IDs to category objects
+      const selectedCategoryObjects = editData.business_categories.map(categoryId => 
+        allCategories.find(cat => cat.id === categoryId)
+      ).filter(Boolean);
+
       const { error } = await supabase
         .from('provider_details')
         .update({
           services_offered: editData.services_offered,
-          pricing_info: editData.pricing_info
+          pricing_info: editData.pricing_info,
+          business_category: selectedCategoryObjects.length > 0 ? selectedCategoryObjects[0].id : null
         })
         .eq('user_id', userId);
 
       if (error) throw error;
 
-      // Update business categories based on selected services
-      const updatedCategories = editData.services_offered.map(serviceId => 
-        allCategories.find(cat => cat.id === serviceId)
-      ).filter(Boolean);
-
       onUpdate({
         services_offered: editData.services_offered,
         pricing_info: editData.pricing_info,
-        business_categories: updatedCategories
+        business_categories: selectedCategoryObjects
       });
 
       setIsEditing(false);
@@ -134,7 +135,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const handleCategoryChange = (selectedCategories: string[]) => {
     setEditData(prev => ({
       ...prev,
-      services_offered: selectedCategories
+      business_categories: selectedCategories
     }));
   };
 
@@ -217,13 +218,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           <div>
             <Label className="text-base font-medium mb-3 block">Business Categories</Label>
             {isEditing ? (
-              <CategorySelector
+               <CategorySelector
                 categories={allCategories.map(cat => ({
                   id: cat.id,
                   name: cat.name,
-                  description: cat.description
+                  description: cat.description,
+                  category_type: cat.category_type
                 }))}
-                selectedCategories={editData.services_offered}
+                selectedCategories={Array.isArray(editData.business_categories) ? 
+                  editData.business_categories.map(cat => typeof cat === 'string' ? cat : cat.id) : []}
                 onSelectionChange={handleCategoryChange}
                 maxSelections={5}
               />
