@@ -48,10 +48,10 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 group">
-              <LogoWithBgRemoval 
+              <img 
                 src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
                 alt="OpenSlot Logo" 
-                className="w-16 h-16"
+                className="w-16 h-16 object-contain"
               />
               <span className="font-bold text-2xl text-foreground group-hover:text-sage-600 transition-colors">
                 OpenSlot

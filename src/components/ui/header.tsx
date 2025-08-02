@@ -151,10 +151,10 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
-            <LogoWithBgRemoval 
+            <img 
               src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
               alt="OpenSlot Logo" 
-              className="w-12 h-12 sm:w-14 sm:h-14"
+              className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
             />
             <span className="text-xl sm:text-2xl font-bold text-foreground">OpenSlot</span>
           </Link>
