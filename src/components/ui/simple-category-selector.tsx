@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Scissors, 
   Sparkles, 
@@ -246,6 +247,7 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
   maxSelections = 3,
   className
 }) => {
+  const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState<'categories' | 'services'>('categories');
   const [selectedMainCategory, setSelectedMainCategory] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -274,6 +276,8 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
 
   const handleConfirmServices = () => {
     if (selectedMainCategory && selectedServices.length > 0) {
+      const categoryData = mainCategories.find(cat => cat.id === selectedMainCategory);
+      
       // Add the category to selected categories if not already there
       const newSelection = selectedCategories.includes(selectedMainCategory)
         ? selectedCategories
@@ -281,6 +285,13 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
       
       if (newSelection.length <= maxSelections) {
         onSelectionChange(newSelection);
+        
+        // Show success toast with details
+        toast({
+          title: "✅ Services Added Successfully",
+          description: `Added ${categoryData?.name} with ${selectedServices.length} selected services: ${selectedServices.slice(0, 3).join(', ')}${selectedServices.length > 3 ? '...' : ''}`,
+          duration: 4000,
+        });
       }
     }
     
