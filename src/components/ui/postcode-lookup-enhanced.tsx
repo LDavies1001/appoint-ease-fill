@@ -136,7 +136,7 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
 
         toast({
           title: "Postcode found",
-          description: `Located in ${result.admin_district}, ${result.admin_county}`
+          description: `Located in ${result.admin_district}${result.admin_county ? `, ${result.admin_county}` : ''}`
         });
       }
     } catch (error) {
