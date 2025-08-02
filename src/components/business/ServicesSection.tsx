@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { CategorySelector } from '@/components/ui/category-selector';
+import { SimpleCategorySelector } from '@/components/ui/simple-category-selector';
 import { ServiceItem } from './ServiceItem';
 import { AddServiceModal } from './AddServiceModal';
 import { Building, Edit2, Save, X, Plus } from 'lucide-react';
@@ -45,18 +45,22 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const [services, setServices] = useState<Service[]>([]);
   const [showAddService, setShowAddService] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
+  
+  // Onboarding services state
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedServices, setSelectedServices] = useState<Record<string, string[]>>({});
+  
   const { toast } = useToast();
 
   useEffect(() => {
     fetchCategories();
-    fetchServices();
-  }, []);
+    if (userId) {
+      fetchProviderServices();
+      fetchOnboardingData();
+    }
+  }, [userId]);
 
-  useEffect(() => {
-    setEditData(data);
-  }, [data]);
-
-  const fetchCategories = async () => {
+  const fetchCategories = () => {
     // Use the same categories as onboarding
     const onboardingCategories = [
       {
@@ -78,7 +82,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     setAllCategories(onboardingCategories);
   };
 
-  const fetchServices = async () => {
+  const fetchProviderServices = async () => {
     try {
       const { data: servicesData, error } = await supabase
         .from('provider_services')
@@ -93,14 +97,40 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     }
   };
 
+  const fetchOnboardingData = async () => {
+    try {
+      const { data: providerData, error } = await supabase
+        .from('provider_details')
+        .select('services_offered')
+        .eq('user_id', userId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      
+      if (providerData?.services_offered) {
+        // Parse the services_offered data which should contain category->services mapping
+        const servicesData = providerData.services_offered;
+        if (typeof servicesData === 'object' && !Array.isArray(servicesData)) {
+          setSelectedServices(servicesData);
+          setSelectedCategories(Object.keys(servicesData));
+        } else if (Array.isArray(servicesData)) {
+          // Legacy format - convert to new format
+          setSelectedCategories(servicesData);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching onboarding data:', error);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Use the selected categories directly as services_offered
+      // Save the onboarding services selection
       const { error } = await supabase
         .from('provider_details')
         .update({
-          services_offered: editData.business_categories,
+          services_offered: Object.keys(selectedServices),
           pricing_info: editData.pricing_info
         })
         .eq('user_id', userId);
@@ -108,9 +138,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       if (error) throw error;
 
       onUpdate({
-        services_offered: editData.business_categories,
+        services_offered: Object.keys(selectedServices),
         pricing_info: editData.pricing_info,
-        business_categories: editData.business_categories.map(categoryId => 
+        business_categories: selectedCategories.map(categoryId => 
           allCategories.find(cat => cat.id === categoryId)
         ).filter(Boolean)
       });
@@ -118,13 +148,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       setIsEditing(false);
       toast({
         title: "Services updated",
-        description: "Your business services have been updated successfully"
+        description: "Your service offerings have been updated successfully."
       });
     } catch (error) {
       console.error('Error updating services:', error);
       toast({
-        title: "Update failed",
-        description: "Could not update your services. Please try again.",
+        title: "Error updating services",
+        description: "Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -135,172 +165,138 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const handleCancel = () => {
     setEditData(data);
     setIsEditing(false);
-  };
-
-  const handleCategoryChange = (selectedCategories: string[]) => {
-    setEditData(prev => ({
-      ...prev,
-      business_categories: selectedCategories
-    }));
-  };
-
-  const handleAddService = () => {
-    setEditingService(null);
-    setShowAddService(true);
+    // Reset to original data
+    fetchOnboardingData();
   };
 
   const handleEditService = (service: Service) => {
     setEditingService(service);
+  };
+
+  const handleAddService = () => {
     setShowAddService(true);
   };
 
-  const handleServiceSaved = (savedService: Service) => {
-    if (editingService) {
-      setServices(prev => prev.map(s => s.id === savedService.id ? savedService : s));
-    } else {
-      setServices(prev => [savedService, ...prev]);
-    }
+  const handleServiceAdded = () => {
+    setShowAddService(false);
+    fetchProviderServices();
+  };
+
+  const handleServiceUpdated = () => {
+    setEditingService(null);
+    fetchProviderServices();
   };
 
   const handleServiceDeleted = (serviceId: string) => {
-    setServices(prev => prev.filter(s => s.id !== serviceId));
+    setServices(prevServices => prevServices.filter(s => s.id !== serviceId));
   };
 
-  const activeServices = services.filter(s => s.is_active);
-  const totalValue = activeServices.reduce((sum, service) => sum + service.base_price, 0);
+  // Get all selected services from all categories
+  const getAllSelectedServices = () => {
+    const allServices: string[] = [];
+    Object.values(selectedServices).forEach(categoryServices => {
+      allServices.push(...categoryServices);
+    });
+    return allServices;
+  };
 
   return (
-    <>
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center">
-              <Building className="h-5 w-5 text-accent" />
+    <Card className="card-elegant">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-provider/20 rounded-xl">
+              <Building className="h-5 w-5 text-provider" />
             </div>
-            <h3 className="text-xl font-semibold">Services & Pricing</h3>
+            <div>
+              <h3 className="text-xl font-semibold text-foreground">Services & Pricing</h3>
+              <p className="text-muted-foreground text-sm">Manage your service offerings and pricing information</p>
+            </div>
           </div>
-          <div className="flex space-x-2">
-            {isEditing ? (
-              <>
-                <Button
-                  variant="provider-outline"
-                  size="sm"
-                  onClick={handleCancel}
-                  disabled={saving}
-                >
-                  <X className="h-4 w-4" />
-                  Cancel
-                </Button>
-                <Button
-                  variant="provider"
-                  size="sm"
-                  onClick={handleSave}
-                  disabled={saving}
-                >
-                  {saving ? (
-                    <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
-                  ) : (
-                    <Save className="h-4 w-4" />
-                  )}
-                  Save
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="provider-outline"
-                size="sm"
-                onClick={() => setIsEditing(true)}
-              >
-                <Edit2 className="h-4 w-4" />
-                Edit
-              </Button>
-            )}
-          </div>
+          {!isEditing && (
+            <Button
+              variant="outline"
+              onClick={() => setIsEditing(true)}
+              className="border-provider/20 hover:border-provider"
+            >
+              <Edit2 className="h-4 w-4 mr-2" />
+              Edit Services
+            </Button>
+          )}
         </div>
 
-        {/* Business Services Section */}
+        {/* Onboarding Services Section */}
         <div className="space-y-6">
           <div>
-            <Label className="text-base font-medium mb-3 block">Your Services</Label>
+            <Label className="text-base font-medium mb-3 block">Your Service Offerings</Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              These are the services customers can book with you. 
+              {isEditing ? " Select categories and specific services you offer." : ""}
+            </p>
+            
             {isEditing ? (
+              <SimpleCategorySelector
+                categories={allCategories}
+                selectedCategories={selectedCategories}
+                onSelectionChange={setSelectedCategories}
+                selectedServices={selectedServices}
+                onServicesChange={setSelectedServices}
+                maxSelections={3}
+                className="mb-6"
+              />
+            ) : (
               <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Edit your service offerings. These are the specific services customers can book.
-                </p>
-                {services.length > 0 ? (
-                  <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {services.map((service) => (
-                      <div
-                        key={service.id}
-                        className="flex items-center justify-between p-4 border border-border rounded-lg bg-background"
-                      >
-                        <div className="flex-1">
-                          <h4 className="font-medium text-foreground">{service.service_name}</h4>
-                          {service.description && (
-                            <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
-                          )}
-                          <div className="flex items-center gap-4 mt-2 text-sm">
-                            {service.base_price && (
-                              <Badge variant="secondary">£{service.base_price}</Badge>
-                            )}
-                            {service.duration_minutes && (
-                              <Badge variant="outline">{service.duration_minutes} mins</Badge>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleEditService(service)}
-                            className="text-provider hover:text-provider"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleServiceDeleted(service.id)}
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
+                {Object.keys(selectedServices).length > 0 ? (
+                  Object.entries(selectedServices).map(([categoryId, categoryServices]) => {
+                    const category = allCategories.find(cat => cat.id === categoryId);
+                    return (
+                      <div key={categoryId} className="space-y-3">
+                        <h4 className="font-medium text-foreground flex items-center gap-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {category?.name || categoryId}
+                          </Badge>
+                        </h4>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                          {categoryServices.map((service, index) => (
+                            <div
+                              key={index}
+                              className="p-3 bg-muted/30 rounded-lg border border-border/50"
+                            >
+                              <span className="text-sm font-medium text-foreground">{service}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })
                 ) : (
                   <div className="text-center py-8 border border-dashed border-border rounded-lg">
-                    <p className="text-muted-foreground">No services found</p>
-                    <p className="text-sm text-muted-foreground mt-1">Add services to start taking bookings</p>
+                    <p className="text-muted-foreground">No services selected yet</p>
+                    <p className="text-sm text-muted-foreground mt-1">Click "Edit Services" to add your service offerings</p>
                   </div>
                 )}
               </div>
+            )}
+          </div>
+
+          {/* Pricing Information */}
+          <div className="space-y-3">
+            <Label htmlFor="pricing_info" className="text-base font-medium">General Pricing Information</Label>
+            {isEditing ? (
+              <Textarea
+                id="pricing_info"
+                placeholder="Describe your general pricing structure, packages, or any pricing notes..."
+                value={editData.pricing_info || ''}
+                onChange={(e) => setEditData(prev => ({ ...prev, pricing_info: e.target.value }))}
+                rows={4}
+                className="resize-none"
+              />
             ) : (
-              <div>
-                {services && services.length > 0 ? (
-                  <div className="grid gap-3">
-                    {services.map((service) => (
-                      <div key={service.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                        <div>
-                          <h4 className="font-medium text-foreground">{service.service_name}</h4>
-                          {service.description && (
-                            <p className="text-sm text-muted-foreground">{service.description}</p>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {service.base_price && (
-                            <Badge variant="secondary">£{service.base_price}</Badge>
-                          )}
-                          {service.duration_minutes && (
-                            <Badge variant="outline">{service.duration_minutes} mins</Badge>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+              <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                {editData.pricing_info ? (
+                  <p className="text-foreground whitespace-pre-wrap">{editData.pricing_info}</p>
                 ) : (
-                  <p className="text-muted-foreground">No services available</p>
+                  <p className="text-muted-foreground italic">No pricing information provided</p>
                 )}
               </div>
             )}
@@ -309,7 +305,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           {/* Service Pricing List */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <Label className="text-base font-medium">Service Pricing List</Label>
+              <Label className="text-base font-medium">Detailed Service Pricing</Label>
               {!isEditing && (
                 <div className="flex items-center gap-4">
                   <Button variant="provider" size="sm" onClick={handleAddService}>
@@ -332,62 +328,74 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   />
                 ))}
                 {isEditing && (
-                  <Button
-                    variant="provider-outline"
-                    onClick={handleAddService}
-                    className="w-full border-dashed"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Add New Service
+                  <div className="p-4 bg-accent/10 rounded-lg border border-accent/20">
+                    <p className="text-sm text-muted-foreground">
+                      💡 <strong>Tip:</strong> These are your detailed service offerings with specific pricing. 
+                      Exit editing mode to add, edit, or remove individual services.
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-6 border border-dashed border-border rounded-lg">
+                <p className="text-muted-foreground">No detailed services added yet</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Add specific services with pricing details to help customers understand your offerings
+                </p>
+                {!isEditing && (
+                  <Button variant="outline" className="mt-3" onClick={handleAddService}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Your First Service
                   </Button>
                 )}
               </div>
-            ) : (
-              <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
-                <div className="h-12 w-12 text-muted-foreground mx-auto mb-3 flex items-center justify-center text-2xl font-bold">£</div>
-                <p className="text-muted-foreground mb-4">No services added yet</p>
-                <Button variant="provider" onClick={handleAddService}>
-                  <Plus className="h-4 w-4" />
-                  Add Your First Service
-                </Button>
-              </div>
             )}
           </div>
 
-          {/* Additional Pricing Information */}
-          <div>
-            <Label htmlFor="pricing_info" className="text-base font-medium">
-              Additional Pricing Information
-            </Label>
-            {isEditing ? (
-              <Textarea
-                id="pricing_info"
-                value={editData.pricing_info}
-                onChange={(e) => setEditData(prev => ({ ...prev, pricing_info: e.target.value }))}
-                placeholder="Any additional pricing details, packages, discounts, etc."
-                className="mt-2"
-                rows={4}
-              />
-            ) : (
-              <div className="mt-2">
-                {data.pricing_info ? (
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">{data.pricing_info}</p>
-                ) : (
-                  <p className="text-sm text-muted-foreground">No additional pricing information provided</p>
-                )}
-              </div>
-            )}
-          </div>
+          {/* Action Buttons */}
+          {isEditing && (
+            <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                variant="provider"
+                className="shadow-elegant"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                {saving ? "Saving..." : "Save Changes"}
+              </Button>
+              <Button
+                onClick={handleCancel}
+                variant="outline"
+                disabled={saving}
+              >
+                <X className="h-4 w-4 mr-2" />
+                Cancel
+              </Button>
+            </div>
+          )}
         </div>
-      </Card>
+      </div>
 
-      <AddServiceModal
-        isOpen={showAddService}
-        onClose={() => setShowAddService(false)}
-        onSave={handleServiceSaved}
-        editingService={editingService}
-        userId={userId}
-      />
-    </>
+      {/* Modals */}
+      {showAddService && (
+        <AddServiceModal
+          isOpen={showAddService}
+          onClose={() => setShowAddService(false)}
+          onSave={handleServiceAdded}
+          userId={userId}
+        />
+      )}
+
+      {editingService && (
+        <AddServiceModal
+          isOpen={true}
+          onClose={() => setEditingService(null)}
+          onSave={handleServiceUpdated}
+          editingService={editingService}
+          userId={userId}
+        />
+      )}
+    </Card>
   );
 };
