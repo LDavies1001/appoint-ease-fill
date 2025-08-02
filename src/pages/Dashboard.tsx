@@ -31,7 +31,16 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 overflow-x-hidden w-full">
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50 w-full overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,119,198,0.1),_transparent_50%)]"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex items-center space-x-3 opacity-10">
+            <img 
+              src="/src/assets/openslot-logo.png" 
+              alt="OpenSlot" 
+              className="h-16 w-16"
+            />
+            <span className="text-3xl font-bold text-foreground">OpenSlot</span>
+          </div>
+        </div>
         <div className="relative max-w-6xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-8 sm:py-12 lg:py-16">
           <div className="text-center space-y-4 lg:space-y-6">
             <div className="space-y-3 lg:space-y-4">
