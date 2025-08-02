@@ -121,6 +121,16 @@ const CustomerSignup = () => {
       });
       return;
     }
+
+    if (!postcode.trim() || !latitude || !longitude) {
+      toast({
+        title: "Location required",
+        description: "Please enter your postcode so we can show you available services",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     
     if (password !== confirmPassword) {
       toast({
@@ -368,7 +378,7 @@ const CustomerSignup = () => {
                     <div className="space-y-3">
                       <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-blush-600" />
-                        Your Postcode (Optional)
+                        Your Location
                       </Label>
                       <PostcodeLookup
                         value={postcode}
@@ -383,7 +393,12 @@ const CustomerSignup = () => {
                         className="h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
                         showCoverageRadius={false}
                       />
-                      <p className="text-sm text-muted-foreground">Help us find services near you</p>
+                      {postcode && isFieldValid('postcode', postcode) && (
+                        <div className="absolute right-4 top-4 text-blush-600">
+                          <Check className="h-5 w-5" />
+                        </div>
+                      )}
+                      <p className="text-sm text-muted-foreground">We'll show you available beauty services in your area</p>
                     </div>
                   </div>
                 </div>
