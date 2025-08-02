@@ -13,7 +13,7 @@ import BusinessSignup from "./pages/BusinessSignup";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import SlotDiscovery from "./pages/SlotDiscovery";
-import BusinessProfile from "./pages/BusinessProfile";
+
 import NewBusinessProfile from "./pages/NewBusinessProfile";
 import CreateBusinessProfile from "./pages/CreateBusinessProfile";
 import Profile from "./pages/Profile";
