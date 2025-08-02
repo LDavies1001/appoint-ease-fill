@@ -86,10 +86,10 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
       }
     };
 
-    if (userId) {
+    if (userId && isOpen) {
       fetchProfileServices();
     }
-  }, [userId]);
+  }, [userId, isOpen]);
 
   const parseDurationToMinutes = (durationText: string): number => {
     // Extract numbers from the text
