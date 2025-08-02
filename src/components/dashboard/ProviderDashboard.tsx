@@ -47,6 +47,7 @@ interface ProviderService {
   discount_price?: number;
   duration_minutes: number;
   is_active: boolean;
+  image_url?: string;
 }
 
 interface Service {
@@ -737,13 +738,14 @@ const ProviderDashboard = () => {
                     value={slotForm.provider_service_id} 
                     onValueChange={(value) => {
                       setSlotForm(prev => ({ ...prev, provider_service_id: value, custom_service_name: "" }));
-                      // Auto-fill price and duration from provider service
+                      // Auto-fill price, duration, and image from provider service
                       const selectedService = providerServices.find(s => s.id === value);
                       if (selectedService) {
                         setSlotForm(prev => ({ 
                           ...prev, 
                           price: selectedService.base_price?.toString() || "",
-                          duration: selectedService.duration_minutes
+                          duration: selectedService.duration_minutes,
+                          image_url: selectedService.image_url || "" // Add existing service image
                         }));
                       }
                     }}
@@ -883,7 +885,11 @@ const ProviderDashboard = () => {
                 {/* Image Upload Section */}
                 <div className="space-y-4">
                   <Label className="text-sm font-medium">Slot Image (optional)</Label>
-                  <p className="text-sm text-muted-foreground">Add an attractive image to showcase your service</p>
+                  {slotForm.provider_service_id && providerServices.find(s => s.id === slotForm.provider_service_id)?.image_url ? (
+                    <p className="text-sm text-success-foreground">✅ Using image from your service: {providerServices.find(s => s.id === slotForm.provider_service_id)?.service_name}</p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">Add an attractive image to showcase your service</p>
+                  )}
                   
                   <div className="flex items-center gap-4">
                     <label htmlFor="image-upload" className="cursor-pointer">
@@ -983,13 +989,14 @@ const ProviderDashboard = () => {
                     value={slotForm.provider_service_id} 
                     onValueChange={(value) => {
                       setSlotForm(prev => ({ ...prev, provider_service_id: value, custom_service_name: "" }));
-                      // Auto-fill price and duration from provider service
+                      // Auto-fill price, duration, and image from provider service
                       const selectedService = providerServices.find(s => s.id === value);
                       if (selectedService) {
                         setSlotForm(prev => ({ 
                           ...prev, 
                           price: selectedService.base_price?.toString() || "",
-                          duration: selectedService.duration_minutes
+                          duration: selectedService.duration_minutes,
+                          image_url: selectedService.image_url || "" // Add existing service image
                         }));
                       }
                     }}
