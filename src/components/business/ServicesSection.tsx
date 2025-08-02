@@ -57,17 +57,25 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   }, [data]);
 
   const fetchCategories = async () => {
-    try {
-      const { data: categories, error } = await supabase
-        .from('business_categories')
-        .select('*')
-        .order('name');
-
-      if (error) throw error;
-      setAllCategories(categories || []);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
+    // Use the same categories as onboarding
+    const onboardingCategories = [
+      {
+        id: 'beauty',
+        name: 'Beauty & Personal Care',
+        description: 'Beauty treatments, personal care services'
+      },
+      {
+        id: 'cleaning', 
+        name: 'Cleaning Services',
+        description: 'Domestic and commercial cleaning'
+      },
+      {
+        id: 'home',
+        name: 'Home & Handy Services', 
+        description: 'Home improvement and handyman services'
+      }
+    ];
+    setAllCategories(onboardingCategories);
   };
 
   const fetchServices = async () => {
