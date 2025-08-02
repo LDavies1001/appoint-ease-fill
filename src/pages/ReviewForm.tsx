@@ -8,10 +8,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowLeft, Star, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useReviews } from '@/hooks/useReviews';
 
 export default function ReviewForm() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addReview } = useReviews();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,12 +26,19 @@ export default function ReviewForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Here you would typically save to database
-    console.log('Review submitted:', formData);
+    // Save the review
+    addReview({
+      name: formData.name,
+      email: formData.email,
+      userType: formData.userType as 'customer' | 'business' | 'both',
+      rating: parseInt(formData.rating),
+      title: formData.title,
+      review: formData.review
+    });
     
     toast({
       title: "Review submitted!",
-      description: "Thank you for your feedback. We'll review it shortly.",
+      description: "Thank you for your feedback. Your review is now live!",
     });
     
     // Navigate back to home page
