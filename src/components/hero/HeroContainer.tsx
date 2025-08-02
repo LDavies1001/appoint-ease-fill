@@ -33,7 +33,7 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-background via-background/95 to-muted/10 w-full">
+    <div className="relative bg-gradient-to-br from-background via-background/95 to-muted/10 w-full">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]"></div>
       
