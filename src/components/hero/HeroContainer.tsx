@@ -93,7 +93,7 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
                   </Button>
                 </Link>
                 <Link to="/signup/business">
-                  <Button size="sm" className="bg-sage-500 hover:bg-sage-600 text-white">
+                  <Button size="sm" className="bg-sage-600 hover:bg-sage-700 text-white">
                     <Building className="h-4 w-4 mr-1" />
                     Business
                   </Button>
