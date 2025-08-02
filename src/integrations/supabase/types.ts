@@ -522,6 +522,48 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_reviews: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_approved: boolean | null
+          is_featured: boolean | null
+          name: string
+          rating: number
+          review: string
+          title: string
+          updated_at: string
+          user_type: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          is_approved?: boolean | null
+          is_featured?: boolean | null
+          name: string
+          rating: number
+          review: string
+          title: string
+          updated_at?: string
+          user_type: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_approved?: boolean | null
+          is_featured?: boolean | null
+          name?: string
+          rating?: number
+          review?: string
+          title?: string
+          updated_at?: string
+          user_type?: string
+        }
+        Relationships: []
+      }
       portfolio_items: {
         Row: {
           category: string | null

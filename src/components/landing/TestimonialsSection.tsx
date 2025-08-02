@@ -5,7 +5,7 @@ import { MessageCircle, Star } from 'lucide-react';
 import { useReviews } from '@/hooks/useReviews';
 
 export const TestimonialsSection = () => {
-  const { getDisplayedReviews } = useReviews();
+  const { getDisplayedReviews, loading } = useReviews();
   const displayedReviews = getDisplayedReviews();
 
   const renderStars = (rating: number) => {
@@ -19,8 +19,8 @@ export const TestimonialsSection = () => {
     ));
   };
 
-  const getUserTypeLabel = (userType: string) => {
-    switch (userType) {
+  const getUserTypeLabel = (user_type: string) => {
+    switch (user_type) {
       case 'customer': return 'Customer';
       case 'business': return 'Business Owner';
       case 'both': return 'Customer & Business Owner';
@@ -40,7 +40,18 @@ export const TestimonialsSection = () => {
           </p>
         </div>
 
-        {displayedReviews.length === 0 ? (
+        {loading ? (
+          <div className="text-center">
+            <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-2xl p-8 max-w-2xl mx-auto">
+              <div className="animate-pulse">
+                <div className="w-16 h-16 bg-muted rounded-full mx-auto mb-6"></div>
+                <div className="h-6 bg-muted rounded mx-auto mb-3 max-w-48"></div>
+                <div className="h-4 bg-muted rounded mx-auto mb-6 max-w-80"></div>
+                <div className="h-10 bg-muted rounded mx-auto max-w-32"></div>
+              </div>
+            </div>
+          </div>
+        ) : displayedReviews.length === 0 ? (
           <div className="text-center">
             <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-2xl p-8 max-w-2xl mx-auto">
               <div className="w-16 h-16 bg-gradient-to-br from-muted/50 to-muted/80 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -75,7 +86,7 @@ export const TestimonialsSection = () => {
                       {renderStars(review.rating)}
                     </div>
                     <span className="text-sm text-muted-foreground">
-                      {getUserTypeLabel(review.userType)}
+                      {getUserTypeLabel(review.user_type)}
                     </span>
                   </div>
                   
@@ -92,7 +103,7 @@ export const TestimonialsSection = () => {
                       {review.name}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {new Date(review.createdAt).toLocaleDateString()}
+                      {new Date(review.created_at).toLocaleDateString()}
                     </span>
                   </div>
                 </div>

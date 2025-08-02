@@ -23,26 +23,34 @@ export default function ReviewForm() {
     review: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Save the review
-    addReview({
-      name: formData.name,
-      email: formData.email,
-      userType: formData.userType as 'customer' | 'business' | 'both',
-      rating: parseInt(formData.rating),
-      title: formData.title,
-      review: formData.review
-    });
-    
-    toast({
-      title: "Review submitted!",
-      description: "Thank you for your feedback. Your review is now live!",
-    });
-    
-    // Navigate back to home page
-    navigate('/', { replace: true });
+    try {
+      // Save the review to database
+      await addReview({
+        name: formData.name,
+        email: formData.email,
+        user_type: formData.userType as 'customer' | 'business' | 'both',
+        rating: parseInt(formData.rating),
+        title: formData.title,
+        review: formData.review
+      });
+      
+      toast({
+        title: "Review submitted!",
+        description: "Thank you for your feedback. Your review will be published after approval.",
+      });
+      
+      // Navigate back to home page
+      navigate('/', { replace: true });
+    } catch (error) {
+      toast({
+        title: "Error submitting review",
+        description: "There was an error submitting your review. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleChange = (field: string, value: string) => {
