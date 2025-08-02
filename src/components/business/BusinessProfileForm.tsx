@@ -536,7 +536,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
             <div className="grid md:grid-cols-2 gap-8">
               {/* Business Name */}
               <div className="space-y-3">
-                <Label htmlFor="business_name" className="text-base font-semibold text-accent flex items-center">
+                <Label htmlFor="business_name" className="text-base font-semibold text-sage-700 flex items-center">
                   <Building className="h-4 w-4 mr-2" />
                   Business Name <span className="text-destructive ml-1">*</span>
                 </Label>
@@ -562,7 +562,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 
               {/* Business Phone */}
               <div className="space-y-3">
-                <Label htmlFor="business_phone" className="text-base font-semibold text-accent flex items-center">
+                <Label htmlFor="business_phone" className="text-base font-semibold text-sage-700 flex items-center">
                   <Phone className="h-4 w-4 mr-2" />
                   Business Phone <span className="text-destructive ml-1">*</span>
                 </Label>
@@ -589,7 +589,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 
             {/* Business Address */}
             <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
-              <h4 className="text-lg font-semibold text-accent mb-4 flex items-center">
+              <h4 className="text-lg font-semibold text-sage-700 mb-4 flex items-center">
                 <Building className="h-5 w-5 mr-2" />
                 Business Address
               </h4>
@@ -788,7 +788,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
 
             {/* Business Description */}
             <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
-              <Label htmlFor="business_description" className="text-base font-semibold text-accent mb-4 block">
+              <Label htmlFor="business_description" className="text-base font-semibold text-sage-700 mb-4 block">
                 Business Description (Optional)
               </Label>
               <Textarea
@@ -812,7 +812,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
             {/* Opening Hours */}
             <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
               <div className="flex justify-between items-center mb-4">
-                <Label className="text-base font-semibold text-accent">
+                <Label className="text-base font-semibold text-sage-700">
                   Opening Hours (Optional)
                 </Label>
                 <Button
