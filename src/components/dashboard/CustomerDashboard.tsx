@@ -817,7 +817,7 @@ const CustomerDashboard = () => {
                         <Button
                           size="lg"
                           onClick={() => handleBookSlot(slot)}
-                          className="min-w-32 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white"
+                          className="min-w-32 bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400"
                         >
                           Book Now
                         </Button>
