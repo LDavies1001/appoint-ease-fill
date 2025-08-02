@@ -41,7 +41,7 @@ import {
   Copy,
   Plus
 } from 'lucide-react';
-import { ImageCropUpload } from '@/components/ui/image-crop-upload';
+import { CoverImageEditor } from '@/components/business/CoverImageEditor';
 
 
 interface ProviderProfile {
@@ -137,7 +137,7 @@ const EnhancedBusinessProfile = () => {
   const [businessCategories, setBusinessCategories] = useState<BusinessCategory[]>([]);
   const [socialConnections, setSocialConnections] = useState<SocialConnection[]>([]);
   const [loading, setLoading] = useState(true);
-  const [coverUploadOpen, setCoverUploadOpen] = useState(false);
+  const [coverEditorOpen, setCoverEditorOpen] = useState(false);
 
   // Check if current user is the profile owner
   const isOwner = profile?.user_id === providerId;
@@ -230,38 +230,12 @@ const EnhancedBusinessProfile = () => {
     }
   };
 
-  const handleCoverImageUpdate = async (url: string) => {
-    try {
-      // Update provider_details with the new cover image URL
-      const { error } = await supabase
-        .from('provider_details')
-        .upsert({ 
-          user_id: providerId,
-          cover_image_url: url 
-        }, {
-          onConflict: 'user_id'
-        });
-
-      if (error) throw error;
-
-      // Update local state
-      if (providerDetails) {
-        setProviderDetails({
-          ...providerDetails,
-          cover_image_url: url
-        });
-      }
-
-      toast({
-        title: "Cover photo updated",
-        description: "Your cover photo has been updated successfully"
-      });
-    } catch (error) {
-      console.error('Error updating cover photo:', error);
-      toast({
-        title: "Upload failed",
-        description: "Could not update the cover photo. Please try again.",
-        variant: "destructive"
+  const handleCoverImageUpdate = (url: string) => {
+    // Update local state
+    if (providerDetails) {
+      setProviderDetails({
+        ...providerDetails,
+        cover_image_url: url
       });
     }
   };
@@ -363,22 +337,27 @@ const EnhancedBusinessProfile = () => {
           )}
           {isOwner && (
             <div className="absolute top-4 right-4">
-              <ImageCropUpload
-                onUpload={handleCoverImageUpdate}
-                bucket="business-photos"
-                aspectRatio={16/9}
-                minWidth={1200}
-                targetWidth={1200}
-                targetHeight={675}
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="bg-white/90 hover:bg-white"
+                onClick={() => setCoverEditorOpen(true)}
               >
-                <Button variant="secondary" size="sm" className="bg-white/90 hover:bg-white">
-                  <Edit2 className="h-4 w-4 mr-2" />
-                  Edit Cover
-                </Button>
-              </ImageCropUpload>
+                <Edit2 className="h-4 w-4 mr-2" />
+                Edit Cover
+              </Button>
             </div>
           )}
         </div>
+
+        {/* Cover Image Editor Dialog */}
+        <CoverImageEditor
+          isOpen={coverEditorOpen}
+          onClose={() => setCoverEditorOpen(false)}
+          providerId={providerId || ''}
+          currentCoverUrl={providerDetails?.cover_image_url}
+          onSave={handleCoverImageUpdate}
+        />
 
         {/* Business Header */}
         <div className="relative bg-gradient-to-r from-card via-card/95 to-card border-b border-border/50">
