@@ -7,7 +7,6 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Building, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, User, MapPin, Check, ArrowLeft, Calendar, Target } from 'lucide-react';
-import openSlotLogo from '@/assets/openslot-logo.png';
 import { PostcodeLookup } from '@/components/ui/postcode-lookup-enhanced';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -209,7 +208,7 @@ const BusinessSignup = () => {
               <div className="flex items-center justify-center space-x-3 mb-6">
                 {/* OpenSlot Logo */}
                 <img 
-                  src={openSlotLogo} 
+                  src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
                   alt="OpenSlot Logo" 
                   className="w-12 h-12 object-contain"
                 />
