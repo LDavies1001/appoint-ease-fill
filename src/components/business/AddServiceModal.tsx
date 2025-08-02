@@ -529,7 +529,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
               )}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Upload images that showcase your service (optional)
+              Upload images that showcase your service (recommended)
             </p>
           </div>
 
