@@ -224,7 +224,7 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
             onFocus={() => {
               if (suggestions.length > 0) setShowSuggestions(true);
             }}
-            placeholder="e.g., M23 9NY or start typing your address..."
+            placeholder="e.g., SW1A 1AA or start typing your address..."
             className="pl-10 pr-12 h-12 text-lg border-2 border-accent/30 focus:border-accent"
           />
           
