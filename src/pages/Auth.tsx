@@ -756,7 +756,7 @@ const Auth = () => {
 
   // Conversion-Optimized Login Form
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sage-50/30 via-background to-sage-100/20">
+    <div className="min-h-screen bg-gradient-to-br from-sage-50/30 via-background to-rose-50/20">
       <div className="container mx-auto px-4 py-8 flex min-h-screen items-center">
         <div className="w-full max-w-4xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* Left side - Engaging Content */}
@@ -774,7 +774,7 @@ const Auth = () => {
             {/* Quick Benefits */}
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-sage-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-rose-400 rounded-full"></div>
                 <span className="text-muted-foreground">40% more bookings on average</span>
               </div>
               <div className="flex items-center gap-3">
@@ -782,7 +782,7 @@ const Auth = () => {
                 <span className="text-muted-foreground">Automated scheduling & reminders</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-sage-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-rose-400 rounded-full"></div>
                 <span className="text-muted-foreground">Professional portfolio showcase</span>
               </div>
             </div>
@@ -795,7 +795,7 @@ const Auth = () => {
               <Button
                 onClick={() => navigate('?tab=signup')}
                 variant="outline"
-                className="w-full border-sage-400 text-sage-700 hover:bg-sage-100 hover:text-sage-800"
+                className="w-full border-rose-300 text-rose-600 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-400"
               >
                 Start Free Trial
               </Button>
