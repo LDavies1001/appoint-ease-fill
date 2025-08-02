@@ -639,7 +639,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 }))}
                 selectedCategories={formData.business_categories}
                 onSelectionChange={(selected) => handleInputChange('business_categories', selected)}
-                maxSelections={3}
+                maxSelections={1}
               />
             </div>
             
