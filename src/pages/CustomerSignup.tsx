@@ -201,7 +201,7 @@ const CustomerSignup = () => {
                 <img 
                   src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
                   alt="OpenSlot Logo" 
-                  className="w-12 h-12 object-contain"
+                  className="w-[200px] h-[200px] object-contain"
                 />
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
