@@ -756,201 +756,129 @@ const Auth = () => {
 
   // Conversion-Optimized Login Form
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-rose-25 to-background animate-fade-in">
-      <div className="absolute top-4 left-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-rose-700 hover:text-rose-800 hover:bg-rose-100/50"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Home
-        </Button>
-      </div>
-      
-      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-        <div className="w-full max-w-lg">
-          {/* Social Proof Banner */}
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-4 py-2 mb-4">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-green-700">
-                <strong>2,847</strong> appointments booked this week
-              </span>
-            </div>
-          </div>
-
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center space-x-3 mb-6">
-              <BrandLogo className="w-8 h-8 md:w-10 md:h-10" />
-              <span className="text-2xl lg:text-3xl font-bold text-foreground">OpenSlot</span>
-            </div>
-            <h1 className="font-bold text-foreground leading-[1.1] tracking-tight mb-3" 
-                style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)' }}>
-              Access Premium Appointments in Seconds
-            </h1>
-            <p className="text-lg text-muted-foreground font-medium mb-4">
-              Join thousands discovering exclusive last-minute slots from top-rated professionals
-            </p>
-            
-            {/* Urgency Element */}
-            <div className="flex items-center justify-center gap-2 text-orange-600 mb-6">
-              <Clock className="h-4 w-4" />
-              <span className="text-sm font-medium">
-                <strong>47 new slots</strong> added in the last hour
-              </span>
-            </div>
-          </div>
-
-          <Card className="border border-rose-100/50 bg-white/80 backdrop-blur-sm shadow-2xl rounded-xl md:rounded-2xl p-8 animate-scale-in">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-foreground">Email Address</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-rose-600" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 border-rose-200 focus:border-rose-500 focus:ring-rose-500/20 rounded-lg h-12"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-rose-600" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 border-rose-200 focus:border-rose-500 focus:ring-rose-500/20 rounded-lg h-12"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-rose-600" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-rose-600" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-br from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02]"
-              >
-                {loading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Signing In...
-                  </div>
-                ) : (
-                  'Access Your Dashboard'
-                )}
-              </Button>
-            </form>
-
-            {/* Benefits Section */}
-            <div className="mt-8 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-100">
-              <div className="text-center mb-4">
-                <h3 className="text-sm font-bold text-foreground mb-3">What you get with OpenSlot:</h3>
-              </div>
-              <div className="grid grid-cols-1 gap-3">
-                {[
-                  { icon: TrendingUp, text: "Up to 60% off premium appointments" },
-                  { icon: Clock, text: "Book instantly, no waiting" },
-                  { icon: Users, text: "Access 500+ verified professionals" }
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-3 text-sm">
-                    <div className="w-6 h-6 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <item.icon className="h-3 w-3 text-white" />
-                    </div>
-                    <span className="font-medium text-foreground">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6 space-y-4">
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground mb-2">New to OpenSlot?</p>
-                <Link to="/auth?tab=signup" className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
-                  <UserCheck className="h-4 w-4" />
-                  Create Free Account - Get £10 Credit
-                </Link>
-              </div>
-              
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-rose-200" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-3 text-muted-foreground font-medium">Quick Start Options</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <Link to="/signup/customer">
-                  <Button variant="outline" className="w-full border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300 rounded-lg h-12 font-medium">
-                    <Heart className="h-4 w-4 mr-2" />
-                    For Customers
-                  </Button>
-                </Link>
-                <Link to="/auth?tab=provider">
-                  <Button variant="outline" className="w-full border-sage-200 text-sage-600 hover:bg-sage-50 hover:border-sage-300 rounded-lg h-12 font-medium">
-                    <Building className="h-4 w-4 mr-2" />
-                    For Businesses
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </Card>
-
-          {/* Enhanced Trust Badges */}
-          <div className="mt-8 space-y-4">
-            <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-rose-400" />
-                <span className="font-medium">Made in the UK</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Lock className="h-4 w-4 text-green-400" />
-                <span className="font-medium">Bank-level security</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Award className="h-4 w-4 text-blue-400" />
-                <span className="font-medium">Instant confirmation</span>
-              </div>
-            </div>
-            
-            {/* Customer Testimonial */}
-            <div className="text-center p-4 bg-white/60 rounded-lg border border-gray-100">
-              <p className="text-sm text-muted-foreground italic mb-2">
-                "Found a last-minute massage appointment in 30 seconds. Saved me £25!"
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      <div className="container mx-auto px-4 py-8 flex min-h-screen items-center">
+        <div className="w-full max-w-4xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left side - Engaging Content */}
+          <div className="space-y-6 lg:pr-8">
+            <div className="space-y-4">
+              <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                Welcome Back to
+                <span className="text-primary block">OpenSlot</span>
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                Continue growing your beauty business with smart booking management.
               </p>
-              <div className="flex items-center justify-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xs">★</span>
-                ))}
-                <span className="text-xs text-muted-foreground ml-2">Sarah M., London</span>
+            </div>
+
+            {/* Quick Benefits */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <span className="text-muted-foreground">40% more bookings on average</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <span className="text-muted-foreground">Automated scheduling & reminders</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <span className="text-muted-foreground">Professional portfolio showcase</span>
               </div>
             </div>
+
+            {/* New User CTA */}
+            <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
+              <p className="text-sm text-muted-foreground mb-3">
+                Don't have an account yet?
+              </p>
+              <Button
+                onClick={() => navigate('?tab=signup')}
+                variant="outline"
+                className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              >
+                Start Free Trial
+              </Button>
+            </div>
+          </div>
+
+          {/* Right side - Login Form */}
+          <div className="w-full max-w-md mx-auto">
+            <Card className="border-2 border-primary/20 shadow-xl">
+              <div className="p-8">
+                <div className="text-center mb-6">
+                  <BrandLogo className="w-10 h-10 mx-auto mb-4" />
+                  <h2 className="text-2xl font-bold text-foreground">
+                    Welcome Back
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Sign in to your OpenSlot account
+                  </p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-foreground font-medium">Email</Label>
+                    <div className="relative">
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="pl-10 border-muted-foreground/20 focus:border-primary"
+                        required
+                      />
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="pl-10 pr-10 border-muted-foreground/20 focus:border-primary"
+                        required
+                      />
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
+                    disabled={loading}
+                    size="lg"
+                  >
+                    {loading ? "Signing in..." : "Sign In"}
+                  </Button>
+                </form>
+
+                <div className="mt-6 pt-6 border-t border-muted/20 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Don't have an account?{' '}
+                    <button
+                      onClick={() => navigate('?tab=signup')}
+                      className="text-primary hover:text-primary/80 font-medium"
+                    >
+                      Sign up here
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </div>
