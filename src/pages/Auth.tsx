@@ -829,11 +829,11 @@ const Auth = () => {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold py-3 rounded-lg transition-all duration-300"
-              >
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-gradient-to-br from-rose-200 to-rose-300 hover:from-rose-300 hover:to-rose-400 text-rose-800 font-semibold py-3 rounded-lg transition-all duration-300"
+                >
                 {loading ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
