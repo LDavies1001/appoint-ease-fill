@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Scissors, Sparkles, Home, ShirtIcon } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { CheckCircle, Scissors, Sparkles, Home, ShirtIcon, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Category {
@@ -43,6 +44,14 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
   maxSelections = 3,
   className
 }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter categories based on search query
+  const filteredCategories = categories.filter(category =>
+    category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    category.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const handleCategoryToggle = (categoryId: string) => {
     const isSelected = selectedCategories.includes(categoryId);
     
@@ -68,8 +77,26 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
         </Badge>
       </div>
 
+      {/* Search Input */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Search for your industry..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {categories.map((category) => {
+        {filteredCategories.length === 0 ? (
+          <div className="col-span-full text-center py-8 text-muted-foreground">
+            <p>No industries found matching "{searchQuery}"</p>
+            <p className="text-sm mt-1">Try a different search term</p>
+          </div>
+        ) : (
+          filteredCategories.map((category) => {
           const isSelected = selectedCategories.includes(category.id);
           const isDisabled = !isSelected && selectedCategories.length >= maxSelections;
 
@@ -114,7 +141,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
               </div>
             </Button>
           );
-        })}
+        }))}
       </div>
 
       {selectedCategories.length >= maxSelections && (
