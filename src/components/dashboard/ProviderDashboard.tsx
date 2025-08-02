@@ -785,17 +785,50 @@ const ProviderDashboard = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <Label htmlFor="start_time" className="text-sm font-medium">Start Time *</Label>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="start_time"
-                        type="time"
-                        value={slotForm.start_time}
-                        onChange={(e) => setSlotForm(prev => ({ ...prev, start_time: e.target.value }))}
-                        className="pl-10 h-11"
-                        required
-                      />
+                    <Label className="text-sm font-medium">Start Time *</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-2">
+                        <Label className="text-xs text-muted-foreground">Hour</Label>
+                        <Select
+                          value={slotForm.start_time.split(':')[0] || ''}
+                          onValueChange={(hour) => {
+                            const minutes = slotForm.start_time.split(':')[1] || '00';
+                            setSlotForm(prev => ({ ...prev, start_time: `${hour}:${minutes}` }));
+                          }}
+                        >
+                          <SelectTrigger className="h-11">
+                            <SelectValue placeholder="Hour" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: 24 }, (_, i) => (
+                              <SelectItem key={i} value={i.toString().padStart(2, '0')}>
+                                {i.toString().padStart(2, '0')}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs text-muted-foreground">Minute</Label>
+                        <Select
+                          value={slotForm.start_time.split(':')[1] || ''}
+                          onValueChange={(minute) => {
+                            const hour = slotForm.start_time.split(':')[0] || '00';
+                            setSlotForm(prev => ({ ...prev, start_time: `${hour}:${minute}` }));
+                          }}
+                        >
+                          <SelectTrigger className="h-11">
+                            <SelectValue placeholder="Minute" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {['00', '15', '30', '45'].map(minute => (
+                              <SelectItem key={minute} value={minute}>
+                                {minute}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </div>
 
