@@ -249,11 +249,19 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
   const [currentStep, setCurrentStep] = useState<'categories' | 'services'>('categories');
   const [selectedMainCategory, setSelectedMainCategory] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [showLimitError, setShowLimitError] = useState(false);
 
   const handleCategorySelect = (categoryId: string) => {
+    if (selectedCategories.length >= maxSelections && !selectedCategories.includes(categoryId)) {
+      setShowLimitError(true);
+      setTimeout(() => setShowLimitError(false), 3000); // Hide after 3 seconds
+      return;
+    }
+    
     setSelectedMainCategory(categoryId);
     setSelectedServices([]);
     setCurrentStep('services');
+    setShowLimitError(false); // Clear error on valid selection
   };
 
   const handleServiceToggle = (service: string) => {
@@ -478,7 +486,7 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
                   "border-muted opacity-50 cursor-not-allowed": !canSelect && !isSelected,
                 }
               )}
-              onClick={() => canSelect ? handleCategorySelect(category.id) : undefined}
+              onClick={() => canSelect || isSelected ? handleCategorySelect(category.id) : handleCategorySelect(category.id)}
             >
               <div className="space-y-3">
                 <div className="text-4xl">{category.emoji}</div>
@@ -497,8 +505,8 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
         })}
       </div>
 
-      {/* Selection limit message */}
-      {selectedCategories.length >= maxSelections && (
+      {/* Selection limit message - only show when user attempts to exceed limit */}
+      {showLimitError && (
         <div className="text-center bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border border-amber-200 dark:border-amber-800">
           <p className="text-sm text-amber-700 dark:text-amber-300 font-medium">
             Maximum categories selected. Remove one to select a different category.
