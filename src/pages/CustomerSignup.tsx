@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart, ArrowLeft, MapPin, Check } from 'lucide-react';
-import { LocationInput } from '@/components/ui/location-input';
+import { PostcodeLookup } from '@/components/ui/postcode-lookup-enhanced';
 
 import { sanitizeInput, validateEmail, validatePhone, validatePassword, rateLimitCheck } from '@/utils/validation';
 
@@ -17,6 +17,10 @@ const CustomerSignup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [location, setLocation] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [postcodeData, setPostcodeData] = useState<any>(null);
   const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -59,6 +63,8 @@ const CustomerSignup = () => {
         return isEmailValid(value);
       case 'phone':
         return !value || validatePhone(value);
+      case 'postcode':
+        return value.trim().length >= 5 && latitude !== null && longitude !== null;
       case 'password':
         return getPasswordStrength() >= 4;
       case 'confirmPassword':
@@ -144,7 +150,12 @@ const CustomerSignup = () => {
         'customer', 
         sanitizedFullName, 
         sanitizedPhone, 
-        sanitizedLocation
+        postcode || sanitizedLocation,
+        undefined, // businessName - not needed for customers
+        latitude,
+        longitude,
+        undefined, // serviceRadius - not needed for customers
+        postcodeData
       );
       
       if (error) {
@@ -354,16 +365,23 @@ const CustomerSignup = () => {
 
                     {/* Location */}
                     <div className="space-y-3">
-                      <Label htmlFor="location" className="text-sm font-semibold text-foreground">Location (Optional)</Label>
-                      <div className="relative">
-                        <MapPin className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
-                        <LocationInput
-                          placeholder="Enter your postcode"
-                          value={location}
-                          onChange={setLocation}
-                          className="pl-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
-                        />
-                      </div>
+                      <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-blush-600" />
+                        Your Postcode (Optional)
+                      </Label>
+                      <PostcodeLookup
+                        value={postcode}
+                        onChange={(data) => {
+                          setPostcode(data.postcode);
+                          setLocation(data.formattedAddress);
+                          setLatitude(data.latitude);
+                          setLongitude(data.longitude);
+                          setPostcodeData(data.postcodeData);
+                        }}
+                        placeholder="Enter your postcode (e.g. SW1A 1AA)"
+                        className="h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                        showCoverageRadius={false}
+                      />
                       <p className="text-sm text-muted-foreground">Help us find services near you</p>
                     </div>
                   </div>
