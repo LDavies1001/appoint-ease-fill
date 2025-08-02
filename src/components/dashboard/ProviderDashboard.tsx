@@ -919,7 +919,7 @@ const ProviderDashboard = () => {
                       onChange={(e) => setSlotForm(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
                       min="15"
                       step="15"
-                      className="h-11"
+                      className="h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
                 </div>
