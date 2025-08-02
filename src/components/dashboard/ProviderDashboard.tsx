@@ -280,6 +280,17 @@ const ProviderDashboard = () => {
       const startTime = new Date(`2000-01-01T${slotForm.start_time}`);
       const endTime = new Date(startTime.getTime() + slotForm.duration * 60000);
       
+      // Determine which image to use
+      let imageUrl = null;
+      if (slotForm.use_service_image !== false) {
+        // Use the service image
+        const selectedService = providerServices.find(s => s.id === slotForm.provider_service_id);
+        imageUrl = selectedService?.image_url || null;
+      } else {
+        // Use the custom uploaded image
+        imageUrl = slotForm.image_url || null;
+      }
+      
       const insertData: any = {
         provider_id: profile?.user_id,
         date: slotForm.date,
@@ -288,7 +299,7 @@ const ProviderDashboard = () => {
         duration: slotForm.duration,
         price: parseFloat(slotForm.price),
         discount_price: slotForm.discount_price ? parseFloat(slotForm.discount_price) : null,
-        image_url: slotForm.image_url || null,
+        image_url: imageUrl,
         notes: slotForm.notes
       };
 
@@ -391,6 +402,17 @@ const ProviderDashboard = () => {
       const startTime = new Date(`2000-01-01T${slotForm.start_time}`);
       const endTime = new Date(startTime.getTime() + slotForm.duration * 60000);
       
+      // Determine which image to use
+      let imageUrl = null;
+      if (slotForm.use_service_image !== false) {
+        // Use the service image
+        const selectedService = providerServices.find(s => s.id === slotForm.provider_service_id);
+        imageUrl = selectedService?.image_url || null;
+      } else {
+        // Use the custom uploaded image
+        imageUrl = slotForm.image_url || null;
+      }
+      
       const updateData: any = {
         date: slotForm.date,
         start_time: slotForm.start_time,
@@ -398,7 +420,7 @@ const ProviderDashboard = () => {
         duration: slotForm.duration,
         price: parseFloat(slotForm.price),
         discount_price: slotForm.discount_price ? parseFloat(slotForm.discount_price) : null,
-        image_url: slotForm.image_url || null,
+        image_url: imageUrl,
         notes: slotForm.notes
       };
 
