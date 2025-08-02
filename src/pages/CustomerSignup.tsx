@@ -308,6 +308,7 @@ const CustomerSignup = () => {
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          variant="customer"
                           required
                         />
                         {fullName && isFieldValid('fullName', fullName) && (
@@ -330,6 +331,7 @@ const CustomerSignup = () => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          variant="customer"
                           required
                         />
                         {email && isFieldValid('email', email) && (
@@ -364,6 +366,7 @@ const CustomerSignup = () => {
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          variant="customer"
                         />
                         {phone && isFieldValid('phone', phone) && (
                           <div className="absolute right-4 top-4 text-blush-600">
@@ -425,6 +428,7 @@ const CustomerSignup = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          variant="customer"
                           required
                         />
                         <button
@@ -471,6 +475,7 @@ const CustomerSignup = () => {
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          variant="customer"
                           required
                         />
                         {confirmPassword && isFieldValid('confirmPassword', confirmPassword) && (
