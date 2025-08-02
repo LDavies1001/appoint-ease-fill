@@ -684,28 +684,8 @@ const CustomerDashboard = () => {
                   }
                   
                   // Default list view (existing layout)
-                  const imageUrl = slot.image_url;
-                  console.log('Slot image_url:', imageUrl, 'Type:', typeof imageUrl);
-                  
                   return (
                     <Card key={slot.id} className="card-elegant p-6 hover:shadow-accent transition-smooth">
-                      {/* Slot Image */}
-                      {imageUrl && (
-                        <div className="mb-4 rounded-lg overflow-hidden">
-                          <img 
-                            src={imageUrl} 
-                            alt={slot.service.name}
-                            className="w-full h-48 object-cover"
-                            onError={(e) => {
-                              console.error('Image failed to load:', imageUrl);
-                              e.currentTarget.style.display = 'none';
-                            }}
-                            onLoad={() => {
-                              console.log('Image loaded successfully:', imageUrl);
-                            }}
-                          />
-                        </div>
-                      )}
                       
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
