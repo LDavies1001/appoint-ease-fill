@@ -886,7 +886,14 @@ const ProviderDashboard = () => {
                 <div className="space-y-4">
                   <Label className="text-sm font-medium">Slot Image (optional)</Label>
                   {slotForm.provider_service_id && providerServices.find(s => s.id === slotForm.provider_service_id)?.image_url ? (
-                    <p className="text-sm text-success-foreground">✅ Using image from your service: {providerServices.find(s => s.id === slotForm.provider_service_id)?.service_name}</p>
+                    <div className="p-3 bg-success/10 border border-success/20 rounded-lg">
+                      <p className="text-sm text-success-foreground font-medium mb-1">
+                        ✅ Currently using image from your service: {providerServices.find(s => s.id === slotForm.provider_service_id)?.service_name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        You can keep this image or upload a different one below
+                      </p>
+                    </div>
                   ) : (
                     <p className="text-sm text-muted-foreground">Add an attractive image to showcase your service</p>
                   )}
