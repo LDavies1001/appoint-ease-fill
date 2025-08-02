@@ -28,7 +28,10 @@ import {
   Phone,
   Mail,
   Image,
-  Settings
+  Settings,
+  Grid3X3,
+  List,
+  LayoutGrid
 } from 'lucide-react';
 
 interface AvailableSlot {
@@ -123,6 +126,7 @@ const CustomerDashboard = () => {
   const [activeTab, setActiveTab] = useState('browse');
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<AvailableSlot | null>(null);
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'compact'>('list');
   
   const { profile, signOut } = useAuth();
   const { toast } = useToast();
@@ -393,195 +397,397 @@ const CustomerDashboard = () => {
           <div className="space-y-6">
             {/* Search and Filters */}
             <Card className="card-elegant p-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search services, providers, or locations..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search services, providers, or locations..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="w-full sm:w-48">
+                      <Filter className="h-4 w-4 mr-2" />
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="Beauty">Beauty</SelectItem>
+                      <SelectItem value="Cleaning">Cleaning</SelectItem>
+                      <SelectItem value="Wellness">Wellness</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* View Toggle */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {filteredSlots.length} slots available
+                  </span>
+                  <div className="flex gap-1 bg-muted rounded-lg p-1">
+                    <Button
+                      variant={viewMode === 'list' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('list')}
+                      className="h-8 px-3"
+                    >
+                      <List className="h-4 w-4" />
+                      <span className="hidden sm:inline ml-2">List</span>
+                    </Button>
+                    <Button
+                      variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('grid')}
+                      className="h-8 px-3"
+                    >
+                      <LayoutGrid className="h-4 w-4" />
+                      <span className="hidden sm:inline ml-2">Grid</span>
+                    </Button>
+                    <Button
+                      variant={viewMode === 'compact' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('compact')}
+                      className="h-8 px-3"
+                    >
+                      <Grid3X3 className="h-4 w-4" />
+                      <span className="hidden sm:inline ml-2">Compact</span>
+                    </Button>
                   </div>
                 </div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full sm:w-48">
-                    <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="Beauty">Beauty</SelectItem>
-                    <SelectItem value="Cleaning">Cleaning</SelectItem>
-                    <SelectItem value="Wellness">Wellness</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             </Card>
 
             {/* Available Slots */}
-            <div className="grid gap-4">
+            <div className={`gap-4 ${
+              viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3' :
+              viewMode === 'compact' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' :
+              'flex flex-col'
+            }`}>
               {loading ? (
-                <div className="flex justify-center py-8">
+                <div className="flex justify-center py-8 col-span-full">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>
               ) : filteredSlots.length === 0 ? (
-                <Card className="card-elegant p-8 text-center">
+                <Card className="card-elegant p-8 text-center col-span-full">
                   <p className="text-muted-foreground">No available slots found.</p>
                 </Card>
               ) : (
-                filteredSlots.map((slot) => (
-                  <Card key={slot.id} className="card-elegant p-6 hover:shadow-accent transition-smooth">
-                    {/* Slot Image */}
-                    {slot.image_url && (
-                      <div className="mb-4 rounded-lg overflow-hidden">
-                        <img 
-                          src={slot.image_url} 
-                          alt={slot.service.name}
-                          className="w-full h-48 object-cover"
-                        />
-                      </div>
-                    )}
-                    
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <h3 className="font-semibold text-lg text-foreground">
-                              {slot.provider.business_name}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              {slot.provider.name}
-                            </p>
-                            {slot.provider.business_description && (
-                              <p className="text-sm text-muted-foreground mt-1 italic">
-                                {slot.provider.business_description}
+                filteredSlots.map((slot) => {
+                  if (viewMode === 'compact') {
+                    return (
+                      <Card key={slot.id} className="card-elegant p-4 hover:shadow-accent transition-smooth">
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-sm text-foreground truncate">
+                                {slot.provider.business_name}
+                              </h3>
+                              <p className="text-xs text-muted-foreground truncate">
+                                {slot.service.name}
                               </p>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            <Badge variant="secondary" className="mb-1">
-                              {slot.service.name}
-                            </Badge>
+                            </div>
                             {slot.provider.rating > 0 && (
-                              <div className="flex items-center text-sm text-muted-foreground">
+                              <div className="flex items-center text-xs text-muted-foreground">
                                 <Star className="h-3 w-3 mr-1 fill-current text-yellow-400" />
                                 {slot.provider.rating.toFixed(1)}
                               </div>
                             )}
                           </div>
+                          
+                          <div className="space-y-2 text-xs text-muted-foreground">
+                            <div className="flex items-center">
+                              <Calendar className="h-3 w-3 mr-1" />
+                              <span className="truncate">{formatDate(slot.date)}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <Clock className="h-3 w-3 mr-1" />
+                              <span>{formatTime(slot.start_time)}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <MapPin className="h-3 w-3 mr-1" />
+                              <span className="truncate">{slot.provider.location}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="font-semibold text-sm text-foreground">
+                              {slot.discount_price ? (
+                                <div className="flex items-center gap-1">
+                                  <span className="line-through text-muted-foreground text-xs">
+                                    £{slot.price}
+                                  </span>
+                                  <span className="text-accent">
+                                    £{slot.discount_price}
+                                  </span>
+                                </div>
+                              ) : (
+                                `£${slot.price || 'TBD'}`
+                              )}
+                            </div>
+                            <Button
+                              variant="accent"
+                              size="sm"
+                              onClick={() => handleBookSlot(slot)}
+                              className="h-8 px-3 text-xs"
+                            >
+                              Book
+                            </Button>
+                          </div>
                         </div>
-
-                        {/* Service Details */}
-                        {slot.provider_service && (
-                          <div className="bg-muted/30 rounded-lg p-3 mb-4">
-                            <h4 className="font-medium text-sm text-foreground mb-1">
-                              Service: {slot.provider_service.service_name}
-                            </h4>
-                            {slot.provider_service.description && (
-                              <p className="text-sm text-muted-foreground">
-                                {slot.provider_service.description}
-                              </p>
-                            )}
+                      </Card>
+                    );
+                  }
+                  
+                  if (viewMode === 'grid') {
+                    return (
+                      <Card key={slot.id} className="card-elegant p-4 hover:shadow-accent transition-smooth">
+                        {slot.image_url && (
+                          <div className="mb-3 rounded-lg overflow-hidden">
+                            <img 
+                              src={slot.image_url} 
+                              alt={slot.service.name}
+                              className="w-full h-32 object-cover"
+                            />
                           </div>
                         )}
-
-                        {/* Date, Time, Location, Price Grid */}
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-muted-foreground mb-4">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            <div>
-                              <div className="font-medium text-foreground">
-                                {formatDate(slot.date)}
-                              </div>
-                              <div className="text-xs">
-                                {slot.duration} minutes
-                              </div>
+                        
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-foreground truncate">
+                                {slot.provider.business_name}
+                              </h3>
+                              <p className="text-sm text-muted-foreground truncate">
+                                {slot.provider.name}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <Badge variant="secondary" className="text-xs">
+                                {slot.service.name}
+                              </Badge>
+                              {slot.provider.rating > 0 && (
+                                <div className="flex items-center text-sm text-muted-foreground mt-1">
+                                  <Star className="h-3 w-3 mr-1 fill-current text-yellow-400" />
+                                  {slot.provider.rating.toFixed(1)}
+                                </div>
+                              )}
                             </div>
                           </div>
-                          <div className="flex items-center">
-                            <Clock className="h-4 w-4 mr-2" />
-                            <div>
-                              <div className="font-medium text-foreground">
-                                {formatTime(slot.start_time)}
-                              </div>
-                              <div className="text-xs">
-                                Ends {formatTime(slot.end_time)}
+                          
+                          <div className="space-y-2 text-sm text-muted-foreground">
+                            <div className="flex items-center">
+                              <Calendar className="h-4 w-4 mr-2" />
+                              <div>
+                                <div className="font-medium text-foreground">
+                                  {formatDate(slot.date)}
+                                </div>
+                                <div className="text-xs">
+                                  {slot.duration} minutes
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-2" />
-                            <div>
-                              <div className="font-medium text-foreground">
+                            <div className="flex items-center">
+                              <Clock className="h-4 w-4 mr-2" />
+                              <div>
+                                <div className="font-medium text-foreground">
+                                  {formatTime(slot.start_time)}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <MapPin className="h-4 w-4 mr-2" />
+                              <div className="font-medium text-foreground truncate">
                                 {slot.provider.location}
                               </div>
-                              {slot.provider.business_phone && (
-                                <div className="text-xs flex items-center mt-1">
-                                  <Phone className="h-3 w-3 mr-1" />
-                                  {slot.provider.business_phone}
-                                </div>
-                              )}
                             </div>
                           </div>
-                          <div className="flex items-center">
-                            <div>
-                              <div className="font-semibold text-lg text-foreground">
-                                {slot.discount_price ? (
-                                  <div>
-                                    <span className="line-through text-muted-foreground text-sm">
-                                      £{slot.price}
-                                    </span>
-                                    <span className="text-accent ml-2">
-                                      £{slot.discount_price}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  `£${slot.price || 'TBD'}`
-                                )}
-                              </div>
-                              {slot.discount_price && (
-                                <div className="text-xs text-accent font-medium">
-                                  Save £{slot.price - slot.discount_price}!
+                          
+                          <div className="flex items-center justify-between pt-2 border-t border-border">
+                            <div className="font-semibold text-lg text-foreground">
+                              {slot.discount_price ? (
+                                <div>
+                                  <span className="line-through text-muted-foreground text-sm">
+                                    £{slot.price}
+                                  </span>
+                                  <span className="text-accent ml-2">
+                                    £{slot.discount_price}
+                                  </span>
                                 </div>
+                              ) : (
+                                `£${slot.price || 'TBD'}`
                               )}
                             </div>
+                            <Button
+                              variant="accent"
+                              size="sm"
+                              onClick={() => handleBookSlot(slot)}
+                            >
+                              Book Now
+                            </Button>
                           </div>
                         </div>
-
-                        {/* Contact Information */}
-                        {slot.provider.business_email && (
-                          <div className="flex items-center text-sm text-muted-foreground mb-3">
-                            <Mail className="h-4 w-4 mr-2" />
-                            {slot.provider.business_email}
+                      </Card>
+                    );
+                  }
+                  
+                  // Default list view (existing layout)
+                  return (
+                    <Card key={slot.id} className="card-elegant p-6 hover:shadow-accent transition-smooth">
+                      {/* Slot Image */}
+                      {slot.image_url && (
+                        <div className="mb-4 rounded-lg overflow-hidden">
+                          <img 
+                            src={slot.image_url} 
+                            alt={slot.service.name}
+                            className="w-full h-48 object-cover"
+                          />
+                        </div>
+                      )}
+                      
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <h3 className="font-semibold text-lg text-foreground">
+                                {slot.provider.business_name}
+                              </h3>
+                              <p className="text-sm text-muted-foreground">
+                                {slot.provider.name}
+                              </p>
+                              {slot.provider.business_description && (
+                                <p className="text-sm text-muted-foreground mt-1 italic">
+                                  {slot.provider.business_description}
+                                </p>
+                              )}
+                            </div>
+                            <div className="text-right">
+                              <Badge variant="secondary" className="mb-1">
+                                {slot.service.name}
+                              </Badge>
+                              {slot.provider.rating > 0 && (
+                                <div className="flex items-center text-sm text-muted-foreground">
+                                  <Star className="h-3 w-3 mr-1 fill-current text-yellow-400" />
+                                  {slot.provider.rating.toFixed(1)}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        )}
 
-                        {/* Special Notes */}
-                        {slot.notes && (
-                          <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 mb-4">
-                            <h5 className="font-medium text-sm text-foreground mb-1">Special Notes:</h5>
-                            <p className="text-sm text-muted-foreground">
-                              {slot.notes}
-                            </p>
+                          {/* Service Details */}
+                          {slot.provider_service && (
+                            <div className="bg-muted/30 rounded-lg p-3 mb-4">
+                              <h4 className="font-medium text-sm text-foreground mb-1">
+                                Service: {slot.provider_service.service_name}
+                              </h4>
+                              {slot.provider_service.description && (
+                                <p className="text-sm text-muted-foreground">
+                                  {slot.provider_service.description}
+                                </p>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Date, Time, Location, Price Grid */}
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-muted-foreground mb-4">
+                            <div className="flex items-center">
+                              <Calendar className="h-4 w-4 mr-2" />
+                              <div>
+                                <div className="font-medium text-foreground">
+                                  {formatDate(slot.date)}
+                                </div>
+                                <div className="text-xs">
+                                  {slot.duration} minutes
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <Clock className="h-4 w-4 mr-2" />
+                              <div>
+                                <div className="font-medium text-foreground">
+                                  {formatTime(slot.start_time)}
+                                </div>
+                                <div className="text-xs">
+                                  Ends {formatTime(slot.end_time)}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <MapPin className="h-4 w-4 mr-2" />
+                              <div>
+                                <div className="font-medium text-foreground">
+                                  {slot.provider.location}
+                                </div>
+                                {slot.provider.business_phone && (
+                                  <div className="text-xs flex items-center mt-1">
+                                    <Phone className="h-3 w-3 mr-1" />
+                                    {slot.provider.business_phone}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <div>
+                                <div className="font-semibold text-lg text-foreground">
+                                  {slot.discount_price ? (
+                                    <div>
+                                      <span className="line-through text-muted-foreground text-sm">
+                                        £{slot.price}
+                                      </span>
+                                      <span className="text-accent ml-2">
+                                        £{slot.discount_price}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    `£${slot.price || 'TBD'}`
+                                  )}
+                                </div>
+                                {slot.discount_price && (
+                                  <div className="text-xs text-accent font-medium">
+                                    Save £{slot.price - slot.discount_price}!
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        )}
+
+                          {/* Contact Information */}
+                          {slot.provider.business_email && (
+                            <div className="flex items-center text-sm text-muted-foreground mb-3">
+                              <Mail className="h-4 w-4 mr-2" />
+                              {slot.provider.business_email}
+                            </div>
+                          )}
+
+                          {/* Special Notes */}
+                          {slot.notes && (
+                            <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 mb-4">
+                              <h5 className="font-medium text-sm text-foreground mb-1">Special Notes:</h5>
+                              <p className="text-sm text-muted-foreground">
+                                {slot.notes}
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex justify-end pt-4 border-t border-border">
-                      <Button
-                        variant="accent"
-                        size="lg"
-                        onClick={() => handleBookSlot(slot)}
-                        className="min-w-32"
-                      >
-                        Book Now
-                      </Button>
-                    </div>
-                  </Card>
-                ))
+                      <div className="flex justify-end pt-4 border-t border-border">
+                        <Button
+                          variant="accent"
+                          size="lg"
+                          onClick={() => handleBookSlot(slot)}
+                          className="min-w-32"
+                        >
+                          Book Now
+                        </Button>
+                      </div>
+                    </Card>
+                  );
+                })
               )}
             </div>
           </div>
