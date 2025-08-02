@@ -138,19 +138,19 @@ export default function ReviewForm() {
                 <RadioGroup
                   value={formData.userType}
                   onValueChange={(value) => handleChange('userType', value)}
-                  className="flex flex-col space-y-2"
+                  className="flex flex-col space-y-3"
                 >
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors">
                     <RadioGroupItem value="customer" id="customer" />
-                    <Label htmlFor="customer">Customer</Label>
+                    <Label htmlFor="customer" className="cursor-pointer flex-1">Customer</Label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors">
                     <RadioGroupItem value="business" id="business" />
-                    <Label htmlFor="business">Business Owner</Label>
+                    <Label htmlFor="business" className="cursor-pointer flex-1">Business Owner</Label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors">
                     <RadioGroupItem value="both" id="both" />
-                    <Label htmlFor="both">Both</Label>
+                    <Label htmlFor="both" className="cursor-pointer flex-1">Both</Label>
                   </div>
                 </RadioGroup>
               </div>
@@ -161,10 +161,10 @@ export default function ReviewForm() {
                 <RadioGroup
                   value={formData.rating}
                   onValueChange={(value) => handleChange('rating', value)}
-                  className="flex space-x-4"
+                  className="flex flex-wrap gap-3"
                 >
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <div key={star} className="flex items-center space-x-1">
+                    <div key={star} className="flex items-center space-x-2 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors">
                       <RadioGroupItem value={star.toString()} id={`star-${star}`} />
                       <Label htmlFor={`star-${star}`} className="flex items-center cursor-pointer">
                         {star} <Star className="h-4 w-4 ml-1 text-amber-500" />
