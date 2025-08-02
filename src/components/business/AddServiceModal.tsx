@@ -406,7 +406,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             <Label htmlFor="service_name">Service Name *</Label>
             {!showCustomInput ? (
               <Select onValueChange={handleServiceSelection} value={formData.service_name || ""}>
-                <SelectTrigger className="mt-1 bg-white">
+                <SelectTrigger className="mt-1 bg-white border-sage-400">
                   <SelectValue placeholder="Select a service or add custom..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white border shadow-lg z-[100] max-h-[200px] overflow-y-auto">
