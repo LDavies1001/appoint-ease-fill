@@ -55,6 +55,7 @@ interface AvailableSlot {
     business_email: string;
     business_phone: string;
     business_description: string;
+    business_category?: string;
   };
   service: {
     name: string;
@@ -142,15 +143,27 @@ const CustomerDashboard = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data, error } = await supabase
+      // Get categories from services table
+      const { data: serviceCategories, error: serviceError } = await supabase
         .from('services')
         .select('category')
         .not('category', 'is', null);
 
-      if (error) throw error;
+      if (serviceError) throw serviceError;
 
-      // Get unique categories
-      const uniqueCategories = [...new Set(data.map(item => item.category))].filter(Boolean);
+      // Get categories from business_categories table
+      const { data: businessCategories, error: businessError } = await supabase
+        .from('business_categories')
+        .select('name');
+
+      if (businessError) throw businessError;
+
+      // Combine and get unique categories
+      const allCategories = [
+        ...serviceCategories.map(item => item.category),
+        ...businessCategories.map(item => item.name)
+      ];
+      const uniqueCategories = [...new Set(allCategories)].filter(Boolean);
       setCategories(uniqueCategories);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -176,10 +189,17 @@ const CustomerDashboard = () => {
 
       // Also fetch provider details and business info for each slot
       const formattedSlots = await Promise.all((data || []).map(async (slot) => {
-        // Get provider business details
+        // Get provider business details including business category
         const { data: providerDetails } = await supabase
           .from('provider_details')
-          .select('business_name, business_email, business_phone, rating, business_description')
+          .select(`
+            business_name, 
+            business_email, 
+            business_phone, 
+            rating, 
+            business_description,
+            business_category:business_categories(name)
+          `)
           .eq('user_id', slot.provider_id)
           .single();
 
@@ -192,7 +212,8 @@ const CustomerDashboard = () => {
             rating: providerDetails?.rating || 0,
             business_email: providerDetails?.business_email || '',
             business_phone: providerDetails?.business_phone || '',
-            business_description: providerDetails?.business_description || ''
+            business_description: providerDetails?.business_description || '',
+            business_category: providerDetails?.business_category?.name || ''
           },
           service: {
             name: slot.provider_service?.service_name || slot.service?.name || slot.custom_service_name || 'Unknown Service',
@@ -344,9 +365,12 @@ const CustomerDashboard = () => {
                          slot.provider.location.toLowerCase().includes(searchTerm.toLowerCase());
     
     // Debug logging
-    console.log('Slot:', slot.id, 'Service category:', slot.service.category, 'Selected category:', selectedCategory);
+    console.log('Slot:', slot.id, 'Service category:', slot.service.category, 'Business category:', slot.provider.business_category, 'Selected category:', selectedCategory);
     
-    const matchesCategory = selectedCategory === 'all' || slot.service.category === selectedCategory;
+    // Check if the selected category matches either the service category OR the business category
+    const matchesCategory = selectedCategory === 'all' || 
+                           slot.service.category === selectedCategory ||
+                           slot.provider.business_category === selectedCategory;
     
     return matchesSearch && matchesCategory;
   });
