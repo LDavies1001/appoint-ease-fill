@@ -75,20 +75,12 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
         validateAndGetPostcodeDetails(value.postcode);
       }
     }
-    
-    // Always ensure we start in search step if no complete address
-    if (!value.address_line_1 || !value.town_city) {
-      setStep('search');
-      setIsAddressSelected(false);
-    }
   }, [value]);
 
   // Debounced search for autocomplete
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      // Only search if we're in search step and haven't selected an address
-      if (searchQuery && searchQuery.length >= 2 && !isAddressSelected && step === 'search') {
-        console.log('Triggering autocomplete search for:', searchQuery); // Debug log
+      if (searchQuery && searchQuery.length >= 2 && !isAddressSelected) {
         searchPostcodes(searchQuery);
       } else {
         setSuggestions([]);
@@ -97,7 +89,7 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, isAddressSelected, step]);
+  }, [searchQuery, isAddressSelected]);
 
   // Click outside handler
   useEffect(() => {
@@ -119,22 +111,16 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
   const searchPostcodes = async (query: string) => {
     if (query.length < 2) return;
     
-    console.log('Searching for postcodes:', query); // Debug log
     setIsLoading(true);
     try {
       const response = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(query)}/autocomplete`);
       
-      console.log('API response status:', response.status); // Debug log
       if (response.ok) {
         const data = await response.json();
-        console.log('API response data:', data); // Debug log
         if (data.result && Array.isArray(data.result)) {
           setSuggestions(data.result.slice(0, 5));
           setShowSuggestions(true);
-          console.log('Suggestions set:', data.result.slice(0, 5)); // Debug log
         }
-      } else {
-        console.error('API request failed:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error fetching postcode suggestions:', error);
@@ -183,30 +169,14 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
   };
 
   const handleSuggestionClick = async (suggestion: string) => {
-    console.log('Suggestion clicked:', suggestion); // Debug log
-    
-    // Immediately stop autocomplete to prevent loops
-    setShowSuggestions(false);
-    setSuggestions([]);
-    setIsAddressSelected(true);
-    
     setSearchQuery(suggestion);
-    const success = await validateAndGetPostcodeDetails(suggestion);
-    console.log('Validation result:', success); // Debug log
+    await validateAndGetPostcodeDetails(suggestion);
   };
 
   const handleSearchSubmit = async (e: React.FormEvent) => {
-    console.log('Search button clicked, searchQuery:', searchQuery); // Debug log
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Immediately stop autocomplete to prevent loops
-      setShowSuggestions(false);
-      setSuggestions([]);
-      setIsAddressSelected(true);
-      
-      console.log('Calling validateAndGetPostcodeDetails with:', searchQuery.trim()); // Debug log
-      const success = await validateAndGetPostcodeDetails(searchQuery.trim());
-      console.log('Search validation result:', success); // Debug log
+      await validateAndGetPostcodeDetails(searchQuery.trim());
     }
   };
 
@@ -240,10 +210,7 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
         </div>
         <h3 className="text-xl font-semibold text-accent">Find Your Business Address</h3>
         <p className="text-muted-foreground">
-          Enter your postcode to find your address quickly
-        </p>
-        <p className="text-xs text-muted-foreground">
-          💡 Try typing just your postcode (e.g., SW1A, M1, B1) for autocomplete suggestions
+          Enter your postcode or start typing your address to get started
         </p>
       </div>
 
@@ -253,19 +220,11 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
           <Input
             ref={inputRef}
             value={searchQuery}
-            onChange={(e) => {
-              const newValue = e.target.value.toUpperCase();
-              setSearchQuery(newValue);
-              // Reset the address selection if user starts typing a new search
-              if (isAddressSelected && newValue !== value.postcode) {
-                setIsAddressSelected(false);
-                setStep('search');
-              }
-            }}
+            onChange={(e) => setSearchQuery(e.target.value.toUpperCase())}
             onFocus={() => {
               if (suggestions.length > 0) setShowSuggestions(true);
             }}
-            placeholder="Enter your postcode (e.g., SW1A 1AA, M1 1AA, B1 1HQ)"
+            placeholder="e.g., M23 9NY or start typing your address..."
             className="pl-10 pr-12 h-12 text-lg border-2 border-accent/30 focus:border-accent"
           />
           
