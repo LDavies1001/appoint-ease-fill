@@ -757,21 +757,9 @@ const Auth = () => {
   // Conversion-Optimized Login Form
   return (
     <div className="min-h-screen bg-gradient-to-br from-sage-50/30 via-background to-rose-50/20">
-      <div className="container mx-auto px-4 py-8 flex min-h-screen items-center">
-        <div className="w-full max-w-4xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Hero Image */}
-          <div className="hidden lg:flex items-center justify-center">
-            <div className="w-full max-w-lg">
-              <img 
-                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&q=80" 
-                alt="OpenSlot booking platform" 
-                className="w-full h-auto rounded-2xl shadow-2xl"
-              />
-            </div>
-          </div>
-
-          {/* Right side - Login Form */}
-          <div className="w-full max-w-md mx-auto">
+      <div className="container mx-auto px-4 py-8 flex min-h-screen items-center justify-center">
+        <div className="w-full max-w-md">
+          {/* Centered Login Form */}
             <Card className="border-2 border-sage-200/60 shadow-xl bg-white/95">
               <div className="p-8">
                 <div className="text-center mb-6">
@@ -847,7 +835,6 @@ const Auth = () => {
                 </div>
               </div>
             </Card>
-          </div>
         </div>
       </div>
     </div>
