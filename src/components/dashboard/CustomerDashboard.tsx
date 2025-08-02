@@ -400,7 +400,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'browse' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('browse')}
-            className={activeTab === 'browse' ? 'bg-primary text-primary-foreground hover:bg-primary/80 hover:shadow-lg transition-all' : 'hover:bg-primary/20 hover:text-primary-foreground'}
+            className={activeTab === 'browse' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
           >
             <Search className="h-4 w-4 mr-2" />
             Browse Slots
@@ -408,7 +408,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'bookings' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('bookings')}
-            className={activeTab === 'bookings' ? 'bg-primary text-primary-foreground hover:bg-primary/80 hover:shadow-lg transition-all' : 'hover:bg-primary/20 hover:text-primary-foreground'}
+            className={activeTab === 'bookings' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
           >
             <BookOpen className="h-4 w-4 mr-2" />
             My Bookings
@@ -416,7 +416,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'favourites' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('favourites')}
-            className={activeTab === 'favourites' ? 'bg-primary text-primary-foreground hover:bg-primary/80 hover:shadow-lg transition-all' : 'hover:bg-primary/20 hover:text-primary-foreground'}
+            className={activeTab === 'favourites' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
           >
             <Heart className="h-4 w-4 mr-2" />
             Favourites
@@ -424,7 +424,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'offers' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('offers')}
-            className={activeTab === 'offers' ? 'bg-primary text-primary-foreground hover:bg-primary/80 hover:shadow-lg transition-all' : 'hover:bg-primary/20 hover:text-primary-foreground'}
+            className={activeTab === 'offers' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
           >
             <Tag className="h-4 w-4 mr-2" />
             Local Offers
@@ -432,7 +432,7 @@ const CustomerDashboard = () => {
           <Button
             variant={activeTab === 'profile' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('profile')}
-            className={activeTab === 'profile' ? 'bg-primary text-primary-foreground hover:bg-primary/80 hover:shadow-lg transition-all' : 'hover:bg-primary/20 hover:text-primary-foreground'}
+            className={activeTab === 'profile' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
           >
             <Settings className="h-4 w-4 mr-2" />
             Profile
