@@ -340,30 +340,16 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
                   <SelectValue placeholder="Select a service or add custom..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white border shadow-lg z-[100] max-h-[200px] overflow-y-auto">
-                  {/* Show user's services first (from onboarding + any they've already created) */}
+                  {/* Show only the user's services from onboarding */}
                   {profileServices.length > 0 && (
-                    <>
-                      <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
-                        Your Services
-                      </div>
-                      {profileServices.map((service) => (
-                        <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
-                          {service}
-                        </SelectItem>
-                      ))}
-                      <div className="px-2 py-1 text-xs font-medium text-muted-foreground border-t">
-                        Available Services
-                      </div>
-                    </>
+                    profileServices.map((service) => (
+                      <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
+                        {service}
+                      </SelectItem>
+                    ))
                   )}
                   
-                  {/* Show global services (filtered to not show duplicates) */}
-                  {globalServices.filter(service => !profileServices.includes(service)).map((service) => (
-                    <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
-                      {service}
-                    </SelectItem>
-                  ))}
-                  
+                  {/* Add Custom Service option */}
                   <SelectItem value="custom" className="font-medium text-primary cursor-pointer hover:bg-gray-100 border-t">
                     <div className="flex items-center gap-2">
                       <Plus className="h-4 w-4" />
