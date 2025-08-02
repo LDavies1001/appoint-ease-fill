@@ -798,21 +798,21 @@ const ProviderDashboard = () => {
                             if (hour > 12) return (hour - 12).toString();
                             return hour.toString();
                           })()}
-                          onValueChange={(hour) => {
-                            const currentHour = parseInt(slotForm.start_time.split(':')[0] || '0');
-                            const isAM = currentHour < 12;
-                            const minutes = slotForm.start_time.split(':')[1] || '00';
-                            let newHour = parseInt(hour);
+                          onValueChange={(selectedHour) => {
+                            const currentMinutes = slotForm.start_time.split(':')[1] || '00';
+                            const currentHour24 = parseInt(slotForm.start_time.split(':')[0] || '0');
+                            const isCurrentlyPM = currentHour24 >= 12;
                             
-                            if (hour === '12') {
-                              newHour = isAM ? 0 : 12;
+                            let newHour24: number;
+                            if (selectedHour === '12') {
+                              newHour24 = isCurrentlyPM ? 12 : 0;
                             } else {
-                              newHour = isAM ? parseInt(hour) : parseInt(hour) + 12;
+                              newHour24 = isCurrentlyPM ? parseInt(selectedHour) + 12 : parseInt(selectedHour);
                             }
                             
                             setSlotForm(prev => ({ 
                               ...prev, 
-                              start_time: `${newHour.toString().padStart(2, '0')}:${minutes}` 
+                              start_time: `${newHour24.toString().padStart(2, '0')}:${currentMinutes}` 
                             }));
                           }}
                         >
@@ -832,7 +832,7 @@ const ProviderDashboard = () => {
                       {/* Minute Selection */}
                       <div>
                         <Select
-                          value={slotForm.start_time.split(':')[1] || ''}
+                          value={slotForm.start_time.split(':')[1] || '00'}
                           onValueChange={(minute) => {
                             const hour = slotForm.start_time.split(':')[0] || '00';
                             setSlotForm(prev => ({ ...prev, start_time: `${hour}:${minute}` }));
@@ -862,19 +862,33 @@ const ProviderDashboard = () => {
                             return hour < 12 ? 'AM' : 'PM';
                           })()}
                           onValueChange={(period) => {
-                            const currentHour = parseInt(slotForm.start_time.split(':')[0] || '0');
-                            const minutes = slotForm.start_time.split(':')[1] || '00';
-                            let newHour = currentHour;
+                            const currentHour24 = parseInt(slotForm.start_time.split(':')[0] || '0');
+                            const currentMinutes = slotForm.start_time.split(':')[1] || '00';
+                            let newHour24: number;
                             
-                            if (period === 'AM' && currentHour >= 12) {
-                              newHour = currentHour === 12 ? 0 : currentHour - 12;
-                            } else if (period === 'PM' && currentHour < 12) {
-                              newHour = currentHour === 0 ? 12 : currentHour + 12;
+                            if (period === 'AM') {
+                              // Convert to AM
+                              if (currentHour24 === 12) {
+                                newHour24 = 0; // 12 AM becomes 0
+                              } else if (currentHour24 > 12) {
+                                newHour24 = currentHour24 - 12; // PM hours become AM
+                              } else {
+                                newHour24 = currentHour24; // Already AM
+                              }
+                            } else {
+                              // Convert to PM
+                              if (currentHour24 === 0) {
+                                newHour24 = 12; // 12 AM becomes 12 PM
+                              } else if (currentHour24 < 12) {
+                                newHour24 = currentHour24 + 12; // AM hours become PM
+                              } else {
+                                newHour24 = currentHour24; // Already PM
+                              }
                             }
                             
                             setSlotForm(prev => ({ 
                               ...prev, 
-                              start_time: `${newHour.toString().padStart(2, '0')}:${minutes}` 
+                              start_time: `${newHour24.toString().padStart(2, '0')}:${currentMinutes}` 
                             }));
                           }}
                         >
