@@ -779,13 +779,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                     className="min-h-20"
                   />
                 </div>
-
-                {/* Profile update note */}
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-xl mx-auto">
-                  <p className="text-sm text-blue-700 text-center">
-                    💡 <strong>Don't worry!</strong> You can update and edit your profile information at any time after creating it.
-                  </p>
-                </div>
               </div>
             </div>
 
@@ -964,6 +957,13 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
           
           <div className="relative z-10">
             {renderStepContent()}
+
+            {/* Profile update note */}
+            <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-xl mx-auto">
+              <p className="text-sm text-blue-700 text-center">
+                💡 <strong>Don't worry!</strong> You can update and edit your profile information at any time after creating it.
+              </p>
+            </div>
 
             {/* Enhanced Navigation Buttons */}
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-12 pt-8 border-t border-accent/20">
