@@ -697,9 +697,11 @@ const Auth = () => {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                <Building className="h-5 w-5 text-white" />
-              </div>
+              <img 
+                src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+                alt="OpenSlot Logo" 
+                className="w-10 h-10 object-contain"
+              />
               <span className="text-2xl font-bold text-foreground">Open-Slot</span>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
