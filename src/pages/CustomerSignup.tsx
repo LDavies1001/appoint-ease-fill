@@ -225,7 +225,7 @@ const CustomerSignup = () => {
                 </p>
                 <Button
                   onClick={() => navigate('/auth')}
-                  className="w-full mt-6 bg-gradient-to-r from-rose-300 to-pink-300 hover:from-rose-400 hover:to-pink-400 text-rose-800 rounded-xl h-12 font-semibold shadow-lg"
+                  className="w-full mt-6 bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 rounded-xl h-12 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   Go to Login
                 </Button>
