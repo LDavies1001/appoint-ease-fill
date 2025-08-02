@@ -11,9 +11,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Save, X } from 'lucide-react';
+import { Save, X, Plus } from 'lucide-react';
 
 interface Service {
   id?: string;
@@ -49,7 +50,33 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
     is_active: true
   });
   const [saving, setSaving] = useState(false);
+  const [profileServices, setProfileServices] = useState<string[]>([]);
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customServiceName, setCustomServiceName] = useState('');
   const { toast } = useToast();
+
+  // Fetch user's profile services
+  useEffect(() => {
+    const fetchProfileServices = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('provider_details')
+          .select('services_offered')
+          .eq('user_id', userId)
+          .single();
+        
+        if (data && data.services_offered) {
+          setProfileServices(data.services_offered);
+        }
+      } catch (error) {
+        console.error('Error fetching profile services:', error);
+      }
+    };
+
+    if (userId) {
+      fetchProfileServices();
+    }
+  }, [userId]);
 
   const parseDurationToMinutes = (durationText: string): number => {
     // Extract numbers from the text
@@ -89,6 +116,56 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
       });
     }
   }, [editingService, isOpen]);
+
+  // Function to save custom service to provider profile
+  const saveCustomServiceToProfile = async (serviceName: string) => {
+    try {
+      const { data: currentData, error: fetchError } = await supabase
+        .from('provider_details')
+        .select('services_offered')
+        .eq('user_id', userId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      const currentServices = currentData?.services_offered || [];
+      
+      // Add the new service if it doesn't already exist
+      if (!currentServices.includes(serviceName)) {
+        const updatedServices = [...currentServices, serviceName];
+        
+        const { error: updateError } = await supabase
+          .from('provider_details')
+          .update({ services_offered: updatedServices })
+          .eq('user_id', userId);
+
+        if (updateError) throw updateError;
+        
+        // Update local state
+        setProfileServices(updatedServices);
+      }
+    } catch (error) {
+      console.error('Error saving custom service to profile:', error);
+    }
+  };
+
+  const handleAddCustomService = async () => {
+    if (customServiceName.trim()) {
+      await saveCustomServiceToProfile(customServiceName.trim());
+      setFormData(prev => ({ ...prev, service_name: customServiceName.trim() }));
+      setShowCustomInput(false);
+      setCustomServiceName('');
+    }
+  };
+
+  const handleServiceSelection = (value: string) => {
+    if (value === 'custom') {
+      setShowCustomInput(true);
+    } else {
+      setFormData(prev => ({ ...prev, service_name: value }));
+      setShowCustomInput(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!formData.service_name.trim()) {
@@ -205,13 +282,57 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
         <div className="space-y-4">
           <div>
             <Label htmlFor="service_name">Service Name *</Label>
-            <Input
-              id="service_name"
-              value={formData.service_name}
-              onChange={(e) => setFormData(prev => ({ ...prev, service_name: e.target.value }))}
-              placeholder="e.g., Classic Manicure"
-              className="mt-1"
-            />
+            {!showCustomInput ? (
+              <Select onValueChange={handleServiceSelection} value={formData.service_name || ""}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Select a service or add custom..." />
+                </SelectTrigger>
+                <SelectContent className="bg-white border shadow-lg z-50">
+                  {profileServices.map((service) => (
+                    <SelectItem key={service} value={service}>
+                      {service}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="custom" className="font-medium text-primary">
+                    <div className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      Add Custom Service
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            ) : (
+              <div className="space-y-2 mt-1">
+                <Input
+                  value={customServiceName}
+                  onChange={(e) => setCustomServiceName(e.target.value)}
+                  placeholder="Enter custom service name..."
+                />
+                <div className="flex gap-2">
+                  <Button 
+                    type="button" 
+                    variant="provider" 
+                    size="sm" 
+                    onClick={handleAddCustomService}
+                    disabled={!customServiceName.trim()}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Service
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      setShowCustomInput(false);
+                      setCustomServiceName('');
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
