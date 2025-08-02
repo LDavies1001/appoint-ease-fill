@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Stepper } from '@/components/ui/stepper';
-import { CategorySelector } from '@/components/ui/category-selector';
+import { EnhancedCategorySelector } from '@/components/ui/enhanced-category-selector';
 import { AddressLookup } from '@/components/ui/address-lookup';
 import { AddressData } from '@/components/ui/address-form';
 import { SocialMediaConnector } from './SocialMediaConnector';
@@ -631,7 +631,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
             </div>
             
             <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
-              <CategorySelector
+              <EnhancedCategorySelector
                 categories={categories.map(cat => ({
                   id: cat.id,
                   name: cat.name,
