@@ -423,10 +423,10 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
               <span className="font-medium">Keep private (Recommended)</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              Show only your town/city and postcode. Perfect if you work from your home address or want to keep your exact location private. Share full address when customers book.
+              Show only your town/city and area postcode (e.g., M23). Perfect if you work from your home address or want to keep your exact location private. Share full address when customers book.
             </p>
             <Badge variant="secondary" className="mt-2 bg-blue-100 text-blue-700">
-              Preview: {value.town_city}, {value.postcode}
+              Preview: {value.town_city}, {value.postcode.split(' ')[0]}
             </Badge>
           </div>
         </div>
