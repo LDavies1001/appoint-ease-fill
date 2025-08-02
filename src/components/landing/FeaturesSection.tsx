@@ -49,7 +49,7 @@ export const FeaturesSection = () => {
             Why Choose OpenSlot?
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Find and book appointments instantly with your favorite beauty professionals
+            Connecting customers with available appointments and helping businesses fill their schedules effortlessly
           </p>
         </div>
 
