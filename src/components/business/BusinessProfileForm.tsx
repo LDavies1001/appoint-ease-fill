@@ -918,7 +918,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         {/* Header Section */}
         <div className="text-center mb-12">
         <img 
-          src="/src/assets/openslot-logo.png" 
+          src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
           alt="OpenSlot Logo" 
           className="w-56 h-56 object-contain mb-6"
         />
