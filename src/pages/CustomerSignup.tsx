@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart, ArrowLeft } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart, ArrowLeft, MapPin, Check } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 
 import { sanitizeInput, validateEmail, validatePhone, validatePassword, rateLimitCheck } from '@/utils/validation';
@@ -39,6 +39,33 @@ const CustomerSignup = () => {
   const getPasswordStrength = () => {
     const validation = validatePassword(password);
     return validation.score;
+  };
+
+  // Field validation helpers
+  const isEmailValid = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isPasswordMatching = () => {
+    return password && confirmPassword && password === confirmPassword;
+  };
+
+  const isFieldValid = (field: string, value: string) => {
+    switch (field) {
+      case 'fullName':
+        return value.trim().length >= 2;
+      case 'email':
+        return isEmailValid(value);
+      case 'phone':
+        return !value || validatePhone(value);
+      case 'password':
+        return getPasswordStrength() >= 4;
+      case 'confirmPassword':
+        return isPasswordMatching();
+      default:
+        return false;
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -143,39 +170,40 @@ const CustomerSignup = () => {
   // Show success message after signup
   if (showSuccessMessage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-          <div className="w-full max-w-md animate-fade-in">
+          <div className="w-full max-w-md">
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                  <CheckCircle className="h-6 w-6 text-white" />
-                </div>
-                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+              <div className="flex items-center justify-center space-x-3 mb-6">
+                {/* OpenSlot Logo */}
+                <img 
+                  src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+                  alt="OpenSlot Logo" 
+                  className="w-12 h-12 object-contain"
+                />
+                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                Welcome to OpenSlot!
+                Customer Account Created!
               </h1>
               <p className="text-muted-foreground">
-                Your customer account has been created successfully
+                Please check your email for verification before logging in
               </p>
             </div>
 
-            <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/10">
+            <Card className="bg-white/60 backdrop-blur-sm shadow-elegant p-8 rounded-2xl border border-blush-100/50">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mx-auto">
-                  <Mail className="h-8 w-8 text-primary" />
+                <div className="w-16 h-16 bg-blush-50 border border-blush-200 rounded-full flex items-center justify-center mx-auto">
+                  <Mail className="h-8 w-8 text-blush-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Check Your Email</h3>
                 <p className="text-sm text-muted-foreground">
-                  We've sent a verification email to <strong className="text-primary">{email}</strong>. 
+                  We've sent a verification email to <strong className="text-blush-600">{email}</strong>. 
                   Please click the link in the email to verify your account before logging in.
                 </p>
                 <Button
                   onClick={() => navigate('/auth')}
-                  variant="hero"
-                  size="lg"
-                  className="w-full mt-6"
+                  className="w-full mt-6 bg-gradient-to-r from-blush-600 to-blush-700 hover:from-blush-700 hover:to-blush-800 text-white rounded-xl h-12 font-semibold"
                 >
                   Go to Login
                 </Button>
@@ -188,178 +216,267 @@ const CustomerSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 overflow-x-hidden w-full">
-      
-      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-        <div className="w-full max-w-md animate-fade-in">
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+    <div className="min-h-screen bg-gradient-to-br from-blush-50 via-blush-25 to-background">
+      {/* Main Content */}
+      <div className="py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          {/* Progress Indicator */}
+          <div className="mb-8 text-center">
+            <div className="inline-flex items-center bg-blush-50 border border-blush-200 rounded-full px-4 py-2 text-sm text-blush-700">
+              <span className="w-6 h-6 bg-blush-600 text-white rounded-full flex items-center justify-center text-xs font-semibold mr-3">1</span>
+              Step 1 of 2: Personal Details
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              Join as a Customer
+          </div>
+
+          {/* Main Headings */}
+          <div className="text-center mb-10">
+            <div className="flex items-center justify-center space-x-3 mb-6">
+              {/* OpenSlot Logo */}
+              <img 
+                src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+                alt="OpenSlot Logo" 
+                className="w-12 h-12 object-contain"
+              />
+              <span className="text-2xl font-bold text-foreground">OpenSlot</span>
+            </div>
+            <h1 className="text-4xl font-bold text-foreground mb-4">
+              Create Your Customer Account
             </h1>
-            <p className="text-muted-foreground">
-              Discover and book last-minute beauty appointments with trusted local providers.
+            <p className="text-xl text-muted-foreground">
+              Join thousands of customers discovering amazing beauty services
             </p>
           </div>
 
-          <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/10">
-            <div className="mb-6">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/')}
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground -ml-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back to Home
-              </Button>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="full-name">Full Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="full-name"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                    required
-                  />
-                </div>
+          {/* Form Container */}
+          <Card className="bg-white/60 backdrop-blur-sm shadow-elegant rounded-2xl border border-blush-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+            <div className="p-8 lg:p-12">
+              {/* Back to Home Button */}
+              <div className="mb-8">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/')}
+                  className="text-muted-foreground hover:text-foreground flex items-center gap-2 -ml-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Home
+                </Button>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number (Optional)</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="07123456789"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground">We'll use this to send booking confirmations</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="location">Location (Optional)</Label>
-                <LocationInput
-                  placeholder="Enter your postcode"
-                  value={location}
-                  onChange={setLocation}
-                  className="h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                />
-                <p className="text-xs text-muted-foreground">Help us find services near you</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {password && (
-                  <div className="space-y-1">
-                    <div className="flex space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`h-1 flex-1 rounded ${
-                            i < getPasswordStrength() ? 'bg-primary' : 'bg-muted'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Password strength: {['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][getPasswordStrength() - 1] || 'Very Weak'}
-                    </p>
+              <form onSubmit={handleSubmit} className="space-y-8">
+                
+                {/* Personal Information Section */}
+                <div className="space-y-6">
+                  <div className="pb-3 border-b border-blush-100">
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <User className="h-5 w-5 text-blush-600" />
+                      Personal Information
+                    </h3>
                   </div>
-                )}
-              </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Full Name */}
+                    <div className="space-y-3">
+                      <Label htmlFor="full-name" className="text-sm font-semibold text-foreground">Full Name</Label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Input
+                          id="full-name"
+                          type="text"
+                          placeholder="e.g. Sarah Johnson"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          required
+                        />
+                        {fullName && isFieldValid('fullName', fullName) && (
+                          <div className="absolute right-4 top-4 text-blush-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="confirm-password"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                    required
-                  />
+                    {/* Email */}
+                    <div className="space-y-3">
+                      <Label htmlFor="email" className="text-sm font-semibold text-foreground">Email Address</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="sarah@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          required
+                        />
+                        {email && isFieldValid('email', email) && (
+                          <div className="absolute right-4 top-4 text-blush-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <Button
-                type="submit"
-                disabled={loading}
-                variant="hero"
-                size="lg"
-                className="w-full mt-6"
-              >
-                {loading ? "Creating Account..." : "Create Customer Account"}
-              </Button>
+                {/* Contact & Location Section */}
+                <div className="space-y-6">
+                  <div className="pb-3 border-b border-blush-100">
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <Phone className="h-5 w-5 text-blush-600" />
+                      Contact & Location
+                    </h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Phone */}
+                    <div className="space-y-3">
+                      <Label htmlFor="phone" className="text-sm font-semibold text-foreground">Phone Number (Optional)</Label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="07123 456789"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                        />
+                        {phone && isFieldValid('phone', phone) && (
+                          <div className="absolute right-4 top-4 text-blush-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">For booking confirmations and updates</p>
+                    </div>
 
-              <div className="text-center space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Already have an account?{' '}
-                  <Link to="/auth" className="text-primary hover:underline">
-                    Sign in here
-                  </Link>
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Want to join as a business?{' '}
-                  <Link to="/signup/business" className="text-accent hover:underline">
-                    Create business account
-                  </Link>
-                </p>
-              </div>
-            </form>
+                    {/* Location */}
+                    <div className="space-y-3">
+                      <Label htmlFor="location" className="text-sm font-semibold text-foreground">Location (Optional)</Label>
+                      <div className="relative">
+                        <MapPin className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <LocationInput
+                          placeholder="Enter your postcode"
+                          value={location}
+                          onChange={setLocation}
+                          className="pl-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                        />
+                      </div>
+                      <p className="text-sm text-muted-foreground">Help us find services near you</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Security Section */}
+                <div className="space-y-6">
+                  <div className="pb-3 border-b border-blush-100">
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <Lock className="h-5 w-5 text-blush-600" />
+                      Account Security
+                    </h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Password */}
+                    <div className="space-y-3">
+                      <Label htmlFor="password" className="text-sm font-semibold text-foreground">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Create a strong password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-4 top-4 text-blush-400 hover:text-blush-600"
+                        >
+                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                        {password && isFieldValid('password', password) && (
+                          <div className="absolute right-12 top-4 text-blush-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                      {password && (
+                        <div className="space-y-2">
+                          <div className="flex space-x-1">
+                            {[...Array(5)].map((_, i) => (
+                              <div
+                                key={i}
+                                className={`h-2 flex-1 rounded ${
+                                  i < getPasswordStrength() ? 'bg-blush-600' : 'bg-muted'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Password strength: {['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][getPasswordStrength() - 1] || 'Very Weak'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Confirm Password */}
+                    <div className="space-y-3">
+                      <Label htmlFor="confirm-password" className="text-sm font-semibold text-foreground">Confirm Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Input
+                          id="confirm-password"
+                          type="password"
+                          placeholder="Confirm your password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          required
+                        />
+                        {confirmPassword && isFieldValid('confirmPassword', confirmPassword) && (
+                          <div className="absolute right-4 top-4 text-blush-600">
+                            <Check className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-6">
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full h-14 rounded-2xl bg-gradient-to-r from-blush-600 to-blush-700 hover:from-blush-700 hover:to-blush-800 text-white font-semibold text-lg shadow-elegant hover:shadow-lg transition-all duration-300"
+                  >
+                    {loading ? "Creating Account..." : "Create Customer Account"}
+                  </Button>
+                </div>
+
+                {/* Links */}
+                <div className="text-center space-y-3 pt-4 border-t border-blush-100">
+                  <p className="text-sm text-muted-foreground">
+                    Already have an account?{' '}
+                    <Link to="/auth" className="text-blush-600 hover:text-blush-700 font-medium hover:underline">
+                      Sign in here
+                    </Link>
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Want to join as a business?{' '}
+                    <Link to="/signup/business" className="text-accent hover:text-accent/80 font-medium hover:underline">
+                      Create business account
+                    </Link>
+                  </p>
+                </div>
+              </form>
+            </div>
           </Card>
         </div>
       </div>
