@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   Instagram, 
   Facebook, 
-  Music, 
-  Twitter, 
-  Youtube,
-  Plus,
-  Check,
-  X,
+  Globe,
   ExternalLink,
-  Trash2
+  Trash2,
+  Save
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -37,10 +29,9 @@ interface SocialPlatform {
   name: string;
   icon: React.ComponentType<any>;
   color: string;
-  hoverColor: string;
   description: string;
   placeholder: string;
-  urlTemplate: string;
+  example: string;
 }
 
 const SOCIAL_PLATFORMS: SocialPlatform[] = [
@@ -49,58 +40,34 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
     name: 'Instagram',
     icon: Instagram,
     color: 'bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500',
-    hoverColor: 'hover:from-purple-600 hover:via-pink-600 hover:to-orange-600',
-    description: "Connect your Instagram to showcase your visual portfolio and attract more customers.",
-    placeholder: '@username',
-    urlTemplate: 'https://instagram.com/'
+    description: "Share your Instagram profile to showcase your visual portfolio",
+    placeholder: 'https://instagram.com/yourusername',
+    example: 'https://instagram.com/yourbusiness'
   },
   {
     id: 'facebook',
     name: 'Facebook',
     icon: Facebook,
     color: 'bg-gradient-to-r from-blue-600 to-blue-700',
-    hoverColor: 'hover:from-blue-700 hover:to-blue-800',
-    description: "Link your Facebook page to build trust and show customer reviews.",
-    placeholder: 'your.page.name',
-    urlTemplate: 'https://facebook.com/'
+    description: "Link your Facebook page to build trust and show reviews",
+    placeholder: 'https://facebook.com/yourpage',
+    example: 'https://facebook.com/yourbusiness'
   },
   {
-    id: 'tiktok',
-    name: 'TikTok',
-    icon: Music,
-    color: 'bg-gradient-to-r from-black via-gray-900 to-red-600',
-    hoverColor: 'hover:from-gray-900 hover:via-black hover:to-red-700',
-    description: "Connect TikTok to show your creative process and behind-the-scenes content.",
-    placeholder: '@username',
-    urlTemplate: 'https://tiktok.com/'
-  },
-  {
-    id: 'twitter',
-    name: 'X (Twitter)',
-    icon: Twitter,
-    color: 'bg-black',
-    hoverColor: 'hover:bg-gray-800',
-    description: "Share updates and engage with customers on X (formerly Twitter).",
-    placeholder: '@username',
-    urlTemplate: 'https://x.com/'
-  },
-  {
-    id: 'youtube',
-    name: 'YouTube',
-    icon: Youtube,
-    color: 'bg-gradient-to-r from-red-600 to-red-700',
-    hoverColor: 'hover:from-red-700 hover:to-red-800',
-    description: "Showcase video tutorials, testimonials, and your work process.",
-    placeholder: '@channel',
-    urlTemplate: 'https://youtube.com/'
+    id: 'website',
+    name: 'Website',
+    icon: Globe,
+    color: 'bg-gradient-to-r from-green-600 to-green-700',
+    description: "Add your business website for customers to learn more",
+    placeholder: 'https://yourwebsite.com',
+    example: 'https://yourbusiness.com'
   }
 ];
 
 export const SocialMediaConnector: React.FC = () => {
   const [connections, setConnections] = useState<SocialConnection[]>([]);
   const [loading, setLoading] = useState(true);
-  const [manualEntry, setManualEntry] = useState<Record<string, string>>({});
-  const [showManualEntry, setShowManualEntry] = useState<Record<string, boolean>>({});
+  const [urlInputs, setUrlInputs] = useState<Record<string, string>>({});
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -108,31 +75,7 @@ export const SocialMediaConnector: React.FC = () => {
     if (user?.id) {
       fetchConnections();
     }
-
-    // Check for OAuth callback success/error
-    const urlParams = new URLSearchParams(window.location.search);
-    const platform = urlParams.get('platform');
-    const status = urlParams.get('status');
-    const error = urlParams.get('error');
-
-    if (platform && status === 'success') {
-      toast({
-        title: `${platform.charAt(0).toUpperCase() + platform.slice(1)} connected!`,
-        description: `Your ${platform} profile will now appear on your public page.`
-      });
-      // Clean up URL
-      window.history.replaceState({}, '', window.location.pathname);
-      fetchConnections();
-    } else if (error) {
-      toast({
-        title: "Connection failed",
-        description: decodeURIComponent(error),
-        variant: "destructive"
-      });
-      // Clean up URL
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-  }, [user?.id, toast]);
+  }, [user?.id]);
 
   const fetchConnections = async () => {
     try {
@@ -144,6 +87,13 @@ export const SocialMediaConnector: React.FC = () => {
 
       if (error) throw error;
       setConnections(data || []);
+      
+      // Populate input fields with existing URLs
+      const urlMap: Record<string, string> = {};
+      data?.forEach(conn => {
+        urlMap[conn.platform] = conn.profile_url;
+      });
+      setUrlInputs(urlMap);
     } catch (error) {
       console.error('Error fetching social connections:', error);
       toast({
@@ -164,60 +114,65 @@ export const SocialMediaConnector: React.FC = () => {
     return connections.find(conn => conn.platform === platformId);
   };
 
-  const handleOAuthConnect = async (platform: SocialPlatform) => {
+  const validateUrl = (url: string, platform: SocialPlatform) => {
+    if (!url.trim()) return false;
+    
     try {
-      // Call our OAuth init function
-      const response = await supabase.functions.invoke('social-oauth-init', {
-        body: {
-          platform: platform.id,
-          userId: user?.id,
-          redirectUrl: window.location.origin + '/create-business-profile'
-        }
-      });
-
-      if (response.error) {
-        throw new Error(response.error.message);
-      }
-
-      const { authUrl } = response.data;
+      const urlObj = new URL(url);
       
-      // Open OAuth popup or redirect
-      if (authUrl) {
-        window.location.href = authUrl;
-      } else {
-        // Fallback to manual entry if OAuth not configured
-        setShowManualEntry(prev => ({ ...prev, [platform.id]: true }));
-        toast({
-          title: "Manual entry mode",
-          description: `OAuth for ${platform.name} is not configured. Please enter your details manually.`
-        });
+      // Check if it's a valid URL with http/https
+      if (!['http:', 'https:'].includes(urlObj.protocol)) {
+        return false;
       }
-    } catch (error) {
-      console.error('OAuth initialization error:', error);
-      // Fallback to manual entry
-      setShowManualEntry(prev => ({ ...prev, [platform.id]: true }));
-      toast({
-        title: "Connection method",
-        description: "Please enter your social media details manually.",
-        variant: "default"
-      });
+      
+      // For Instagram and Facebook, check if the domain matches
+      if (platform.id === 'instagram' && !urlObj.hostname.includes('instagram.com')) {
+        return false;
+      }
+      if (platform.id === 'facebook' && !urlObj.hostname.includes('facebook.com')) {
+        return false;
+      }
+      
+      return true;
+    } catch {
+      return false;
     }
   };
 
-  const handleManualConnect = async (platform: SocialPlatform) => {
-    const handle = manualEntry[platform.id]?.trim();
-    if (!handle) {
+  const extractHandle = (url: string, platform: SocialPlatform) => {
+    try {
+      const urlObj = new URL(url);
+      const pathname = urlObj.pathname.replace(/\/$/, ''); // Remove trailing slash
+      const parts = pathname.split('/').filter(Boolean);
+      return parts[0] || 'profile';
+    } catch {
+      return 'profile';
+    }
+  };
+
+  const handleSaveConnection = async (platform: SocialPlatform) => {
+    const url = urlInputs[platform.id]?.trim();
+    
+    if (!url) {
       toast({
-        title: "Handle required",
-        description: `Please enter your ${platform.name} handle`,
+        title: "URL required",
+        description: `Please enter your ${platform.name} URL`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!validateUrl(url, platform)) {
+      toast({
+        title: "Invalid URL",
+        description: `Please enter a valid ${platform.name} URL starting with https://`,
         variant: "destructive"
       });
       return;
     }
 
     try {
-      const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle;
-      const profileUrl = `${platform.urlTemplate}${cleanHandle}`;
+      const handle = extractHandle(url, platform);
 
       // First, check if a connection already exists and deactivate it
       const { error: deactivateError } = await supabase
@@ -236,16 +191,14 @@ export const SocialMediaConnector: React.FC = () => {
         .insert({
           provider_id: user?.id,
           platform: platform.id,
-          handle: cleanHandle,
-          profile_url: profileUrl,
+          handle: handle,
+          profile_url: url,
           is_active: true
         });
 
       if (error) throw error;
 
       await fetchConnections();
-      setManualEntry(prev => ({ ...prev, [platform.id]: '' }));
-      setShowManualEntry(prev => ({ ...prev, [platform.id]: false }));
 
       toast({
         title: `${platform.name} connected!`,
@@ -270,6 +223,9 @@ export const SocialMediaConnector: React.FC = () => {
 
       if (error) throw error;
 
+      // Clear the input field
+      setUrlInputs(prev => ({ ...prev, [connection.platform]: '' }));
+      
       await fetchConnections();
       const platform = SOCIAL_PLATFORMS.find(p => p.id === connection.platform);
       
@@ -289,16 +245,12 @@ export const SocialMediaConnector: React.FC = () => {
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Connect Your Socials</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground mt-2">Loading social connections...</p>
+        </div>
+      </div>
     );
   }
 
@@ -310,15 +262,16 @@ export const SocialMediaConnector: React.FC = () => {
         </div>
         <h3 className="text-3xl font-bold bg-gradient-provider bg-clip-text text-transparent">Connect Your Socials</h3>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Showcase your work and build trust by connecting your social media profiles. This enhances your credibility and helps customers discover your amazing work.
+          Add your social media profiles and website to help customers discover your work and build trust in your business.
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1 max-w-2xl mx-auto">
         {SOCIAL_PLATFORMS.map((platform) => {
           const connected = isConnected(platform.id);
           const connection = getConnection(platform.id);
           const Icon = platform.icon;
+          const currentUrl = urlInputs[platform.id] || '';
 
           return (
             <div 
@@ -330,55 +283,72 @@ export const SocialMediaConnector: React.FC = () => {
                   : "bg-white/80 border-provider/10 hover:border-provider/30"
               )}
             >
-              {/* Platform Header */}
               <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={cn(
-                      "p-3 rounded-xl shadow-sm",
-                      platform.color
-                    )}>
-                      <Icon className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground">{platform.name}</h4>
-                      <p className="text-xs text-muted-foreground">Social Platform</p>
-                    </div>
+                {/* Platform Header */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={cn(
+                    "p-3 rounded-xl shadow-sm",
+                    platform.color
+                  )}>
+                    <Icon className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-foreground">{platform.name}</h4>
+                    <p className="text-sm text-muted-foreground">{platform.description}</p>
                   </div>
                   
                   {/* Status Badge */}
-                  <div className="shrink-0">
-                    {connected ? (
-                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-provider/10 border border-provider/20">
-                        <div className="w-2 h-2 rounded-full bg-provider"></div>
-                        <span className="text-xs font-medium text-provider">Connected</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-muted/50 border border-muted">
-                        <div className="w-2 h-2 rounded-full bg-muted-foreground/50"></div>
-                        <span className="text-xs font-medium text-muted-foreground">Not connected</span>
-                      </div>
-                    )}
-                  </div>
+                  {connected && (
+                    <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-provider/10 border border-provider/20">
+                      <div className="w-2 h-2 rounded-full bg-provider"></div>
+                      <span className="text-xs font-medium text-provider">Connected</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Connected State */}
-                {connected && connection ? (
-                  <div className="space-y-4">
-                    <div className="p-3 rounded-lg bg-provider/5 border border-provider/20">
-                      <p className="font-medium text-sm text-provider">@{connection.handle}</p>
-                      <p className="text-xs text-muted-foreground truncate">{connection.profile_url}</p>
-                    </div>
-                    
-                    <div className="flex gap-2">
+                {/* URL Input */}
+                <div className="space-y-3">
+                  <Label htmlFor={`${platform.id}-url`} className="text-sm font-medium">
+                    {platform.name} URL
+                  </Label>
+                  <Input
+                    id={`${platform.id}-url`}
+                    type="url"
+                    placeholder={platform.placeholder}
+                    value={currentUrl}
+                    onChange={(e) => setUrlInputs(prev => ({ 
+                      ...prev, 
+                      [platform.id]: e.target.value 
+                    }))}
+                    className="border-provider/30 focus:border-provider focus:ring-provider/20"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Example: {platform.example}
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 mt-4">
+                  <Button
+                    onClick={() => handleSaveConnection(platform)}
+                    disabled={!currentUrl.trim() || currentUrl === connection?.profile_url}
+                    variant="provider"
+                    size="sm"
+                    className="flex-1"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {connected ? 'Update' : 'Save'} {platform.name}
+                  </Button>
+                  
+                  {connected && connection && (
+                    <>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => window.open(connection.profile_url, '_blank')}
-                        className="flex-1 border-provider/30 hover:border-provider hover:bg-provider/5"
+                        className="border-provider/30 hover:border-provider hover:bg-provider/5"
                       >
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Visit Profile
+                        <ExternalLink className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="outline"
@@ -388,89 +358,9 @@ export const SocialMediaConnector: React.FC = () => {
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
-                    </div>
-                  </div>
-                ) : (
-                  /* Not Connected State */
-                  <div className="space-y-4">
-                    <div className="p-3 rounded-lg bg-muted/30 border border-muted/50">
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {platform.description}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Example: {platform.placeholder}
-                      </p>
-                    </div>
-
-                    {/* Manual Entry Form */}
-                    {showManualEntry[platform.id] ? (
-                      <div className="space-y-3">
-                        <div className="space-y-2">
-                          <Label htmlFor={`${platform.id}-handle`} className="text-sm font-medium text-provider">
-                            Enter your {platform.name} handle
-                          </Label>
-                          <Input
-                            id={`${platform.id}-handle`}
-                            placeholder={platform.placeholder}
-                            value={manualEntry[platform.id] || ''}
-                            onChange={(e) => setManualEntry(prev => ({ 
-                              ...prev, 
-                              [platform.id]: e.target.value 
-                            }))}
-                            className="border-provider/30 focus:border-provider focus:ring-provider/20"
-                          />
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleManualConnect(platform)}
-                            disabled={!manualEntry[platform.id]?.trim()}
-                            variant="provider"
-                            className="flex-1"
-                          >
-                            <Check className="h-4 w-4 mr-2" />
-                            Connect Account
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setShowManualEntry(prev => ({ 
-                              ...prev, 
-                              [platform.id]: false 
-                            }))}
-                            className="border-muted-foreground/30"
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      /* Connection Buttons */
-                      <div className="space-y-2">
-                        <Button
-                          onClick={() => handleOAuthConnect(platform)}
-                          className={cn(
-                            "w-full transition-all duration-200 shadow-sm",
-                            platform.color,
-                            platform.hoverColor,
-                            "text-white border-0 hover:shadow-md"
-                          )}
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Connect with {platform.name}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setShowManualEntry(prev => ({ ...prev, [platform.id]: true }))}
-                          className="w-full text-muted-foreground hover:text-provider hover:bg-provider/5"
-                        >
-                          Enter manually instead
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Connected indicator border */}
@@ -483,7 +373,7 @@ export const SocialMediaConnector: React.FC = () => {
       </div>
 
       {/* Privacy Section */}
-      <div className="bg-gradient-to-r from-provider/5 to-provider-glow/5 rounded-xl p-6 border border-provider/20">
+      <div className="bg-gradient-to-r from-provider/5 to-provider-glow/5 rounded-xl p-6 border border-provider/20 max-w-2xl mx-auto">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0 w-12 h-12 bg-provider/10 rounded-full flex items-center justify-center">
             <div className="text-2xl">🛡️</div>
@@ -491,17 +381,11 @@ export const SocialMediaConnector: React.FC = () => {
           <div>
             <h4 className="font-semibold text-provider mb-2">Your Privacy is Protected</h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              We only display your public handle and profile link to help customers find and trust your business. 
-              We never post on your behalf, access private information, or share your data with third parties.
+              We only display your public profile links to help customers find and trust your business. 
+              We never post on your behalf or access private information.
             </p>
           </div>
         </div>
-      </div>
-
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground">
-          You can always add, remove, or update your social accounts later from your dashboard
-        </p>
       </div>
     </div>
   );
