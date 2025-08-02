@@ -7,10 +7,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Phone, MapPin, Camera, Upload, X, Locate, CheckCircle, Eye, EyeOff, ArrowRight, ArrowLeft } from 'lucide-react';
+import { PostcodeLookup } from '@/components/ui/postcode-lookup-enhanced';
 
 interface CustomerStepData {
   phone: string;
   location: string;
+  postcode: string;
+  latitude: number | null;
+  longitude: number | null;
+  postcodeData: any;
   bio: string;
   profile_photo: File | null;
   privacy_settings: {
@@ -38,10 +43,13 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
   userEmail
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [detectingLocation, setDetectingLocation] = useState(false);
   const [formData, setFormData] = useState<CustomerStepData>({
     phone: initialData.phone || '',
     location: initialData.location || '',
+    postcode: initialData.postcode || '',
+    latitude: initialData.latitude || null,
+    longitude: initialData.longitude || null,
+    postcodeData: initialData.postcodeData || null,
     bio: initialData.bio || '',
     profile_photo: null,
     privacy_settings: {
@@ -61,7 +69,7 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
     { title: "Terms & Complete", description: "Accept terms and finish setup" },
   ];
 
-  const handleInputChange = (field: keyof CustomerStepData, value: string | boolean | File | null) => {
+  const handleInputChange = (field: keyof CustomerStepData, value: string | boolean | File | null | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -97,74 +105,6 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
     }
   };
 
-  const detectLocation = async () => {
-    if (!navigator.geolocation) {
-      toast({
-        title: "Geolocation not supported",
-        description: "Your browser doesn't support location detection",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setDetectingLocation(true);
-    
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
-          );
-          
-          if (!response.ok) throw new Error('Failed to get location');
-          
-          const data = await response.json();
-          
-          const { city, town, village, county, state, country, postcode } = data.address || {};
-          const locationString = [
-            city || town || village,
-            county || state,
-            postcode,
-            country
-          ].filter(Boolean).join(', ');
-          
-          handleInputChange('location', locationString || `${latitude}, ${longitude}`);
-          
-          toast({
-            title: "Location detected",
-            description: `Set to: ${locationString}`
-          });
-          
-        } catch (error) {
-          console.error('Error reverse geocoding:', error);
-          toast({
-            title: "Location detection failed",
-            description: "Could not determine your address",
-            variant: "destructive"
-          });
-        } finally {
-          setDetectingLocation(false);
-        }
-      },
-      (error) => {
-        console.error('Geolocation error:', error);
-        setDetectingLocation(false);
-        
-        let message = "Could not access your location";
-        if (error.code === error.PERMISSION_DENIED) {
-          message = "Location access denied. Please enable location permissions";
-        }
-        
-        toast({
-          title: "Location detection failed",
-          description: message,
-          variant: "destructive"
-        });
-      }
-    );
-  };
 
   const validateCurrentStep = (): boolean => {
     switch (currentStep) {
@@ -177,10 +117,10 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
           });
           return false;
         }
-        if (!formData.location.trim()) {
+        if (!formData.postcode.trim() || !formData.latitude || !formData.longitude) {
           toast({
             title: "Location required",
-            description: "Please enter your location for localized suggestions",
+            description: "Please enter your postcode so we can show you available services",
             variant: "destructive"
           });
           return false;
@@ -250,34 +190,26 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location/Address *</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="location"
-                    placeholder="Enter your city, area, or postcode"
-                    value={formData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    className="pl-10 pr-12 h-12 rounded-xl border-rose-200 focus:border-rose-500 focus:ring-rose-200"
-                    variant="customer"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={detectLocation}
-                    disabled={detectingLocation}
-                    className="absolute right-1 top-1 h-8 w-8 p-0 hover:bg-primary/10"
-                  >
-                    <Locate className="h-4 w-4" />
-                  </Button>
-                  {formData.location && (
-                    <CheckCircle className="absolute right-10 top-3 h-5 w-5 text-rose-600" />
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Click the location icon to auto-detect your current location
+                <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-rose-600" />
+                  Your Location *
+                </Label>
+                <PostcodeLookup
+                  value={formData.postcode}
+                  onChange={(data) => {
+                    handleInputChange('postcode', data.postcode);
+                    handleInputChange('location', data.formattedAddress);
+                    handleInputChange('latitude', data.latitude);
+                    handleInputChange('longitude', data.longitude);
+                    setFormData(prev => ({ ...prev, postcodeData: data.postcodeData }));
+                  }}
+                  placeholder="Enter your postcode (e.g. SW1A 1AA)"
+                  className="h-12 rounded-xl border-rose-200 focus:border-rose-500 focus:ring-rose-200"
+                  variant="customer"
+                  showCoverageRadius={false}
+                />
+                <p className="text-sm text-muted-foreground">
+                  We'll show you available beauty services in your area
                 </p>
               </div>
             </div>

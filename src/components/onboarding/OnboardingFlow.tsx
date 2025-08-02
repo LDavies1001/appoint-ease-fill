@@ -111,9 +111,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
 
       // Update profile with customer data
       const profileUpdates = {
-        name: customerData.full_name || customerData.phone, // fallback to phone if name not provided
+        name: customerData.phone || customerData.phone, // fallback to phone if name not provided
         phone: customerData.phone,
-        location: customerData.location,
+        location: customerData.location || customerData.postcode, // Use formatted address or postcode
         bio: customerData.bio,
         avatar_url: profilePhotoUrl || profile?.avatar_url,
         privacy_settings: customerData.privacy_settings,
@@ -265,6 +265,10 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
           initialData={{
             phone: profile?.phone || '',
             location: profile?.location || '',
+            postcode: profile?.location || '', // Use location as postcode if it exists
+            latitude: null, // We don't store coordinates in profiles yet
+            longitude: null,
+            postcodeData: null,
             bio: profile?.bio || '',
             privacy_settings: profile?.privacy_settings || {
               phone_visible: true,
