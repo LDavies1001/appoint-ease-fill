@@ -120,6 +120,7 @@ const CustomerDashboard = () => {
   const [myBookings, setMyBookings] = useState<Booking[]>([]);
   const [favouriteBusinesses, setFavouriteBusinesses] = useState<FavouriteBusiness[]>([]);
   const [localOffers, setLocalOffers] = useState<LocalOffer[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -136,7 +137,25 @@ const CustomerDashboard = () => {
     fetchMyBookings();
     fetchFavouriteBusinesses();
     fetchLocalOffers();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('category')
+        .not('category', 'is', null);
+
+      if (error) throw error;
+
+      // Get unique categories
+      const uniqueCategories = [...new Set(data.map(item => item.category))].filter(Boolean);
+      setCategories(uniqueCategories);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const fetchAvailableSlots = async () => {
     try {
@@ -417,9 +436,11 @@ const CustomerDashboard = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Categories</SelectItem>
-                      <SelectItem value="Beauty">Beauty</SelectItem>
-                      <SelectItem value="Cleaning">Cleaning</SelectItem>
-                      <SelectItem value="Wellness">Wellness</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
