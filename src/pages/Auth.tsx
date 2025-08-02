@@ -814,7 +814,7 @@ const Auth = () => {
 
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-br from-sage-400 to-sage-500 hover:from-sage-500 hover:to-sage-600 text-white font-semibold py-3"
+                    className="w-full bg-gradient-to-br from-sage-200 to-sage-300 hover:from-sage-300 hover:to-sage-400 text-sage-800 font-semibold py-3"
                     disabled={loading}
                     size="lg"
                   >
