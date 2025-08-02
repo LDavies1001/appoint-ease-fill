@@ -29,7 +29,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="relative py-16 lg:py-24 animate-fade-in">
+      <section id="features" className="relative py-16 lg:py-24 animate-fade-in">
         <div className="absolute top-0 left-8 lg:left-16">
           <div className="text-6xl lg:text-8xl font-black text-primary/10 select-none">01</div>
         </div>
@@ -41,7 +41,7 @@ const Index = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="relative py-16 lg:py-24 bg-gradient-to-br from-muted/30 to-accent/10 animate-fade-in">
+      <section id="how-it-works" className="relative py-16 lg:py-24 bg-gradient-to-br from-muted/30 to-accent/10 animate-fade-in">
         <div className="absolute top-0 right-8 lg:right-16">
           <div className="text-6xl lg:text-8xl font-black text-secondary/15 select-none">02</div>
         </div>
@@ -53,7 +53,7 @@ const Index = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="relative py-16 lg:py-24 animate-fade-in">
+      <section id="testimonials" className="relative py-16 lg:py-24 animate-fade-in">
         <div className="absolute top-0 left-8 lg:left-16">
           <div className="text-6xl lg:text-8xl font-black text-accent/15 select-none">03</div>
         </div>
