@@ -157,12 +157,21 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       }
     }
     
+    // Get the user's location/postcode from profile to prepopulate the business address
+    const userPostcode = profile?.location || '';
+    const defaultAddress = parseAddressData(existingData?.business_address);
+    
+    // If no existing address data and user has a location from signup, use it as the postcode
+    if (!defaultAddress.postcode && userPostcode) {
+      defaultAddress.postcode = userPostcode;
+    }
+    
     // Fallback to existing data or defaults
     return {
       business_name: existingData?.business_name || '',
       business_categories: existingData?.business_categories || existingData?.services_offered || [],
       business_phone: existingData?.business_phone || '',
-      business_address: parseAddressData(existingData?.business_address),
+      business_address: defaultAddress,
       business_description: existingData?.business_description || '',
       business_logo_url: existingData?.business_logo_url || '',
       operating_hours: getDefaultOperatingHours(),
