@@ -286,7 +286,7 @@ const Auth = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-muted-foreground hover:text-rose-600 hover:bg-rose-50"
+            className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Home
@@ -339,7 +339,7 @@ const Auth = () => {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold py-3 rounded-lg">
+                  <Button className="w-full bg-gradient-to-br from-rose-100 via-rose-200 to-rose-300 hover:from-rose-200 hover:via-rose-300 hover:to-rose-400 text-rose-800 font-semibold py-3 rounded-lg">
                     Get Started as Customer
                   </Button>
                 </div>
@@ -374,7 +374,7 @@ const Auth = () => {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white font-semibold py-3 rounded-lg">
+                  <Button className="w-full bg-gradient-to-br from-sage-100 via-sage-200 to-sage-300 hover:from-sage-200 hover:via-sage-300 hover:to-sage-400 text-sage-800 font-semibold py-3 rounded-lg">
                     Get Started as Business
                   </Button>
                 </div>
@@ -384,7 +384,7 @@ const Auth = () => {
             <div className="text-center mt-8">
               <p className="text-sm text-muted-foreground">
                 Already have an account?{' '}
-                <Link to="/auth" className="text-rose-600 hover:text-rose-700 font-medium story-link">
+                <Link to="/auth" className="text-primary hover:text-primary/80 font-medium story-link">
                   Sign in here
                 </Link>
               </p>
@@ -428,7 +428,7 @@ const Auth = () => {
                 </div>
                 <Button
                   onClick={() => navigate('/auth')}
-                  className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold py-3 rounded-lg"
+                  className="w-full bg-gradient-to-br from-rose-100 via-rose-200 to-rose-300 hover:from-rose-200 hover:via-rose-300 hover:to-rose-400 text-rose-800 font-semibold py-3 rounded-lg"
                 >
                   Go to Login
                 </Button>
@@ -553,7 +553,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold py-3 rounded-lg transition-all duration-300"
+                  className="w-full bg-gradient-to-br from-rose-100 via-rose-200 to-rose-300 hover:from-rose-200 hover:via-rose-300 hover:to-rose-400 text-rose-800 font-semibold py-3 rounded-lg transition-all duration-300"
                 >
                   {loading ? 'Creating Account...' : 'Create Account'}
                 </Button>
@@ -733,7 +733,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white font-semibold py-3 rounded-lg transition-all duration-300"
+                  className="w-full bg-gradient-to-br from-sage-100 via-sage-200 to-sage-300 hover:from-sage-200 hover:via-sage-300 hover:to-sage-400 text-sage-800 font-semibold py-3 rounded-lg transition-all duration-300"
                 >
                   {loading ? 'Creating Account...' : 'Create Business Account'}
                 </Button>
