@@ -775,7 +775,7 @@ const Auth = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-rose-400 rounded-full"></div>
-                <span className="text-muted-foreground">40% more bookings on average</span>
+                <span className="text-muted-foreground">Fill empty slots with last-minute bookings</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-sage-500 rounded-full"></div>
