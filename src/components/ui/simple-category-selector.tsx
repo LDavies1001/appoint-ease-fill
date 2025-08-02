@@ -26,6 +26,8 @@ interface SimpleCategorySelectorProps {
   categories: Category[];
   selectedCategories: string[];
   onSelectionChange: (selected: string[]) => void;
+  selectedServices?: Record<string, string[]>; // Store services per category
+  onServicesChange?: (services: Record<string, string[]>) => void;
   maxSelections?: number;
   className?: string;
 }
@@ -244,6 +246,8 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
   categories,
   selectedCategories,
   onSelectionChange,
+  selectedServices: categoryServices = {},
+  onServicesChange,
   maxSelections = 3,
   className
 }) => {
@@ -283,8 +287,15 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
         ? selectedCategories
         : [...selectedCategories, selectedMainCategory];
       
+      // Store the services for this category
+      const newCategoryServices = {
+        ...categoryServices,
+        [selectedMainCategory]: selectedServices
+      };
+      
       if (newSelection.length <= maxSelections) {
         onSelectionChange(newSelection);
+        onServicesChange?.(newCategoryServices);
         
         // Show success toast with details
         toast({
@@ -452,26 +463,48 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
         )}
       </div>
 
-      {/* Selected categories */}
+      {/* Selected categories with services */}
       {selectedCategories.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-sm font-medium">Selected Categories:</h3>
-          <div className="flex flex-wrap gap-2">
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Selected Categories & Services:</h3>
+          <div className="space-y-3">
             {selectedCategories.map(categoryId => {
               const categoryData = mainCategories.find(cat => cat.id === categoryId);
+              const categoryServicesData = categoryServices[categoryId] || [];
+              
               return categoryData ? (
                 <div
                   key={categoryId}
-                  className="flex items-center gap-2 bg-accent/10 text-accent px-3 py-1 rounded-full text-sm"
+                  className="bg-accent/5 border border-accent/20 rounded-lg p-4"
                 >
-                  <span>{categoryData.emoji}</span>
-                  <span>{categoryData.name}</span>
-                  <button
-                    onClick={() => handleRemoveCategory(categoryId)}
-                    className="hover:bg-accent/20 rounded-full p-0.5 ml-1"
-                  >
-                    ×
-                  </button>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{categoryData.emoji}</span>
+                      <span className="font-medium text-sm">{categoryData.name}</span>
+                      <span className="text-xs bg-accent/20 text-accent px-2 py-1 rounded-full">
+                        {categoryServicesData.length} services
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => handleRemoveCategory(categoryId)}
+                      className="text-muted-foreground hover:text-destructive text-sm"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  
+                  {categoryServicesData.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {categoryServicesData.map((service, index) => (
+                        <span
+                          key={index}
+                          className="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full"
+                        >
+                          {service}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ) : null;
             })}

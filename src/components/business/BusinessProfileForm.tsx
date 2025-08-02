@@ -184,7 +184,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   };
 
   const [formData, setFormData] = useState<BusinessProfileData>(initializeFormData());
-
+  const [selectedServices, setSelectedServices] = useState<Record<string, string[]>>({});
   
   const [categories, setCategories] = useState<BusinessCategory[]>([]);
   
@@ -639,6 +639,8 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 }))}
                 selectedCategories={formData.business_categories}
                 onSelectionChange={(selected) => handleInputChange('business_categories', selected)}
+                selectedServices={selectedServices}
+                onServicesChange={setSelectedServices}
                 maxSelections={1}
               />
             </div>
