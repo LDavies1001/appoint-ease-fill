@@ -112,7 +112,7 @@ const ProviderDashboard = () => {
     custom_service_name: '',
     date: '',
     start_time: '',
-    duration: 60,
+    duration: '',
     price: '',
     discount_price: '',
     notes: '',
@@ -278,7 +278,7 @@ const ProviderDashboard = () => {
 
     try {
       const startTime = new Date(`2000-01-01T${slotForm.start_time}`);
-      const endTime = new Date(startTime.getTime() + slotForm.duration * 60000);
+      const endTime = new Date(startTime.getTime() + (parseInt(slotForm.duration) || 0) * 60000);
       
       // Determine which image to use
       let imageUrl = null;
@@ -296,7 +296,7 @@ const ProviderDashboard = () => {
         date: slotForm.date,
         start_time: slotForm.start_time,
         end_time: endTime.toTimeString().slice(0, 5),
-        duration: slotForm.duration,
+        duration: parseInt(slotForm.duration) || 0,
         price: parseFloat(slotForm.price),
         discount_price: slotForm.discount_price ? parseFloat(slotForm.discount_price) : null,
         image_url: imageUrl,
@@ -322,7 +322,7 @@ const ProviderDashboard = () => {
         custom_service_name: '',
         date: '',
         start_time: '',
-        duration: 60,
+        duration: '',
         price: '',
         discount_price: '',
         notes: '',
@@ -400,7 +400,7 @@ const ProviderDashboard = () => {
 
     try {
       const startTime = new Date(`2000-01-01T${slotForm.start_time}`);
-      const endTime = new Date(startTime.getTime() + slotForm.duration * 60000);
+      const endTime = new Date(startTime.getTime() + (parseInt(slotForm.duration) || 0) * 60000);
       
       // Determine which image to use
       let imageUrl = null;
@@ -417,7 +417,7 @@ const ProviderDashboard = () => {
         date: slotForm.date,
         start_time: slotForm.start_time,
         end_time: endTime.toTimeString().slice(0, 5),
-        duration: slotForm.duration,
+        duration: parseInt(slotForm.duration) || 0,
         price: parseFloat(slotForm.price),
         discount_price: slotForm.discount_price ? parseFloat(slotForm.discount_price) : null,
         image_url: imageUrl,
@@ -444,7 +444,7 @@ const ProviderDashboard = () => {
         custom_service_name: '',
         date: '',
         start_time: '',
-        duration: 60,
+        duration: '',
         price: '',
         discount_price: '',
         notes: '',
@@ -475,7 +475,7 @@ const ProviderDashboard = () => {
         custom_service_name: editingSlot.custom_service_name || '',
         date: editingSlot.date,
         start_time: editingSlot.start_time,
-        duration: editingSlot.duration,
+        duration: editingSlot.duration?.toString() || '',
         price: editingSlot.price?.toString() || '',
         discount_price: editingSlot.discount_price?.toString() || '',
         notes: editingSlot.notes || '',
@@ -772,7 +772,7 @@ const ProviderDashboard = () => {
                         setSlotForm(prev => ({ 
                           ...prev, 
                           price: selectedService.base_price?.toString() || "",
-                          duration: selectedService.duration_minutes,
+                          duration: selectedService.duration_minutes?.toString() || "",
                           image_url: selectedService.image_url || "" // Add existing service image
                         }));
                       }
@@ -938,7 +938,7 @@ const ProviderDashboard = () => {
                       id="duration"
                       type="number"
                       value={slotForm.duration}
-                      onChange={(e) => setSlotForm(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
+                      onChange={(e) => setSlotForm(prev => ({ ...prev, duration: e.target.value }))}
                       min="15"
                       step="15"
                       className="h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -1216,7 +1216,7 @@ const ProviderDashboard = () => {
                         setSlotForm(prev => ({ 
                           ...prev, 
                           price: selectedService.base_price?.toString() || "",
-                          duration: selectedService.duration_minutes,
+                          duration: selectedService.duration_minutes?.toString() || "",
                           image_url: selectedService.image_url || "" // Add existing service image
                         }));
                       }
@@ -1274,7 +1274,7 @@ const ProviderDashboard = () => {
                       id="edit-duration"
                       type="number"
                       value={slotForm.duration}
-                      onChange={(e) => setSlotForm(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
+                      onChange={(e) => setSlotForm(prev => ({ ...prev, duration: e.target.value }))}
                       min="15"
                       step="15"
                       className="h-11"
