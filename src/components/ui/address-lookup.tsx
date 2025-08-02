@@ -220,7 +220,15 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
           <Input
             ref={inputRef}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value.toUpperCase())}
+            onChange={(e) => {
+              const newValue = e.target.value.toUpperCase();
+              setSearchQuery(newValue);
+              // Reset the address selection if user starts typing a new search
+              if (isAddressSelected && newValue !== value.postcode) {
+                setIsAddressSelected(false);
+                setStep('search');
+              }
+            }}
             onFocus={() => {
               if (suggestions.length > 0) setShowSuggestions(true);
             }}
