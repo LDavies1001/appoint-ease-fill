@@ -85,10 +85,15 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
         const onboardingServices = providerDetails?.services_offered || [];
         console.log('Raw services_offered from database:', onboardingServices);
         
-        // Combine existing services with onboarding services (and remove duplicates)
-        const allServices = [...new Set([...existingServices, ...onboardingServices])];
+        // Since onboarding data is corrupted (only has "beauty"), combine existing services with global services
+        // Filter out any that are just category names
+        const validOnboardingServices = onboardingServices.filter(service => 
+          service !== 'beauty' && service !== 'cleaning' && service !== 'home'
+        );
         
-        console.log('Found user services:', { existingServices, onboardingServices, allServices });
+        // Combine existing services, valid onboarding services, and global services for now
+        const allServices = [...new Set([...existingServices, ...validOnboardingServices, ...globalServices])];
+        console.log('Final combined services:', allServices);
         setProfileServices(allServices);
         
       } catch (error) {
