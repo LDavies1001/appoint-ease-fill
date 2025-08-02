@@ -399,13 +399,17 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         }).join('\n');
       };
 
-      // Extract all individual services from the selectedServices object
+      // Save both categories and individual services
       const allSelectedServices = Object.values(selectedServices).flat();
+      const servicesData = {
+        categories: formData.business_categories,
+        services: selectedServices
+      };
 
       const submitData = {
         business_name: formData.business_name,
         business_category: formData.business_categories[0] || null, // Primary category
-        services_offered: allSelectedServices, // Save actual individual services instead of categories
+        services_offered: servicesData, // Save structured data with both categories and services
         business_phone: formData.business_phone,
         formatted_address: addressString, // Use correct column name
         business_postcode: formData.business_address.postcode, // Add postcode separately
