@@ -409,7 +409,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       const submitData = {
         business_name: formData.business_name,
         business_category: formData.business_categories[0] || null, // Primary category
-        services_offered: formData.business_categories, // Keep legacy format for backward compatibility
+        services_offered: formData.business_categories as string[], // Ensure it's typed as string array
         services_selection: servicesData, // New structured data
         business_phone: formData.business_phone,
         formatted_address: addressString, // Use correct column name
