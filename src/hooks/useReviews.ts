@@ -19,7 +19,17 @@ export const useReviews = () => {
     const savedReviews = localStorage.getItem('openslot-reviews');
     if (savedReviews) {
       try {
-        setReviews(JSON.parse(savedReviews));
+        const parsedReviews = JSON.parse(savedReviews);
+        // Filter out test reviews with title "great" or other test data
+        const filteredReviews = parsedReviews.filter((review: Review) => 
+          review.title.toLowerCase() !== 'great' && 
+          review.review.toLowerCase() !== 'great'
+        );
+        setReviews(filteredReviews);
+        // Update localStorage with filtered reviews
+        if (filteredReviews.length !== parsedReviews.length) {
+          localStorage.setItem('openslot-reviews', JSON.stringify(filteredReviews));
+        }
       } catch (error) {
         console.error('Error parsing saved reviews:', error);
       }
@@ -47,22 +57,9 @@ export const useReviews = () => {
       .slice(0, 6);
   };
 
-  const removeReview = (reviewId: string) => {
-    const updatedReviews = reviews.filter(review => review.id !== reviewId);
-    setReviews(updatedReviews);
-    localStorage.setItem('openslot-reviews', JSON.stringify(updatedReviews));
-  };
-
-  const clearAllReviews = () => {
-    setReviews([]);
-    localStorage.removeItem('openslot-reviews');
-  };
-
   return {
     reviews,
     addReview,
     getDisplayedReviews,
-    removeReview,
-    clearAllReviews,
   };
 };
