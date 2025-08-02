@@ -756,7 +756,7 @@ const Auth = () => {
 
   // Conversion-Optimized Login Form
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-sage-50/30 via-background to-sage-100/20">
       <div className="container mx-auto px-4 py-8 flex min-h-screen items-center">
         <div className="w-full max-w-4xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* Left side - Engaging Content */}
@@ -764,7 +764,7 @@ const Auth = () => {
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
                 Welcome Back to
-                <span className="text-primary block">OpenSlot</span>
+                <span className="text-sage-600 block">OpenSlot</span>
               </h1>
               <p className="text-xl text-muted-foreground">
                 Continue growing your beauty business with smart booking management.
@@ -774,28 +774,28 @@ const Auth = () => {
             {/* Quick Benefits */}
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <div className="w-2 h-2 bg-sage-500 rounded-full"></div>
                 <span className="text-muted-foreground">40% more bookings on average</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <div className="w-2 h-2 bg-sage-500 rounded-full"></div>
                 <span className="text-muted-foreground">Automated scheduling & reminders</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <div className="w-2 h-2 bg-sage-500 rounded-full"></div>
                 <span className="text-muted-foreground">Professional portfolio showcase</span>
               </div>
             </div>
 
             {/* New User CTA */}
-            <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
+            <div className="bg-sage-50 border border-sage-200 rounded-lg p-4">
               <p className="text-sm text-muted-foreground mb-3">
                 Don't have an account yet?
               </p>
               <Button
                 onClick={() => navigate('?tab=signup')}
                 variant="outline"
-                className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                className="w-full border-sage-400 text-sage-700 hover:bg-sage-100 hover:text-sage-800"
               >
                 Start Free Trial
               </Button>
@@ -804,7 +804,7 @@ const Auth = () => {
 
           {/* Right side - Login Form */}
           <div className="w-full max-w-md mx-auto">
-            <Card className="border-2 border-primary/20 shadow-xl">
+            <Card className="border-2 border-sage-200/60 shadow-xl bg-white/95">
               <div className="p-8">
                 <div className="text-center mb-6">
                   <BrandLogo className="w-10 h-10 mx-auto mb-4" />
@@ -826,10 +826,10 @@ const Auth = () => {
                         placeholder="Enter your email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 border-muted-foreground/20 focus:border-primary"
+                        className="pl-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
                         required
                       />
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-sage-600" />
                     </div>
                   </div>
 
@@ -842,14 +842,14 @@ const Auth = () => {
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 pr-10 border-muted-foreground/20 focus:border-primary"
+                        className="pl-10 pr-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
                         required
                       />
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-sage-600" />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sage-600 hover:text-sage-700"
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -858,7 +858,7 @@ const Auth = () => {
 
                   <Button
                     type="submit"
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
+                    className="w-full bg-gradient-to-br from-sage-500 to-sage-600 hover:from-sage-600 hover:to-sage-700 text-white font-semibold py-3"
                     disabled={loading}
                     size="lg"
                   >
@@ -866,12 +866,12 @@ const Auth = () => {
                   </Button>
                 </form>
 
-                <div className="mt-6 pt-6 border-t border-muted/20 text-center">
+                <div className="mt-6 pt-6 border-t border-sage-100 text-center">
                   <p className="text-sm text-muted-foreground">
                     Don't have an account?{' '}
                     <button
                       onClick={() => navigate('?tab=signup')}
-                      className="text-primary hover:text-primary/80 font-medium"
+                      className="text-sage-600 hover:text-sage-700 font-medium"
                     >
                       Sign up here
                     </button>
