@@ -330,7 +330,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
               {progress}%
             </span>
           </div>
-          <Progress value={progress} className="h-2 [&>div]:bg-gradient-to-r [&>div]:from-rose-500 [&>div]:to-rose-600" />
+          <Progress value={progress} className="h-2 [&_.bg-primary]:bg-gradient-to-r [&_.bg-primary]:from-rose-200 [&_.bg-primary]:to-rose-300" />
         </div>
       </div>
 
