@@ -1,21 +1,11 @@
-import React, { useState, useMemo } from 'react';
-import { Badge } from '@/components/ui/badge';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
-  Search, 
   Scissors, 
-  Home, 
-  Dumbbell, 
-  Camera, 
-  GraduationCap, 
-  Briefcase, 
-  ShoppingBag, 
-  Car, 
-  ChefHat, 
-  MoreHorizontal,
-  X
+  Sparkles, 
+  Wrench,
+  ChevronLeft
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,10 +15,10 @@ interface Category {
   description?: string;
 }
 
-interface SubService {
+interface ServiceGroup {
   id: string;
   name: string;
-  categoryId: string;
+  services: string[];
 }
 
 interface SimpleCategorySelectorProps {
@@ -39,100 +29,215 @@ interface SimpleCategorySelectorProps {
   className?: string;
 }
 
-const getCategoryIcon = (categoryName: string) => {
-  const name = categoryName.toLowerCase();
-  if (name.includes('beauty')) return <Scissors className="h-5 w-5" />;
-  if (name.includes('home')) return <Home className="h-5 w-5" />;
-  if (name.includes('health') || name.includes('fitness')) return <Dumbbell className="h-5 w-5" />;
-  if (name.includes('entertainment')) return <Camera className="h-5 w-5" />;
-  if (name.includes('education')) return <GraduationCap className="h-5 w-5" />;
-  if (name.includes('professional')) return <Briefcase className="h-5 w-5" />;
-  if (name.includes('retail')) return <ShoppingBag className="h-5 w-5" />;
-  if (name.includes('automotive')) return <Car className="h-5 w-5" />;
-  if (name.includes('food') || name.includes('drink')) return <ChefHat className="h-5 w-5" />;
-  return <MoreHorizontal className="h-5 w-5" />;
-};
-
-// Predefined sub-services for each category
-const subServices: SubService[] = [
-  // Beauty
-  { id: 'nails', name: 'Nails', categoryId: 'beauty' },
-  { id: 'hair', name: 'Hair', categoryId: 'beauty' },
-  { id: 'lashes', name: 'Lashes', categoryId: 'beauty' },
-  { id: 'brows', name: 'Brows', categoryId: 'beauty' },
-  { id: 'facials', name: 'Facials', categoryId: 'beauty' },
-  { id: 'makeup', name: 'Makeup', categoryId: 'beauty' },
-  { id: 'waxing', name: 'Waxing', categoryId: 'beauty' },
-  { id: 'massage', name: 'Massage', categoryId: 'beauty' },
-
-  // Home Services
-  { id: 'cleaning', name: 'Cleaning', categoryId: 'home' },
-  { id: 'gardening', name: 'Gardening', categoryId: 'home' },
-  { id: 'handyman', name: 'Handyman', categoryId: 'home' },
-  { id: 'plumbing', name: 'Plumbing', categoryId: 'home' },
-  { id: 'electrical', name: 'Electrical', categoryId: 'home' },
-  { id: 'painting', name: 'Painting', categoryId: 'home' },
-  { id: 'carpentry', name: 'Carpentry', categoryId: 'home' },
-  { id: 'pest-control', name: 'Pest Control', categoryId: 'home' },
-
-  // Health & Fitness
-  { id: 'personal-training', name: 'Personal Training', categoryId: 'health' },
-  { id: 'yoga', name: 'Yoga', categoryId: 'health' },
-  { id: 'pilates', name: 'Pilates', categoryId: 'health' },
-  { id: 'nutrition', name: 'Nutrition', categoryId: 'health' },
-  { id: 'physiotherapy', name: 'Physiotherapy', categoryId: 'health' },
-  { id: 'sports-coaching', name: 'Sports Coaching', categoryId: 'health' },
-  { id: 'mental-health', name: 'Mental Health', categoryId: 'health' },
-
-  // Entertainment
-  { id: 'photography', name: 'Photography', categoryId: 'entertainment' },
-  { id: 'videography', name: 'Videography', categoryId: 'entertainment' },
-  { id: 'dj-services', name: 'DJ Services', categoryId: 'entertainment' },
-  { id: 'live-music', name: 'Live Music', categoryId: 'entertainment' },
-  { id: 'party-planning', name: 'Party Planning', categoryId: 'entertainment' },
-  { id: 'magic-shows', name: 'Magic Shows', categoryId: 'entertainment' },
-  { id: 'face-painting', name: 'Face Painting', categoryId: 'entertainment' },
-
-  // Education
-  { id: 'tutoring', name: 'Tutoring', categoryId: 'education' },
-  { id: 'music-lessons', name: 'Music Lessons', categoryId: 'education' },
-  { id: 'language-teaching', name: 'Language Teaching', categoryId: 'education' },
-  { id: 'driving-instruction', name: 'Driving Instruction', categoryId: 'education' },
-  { id: 'art-classes', name: 'Art Classes', categoryId: 'education' },
-  { id: 'computer-training', name: 'Computer Training', categoryId: 'education' },
-
-  // Professional
-  { id: 'legal', name: 'Legal', categoryId: 'professional' },
-  { id: 'accounting', name: 'Accounting', categoryId: 'professional' },
-  { id: 'consulting', name: 'Consulting', categoryId: 'professional' },
-  { id: 'marketing', name: 'Marketing', categoryId: 'professional' },
-  { id: 'web-development', name: 'Web Development', categoryId: 'professional' },
-  { id: 'graphic-design', name: 'Graphic Design', categoryId: 'professional' },
-
-  // Retail
-  { id: 'personal-shopping', name: 'Personal Shopping', categoryId: 'retail' },
-  { id: 'styling', name: 'Styling', categoryId: 'retail' },
-  { id: 'custom-clothing', name: 'Custom Clothing', categoryId: 'retail' },
-  { id: 'jewelry', name: 'Jewelry', categoryId: 'retail' },
-
-  // Automotive
-  { id: 'car-repairs', name: 'Car Repairs', categoryId: 'automotive' },
-  { id: 'mot-testing', name: 'MOT Testing', categoryId: 'automotive' },
-  { id: 'car-detailing', name: 'Car Detailing', categoryId: 'automotive' },
-  { id: 'tire-fitting', name: 'Tire Fitting', categoryId: 'automotive' },
-
-  // Food & Drink
-  { id: 'catering', name: 'Catering', categoryId: 'food' },
-  { id: 'private-chef', name: 'Private Chef', categoryId: 'food' },
-  { id: 'baking', name: 'Baking', categoryId: 'food' },
-  { id: 'bartending', name: 'Bartending', categoryId: 'food' },
-
-  // Other
-  { id: 'pet-services', name: 'Pet Services', categoryId: 'other' },
-  { id: 'childcare', name: 'Childcare', categoryId: 'other' },
-  { id: 'eldercare', name: 'Eldercare', categoryId: 'other' },
-  { id: 'moving', name: 'Moving', categoryId: 'other' },
+// Main categories
+const mainCategories = [
+  {
+    id: 'beauty',
+    name: 'Beauty & Personal Care',
+    icon: Scissors,
+    emoji: '💅'
+  },
+  {
+    id: 'cleaning',
+    name: 'Cleaning Services', 
+    icon: Sparkles,
+    emoji: '🧼'
+  },
+  {
+    id: 'home',
+    name: 'Home & Handy Services',
+    icon: Wrench,
+    emoji: '🛠️'
+  }
 ];
+
+// Service groups for each category
+const serviceGroups: Record<string, ServiceGroup[]> = {
+  beauty: [
+    {
+      id: 'brows-lashes',
+      name: 'Brows & Lashes',
+      services: [
+        'Eyebrow Waxing',
+        'Threading', 
+        'Tinting',
+        'Brow Lamination',
+        'Lash Lift',
+        'Classic Lashes',
+        'Hybrid Lashes',
+        'Volume Lashes',
+        'Lash Removal'
+      ]
+    },
+    {
+      id: 'nails',
+      name: 'Nails',
+      services: [
+        'Manicure',
+        'Gel Nails',
+        'Acrylic Nails',
+        'BIAB',
+        'Pedicure',
+        'Nail Art',
+        'Nail Removal',
+        'Callus Peel'
+      ]
+    },
+    {
+      id: 'hair',
+      name: 'Hair',
+      services: [
+        'Dry Cut',
+        'Wash & Blow Dry',
+        'Hair Colour',
+        'Highlights',
+        'Balayage',
+        'Hair Up / Occasion Styling',
+        'Hair Extensions',
+        'Hair Treatments'
+      ]
+    },
+    {
+      id: 'facials-skin',
+      name: 'Facials & Skin',
+      services: [
+        'Express Facial',
+        'Luxury Facial',
+        'Dermaplaning',
+        'Chemical Peel',
+        'Microdermabrasion',
+        'LED Therapy'
+      ]
+    },
+    {
+      id: 'waxing-hair-removal',
+      name: 'Waxing & Hair Removal',
+      services: [
+        'Leg Wax',
+        'Bikini / Hollywood',
+        'Underarm Wax',
+        'Arm / Face Wax',
+        'Chin / Lip Wax'
+      ]
+    },
+    {
+      id: 'tanning',
+      name: 'Tanning',
+      services: [
+        'Light Spray Tan',
+        'Medium / Dark Spray Tan',
+        'Tanning Booth'
+      ]
+    },
+    {
+      id: 'massage-body',
+      name: 'Massage & Body',
+      services: [
+        'Back & Shoulder Massage',
+        'Full Body Massage',
+        'Hot Stone Massage',
+        'Pregnancy Massage',
+        'Indian Head Massage'
+      ]
+    }
+  ],
+  cleaning: [
+    {
+      id: 'domestic-cleaning',
+      name: 'Domestic Cleaning',
+      services: [
+        'Regular Clean',
+        'Deep Clean',
+        'End-of-Tenancy',
+        'Post-Party Clean',
+        'Airbnb Turnaround',
+        'Spring Clean'
+      ]
+    },
+    {
+      id: 'commercial-cleaning',
+      name: 'Commercial Cleaning',
+      services: [
+        'Office Cleaning',
+        'Shop Cleaning',
+        'Salon / Clinic Cleaning',
+        'Restaurant / Kitchen Cleaning',
+        'Commercial End-of-Tenancy'
+      ]
+    },
+    {
+      id: 'specialist-cleaning',
+      name: 'Specialist Cleaning',
+      services: [
+        'Oven Cleaning',
+        'Carpet Cleaning',
+        'Upholstery Cleaning',
+        'Window Cleaning',
+        'Jet Washing',
+        'Mould Removal',
+        'Hoarder Cleaning',
+        'Disinfection / Antiviral'
+      ]
+    },
+    {
+      id: 'extras-addons',
+      name: 'Extras / Add-Ons',
+      services: [
+        'Ironing',
+        'Laundry Folding',
+        'Bed Changing',
+        'Cupboard / Fridge Cleaning',
+        'Internal Windows'
+      ]
+    }
+  ],
+  home: [
+    {
+      id: 'handyman',
+      name: 'Handyman',
+      services: [
+        'Flatpack Assembly',
+        'Hanging Shelves / Mirrors',
+        'TV Mounting',
+        'Door / Lock Repairs',
+        'Curtain / Blind Fitting'
+      ]
+    },
+    {
+      id: 'electrical',
+      name: 'Electrical',
+      services: [
+        'Light Replacement',
+        'Socket / Switch Install',
+        'Fuse Box Work',
+        'Minor Rewiring',
+        'PAT Testing'
+      ]
+    },
+    {
+      id: 'plumbing',
+      name: 'Plumbing',
+      services: [
+        'Tap Repair',
+        'Sink / Toilet Unblocking',
+        'Shower Installation',
+        'Leak Detection',
+        'Radiator Bleeding'
+      ]
+    },
+    {
+      id: 'gardening',
+      name: 'Gardening',
+      services: [
+        'Lawn Mowing',
+        'Hedge Trimming',
+        'Weeding',
+        'General Garden Tidy',
+        'Jet Washing'
+      ]
+    }
+  ]
+};
 
 export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
   categories,
@@ -141,67 +246,27 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
   maxSelections = 3,
   className
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [currentStep, setCurrentStep] = useState<'categories' | 'services'>('categories');
   const [selectedMainCategory, setSelectedMainCategory] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  // Map database categories to our predefined structure
-  const categoryMapping: Record<string, string> = {
-    'Beauty': 'beauty',
-    'Home Services': 'home',
-    'Health & Fitness': 'health',
-    'Entertainment': 'entertainment',
-    'Education': 'education',
-    'Professional': 'professional',
-    'Retail': 'retail',
-    'Automotive': 'automotive',
-    'Food & Drink': 'food',
-    'Other': 'other'
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedMainCategory(categoryId);
+    setSelectedServices([]);
+    setCurrentStep('services');
   };
 
-  const availableCategories = categories.filter(cat => categoryMapping[cat.name]);
-
-  // Filter categories and services based on search
-  const filteredCategories = useMemo(() => {
-    if (!searchQuery) return availableCategories;
-    return availableCategories.filter(category =>
-      category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      subServices.some(service => 
-        service.categoryId === categoryMapping[category.name] &&
-        service.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-  }, [availableCategories, searchQuery]);
-
-  const getServicesForCategory = (categoryName: string) => {
-    const categoryKey = categoryMapping[categoryName];
-    return subServices.filter(service => service.categoryId === categoryKey);
-  };
-
-  const handleCategoryClick = (categoryId: string, categoryName: string) => {
-    if (selectedMainCategory === categoryId) {
-      // If clicking the same category, close it
-      setSelectedMainCategory(null);
-      setSelectedServices([]);
-    } else {
-      // Open new category
-      setSelectedMainCategory(categoryId);
-      setSelectedServices([]);
-    }
-  };
-
-  const handleServiceToggle = (serviceId: string) => {
-    const newSelected = selectedServices.includes(serviceId)
-      ? selectedServices.filter(id => id !== serviceId)
-      : [...selectedServices, serviceId];
+  const handleServiceToggle = (service: string) => {
+    const newSelected = selectedServices.includes(service)
+      ? selectedServices.filter(s => s !== service)
+      : [...selectedServices, service];
     
     setSelectedServices(newSelected);
   };
 
-  const handleConfirmSelection = () => {
-    // For now, we'll store the main category ID in the database
-    // In a real app, you might want to store the specific services
+  const handleConfirmServices = () => {
     if (selectedMainCategory && selectedServices.length > 0) {
+      // Add the category to selected categories if not already there
       const newSelection = selectedCategories.includes(selectedMainCategory)
         ? selectedCategories
         : [...selectedCategories, selectedMainCategory];
@@ -210,164 +275,188 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
         onSelectionChange(newSelection);
       }
     }
+    
+    // Reset and go back to category selection
+    setCurrentStep('categories');
     setSelectedMainCategory(null);
     setSelectedServices([]);
   };
 
-  const handleClearAll = () => {
-    onSelectionChange([]);
+  const handleBackToCategories = () => {
+    setCurrentStep('categories');
     setSelectedMainCategory(null);
     setSelectedServices([]);
   };
+
+  const handleRemoveCategory = (categoryId: string) => {
+    onSelectionChange(selectedCategories.filter(id => id !== categoryId));
+  };
+
+  if (currentStep === 'services' && selectedMainCategory) {
+    const categoryData = mainCategories.find(cat => cat.id === selectedMainCategory);
+    const groups = serviceGroups[selectedMainCategory] || [];
+
+    return (
+      <div className={cn("space-y-6", className)}>
+        {/* Header with back button */}
+        <div className="flex items-center gap-4">
+          <Button variant="outline" size="sm" onClick={handleBackToCategories}>
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Back
+          </Button>
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              {categoryData?.emoji} {categoryData?.name.toUpperCase()}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Select the services you offer
+            </p>
+          </div>
+        </div>
+
+        {/* Service groups */}
+        <div className="space-y-6">
+          {groups.map((group) => (
+            <div key={group.id} className="space-y-3">
+              <h3 className="font-medium text-sm">{group.name}</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {group.services.map((service) => (
+                  <div key={service} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={service}
+                      checked={selectedServices.includes(service)}
+                      onCheckedChange={() => handleServiceToggle(service)}
+                    />
+                    <label
+                      htmlFor={service}
+                      className="text-sm cursor-pointer hover:text-primary"
+                    >
+                      {service}
+                    </label>
+                  </div>
+                ))}
+                {/* Other option */}
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`${group.id}-other`}
+                    checked={selectedServices.includes(`${group.name} - Other`)}
+                    onCheckedChange={() => handleServiceToggle(`${group.name} - Other`)}
+                  />
+                  <label
+                    htmlFor={`${group.id}-other`}
+                    className="text-sm cursor-pointer hover:text-primary"
+                  >
+                    Other
+                  </label>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex gap-3 pt-4">
+          <Button 
+            onClick={handleConfirmServices}
+            disabled={selectedServices.length === 0}
+            className="flex-1"
+          >
+            Add Services ({selectedServices.length})
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={handleBackToCategories}
+          >
+            Cancel
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("space-y-6", className)}>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">
-            Select up to {maxSelections} main service categories for your business.
-          </p>
-          <p className="text-lg font-medium text-accent">
-            {selectedCategories.length} of {maxSelections} selected
-          </p>
-        </div>
+      <div className="space-y-2">
+        <h2 className="text-lg font-semibold">Select Your Service Categories</h2>
+        <p className="text-sm text-muted-foreground">
+          Choose the main categories that best describe your business
+        </p>
         {selectedCategories.length > 0 && (
-          <Button variant="outline" size="sm" onClick={handleClearAll}>
-            <X className="h-3 w-3 mr-1" />
-            Clear All
-          </Button>
+          <p className="text-sm font-medium text-primary">
+            {selectedCategories.length} of {maxSelections} categories selected
+          </p>
         )}
       </div>
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="text"
-          placeholder="Search categories or services..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
-      </div>
-
-      {/* Selected categories display */}
+      {/* Selected categories */}
       {selectedCategories.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Selected Categories:</p>
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium">Selected Categories:</h3>
           <div className="flex flex-wrap gap-2">
             {selectedCategories.map(categoryId => {
-              const category = categories.find(c => c.id === categoryId);
-              return category ? (
-                <Badge key={categoryId} variant="default" className="flex items-center gap-1">
-                  {getCategoryIcon(category.name)}
-                  {category.name}
+              const categoryData = mainCategories.find(cat => cat.id === categoryId);
+              return categoryData ? (
+                <div
+                  key={categoryId}
+                  className="flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
+                >
+                  <span>{categoryData.emoji}</span>
+                  <span>{categoryData.name}</span>
                   <button
-                    onClick={() => onSelectionChange(selectedCategories.filter(id => id !== categoryId))}
-                    className="ml-1 hover:bg-white/20 rounded-full p-0.5"
+                    onClick={() => handleRemoveCategory(categoryId)}
+                    className="hover:bg-primary/20 rounded-full p-0.5 ml-1"
                   >
-                    <X className="h-3 w-3" />
+                    ×
                   </button>
-                </Badge>
+                </div>
               ) : null;
             })}
           </div>
         </div>
       )}
 
-      {/* Categories grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredCategories.map((category) => {
+      {/* Category tiles */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {mainCategories.map((category) => {
           const isSelected = selectedCategories.includes(category.id);
-          const isExpanded = selectedMainCategory === category.id;
-          const services = getServicesForCategory(category.name);
           const canSelect = !isSelected && selectedCategories.length < maxSelections;
+          const IconComponent = category.icon;
 
           return (
-            <div key={category.id} className="space-y-3">
-              {/* Main category card */}
-              <div
-                className={cn(
-                  "p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer",
-                  {
-                    "border-accent bg-accent/10": isSelected,
-                    "border-primary bg-primary/10": isExpanded && !isSelected,
-                    "border-muted hover:border-accent/50": !isSelected && !isExpanded && canSelect,
-                    "border-muted opacity-50 cursor-not-allowed": !canSelect && !isSelected,
-                  }
-                )}
-                onClick={() => canSelect || isSelected ? handleCategoryClick(category.id, category.name) : undefined}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 rounded-lg bg-accent/20">
-                    {getCategoryIcon(category.name)}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-medium">{category.name}</h3>
-                    <p className="text-sm text-muted-foreground">{category.description}</p>
-                  </div>
+            <div
+              key={category.id}
+              className={cn(
+                "p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 text-center",
+                {
+                  "border-primary bg-primary/10": isSelected,
+                  "border-muted hover:border-primary/50 hover:bg-primary/5": canSelect,
+                  "border-muted opacity-50 cursor-not-allowed": !canSelect && !isSelected,
+                }
+              )}
+              onClick={() => canSelect ? handleCategorySelect(category.id) : undefined}
+            >
+              <div className="space-y-3">
+                <div className="text-4xl">{category.emoji}</div>
+                <div className="p-3 rounded-lg bg-background">
+                  <IconComponent className="h-8 w-8 mx-auto text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-sm">{category.name}</h3>
                   {isSelected && (
-                    <Badge variant="default" className="text-xs">Selected</Badge>
+                    <p className="text-xs text-primary font-medium mt-1">Selected</p>
                   )}
                 </div>
               </div>
-
-              {/* Services selection */}
-              {isExpanded && (
-                <div className="ml-4 p-4 border rounded-lg bg-muted/30 animate-fade-in">
-                  <p className="text-sm font-medium mb-3">Select specific services you offer:</p>
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    {services.map((service) => (
-                      <div key={service.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={service.id}
-                          checked={selectedServices.includes(service.id)}
-                          onCheckedChange={() => handleServiceToggle(service.id)}
-                        />
-                        <label
-                          htmlFor={service.id}
-                          className="text-sm cursor-pointer hover:text-accent"
-                        >
-                          {service.name}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      onClick={handleConfirmSelection}
-                      disabled={selectedServices.length === 0}
-                    >
-                      Add Category
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      onClick={() => setSelectedMainCategory(null)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              )}
             </div>
           );
         })}
       </div>
 
-      {/* No results */}
-      {filteredCategories.length === 0 && searchQuery && (
-        <div className="text-center py-8 text-muted-foreground">
-          <p>No categories found matching "{searchQuery}"</p>
-        </div>
-      )}
-
       {/* Selection limit message */}
       {selectedCategories.length >= maxSelections && (
-        <div className="text-center bg-accent/10 rounded-lg p-4 border border-accent/20">
-          <p className="text-sm text-accent font-medium">
+        <div className="text-center bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border border-amber-200 dark:border-amber-800">
+          <p className="text-sm text-amber-700 dark:text-amber-300 font-medium">
             Maximum categories selected. Remove one to select a different category.
           </p>
         </div>
