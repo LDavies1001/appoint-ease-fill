@@ -59,36 +59,43 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
   // Debug modal opening
   console.log('AddServiceModal rendered with:', { isOpen, userId });
 
-  // Fetch user's profile services
+  // Fetch user's saved services from provider_services table (already created services with prices)
   useEffect(() => {
-    const fetchProfileServices = async () => {
-      console.log('Attempting to fetch profile services for userId:', userId);
+    const fetchAllUserServices = async () => {
+      if (!userId) return;
+      
       try {
-        const { data, error } = await supabase
+        // Get services already created in provider_services (with prices/duration set)
+        const { data: providerServicesData } = await supabase
+          .from('provider_services')
+          .select('service_name')
+          .eq('provider_id', userId);
+        
+        const existingServices = providerServicesData?.map(s => s.service_name) || [];
+        
+        // Get services selected during onboarding from provider_details
+        const { data: providerDetails } = await supabase
           .from('provider_details')
           .select('services_offered')
           .eq('user_id', userId)
           .single();
         
-        console.log('Supabase query result:', { data, error });
+        const onboardingServices = providerDetails?.services_offered || [];
         
-        if (data && data.services_offered) {
-          console.log('Found services_offered:', data.services_offered);
-          console.log('Type of services_offered:', typeof data.services_offered);
-          console.log('Is array:', Array.isArray(data.services_offered));
-          setProfileServices(data.services_offered);
-        } else {
-          console.log('No services_offered found in profile data:', data);
-          setProfileServices([]);
-        }
+        // Combine and deduplicate
+        const allServices = [...new Set([...existingServices, ...onboardingServices])];
+        
+        console.log('Found user services:', { existingServices, onboardingServices, allServices });
+        setProfileServices(allServices);
+        
       } catch (error) {
-        console.error('Error fetching profile services:', error);
+        console.error('Error fetching user services:', error);
         setProfileServices([]);
       }
     };
 
     if (userId && isOpen) {
-      fetchProfileServices();
+      fetchAllUserServices();
     }
   }, [userId, isOpen]);
 
