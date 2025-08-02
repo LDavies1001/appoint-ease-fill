@@ -687,15 +687,22 @@ const CustomerDashboard = () => {
                   return (
                     <Card key={slot.id} className="card-elegant p-6 hover:shadow-accent transition-smooth">
                       {/* Slot Image */}
-                      {slot.image_url && (
-                        <div className="mb-4 rounded-lg overflow-hidden">
-                          <img 
-                            src={slot.image_url} 
-                            alt={slot.service.name}
-                            className="w-full h-48 object-cover"
-                          />
-                        </div>
-                      )}
+                        {slot.image_url && (
+                          <div className="mb-4 rounded-lg overflow-hidden">
+                            <img 
+                              src={slot.image_url} 
+                              alt={slot.service.name}
+                              className="w-full h-48 object-cover"
+                              onError={(e) => {
+                                console.error('Image failed to load:', slot.image_url);
+                                e.currentTarget.style.display = 'none';
+                              }}
+                              onLoad={() => {
+                                console.log('Image loaded successfully:', slot.image_url);
+                              }}
+                            />
+                          </div>
+                        )}
                       
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
