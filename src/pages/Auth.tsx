@@ -798,7 +798,7 @@ const Auth = () => {
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 pr-10 border-sage-200 focus:border-sage-500 focus:ring-sage-500/20"
+                        className="pl-10 pr-10 border-sage-200 focus:border-rose-400 focus:ring-rose-400/20"
                         required
                       />
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-sage-600" />
@@ -827,7 +827,7 @@ const Auth = () => {
                     Don't have an account?{' '}
                     <button
                       onClick={() => navigate('?tab=signup')}
-                      className="text-sage-600 hover:text-sage-700 font-medium"
+                      className="text-rose-500 hover:text-rose-600 font-medium"
                     >
                       Sign up here
                     </button>
