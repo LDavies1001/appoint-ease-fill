@@ -66,6 +66,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
           .single();
         
         if (data && data.services_offered) {
+          // services_offered contains the individual services selected during onboarding
           setProfileServices(data.services_offered);
         }
       } catch (error) {
