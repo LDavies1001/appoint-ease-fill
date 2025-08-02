@@ -30,7 +30,22 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 overflow-x-hidden w-full">
 
-      {/* Dashboard Content */}
+      {/* Banner Section with Logo */}
+      <div className="relative bg-gradient-to-r from-card via-card/95 to-accent/10 border-b border-border/50 w-full overflow-hidden">
+        <div className="relative max-w-6xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-6 sm:py-8">
+          <div className="flex items-center justify-center space-x-4">
+            <img 
+              src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+              alt="OpenSlot Logo" 
+              className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
+            />
+            <span className="font-bold text-2xl sm:text-3xl text-foreground">
+              OpenSlot
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-6 sm:py-8 lg:py-12">
         <div className="bg-gradient-to-r from-card via-card/95 to-card/90 rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-xl border border-border/50 backdrop-blur-sm overflow-hidden">
           {profile.active_role === 'customer' ? (
