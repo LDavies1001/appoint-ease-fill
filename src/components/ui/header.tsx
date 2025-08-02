@@ -151,7 +151,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
             <img 
-              src="/src/assets/openslot-logo.png" 
+              src="/lovable-uploads/3fe42c9c-7458-4205-a88e-61bea2713e02.png" 
               alt="OpenSlot Logo" 
               className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
             />

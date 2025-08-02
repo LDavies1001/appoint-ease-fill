@@ -48,7 +48,7 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group">
               <img 
-                src="/src/assets/openslot-logo.png" 
+                src="/lovable-uploads/3fe42c9c-7458-4205-a88e-61bea2713e02.png" 
                 alt="OpenSlot Logo" 
                 className="w-8 h-8 rounded-lg"
               />
