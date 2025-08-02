@@ -808,7 +808,6 @@ const ProviderDashboard = () => {
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Minute</Label>
                         <Select
                           value={slotForm.start_time.split(':')[1] || ''}
                           onValueChange={(minute) => {
