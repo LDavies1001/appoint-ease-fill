@@ -917,9 +917,11 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         {/* Header Section */}
         <div className="text-center mb-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full mb-6 shadow-lg">
-          <Building className="h-8 w-8 text-white" />
-        </div>
+        <img 
+          src="/src/assets/openslot-logo.png" 
+          alt="OpenSlot Logo" 
+          className="w-56 h-56 object-contain mb-6"
+        />
           <h1 className="text-5xl font-bold text-accent mb-4">
             Complete Your Profile
           </h1>
