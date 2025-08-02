@@ -402,7 +402,7 @@ const Auth = () => {
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-3 mb-6">
-                <BrandLogo className="w-8 h-8 md:w-10 md:h-10" />
+                <BrandLogo className="w-[200px] h-[200px]" />
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
                 Account Created Successfully!
