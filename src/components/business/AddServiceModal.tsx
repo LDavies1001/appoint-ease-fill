@@ -605,7 +605,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
                       <SelectValue placeholder="Minutes" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border shadow-lg z-[100]">
-                      {[0, 15, 30, 45].map(minute => (
+                      {[15, 30, 45].map(minute => (
                         <SelectItem key={minute} value={minute.toString()}>
                           {minute}
                         </SelectItem>
