@@ -29,49 +29,73 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="relative py-8 lg:py-12 animate-fade-in">
-        <div className="absolute top-0 left-8 lg:left-16">
-          <div className="text-4xl lg:text-6xl font-black text-primary/10 select-none">01</div>
+      <section id="features" className="relative py-6 lg:py-8 animate-fade-in">
+        <div className="absolute top-4 left-8 lg:left-16 z-10">
+          <div className="text-3xl lg:text-5xl font-black text-primary/20 select-none">01</div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-6 lg:p-8">
-            <FeaturesSection />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-md border border-primary/20 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 lg:p-8 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
+            <div className="relative z-10">
+              <FeaturesSection />
+            </div>
           </div>
+        </div>
+        {/* Connecting visual element */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 z-20">
+          <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full shadow-lg border-4 border-background"></div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="relative py-8 lg:py-12 bg-gradient-to-br from-muted/30 to-accent/10 animate-fade-in">
-        <div className="absolute top-0 right-8 lg:right-16">
-          <div className="text-4xl lg:text-6xl font-black text-secondary/15 select-none">02</div>
+      <section id="how-it-works" className="relative py-6 lg:py-8 bg-gradient-to-br from-muted/20 to-accent/5 animate-fade-in">
+        <div className="absolute top-4 right-8 lg:right-16 z-10">
+          <div className="text-3xl lg:text-5xl font-black text-secondary/25 select-none">02</div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-6 lg:p-8">
-            <HowItWorksSection />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-background/90 to-background/70 backdrop-blur-md border border-secondary/20 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 lg:p-8 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent"></div>
+            <div className="relative z-10">
+              <HowItWorksSection />
+            </div>
           </div>
+        </div>
+        {/* Connecting visual element */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 z-20">
+          <div className="w-8 h-8 bg-gradient-to-br from-secondary to-accent rounded-full shadow-lg border-4 border-background"></div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="relative py-8 lg:py-12 animate-fade-in">
-        <div className="absolute top-0 left-8 lg:left-16">
-          <div className="text-4xl lg:text-6xl font-black text-accent/15 select-none">03</div>
+      <section id="testimonials" className="relative py-6 lg:py-8 animate-fade-in">
+        <div className="absolute top-4 left-8 lg:left-16 z-10">
+          <div className="text-3xl lg:text-5xl font-black text-accent/25 select-none">03</div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-3xl shadow-lg p-6 lg:p-8">
-            <TestimonialsSection />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-card/90 to-card/70 backdrop-blur-md border border-accent/20 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 lg:p-8 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent"></div>
+            <div className="relative z-10">
+              <TestimonialsSection />
+            </div>
           </div>
+        </div>
+        {/* Connecting visual element */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 z-20">
+          <div className="w-8 h-8 bg-gradient-to-br from-accent to-primary rounded-full shadow-lg border-4 border-background"></div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="relative py-8 lg:py-12 bg-gradient-to-br from-primary/5 to-secondary/5 animate-fade-in">
-        <div className="absolute top-0 right-8 lg:right-16">
-          <div className="text-4xl lg:text-6xl font-black text-primary/15 select-none">04</div>
+      <section className="relative py-6 lg:py-8 bg-gradient-to-br from-primary/8 to-secondary/8 animate-fade-in">
+        <div className="absolute top-4 right-8 lg:right-16 z-10">
+          <div className="text-3xl lg:text-5xl font-black text-primary/25 select-none">04</div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-background/90 backdrop-blur-sm border border-border/50 rounded-3xl shadow-xl p-6 lg:p-8">
-            <FinalCTASection />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-background/95 to-background/85 backdrop-blur-md border border-primary/25 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 p-6 lg:p-8 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 to-secondary/5"></div>
+            <div className="relative z-10">
+              <FinalCTASection />
+            </div>
           </div>
         </div>
       </section>
