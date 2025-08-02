@@ -763,7 +763,7 @@ const Auth = () => {
             <Card className="border-2 border-sage-200/60 shadow-xl bg-white/95">
               <div className="p-8">
                 <div className="text-center mb-6">
-                  <BrandLogo className="w-24 h-24 mx-auto mb-4" />
+                  <BrandLogo className="w-32 h-32 mx-auto mb-4" />
                   <h2 className="text-2xl font-bold text-foreground">
                     Welcome Back
                   </h2>
