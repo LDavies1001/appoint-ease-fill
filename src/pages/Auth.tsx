@@ -270,9 +270,11 @@ const Auth = () => {
 
   // Brand Logo Component
   const BrandLogo = ({ className = "w-8 h-8" }: { className?: string }) => (
-    <div className={`${className} bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg flex items-center justify-center`}>
-      <Calendar className="h-4 w-4 text-rose-700" />
-    </div>
+    <img 
+      src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+      alt="OpenSlot Logo" 
+      className={`${className} object-contain`}
+    />
   );
 
   // Role Selection Page
