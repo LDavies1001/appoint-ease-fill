@@ -815,10 +815,9 @@ const CustomerDashboard = () => {
 
                       <div className="flex justify-end pt-4 border-t border-border">
                         <Button
-                          variant="accent"
                           size="lg"
                           onClick={() => handleBookSlot(slot)}
-                          className="min-w-32"
+                          className="min-w-32 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white"
                         >
                           Book Now
                         </Button>
