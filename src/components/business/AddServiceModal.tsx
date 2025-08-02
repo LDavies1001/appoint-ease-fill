@@ -67,7 +67,10 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
         
         if (data && data.services_offered) {
           // services_offered contains the individual services selected during onboarding
+          console.log('Fetched profile services:', data.services_offered);
           setProfileServices(data.services_offered);
+        } else {
+          console.log('No services_offered found in profile data:', data);
         }
       } catch (error) {
         console.error('Error fetching profile services:', error);
