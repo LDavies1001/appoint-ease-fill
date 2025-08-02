@@ -404,7 +404,8 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         business_category: formData.business_categories[0] || null, // Primary category
         services_offered: formData.business_categories,
         business_phone: formData.business_phone,
-        business_address: addressString,
+        formatted_address: addressString, // Use correct column name
+        business_postcode: formData.business_address.postcode, // Add postcode separately
         is_address_public: formData.business_address.is_public, // Store privacy setting
         business_description: formData.business_description,
         operating_hours: formatOperatingHours(formData.operating_hours),
