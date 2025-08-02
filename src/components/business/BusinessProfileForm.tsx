@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Stepper } from '@/components/ui/stepper';
-import { EnhancedCategorySelector } from '@/components/ui/enhanced-category-selector';
+import { SimpleCategorySelector } from '@/components/ui/simple-category-selector';
 import { AddressLookup } from '@/components/ui/address-lookup';
 import { AddressData } from '@/components/ui/address-form';
 import { SocialMediaConnector } from './SocialMediaConnector';
@@ -626,12 +626,12 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </div>
               <h3 className="text-3xl font-bold text-accent">What services do you provide?</h3>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                This helps customers find exactly what they're looking for. Choose up to 3 services that best represent your business.
+                Choose your main service categories, then select the specific services you offer within each category.
               </p>
             </div>
             
             <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
-              <EnhancedCategorySelector
+              <SimpleCategorySelector
                 categories={categories.map(cat => ({
                   id: cat.id,
                   name: cat.name,
