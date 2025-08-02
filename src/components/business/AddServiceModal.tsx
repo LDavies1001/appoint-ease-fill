@@ -391,7 +391,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md border-sage-500">
         <DialogHeader>
           <DialogTitle>
             {editingService ? 'Edit Service' : 'Add New Service'}
@@ -479,7 +479,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             <Label>Service Images</Label>
             <div className="mt-1 space-y-3">
               {/* Upload Area */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
+              <div className="border-2 border-dashed border-sage-400 rounded-lg p-4 text-center hover:border-sage-500 transition-colors">
                 <input
                   type="file"
                   accept="image/*"
@@ -514,7 +514,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
                       <img
                         src={imageUrl}
                         alt={`Service image ${index + 1}`}
-                        className="w-full h-24 object-cover rounded-lg border"
+                        className="w-full h-24 object-cover rounded-lg border-sage-400"
                       />
                       <button
                         type="button"
