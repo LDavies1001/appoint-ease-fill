@@ -47,9 +47,22 @@ export const useReviews = () => {
       .slice(0, 6);
   };
 
+  const removeReview = (reviewId: string) => {
+    const updatedReviews = reviews.filter(review => review.id !== reviewId);
+    setReviews(updatedReviews);
+    localStorage.setItem('openslot-reviews', JSON.stringify(updatedReviews));
+  };
+
+  const clearAllReviews = () => {
+    setReviews([]);
+    localStorage.removeItem('openslot-reviews');
+  };
+
   return {
     reviews,
     addReview,
     getDisplayedReviews,
+    removeReview,
+    clearAllReviews,
   };
 };

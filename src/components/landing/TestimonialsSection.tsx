@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Star } from 'lucide-react';
+import { MessageCircle, Star, X } from 'lucide-react';
 import { useReviews } from '@/hooks/useReviews';
 
 export const TestimonialsSection = () => {
-  const { getDisplayedReviews } = useReviews();
+  const { getDisplayedReviews, removeReview } = useReviews();
   const displayedReviews = getDisplayedReviews();
 
   const renderStars = (rating: number) => {
@@ -68,8 +68,18 @@ export const TestimonialsSection = () => {
               {displayedReviews.map((review) => (
                 <div
                   key={review.id}
-                  className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative group"
                 >
+                  {/* Delete button - only visible in dev mode or for testing */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <button
+                      onClick={() => removeReview(review.id)}
+                      className="absolute top-2 right-2 p-1 rounded-full bg-red-100 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-200"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                  
                   <div className="flex items-center mb-3">
                     <div className="flex space-x-1 mr-3">
                       {renderStars(review.rating)}
