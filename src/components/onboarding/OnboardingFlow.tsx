@@ -262,6 +262,18 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
         <CustomerStepper
           userFullName={profile?.name || user?.email?.split('@')[0] || 'there'}
           userEmail={user?.email || ''}
+          initialData={{
+            phone: profile?.phone || '',
+            location: profile?.location || '',
+            bio: profile?.bio || '',
+            privacy_settings: profile?.privacy_settings || {
+              phone_visible: true,
+              email_visible: false,
+              location_visible: true,
+            },
+            gdpr_consent: profile?.gdpr_consent || false,
+            terms_accepted: profile?.terms_accepted || false,
+          }}
           onComplete={handleCustomerComplete}
           isLoading={loading}
         />
