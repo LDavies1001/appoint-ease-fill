@@ -41,7 +41,6 @@ import {
   Copy,
   Plus
 } from 'lucide-react';
-import { CoverImageEditor } from '@/components/business/CoverImageEditor';
 
 
 interface ProviderProfile {
@@ -137,7 +136,6 @@ const EnhancedBusinessProfile = () => {
   const [businessCategories, setBusinessCategories] = useState<BusinessCategory[]>([]);
   const [socialConnections, setSocialConnections] = useState<SocialConnection[]>([]);
   const [loading, setLoading] = useState(true);
-  const [coverEditorOpen, setCoverEditorOpen] = useState(false);
 
   // Check if current user is the profile owner
   const isOwner = profile?.user_id === providerId;
@@ -230,15 +228,6 @@ const EnhancedBusinessProfile = () => {
     }
   };
 
-  const handleCoverImageUpdate = (url: string) => {
-    // Update local state
-    if (providerDetails) {
-      setProviderDetails({
-        ...providerDetails,
-        cover_image_url: url
-      });
-    }
-  };
 
   const parseOperatingHours = (hoursStr: string) => {
     if (!hoursStr) return [];
@@ -280,6 +269,9 @@ const EnhancedBusinessProfile = () => {
     }
   };
 
+  // Derived values
+  const businessName = providerDetails?.business_name || providerProfile?.name || 'Business';
+
   const operatingHours = providerDetails ? parseOperatingHours(providerDetails.operating_hours) : [];
   const totalServiceValue = providerServices.reduce((sum, service) => sum + (service.base_price || 0), 0);
 
@@ -317,50 +309,143 @@ const EnhancedBusinessProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5 overflow-x-hidden w-full">
       
       
-      {/* Hero/Cover Section */}
+      {/* Hero Banner Section */}
       <div className="relative">
-        {/* Cover Image */}
-        <div className="h-64 md:h-80 lg:h-96 bg-gradient-to-r from-provider/20 via-provider/10 to-provider/20 overflow-hidden">
-          {providerDetails.cover_image_url ? (
-            <img 
-              src={providerDetails.cover_image_url} 
-              alt="Cover" 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-r from-provider via-provider-dark to-provider flex items-center justify-center">
-              <div className="text-center text-white">
-                <Camera className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg opacity-75">Professional Beauty Services</p>
+        {/* Hero Banner Background */}
+        <div className="relative w-full h-80 bg-gradient-to-br from-primary/90 via-primary/70 to-secondary/60 overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(255,255,255,0.1),_transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,_transparent_40%,_rgba(255,255,255,0.05)_60%)]"></div>
+          
+          {/* Content Container */}
+          <div className="relative h-full flex items-center">
+            <div className="max-w-7xl mx-auto px-6 py-8 w-full">
+              <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+                
+                {/* Business Avatar/Logo */}
+                <div className="flex-shrink-0">
+                  <div className="relative">
+                    <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full border-4 border-white/20 shadow-2xl overflow-hidden bg-white/10 backdrop-blur-sm">
+                      {providerDetails?.business_logo_url ? (
+                        <img
+                          src={providerDetails.business_logo_url}
+                          alt={`${businessName} logo`}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-white">
+                          <Building className="h-16 w-16 lg:h-20 lg:w-20 opacity-60" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Verification Badge */}
+                    {providerDetails?.is_fully_verified && (
+                      <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-3 border-white flex items-center justify-center">
+                        <CheckCircle className="h-5 w-5 text-white" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Business Information */}
+                <div className="flex-1 text-center lg:text-left text-white">
+                  <h1 className="text-3xl lg:text-5xl font-bold mb-3 drop-shadow-lg">
+                    {businessName}
+                  </h1>
+                  
+                  {providerProfile?.name && providerProfile.name !== businessName && (
+                    <p className="text-xl lg:text-2xl opacity-90 mb-4 drop-shadow">
+                      by {providerProfile.name}
+                    </p>
+                  )}
+
+                  {/* Key Stats */}
+                  <div className="flex flex-wrap gap-6 justify-center lg:justify-start mb-6">
+                    {providerDetails?.rating && (
+                      <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${
+                                i < Math.floor(providerDetails.rating)
+                                  ? 'fill-yellow-300 text-yellow-300'
+                                  : 'text-white/40'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="font-semibold">{providerDetails.rating.toFixed(1)}</span>
+                        <span className="text-sm opacity-90">
+                          ({providerDetails.total_reviews} reviews)
+                        </span>
+                      </div>
+                    )}
+                    
+                    {providerProfile?.location && (
+                      <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                        <MapPin className="h-4 w-4" />
+                        <span>{providerProfile.location}</span>
+                      </div>
+                    )}
+                    
+                    {providerDetails?.years_experience && (
+                      <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                        <Award className="h-4 w-4" />
+                        <span>{providerDetails.years_experience} years experience</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Business Description */}
+                  {(providerProfile?.bio || providerDetails?.business_description) && (
+                    <p className="text-lg opacity-95 mb-6 max-w-2xl leading-relaxed drop-shadow">
+                      {providerDetails?.business_description || providerProfile?.bio}
+                    </p>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex-shrink-0 text-center space-y-4">
+                  <Button 
+                    size="lg" 
+                    className="w-full lg:w-auto bg-white text-primary hover:bg-gray-100 font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                    onClick={() => {
+                      window.location.href = `/provider/${providerId}/book`;
+                    }}
+                  >
+                    <Calendar className="h-5 w-5 mr-2" />
+                    Book Appointment
+                  </Button>
+                  
+                  <div className="space-y-2">
+                    {(providerDetails?.business_phone || providerProfile?.phone) && (
+                      <a 
+                        href={`tel:${providerDetails?.business_phone || providerProfile?.phone}`}
+                        className="flex items-center justify-center space-x-2 text-white hover:text-yellow-200 transition-colors group"
+                      >
+                        <Phone className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                        <span className="font-medium">Call Now</span>
+                      </a>
+                    )}
+                    
+                    {providerDetails?.business_email && (
+                      <a 
+                        href={`mailto:${providerDetails.business_email}`}
+                        className="flex items-center justify-center space-x-2 text-white hover:text-yellow-200 transition-colors group"
+                      >
+                        <Mail className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                        <span className="font-medium">Send Message</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
-          )}
-          {isOwner && (
-            <div className="absolute top-4 right-4">
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                className="bg-white/90 hover:bg-white"
-                onClick={() => setCoverEditorOpen(true)}
-              >
-                <Edit2 className="h-4 w-4 mr-2" />
-                Edit Cover
-              </Button>
-            </div>
-          )}
+          </div>
         </div>
 
-        {/* Cover Image Editor Dialog */}
-        <CoverImageEditor
-          isOpen={coverEditorOpen}
-          onClose={() => setCoverEditorOpen(false)}
-          providerId={providerId || ''}
-          currentCoverUrl={providerDetails?.cover_image_url}
-          onSave={handleCoverImageUpdate}
-        />
-
-        {/* Business Header */}
-        <div className="relative bg-gradient-to-r from-card via-card/95 to-card border-b border-border/50">
           <div className="max-w-7xl mx-auto px-6 py-8">
             <div className="flex flex-col lg:flex-row items-start gap-6">
               {/* Business Logo/Avatar */}
