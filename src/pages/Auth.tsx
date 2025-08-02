@@ -481,7 +481,7 @@ const Auth = () => {
                       placeholder="Enter your full name"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="pl-10 border-rose-200 focus:border-rose-500 focus:ring-rose-500/20 rounded-lg"
+                       className="pl-10 border-rose-200 focus:border-rose-300 focus:ring-rose-200/20 rounded-lg"
                       required
                     />
                   </div>
@@ -795,7 +795,7 @@ const Auth = () => {
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 pr-10 border-sage-200 focus:border-rose-400 focus:ring-rose-400/20 bg-rose-50/50"
+                        className="pl-10 pr-10 border-rose-200 focus:border-rose-300 focus:ring-rose-200/20 bg-rose-50/50"
                         required
                       />
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-sage-600" />

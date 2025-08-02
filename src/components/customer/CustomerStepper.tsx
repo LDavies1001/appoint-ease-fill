@@ -176,12 +176,12 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                     placeholder="Enter your phone number"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="pl-10 pr-12 h-12 rounded-xl border-rose-200 focus:border-rose-500 focus:ring-rose-200"
+                    className="pl-10 pr-12 h-12 rounded-xl border-rose-200 focus:border-rose-300 focus:ring-rose-200"
                     variant="customer"
                     required
                   />
                   {formData.phone && (
-                    <CheckCircle className="absolute right-3 top-3 h-5 w-5 text-rose-600" />
+                    <CheckCircle className="absolute right-3 top-3 h-5 w-5 text-rose-800" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -191,7 +191,7 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
 
               <div className="space-y-2">
                 <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-rose-600" />
+                  <MapPin className="h-4 w-4 text-rose-800" />
                   Your Location *
                 </Label>
                 <PostcodeLookup
@@ -204,7 +204,7 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                     setFormData(prev => ({ ...prev, postcodeData: data.postcodeData }));
                   }}
                   placeholder="Enter your postcode (e.g. SW1A 1AA)"
-                  className="h-12 rounded-xl border-rose-200 focus:border-rose-500 focus:ring-rose-200"
+                  className="h-12 rounded-xl border-rose-200 focus:border-rose-300 focus:ring-rose-200"
                   variant="customer"
                   showCoverageRadius={false}
                 />
@@ -366,8 +366,8 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
         <div className="max-w-2xl mx-auto">
           {/* Progress Indicator */}
           <div className="mb-8 text-center">
-            <div className="inline-flex items-center bg-rose-50 border border-rose-200 rounded-full px-4 py-2 text-sm text-rose-700">
-              <span className="w-6 h-6 bg-rose-600 text-white rounded-full flex items-center justify-center text-xs font-semibold mr-3">{currentStep + 1}</span>
+             <div className="inline-flex items-center bg-rose-50 border border-rose-200 rounded-full px-4 py-2 text-sm text-rose-800">
+               <span className="w-6 h-6 bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 rounded-full flex items-center justify-center text-xs font-semibold mr-3">{currentStep + 1}</span>
               Step {currentStep + 1} of {steps.length}: {steps[currentStep].title}
             </div>
           </div>

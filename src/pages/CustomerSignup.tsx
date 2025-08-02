@@ -212,14 +212,14 @@ const CustomerSignup = () => {
               </p>
             </div>
 
-            <Card className="bg-white/60 backdrop-blur-sm shadow-elegant p-8 rounded-2xl border border-blush-100/50">
+            <Card className="bg-white/60 backdrop-blur-sm shadow-elegant p-8 rounded-2xl border border-rose-100/50">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-blush-50 border border-blush-200 rounded-full flex items-center justify-center mx-auto">
-                  <Mail className="h-8 w-8 text-blush-600" />
+                <div className="w-16 h-16 bg-rose-50 border border-rose-200 rounded-full flex items-center justify-center mx-auto">
+                  <Mail className="h-8 w-8 text-rose-800" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Check Your Email</h3>
                 <p className="text-sm text-muted-foreground">
-                  We've sent a verification email to <strong className="text-blush-600">{email}</strong>. 
+                  We've sent a verification email to <strong className="text-rose-800">{email}</strong>. 
                   Please click the link in the email to verify your account before logging in.
                 </p>
                 <Button
@@ -237,14 +237,14 @@ const CustomerSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blush-50 via-blush-25 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-rose-25 to-background">
       {/* Main Content */}
       <div className="py-8 px-4">
         <div className="max-w-2xl mx-auto">
           {/* Progress Indicator */}
           <div className="mb-8 text-center">
-            <div className="inline-flex items-center bg-blush-50 border border-blush-200 rounded-full px-4 py-2 text-sm text-blush-700">
-              <span className="w-6 h-6 bg-blush-600 text-white rounded-full flex items-center justify-center text-xs font-semibold mr-3">1</span>
+             <div className="inline-flex items-center bg-rose-50 border border-rose-200 rounded-full px-4 py-2 text-sm text-rose-800">
+               <span className="w-6 h-6 bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 rounded-full flex items-center justify-center text-xs font-semibold mr-3">1</span>
               Step 1 of 2: Personal Details
             </div>
           </div>
@@ -269,7 +269,7 @@ const CustomerSignup = () => {
           </div>
 
           {/* Form Container */}
-          <Card className="bg-white/60 backdrop-blur-sm shadow-elegant rounded-2xl border border-blush-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+          <Card className="bg-white/60 backdrop-blur-sm shadow-elegant rounded-2xl border border-rose-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
             <div className="p-8 lg:p-12">
               {/* Back to Home Button */}
               <div className="mb-8">
@@ -287,9 +287,9 @@ const CustomerSignup = () => {
                 
                 {/* Personal Information Section */}
                 <div className="space-y-6">
-                  <div className="pb-3 border-b border-blush-100">
-                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                      <User className="h-5 w-5 text-blush-600" />
+                   <div className="pb-3 border-b border-rose-100">
+                     <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                       <User className="h-5 w-5 text-rose-800" />
                       Personal Information
                     </h3>
                   </div>
@@ -299,19 +299,19 @@ const CustomerSignup = () => {
                     <div className="space-y-3">
                       <Label htmlFor="full-name" className="text-sm font-semibold text-foreground">Full Name</Label>
                       <div className="relative">
-                        <User className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <User className="absolute left-4 top-4 h-5 w-5 text-rose-300 z-10" />
                         <Input
                           id="full-name"
                           type="text"
                           placeholder="e.g. Sarah Johnson"
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
-                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          className="pl-12 pr-12 h-14 rounded-2xl border-rose-200 focus:border-rose-300 focus:ring-rose-200 text-base"
                           variant="customer"
                           required
                         />
                         {fullName && isFieldValid('fullName', fullName) && (
-                          <div className="absolute right-4 top-4 text-blush-600">
+                          <div className="absolute right-4 top-4 text-rose-800">
                             <Check className="h-5 w-5" />
                           </div>
                         )}
@@ -322,19 +322,19 @@ const CustomerSignup = () => {
                     <div className="space-y-3">
                       <Label htmlFor="email" className="text-sm font-semibold text-foreground">Email Address</Label>
                       <div className="relative">
-                        <Mail className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Mail className="absolute left-4 top-4 h-5 w-5 text-rose-300 z-10" />
                         <Input
                           id="email"
                           type="email"
                           placeholder="sarah@example.com"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          className="pl-12 pr-12 h-14 rounded-2xl border-rose-200 focus:border-rose-300 focus:ring-rose-200 text-base"
                           variant="customer"
                           required
                         />
                         {email && isFieldValid('email', email) && (
-                          <div className="absolute right-4 top-4 text-blush-600">
+                          <div className="absolute right-4 top-4 text-rose-800">
                             <Check className="h-5 w-5" />
                           </div>
                         )}
@@ -345,9 +345,9 @@ const CustomerSignup = () => {
 
                 {/* Contact & Location Section */}
                 <div className="space-y-6">
-                  <div className="pb-3 border-b border-blush-100">
+                  <div className="pb-3 border-b border-rose-100">
                     <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                      <Phone className="h-5 w-5 text-blush-600" />
+                      <Phone className="h-5 w-5 text-rose-800" />
                       Contact & Location
                     </h3>
                   </div>
@@ -357,18 +357,18 @@ const CustomerSignup = () => {
                     <div className="space-y-3">
                       <Label htmlFor="phone" className="text-sm font-semibold text-foreground">Phone Number (Optional)</Label>
                       <div className="relative">
-                        <Phone className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Phone className="absolute left-4 top-4 h-5 w-5 text-rose-300 z-10" />
                         <Input
                           id="phone"
                           type="tel"
                           placeholder="07123 456789"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          className="pl-12 pr-12 h-14 rounded-2xl border-rose-200 focus:border-rose-300 focus:ring-rose-200 text-base"
                           variant="customer"
                         />
                         {phone && isFieldValid('phone', phone) && (
-                          <div className="absolute right-4 top-4 text-blush-600">
+                          <div className="absolute right-4 top-4 text-rose-800">
                             <Check className="h-5 w-5" />
                           </div>
                         )}
@@ -379,7 +379,7 @@ const CustomerSignup = () => {
                     {/* Location */}
                     <div className="space-y-3">
                       <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-blush-600" />
+                        <MapPin className="h-4 w-4 text-rose-800" />
                         Your Location
                       </Label>
                       <PostcodeLookup
@@ -392,12 +392,12 @@ const CustomerSignup = () => {
                           setPostcodeData(data.postcodeData);
                         }}
                         placeholder="Enter your postcode (e.g. SW1A 1AA)"
-                        className="h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                        className="h-14 rounded-2xl border-rose-200 focus:border-rose-300 focus:ring-rose-200 text-base"
                         showCoverageRadius={false}
                         variant="customer"
                       />
                       {postcode && isFieldValid('postcode', postcode) && (
-                        <div className="absolute right-4 top-4 text-blush-600">
+                        <div className="absolute right-4 top-4 text-rose-800">
                           <Check className="h-5 w-5" />
                         </div>
                       )}
@@ -408,9 +408,9 @@ const CustomerSignup = () => {
 
                 {/* Security Section */}
                 <div className="space-y-6">
-                  <div className="pb-3 border-b border-blush-100">
+                  <div className="pb-3 border-b border-rose-100">
                     <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                      <Lock className="h-5 w-5 text-blush-600" />
+                      <Lock className="h-5 w-5 text-rose-800" />
                       Account Security
                     </h3>
                   </div>
@@ -420,26 +420,26 @@ const CustomerSignup = () => {
                     <div className="space-y-3">
                       <Label htmlFor="password" className="text-sm font-semibold text-foreground">Password</Label>
                       <div className="relative">
-                        <Lock className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Lock className="absolute left-4 top-4 h-5 w-5 text-rose-300 z-10" />
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
                           placeholder="Create a strong password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          className="pl-12 pr-12 h-14 rounded-2xl border-rose-200 focus:border-rose-300 focus:ring-rose-200 text-base"
                           variant="customer"
                           required
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-4 text-blush-400 hover:text-blush-600"
+                          className="absolute right-4 top-4 text-rose-300 hover:text-rose-800"
                         >
                           {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                         </button>
                         {password && isFieldValid('password', password) && (
-                          <div className="absolute right-12 top-4 text-blush-600">
+                          <div className="absolute right-12 top-4 text-rose-800">
                             <Check className="h-5 w-5" />
                           </div>
                         )}
@@ -451,7 +451,7 @@ const CustomerSignup = () => {
                               <div
                                 key={i}
                                 className={`h-2 flex-1 rounded ${
-                                  i < getPasswordStrength() ? 'bg-blush-600' : 'bg-muted'
+                                  i < getPasswordStrength() ? 'bg-rose-800' : 'bg-muted'
                                 }`}
                               />
                             ))}
@@ -467,19 +467,19 @@ const CustomerSignup = () => {
                     <div className="space-y-3">
                       <Label htmlFor="confirm-password" className="text-sm font-semibold text-foreground">Confirm Password</Label>
                       <div className="relative">
-                        <Lock className="absolute left-4 top-4 h-5 w-5 text-blush-400 z-10" />
+                        <Lock className="absolute left-4 top-4 h-5 w-5 text-rose-300 z-10" />
                         <Input
                           id="confirm-password"
                           type="password"
                           placeholder="Confirm your password"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="pl-12 pr-12 h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
+                          className="pl-12 pr-12 h-14 rounded-2xl border-rose-200 focus:border-rose-300 focus:ring-rose-200 text-base"
                           variant="customer"
                           required
                         />
                         {confirmPassword && isFieldValid('confirmPassword', confirmPassword) && (
-                          <div className="absolute right-4 top-4 text-blush-600">
+                          <div className="absolute right-4 top-4 text-rose-800">
                             <Check className="h-5 w-5" />
                           </div>
                         )}
@@ -493,17 +493,17 @@ const CustomerSignup = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-14 rounded-2xl bg-gradient-to-r from-blush-600 to-blush-700 hover:from-blush-700 hover:to-blush-800 text-white font-semibold text-lg shadow-elegant hover:shadow-lg transition-all duration-300"
+                    className="w-full h-14 rounded-2xl bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 font-semibold text-lg shadow-elegant hover:shadow-lg transition-all duration-300"
                   >
                     {loading ? "Creating Account..." : "Create Customer Account"}
                   </Button>
                 </div>
 
                 {/* Links */}
-                <div className="text-center space-y-3 pt-4 border-t border-blush-100">
+                <div className="text-center space-y-3 pt-4 border-t border-rose-100">
                   <p className="text-sm text-muted-foreground">
                     Already have an account?{' '}
-                    <Link to="/auth" className="text-blush-600 hover:text-blush-700 font-medium hover:underline">
+                    <Link to="/auth" className="text-rose-800 hover:text-rose-900 font-medium hover:underline">
                       Sign in here
                     </Link>
                   </p>
