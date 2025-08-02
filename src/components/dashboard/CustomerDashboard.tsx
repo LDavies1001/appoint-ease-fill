@@ -176,7 +176,7 @@ const CustomerDashboard = () => {
             business_description: providerDetails?.business_description || ''
           },
           service: {
-            name: slot.service?.name || slot.custom_service_name || 'Unknown Service',
+            name: slot.provider_service?.service_name || slot.service?.name || slot.custom_service_name || 'Unknown Service',
             category: slot.service?.category || 'Unknown'
           },
           provider_service: slot.provider_service || null
