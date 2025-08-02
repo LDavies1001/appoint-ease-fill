@@ -498,10 +498,10 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               
               <div className="flex justify-center">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-accent to-accent-glow rounded-full opacity-50 group-hover:opacity-75 transition-opacity duration-300 blur"></div>
+                  <div className="absolute -inset-1 bg-accent rounded-full opacity-50 group-hover:opacity-75 transition-opacity duration-300 blur"></div>
                   <Avatar className="relative h-36 w-36 border-4 border-white shadow-xl">
                     <AvatarImage src={formData.business_logo_url} className="object-cover" />
-                    <AvatarFallback className="text-5xl bg-gradient-to-br from-accent to-accent-glow text-white font-bold">
+                    <AvatarFallback className="text-5xl bg-accent text-white font-bold">
                       {formData.business_name.charAt(0) || 'B'}
                     </AvatarFallback>
                   </Avatar>
@@ -517,7 +517,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                       <Button
                         type="button"
                         size="sm"
-                        className="h-12 w-12 rounded-full bg-gradient-to-r from-accent to-accent-glow hover:from-accent/90 hover:to-accent-glow/90 shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="h-12 w-12 rounded-full bg-accent hover:bg-accent/90 shadow-lg hover:shadow-xl transition-all duration-300"
                       >
                         <Upload className="h-5 w-5 text-white" />
                       </Button>
@@ -611,7 +611,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         return (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-4">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-4 shadow-lg">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full mb-4 shadow-lg">
                 <Sparkles className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-3xl font-bold text-accent">What services do you provide?</h3>
@@ -777,7 +777,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         return (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-4">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-4 shadow-lg">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full mb-4 shadow-lg">
                 <CheckCircle className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-3xl font-bold text-accent">Tell us about your business</h3>
@@ -917,9 +917,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-accent-glow rounded-full mb-6 shadow-lg">
-            <Building className="h-8 w-8 text-white" />
-          </div>
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full mb-6 shadow-lg">
+          <Building className="h-8 w-8 text-white" />
+        </div>
           <h1 className="text-5xl font-bold text-accent mb-4">
             Complete Your Profile
           </h1>
