@@ -316,42 +316,84 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
 
         {/* Service groups */}
         <div className="space-y-6">
-          {groups.map((group) => (
-            <div key={group.id} className="space-y-3">
-              <h3 className="font-medium text-sm">{group.name}</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {group.services.map((service) => (
-                  <div key={service} className="flex items-center space-x-2">
+          {groups.map((group) => {
+            const groupServices = [...group.services, `${group.name} - Other`];
+            const selectedGroupServices = selectedServices.filter(service => 
+              groupServices.includes(service)
+            );
+            const isAllSelected = groupServices.length > 0 && selectedGroupServices.length === groupServices.length;
+            
+            const handleSelectAll = () => {
+              const newServices = [...new Set([...selectedServices, ...groupServices])];
+              setSelectedServices(newServices);
+            };
+            
+            const handleDeselectAll = () => {
+              const newServices = selectedServices.filter(service => 
+                !groupServices.includes(service)
+              );
+              setSelectedServices(newServices);
+            };
+
+            return (
+              <div key={group.id} className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-sm">{group.name}</h3>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleSelectAll}
+                      disabled={isAllSelected}
+                      className="text-xs h-6 px-2"
+                    >
+                      Select All
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleDeselectAll}
+                      disabled={selectedGroupServices.length === 0}
+                      className="text-xs h-6 px-2"
+                    >
+                      Deselect All
+                    </Button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {group.services.map((service) => (
+                    <div key={service} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={service}
+                        checked={selectedServices.includes(service)}
+                        onCheckedChange={() => handleServiceToggle(service)}
+                      />
+                      <label
+                        htmlFor={service}
+                        className="text-sm cursor-pointer hover:text-primary"
+                      >
+                        {service}
+                      </label>
+                    </div>
+                  ))}
+                  {/* Other option */}
+                  <div className="flex items-center space-x-2">
                     <Checkbox
-                      id={service}
-                      checked={selectedServices.includes(service)}
-                      onCheckedChange={() => handleServiceToggle(service)}
+                      id={`${group.id}-other`}
+                      checked={selectedServices.includes(`${group.name} - Other`)}
+                      onCheckedChange={() => handleServiceToggle(`${group.name} - Other`)}
                     />
                     <label
-                      htmlFor={service}
+                      htmlFor={`${group.id}-other`}
                       className="text-sm cursor-pointer hover:text-primary"
                     >
-                      {service}
+                      Other
                     </label>
                   </div>
-                ))}
-                {/* Other option */}
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`${group.id}-other`}
-                    checked={selectedServices.includes(`${group.name} - Other`)}
-                    onCheckedChange={() => handleServiceToggle(`${group.name} - Other`)}
-                  />
-                  <label
-                    htmlFor={`${group.id}-other`}
-                    className="text-sm cursor-pointer hover:text-primary"
-                  >
-                    Other
-                  </label>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Action buttons */}
