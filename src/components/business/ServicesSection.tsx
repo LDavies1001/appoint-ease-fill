@@ -218,35 +218,89 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </div>
         </div>
 
-        {/* Business Categories Section */}
+        {/* Business Services Section */}
         <div className="space-y-6">
           <div>
-            <Label className="text-base font-medium mb-3 block">Business Categories</Label>
+            <Label className="text-base font-medium mb-3 block">Your Services</Label>
             {isEditing ? (
-               <CategorySelector
-                categories={allCategories.map(cat => ({
-                  id: cat.id,
-                  name: cat.name,
-                  description: cat.description,
-                  category_type: cat.category_type
-                }))}
-                selectedCategories={Array.isArray(editData.business_categories) ? 
-                  editData.business_categories.map(cat => typeof cat === 'string' ? cat : cat.id) : []}
-                onSelectionChange={handleCategoryChange}
-                maxSelections={5}
-              />
-            ) : (
-              <div>
-                {data.business_categories && data.business_categories.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {data.business_categories.map((category, index) => (
-                      <Badge key={index} variant="secondary" className="px-3 py-1">
-                        {category.name}
-                      </Badge>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Edit your service offerings. These are the specific services customers can book.
+                </p>
+                {services.length > 0 ? (
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {services.map((service) => (
+                      <div
+                        key={service.id}
+                        className="flex items-center justify-between p-4 border border-border rounded-lg bg-background"
+                      >
+                        <div className="flex-1">
+                          <h4 className="font-medium text-foreground">{service.service_name}</h4>
+                          {service.description && (
+                            <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
+                          )}
+                          <div className="flex items-center gap-4 mt-2 text-sm">
+                            {service.base_price && (
+                              <Badge variant="secondary">£{service.base_price}</Badge>
+                            )}
+                            {service.duration_minutes && (
+                              <Badge variant="outline">{service.duration_minutes} mins</Badge>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditService(service)}
+                            className="text-provider hover:text-provider"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleServiceDeleted(service.id)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground">No services selected</p>
+                  <div className="text-center py-8 border border-dashed border-border rounded-lg">
+                    <p className="text-muted-foreground">No services found</p>
+                    <p className="text-sm text-muted-foreground mt-1">Add services to start taking bookings</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                {services && services.length > 0 ? (
+                  <div className="grid gap-3">
+                    {services.map((service) => (
+                      <div key={service.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                        <div>
+                          <h4 className="font-medium text-foreground">{service.service_name}</h4>
+                          {service.description && (
+                            <p className="text-sm text-muted-foreground">{service.description}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {service.base_price && (
+                            <Badge variant="secondary">£{service.base_price}</Badge>
+                          )}
+                          {service.duration_minutes && (
+                            <Badge variant="outline">{service.duration_minutes} mins</Badge>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground">No services available</p>
                 )}
               </div>
             )}
