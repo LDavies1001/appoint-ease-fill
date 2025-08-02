@@ -194,10 +194,6 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({
                 <p className="text-sm text-muted-foreground">Experience</p>
                 <p className="font-medium">{data.years_experience || 0} years</p>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Service Area</p>
-                <p className="font-medium">{data.service_area || 'Not specified'}</p>
-              </div>
             </div>
           </div>
         )}
