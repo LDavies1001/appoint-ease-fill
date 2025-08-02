@@ -86,7 +86,9 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
   // Debounced search for autocomplete
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (searchQuery && searchQuery.length >= 2 && !isAddressSelected) {
+      // Only search if we're in search step and haven't selected an address
+      if (searchQuery && searchQuery.length >= 2 && !isAddressSelected && step === 'search') {
+        console.log('Triggering autocomplete search for:', searchQuery); // Debug log
         searchPostcodes(searchQuery);
       } else {
         setSuggestions([]);
@@ -95,7 +97,7 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, isAddressSelected]);
+  }, [searchQuery, isAddressSelected, step]);
 
   // Click outside handler
   useEffect(() => {
