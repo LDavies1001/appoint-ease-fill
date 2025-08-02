@@ -236,12 +236,12 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                     placeholder="Enter your phone number"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="pl-10 pr-12 h-12 rounded-xl border-blush-200 focus:border-blush-500 focus:ring-blush-200"
+                    className="pl-10 pr-12 h-12 rounded-xl border-rose-200 focus:border-rose-500 focus:ring-rose-200"
                     variant="customer"
                     required
                   />
                   {formData.phone && (
-                    <CheckCircle className="absolute right-3 top-3 h-5 w-5 text-blush-600" />
+                    <CheckCircle className="absolute right-3 top-3 h-5 w-5 text-rose-600" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -258,7 +258,7 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                     placeholder="Enter your city, area, or postcode"
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
-                    className="pl-10 pr-12 h-12 rounded-xl border-blush-200 focus:border-blush-500 focus:ring-blush-200"
+                    className="pl-10 pr-12 h-12 rounded-xl border-rose-200 focus:border-rose-500 focus:ring-rose-200"
                     variant="customer"
                     required
                   />
@@ -273,7 +273,7 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                     <Locate className="h-4 w-4" />
                   </Button>
                   {formData.location && (
-                    <CheckCircle className="absolute right-10 top-3 h-5 w-5 text-blush-600" />
+                    <CheckCircle className="absolute right-10 top-3 h-5 w-5 text-rose-600" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -428,14 +428,14 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blush-50 via-blush-25 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-rose-25 to-background">
       {/* Main Content */}
       <div className="py-8 px-4">
         <div className="max-w-2xl mx-auto">
           {/* Progress Indicator */}
           <div className="mb-8 text-center">
-            <div className="inline-flex items-center bg-blush-50 border border-blush-200 rounded-full px-4 py-2 text-sm text-blush-700">
-              <span className="w-6 h-6 bg-blush-600 text-white rounded-full flex items-center justify-center text-xs font-semibold mr-3">{currentStep + 1}</span>
+            <div className="inline-flex items-center bg-rose-50 border border-rose-200 rounded-full px-4 py-2 text-sm text-rose-700">
+              <span className="w-6 h-6 bg-rose-600 text-white rounded-full flex items-center justify-center text-xs font-semibold mr-3">{currentStep + 1}</span>
               Step {currentStep + 1} of {steps.length}: {steps[currentStep].title}
             </div>
           </div>
@@ -451,13 +451,13 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
           </div>
 
           {/* Form Container */}
-          <Card className="bg-white/60 backdrop-blur-sm shadow-elegant rounded-2xl border border-blush-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+          <Card className="bg-white/60 backdrop-blur-sm shadow-elegant rounded-2xl border border-rose-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
             <div className="p-8 lg:p-12">
               {/* Step Content */}
               {renderStepContent()}
               
               {/* Navigation Buttons */}
-              <div className="flex justify-between mt-8 pt-6 border-t border-blush-100">
+              <div className="flex justify-between mt-8 pt-6 border-t border-rose-100">
                 <Button
                   type="button"
                   variant="ghost"
@@ -473,7 +473,7 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                   type="button"
                   onClick={handleNext}
                   disabled={isLoading}
-                  className="flex items-center gap-2 bg-gradient-to-r from-blush-600 to-blush-700 hover:from-blush-700 hover:to-blush-800 text-white px-8 py-3 text-lg rounded-xl font-semibold shadow-elegant hover:shadow-lg transition-all duration-300"
+                  className="flex items-center gap-2 bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 px-8 py-3 text-lg rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   {isLoading ? (
                     <>

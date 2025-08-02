@@ -16,7 +16,7 @@ const Input = React.forwardRef<
           variant === "provider" 
             ? "focus-visible:ring-accent"
             : variant === "customer"
-            ? "focus-visible:ring-blush-500"
+            ? "focus-visible:ring-rose-500"
             : "focus-visible:ring-accent",
           className
         )}
