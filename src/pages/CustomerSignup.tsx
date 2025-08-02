@@ -1,3 +1,4 @@
+// Conversion-focused Customer Signup page
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
@@ -6,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart, ArrowLeft } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart, ArrowLeft, Star, Clock, Zap, MapPin, PoundSterling, Shield } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 
 import { sanitizeInput, validateEmail, validatePhone, validatePassword, rateLimitCheck } from '@/utils/validation';
@@ -143,39 +144,48 @@ const CustomerSignup = () => {
   // Show success message after signup
   if (showSuccessMessage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
-        <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-          <div className="w-full max-w-md animate-fade-in">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 animate-fade-in">
+        <div className="flex items-center justify-center p-4 min-h-screen">
+          <div className="w-full max-w-md">
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                  <CheckCircle className="h-6 w-6 text-white" />
-                </div>
-                <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+              <div className="flex items-center justify-center space-x-3 mb-6">
+                <img 
+                  src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+                  alt="OpenSlot Logo" 
+                  className="w-8 h-8 md:w-10 md:h-10 object-contain"
+                />
+                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">
-                Welcome to OpenSlot!
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                Welcome to the Future!
               </h1>
-              <p className="text-muted-foreground">
-                Your customer account has been created successfully
+              <p className="text-muted-foreground font-medium">
+                Check your email to verify your account and start booking amazing deals
               </p>
             </div>
 
-            <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/10">
-              <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mx-auto">
-                  <Mail className="h-8 w-8 text-primary" />
+            <Card className="border border-primary/20 bg-gradient-to-br from-background/95 to-muted/10 backdrop-blur-sm shadow-xl rounded-xl md:rounded-2xl p-8 animate-scale-in">
+              <div className="text-center space-y-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mx-auto">
+                  <Mail className="h-8 w-8 text-green-700" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground">Check Your Email</h3>
-                <p className="text-sm text-muted-foreground">
-                  We've sent a verification email to <strong className="text-primary">{email}</strong>. 
-                  Please click the link in the email to verify your account before logging in.
-                </p>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-bold text-foreground">Verification Email Sent</h3>
+                  <p className="text-sm text-muted-foreground">
+                    We've sent a verification link to <strong className="text-foreground">{email}</strong>. 
+                    Click the link to activate your account and start booking.
+                  </p>
+                </div>
+                
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-blue-800">
+                    <strong>💡 Pro tip:</strong> Check your spam folder if you don't see the email within 2 minutes.
+                  </p>
+                </div>
+
                 <Button
                   onClick={() => navigate('/auth')}
-                  variant="hero"
-                  size="lg"
-                  className="w-full mt-6"
+                  className="w-full bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold py-3 rounded-lg"
                 >
                   Go to Login
                 </Button>
@@ -188,179 +198,193 @@ const CustomerSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 overflow-x-hidden w-full">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-background to-rose-50/30 animate-fade-in">
+      <div className="absolute top-4 left-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-primary/10"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Home
+        </Button>
+      </div>
       
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
-        <div className="w-full max-w-md animate-fade-in">
+        <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-foreground">Open-Slot</span>
+            <div className="flex items-center justify-center space-x-3 mb-6">
+              <img 
+                src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+                alt="OpenSlot Logo" 
+                className="w-7 h-7 md:w-8 md:h-8 object-contain"
+              />
+              <span className="text-2xl font-bold text-foreground">OpenSlot</span>
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              Join as a Customer
+            
+            {/* Benefits banner */}
+            <div className="bg-gradient-to-r from-rose-100 to-pink-100 border border-rose-200 rounded-lg p-3 mb-6">
+              <p className="text-sm text-rose-800 font-medium">
+                🎉 <strong>Limited time:</strong> Get 25% off your first 3 bookings
+              </p>
+            </div>
+
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+              Find Your Next Appointment
             </h1>
-            <p className="text-muted-foreground">
-              Discover and book last-minute beauty appointments with trusted local providers.
+            <p className="text-muted-foreground font-medium mb-4">
+              Join thousands discovering last-minute slots near them
             </p>
+
+            {/* Quick stats */}
+            <div className="grid grid-cols-3 gap-4 mb-6 text-center">
+              <div className="space-y-1">
+                <div className="text-lg font-bold text-rose-600">1000+</div>
+                <div className="text-xs text-muted-foreground">Providers</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-lg font-bold text-rose-600">30s</div>
+                <div className="text-xs text-muted-foreground">Avg. booking</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-lg font-bold text-rose-600">40%</div>
+                <div className="text-xs text-muted-foreground">Avg. savings</div>
+              </div>
+            </div>
           </div>
 
-          <Card className="border-0 shadow-elegant bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/10">
-            <div className="mb-6">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/')}
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground -ml-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back to Home
-              </Button>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <Card className="border border-rose-100/50 bg-white/80 backdrop-blur-sm shadow-xl rounded-xl md:rounded-2xl p-8 animate-scale-in">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="full-name">Full Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="full-name"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                    required
-                  />
-                </div>
+                <Label htmlFor="fullName" className="text-sm font-semibold text-foreground">Full Name</Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="h-11 rounded-lg border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+                  required
+                />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                    required
-                  />
-                </div>
+                <Label htmlFor="email" className="text-sm font-semibold text-foreground">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-11 rounded-lg border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+                  required
+                />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number (Optional)</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="07123456789"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                  />
-                </div>
+                <Label htmlFor="phone" className="text-sm font-semibold text-foreground">Phone Number (Optional)</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="07123456789"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="h-11 rounded-lg border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+                />
                 <p className="text-xs text-muted-foreground">We'll use this to send booking confirmations</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location (Optional)</Label>
+                <Label htmlFor="location" className="text-sm font-semibold text-foreground">Location (Optional)</Label>
                 <LocationInput
                   placeholder="Enter your postcode"
                   value={location}
                   onChange={setLocation}
-                  className="h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
+                  className="h-11 rounded-lg border-rose-200 focus:border-rose-400 focus:ring-rose-400"
                 />
                 <p className="text-xs text-muted-foreground">Help us find services near you</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-sm font-semibold text-foreground">Password</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Create a password"
+                    placeholder="Create a strong password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
+                    className="h-11 rounded-lg border-rose-200 focus:border-rose-400 focus:ring-rose-400 pr-10"
                     required
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-11 w-11 text-muted-foreground hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
+                  </Button>
                 </div>
                 {password && (
-                  <div className="space-y-1">
-                    <div className="flex space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`h-1 flex-1 rounded ${
-                            i < getPasswordStrength() ? 'bg-primary' : 'bg-muted'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Password strength: {['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][getPasswordStrength() - 1] || 'Very Weak'}
-                    </p>
+                  <div className="flex gap-1 mt-2">
+                    {[...Array(5)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={`h-1 w-full rounded ${
+                          i < getPasswordStrength() ? 'bg-green-500' : 'bg-gray-200'
+                        }`}
+                      />
+                    ))}
                   </div>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="confirm-password"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary focus:ring-primary/20"
-                    required
-                  />
-                </div>
+                <Label htmlFor="confirmPassword" className="text-sm font-semibold text-foreground">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="h-11 rounded-lg border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+                  required
+                />
               </div>
 
               <Button
                 type="submit"
                 disabled={loading}
-                variant="hero"
-                size="lg"
-                className="w-full mt-6"
+                className="w-full bg-gradient-to-br from-rose-400 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-bold py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg"
               >
-                {loading ? "Creating Account..." : "Create Customer Account"}
+                {loading ? 'Creating Your Account...' : 'Start Finding Appointments'}
               </Button>
 
-              <div className="text-center space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Already have an account?{' '}
-                  <Link to="/auth" className="text-primary hover:underline">
-                    Sign in here
-                  </Link>
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Want to join as a business?{' '}
-                  <Link to="/signup/business" className="text-accent hover:underline">
-                    Create business account
-                  </Link>
-                </p>
-              </div>
+              <p className="text-xs text-center text-muted-foreground">
+                By signing up, you agree to our{' '}
+                <Link to="/terms" className="text-rose-600 hover:underline">Terms</Link> and{' '}
+                <Link to="/privacy" className="text-rose-600 hover:underline">Privacy Policy</Link>
+              </p>
             </form>
           </Card>
+
+          <div className="text-center mt-6">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link to="/auth" className="text-rose-600 hover:text-rose-700 font-medium underline underline-offset-4">
+                Sign in here
+              </Link>
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Want to join as a business?{' '}
+              <Link to="/signup/business" className="text-rose-600 hover:underline">
+                Business signup
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
