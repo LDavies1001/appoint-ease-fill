@@ -152,11 +152,11 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
             <LogoWithBgRemoval 
-              src="/lovable-uploads/3fe42c9c-7458-4205-a88e-61bea2713e02.png" 
+              src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
               alt="OpenSlot Logo" 
-              className="w-9 h-9 sm:w-10 sm:h-10"
+              className="w-12 h-12 sm:w-14 sm:h-14"
             />
-            <span className="text-lg sm:text-xl font-bold text-foreground">OpenSlot</span>
+            <span className="text-xl sm:text-2xl font-bold text-foreground">OpenSlot</span>
           </Link>
           
           {/* Desktop Navigation */}
