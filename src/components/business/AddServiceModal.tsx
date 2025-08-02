@@ -14,7 +14,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Save, X, Plus } from 'lucide-react';
+import { Save, X, Plus, Upload, Image as ImageIcon } from 'lucide-react';
 
 interface Service {
   id?: string;
@@ -54,6 +54,8 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
   const [globalServices, setGlobalServices] = useState<string[]>([]);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customServiceName, setCustomServiceName] = useState('');
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
 
   // Debug modal opening
@@ -219,6 +221,72 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
     }
   };
 
+  const handleImageUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    
+    setUploading(true);
+    try {
+      const file = files[0];
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload an image file",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please upload an image smaller than 5MB",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Create unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}/${Date.now()}.${fileExt}`;
+      
+      // Upload to Supabase storage
+      const { error: uploadError } = await supabase.storage
+        .from('business-photos')
+        .upload(fileName, file);
+      
+      if (uploadError) throw uploadError;
+      
+      // Get public URL
+      const { data } = supabase.storage
+        .from('business-photos')
+        .getPublicUrl(fileName);
+      
+      if (data.publicUrl) {
+        setUploadedImages(prev => [...prev, data.publicUrl]);
+        toast({
+          title: "Image uploaded",
+          description: "Your service image has been uploaded successfully"
+        });
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: "Upload failed",
+        description: "Could not upload the image. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = (imageUrl: string) => {
+    setUploadedImages(prev => prev.filter(url => url !== imageUrl));
+  };
+
   const handleSave = async () => {
     if (!formData.service_name.trim()) {
       toast({
@@ -264,7 +332,8 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             base_price: formData.base_price,
             duration_minutes: parsedDurationMinutes,
             duration_text: formData.duration_text,
-            is_active: formData.is_active
+            is_active: formData.is_active,
+            image_url: uploadedImages.length > 0 ? uploadedImages[0] : null // Update image if new one uploaded
           })
           .eq('id', editingService.id)
           .select()
@@ -283,7 +352,8 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             base_price: formData.base_price,
             duration_minutes: parsedDurationMinutes,
             duration_text: formData.duration_text,
-            is_active: formData.is_active
+            is_active: formData.is_active,
+            image_url: uploadedImages.length > 0 ? uploadedImages[0] : null // Use first uploaded image
           })
           .select()
           .single();
@@ -402,6 +472,65 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
               className="mt-1"
               rows={3}
             />
+          </div>
+
+          {/* Service Images Upload */}
+          <div>
+            <Label>Service Images</Label>
+            <div className="mt-1 space-y-3">
+              {/* Upload Area */}
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e.target.files)}
+                  className="hidden"
+                  id="image-upload"
+                  disabled={uploading}
+                />
+                <label
+                  htmlFor="image-upload"
+                  className="cursor-pointer flex flex-col items-center gap-2"
+                >
+                  {uploading ? (
+                    <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
+                  ) : (
+                    <Upload className="h-8 w-8 text-gray-400" />
+                  )}
+                  <div className="text-sm text-gray-600">
+                    {uploading ? 'Uploading...' : 'Click to upload service image'}
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    PNG, JPG up to 5MB
+                  </div>
+                </label>
+              </div>
+
+              {/* Uploaded Images Preview */}
+              {uploadedImages.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {uploadedImages.map((imageUrl, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={imageUrl}
+                        alt={`Service image ${index + 1}`}
+                        className="w-full h-24 object-cover rounded-lg border"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(imageUrl)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Upload images that showcase your service (optional)
+            </p>
           </div>
 
           <div className="grid grid-cols-1 gap-4">
