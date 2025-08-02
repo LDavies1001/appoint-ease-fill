@@ -886,16 +886,25 @@ const ProviderDashboard = () => {
                 <div className="space-y-4">
                   <Label className="text-sm font-medium">Slot Image (optional)</Label>
                   {slotForm.provider_service_id && providerServices.find(s => s.id === slotForm.provider_service_id)?.image_url ? (
-                    <div className="p-3 bg-success/10 border border-success/20 rounded-lg">
-                      <p className="text-sm text-success-foreground font-medium mb-1">
-                        ✅ Currently using image from your service: {providerServices.find(s => s.id === slotForm.provider_service_id)?.service_name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        You can keep this image or upload a different one below
-                      </p>
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="text-blue-600 text-sm">✓</span>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-blue-900 mb-1">
+                            Image available from "{providerServices.find(s => s.id === slotForm.provider_service_id)?.service_name}"
+                          </p>
+                          <p className="text-xs text-blue-700">
+                            <strong>Option 1:</strong> Keep using this image automatically, OR <strong>Option 2:</strong> Upload a different image below
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-muted-foreground">Add an attractive image to showcase your service</p>
+                    <p className="text-sm text-muted-foreground">Upload an image to showcase your service</p>
                   )}
                   
                   <div className="flex items-center gap-4">
