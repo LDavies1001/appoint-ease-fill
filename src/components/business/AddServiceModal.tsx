@@ -83,6 +83,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
           .single();
         
         const onboardingServices = providerDetails?.services_offered || [];
+        console.log('Raw services_offered from database:', onboardingServices);
         
         // Combine existing services with onboarding services (and remove duplicates)
         const allServices = [...new Set([...existingServices, ...onboardingServices])];
