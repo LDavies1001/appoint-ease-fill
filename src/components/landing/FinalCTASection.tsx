@@ -15,9 +15,9 @@ export const FinalCTASection = () => {
           <span className="text-sage-600"> Booking Experience?</span>
         </h2>
         
-        <p className="text-xl text-sage-700 mb-8 max-w-2xl mx-auto leading-relaxed">
-          Join thousands of customers and businesses already using OpenSlot to make booking appointments effortless.
-        </p>
+          <p className="text-xl text-sage-700 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Be among the first to experience the future of appointment booking. Join our growing community and transform how you manage your schedule.
+          </p>
 
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
           <Link to="/signup/customer" className="group">
