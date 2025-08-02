@@ -181,14 +181,20 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
   };
 
   const handleSuggestionClick = async (suggestion: string) => {
+    console.log('Suggestion clicked:', suggestion); // Debug log
     setSearchQuery(suggestion);
-    await validateAndGetPostcodeDetails(suggestion);
+    setShowSuggestions(false);
+    const success = await validateAndGetPostcodeDetails(suggestion);
+    console.log('Validation result:', success); // Debug log
   };
 
   const handleSearchSubmit = async (e: React.FormEvent) => {
+    console.log('Search button clicked, searchQuery:', searchQuery); // Debug log
     e.preventDefault();
     if (searchQuery.trim()) {
-      await validateAndGetPostcodeDetails(searchQuery.trim());
+      console.log('Calling validateAndGetPostcodeDetails with:', searchQuery.trim()); // Debug log
+      const success = await validateAndGetPostcodeDetails(searchQuery.trim());
+      console.log('Search validation result:', success); // Debug log
     }
   };
 
