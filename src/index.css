@@ -133,7 +133,7 @@ All colors MUST be HSL.
 
     --border: 210 15% 88%; /* Clearer borders */
     --input: 0 0% 100%; /* White input backgrounds */
-    --ring: 0 25% 90%; /* Muted primary color for focus rings */
+    --ring: 120 20% 75%; /* Provider sage green for focus rings */
 
     /* Gradients for beautiful effects */
     --gradient-primary: linear-gradient(135deg, hsl(0 25% 90%), hsl(0 20% 95%));
