@@ -572,7 +572,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
                       }));
                     }}
                   >
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-white border-sage-400">
                       <SelectValue placeholder="Hours" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border shadow-lg z-[100]">
@@ -601,7 +601,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
                       }));
                     }}
                   >
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-white border-sage-400">
                       <SelectValue placeholder="Minutes" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border shadow-lg z-[100]">
