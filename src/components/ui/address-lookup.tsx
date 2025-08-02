@@ -75,6 +75,12 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
         validateAndGetPostcodeDetails(value.postcode);
       }
     }
+    
+    // Always ensure we start in search step if no complete address
+    if (!value.address_line_1 || !value.town_city) {
+      setStep('search');
+      setIsAddressSelected(false);
+    }
   }, [value]);
 
   // Debounced search for autocomplete
@@ -111,16 +117,22 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
   const searchPostcodes = async (query: string) => {
     if (query.length < 2) return;
     
+    console.log('Searching for postcodes:', query); // Debug log
     setIsLoading(true);
     try {
       const response = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(query)}/autocomplete`);
       
+      console.log('API response status:', response.status); // Debug log
       if (response.ok) {
         const data = await response.json();
+        console.log('API response data:', data); // Debug log
         if (data.result && Array.isArray(data.result)) {
           setSuggestions(data.result.slice(0, 5));
           setShowSuggestions(true);
+          console.log('Suggestions set:', data.result.slice(0, 5)); // Debug log
         }
+      } else {
+        console.error('API request failed:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error fetching postcode suggestions:', error);
