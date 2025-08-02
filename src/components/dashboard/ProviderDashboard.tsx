@@ -788,7 +788,6 @@ const ProviderDashboard = () => {
                     <Label className="text-sm font-medium">Start Time *</Label>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Hour</Label>
                         <Select
                           value={slotForm.start_time.split(':')[0] || ''}
                           onValueChange={(hour) => {
