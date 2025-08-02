@@ -122,32 +122,8 @@ const CreateBusinessProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-provider/5 overflow-x-hidden w-full">
-      {/* Provider Hero Banner */}
-      <div className="bg-provider text-white w-full overflow-hidden">
-        <div className="px-4 py-8 text-center">
-          <div className="space-y-4">
-            <div className="bg-white/20 rounded-full px-3 py-1 text-xs font-medium inline-block">
-              Provider Setup
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold leading-tight break-words">
-              {hasExistingProfile ? 'Edit Your Business Profile' : 'Create Your Business Profile'}
-            </h1>
-            <p className="text-sm sm:text-base text-white/90 leading-relaxed break-words">
-              {hasExistingProfile 
-                ? 'Update your business information and reach more customers'
-                : 'Set up your business profile and start filling empty slots with new customers'
-              }
-            </p>
-            <div className="text-xs text-white/80">
-              <div className="w-2 h-2 rounded-full bg-white/60 inline-block mr-2"></div>
-              <span>Fill empty slots • Grow your business</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Profile Form */}
-      <div className="px-4 -mt-4 relative z-10">
+      <div className="px-4 py-8 relative z-10">
         <BusinessProfileForm 
           mode={hasExistingProfile ? 'edit' : 'create'}
           existingData={existingProfile}
