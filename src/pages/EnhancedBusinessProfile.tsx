@@ -41,6 +41,7 @@ import {
   Copy,
   Plus
 } from 'lucide-react';
+import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
 
 
 interface ProviderProfile {
@@ -136,6 +137,7 @@ const EnhancedBusinessProfile = () => {
   const [businessCategories, setBusinessCategories] = useState<BusinessCategory[]>([]);
   const [socialConnections, setSocialConnections] = useState<SocialConnection[]>([]);
   const [loading, setLoading] = useState(true);
+  const [coverUploadOpen, setCoverUploadOpen] = useState(false);
 
   // Check if current user is the profile owner
   const isOwner = profile?.user_id === providerId;
@@ -225,6 +227,15 @@ const EnhancedBusinessProfile = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCoverImageUpdate = (url: string | null) => {
+    if (providerDetails) {
+      setProviderDetails({
+        ...providerDetails,
+        cover_image_url: url
+      });
     }
   };
 
@@ -325,10 +336,12 @@ const EnhancedBusinessProfile = () => {
           )}
           {isOwner && (
             <div className="absolute top-4 right-4">
-              <Button variant="secondary" size="sm" className="bg-white/90 hover:bg-white">
-                <Edit2 className="h-4 w-4 mr-2" />
-                Edit Cover
-              </Button>
+              <CoverPhotoManager
+                coverImageUrl={providerDetails?.cover_image_url}
+                providerId={providerId || ''}
+                onCoverImageUpdate={handleCoverImageUpdate}
+                isOwner={isOwner}
+              />
             </div>
           )}
         </div>
