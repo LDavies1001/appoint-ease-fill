@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Eye, Trash2, Edit, Star, Pin, Heart, Check, X, FolderOpen, Move } from 'lucide-react';
+import { Eye, Trash2, Edit, Star, Pin, Heart, Check, X, FolderOpen, Move, CheckSquare, Square } from 'lucide-react';
 import { UploadedImage } from '@/hooks/useImageLibrary';
 import { getImageContainerClasses, getImageClasses } from '@/lib/image-utils';
 
@@ -20,6 +20,10 @@ interface ImageCardProps {
   showActions?: boolean;
   viewMode?: 'grid' | 'list';
   isDragging?: boolean;
+  // Selection props
+  selectionMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (imageId: string) => void;
 }
 
 const ImageCard: React.FC<ImageCardProps> = ({ 
@@ -32,7 +36,10 @@ const ImageCard: React.FC<ImageCardProps> = ({
   showBucket = true,
   showActions = true,
   viewMode = 'grid',
-  isDragging = false
+  isDragging = false,
+  selectionMode = false,
+  isSelected = false,
+  onToggleSelect
 }) => {
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
@@ -107,8 +114,8 @@ const ImageCard: React.FC<ImageCardProps> = ({
                     alt={image.name}
                     className={`${getImageClasses('cover', true)} cursor-pointer transition-opacity duration-300 ${
                       imageLoading ? 'opacity-0' : 'opacity-100'
-                    }`}
-                    onClick={() => window.open(image.url, '_blank')}
+                    } ${selectionMode && isSelected ? 'ring-2 ring-provider' : ''}`}
+                    onClick={() => selectionMode && onToggleSelect ? onToggleSelect(image.id || image.name) : window.open(image.url, '_blank')}
                     onLoad={handleImageLoad}
                     onError={handleImageError}
                   />
@@ -116,6 +123,24 @@ const ImageCard: React.FC<ImageCardProps> = ({
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
                   <Eye className="h-6 w-6 opacity-50 text-muted-foreground" />
+                </div>
+              )}
+              
+              {/* Selection checkbox overlay */}
+              {selectionMode && (
+                <div className="absolute top-1 right-1">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => onToggleSelect?.(image.id || image.name)}
+                    className={`w-6 h-6 p-0 shadow-md ${
+                      isSelected 
+                        ? 'bg-provider text-white hover:bg-provider-dark' 
+                        : 'bg-white/90 hover:bg-white text-gray-800'
+                    }`}
+                  >
+                    {isSelected ? <CheckSquare className="h-3 w-3" /> : <Square className="h-3 w-3" />}
+                  </Button>
                 </div>
               )}
               
@@ -318,8 +343,8 @@ const ImageCard: React.FC<ImageCardProps> = ({
                 alt={image.name}
                 className={`${getImageClasses('cover', true)} cursor-pointer transition-opacity duration-300 ${
                   imageLoading ? 'opacity-0' : 'opacity-100'
-                }`}
-                onClick={() => window.open(image.url, '_blank')}
+                } ${selectionMode && isSelected ? 'ring-2 ring-provider' : ''}`}
+                onClick={() => selectionMode && onToggleSelect ? onToggleSelect(image.id || image.name) : window.open(image.url, '_blank')}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
               />
@@ -330,6 +355,24 @@ const ImageCard: React.FC<ImageCardProps> = ({
                 <Eye className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">Failed to load</p>
               </div>
+            </div>
+          )}
+
+          {/* Selection checkbox overlay - Top right */}
+          {selectionMode && (
+            <div className="absolute top-2 right-2 z-10">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => onToggleSelect?.(image.id || image.name)}
+                className={`w-8 h-8 p-0 shadow-md ${
+                  isSelected 
+                    ? 'bg-provider text-white hover:bg-provider-dark' 
+                    : 'bg-white/90 hover:bg-white text-gray-800'
+                }`}
+              >
+                {isSelected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
+              </Button>
             </div>
           )}
 

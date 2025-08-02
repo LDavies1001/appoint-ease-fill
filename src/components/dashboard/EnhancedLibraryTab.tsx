@@ -26,7 +26,10 @@ import {
   FolderOpen,
   Building,
   Folder,
-  FolderPlus
+  FolderPlus,
+  CheckSquare,
+  Square,
+  MousePointer
 } from 'lucide-react';
 import ImageDropzone from './ImageDropzone';
 import ImageCard from './ImageCard';
@@ -61,6 +64,10 @@ const EnhancedLibraryTab = () => {
   const [newFolderName, setNewFolderName] = useState('');
   const [showFolderDropZones, setShowFolderDropZones] = useState(false);
   const [draggingImageId, setDraggingImageId] = useState<string | null>(null);
+  
+  // Selection state
+  const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
+  const [selectionMode, setSelectionMode] = useState(false);
   
   // Constants
   const categories = ['all', 'portraits', 'nails', 'hair', 'makeup', 'lashes', 'brows', 'other'];
@@ -367,6 +374,65 @@ const EnhancedLibraryTab = () => {
 
   const stats = getImageStats();
 
+  // Selection functions
+  const handleSelectAll = () => {
+    const allIds = new Set(filteredItems.map(item => item.id));
+    setSelectedImages(allIds);
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedImages(new Set());
+  };
+
+  const handleToggleSelection = (imageId: string) => {
+    const newSelected = new Set(selectedImages);
+    if (newSelected.has(imageId)) {
+      newSelected.delete(imageId);
+    } else {
+      newSelected.add(imageId);
+    }
+    setSelectedImages(newSelected);
+  };
+
+  const toggleSelectionMode = () => {
+    setSelectionMode(!selectionMode);
+    if (selectionMode) {
+      setSelectedImages(new Set());
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedImages.size === 0) return;
+    
+    const selectedItems = filteredItems.filter(item => selectedImages.has(item.id));
+    
+    try {
+      for (const item of selectedItems) {
+        const fullPath = (item as any).fullPath || item.name;
+        const filePath = `${user?.id}/${fullPath}`;
+        
+        await supabase.storage
+          .from(item.bucket)
+          .remove([filePath]);
+      }
+
+      toast({
+        title: "Images deleted successfully",
+        description: `Deleted ${selectedImages.size} images`,
+      });
+      
+      setSelectedImages(new Set());
+      setSelectionMode(false);
+      fetchMediaItems();
+    } catch (error: any) {
+      toast({
+        title: "Error deleting images",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
   // Handle global drag events
   React.useEffect(() => {
     const handleDragStart = () => setShowFolderDropZones(true);
@@ -631,6 +697,67 @@ const EnhancedLibraryTab = () => {
 
       {/* Image Gallery */}
       <Card className="card-elegant">
+        {/* Selection Controls - Show when there are images */}
+        {filteredItems.length > 0 && (
+          <div className="px-6 pt-6 pb-4 border-b border-border">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant={selectionMode ? "provider" : "outline"}
+                  size="sm"
+                  onClick={toggleSelectionMode}
+                  className="border-provider/20 hover:border-provider text-provider"
+                >
+                  <MousePointer className="h-4 w-4 mr-2" />
+                  {selectionMode ? "Exit Selection" : "Select Images"}
+                </Button>
+                
+                {selectionMode && (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSelectAll}
+                      disabled={selectedImages.size === filteredItems.length}
+                    >
+                      <CheckSquare className="h-4 w-4 mr-1" />
+                      Select All ({filteredItems.length})
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleDeselectAll}
+                      disabled={selectedImages.size === 0}
+                    >
+                      <Square className="h-4 w-4 mr-1" />
+                      Deselect All
+                    </Button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Selection Actions */}
+              {selectionMode && selectedImages.size > 0 && (
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="text-provider">
+                    {selectedImages.size} selected
+                  </Badge>
+                  
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleBulkDelete}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Delete ({selectedImages.size})
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
         <CardContent className="p-6">
           {filteredItems.length === 0 ? (
             <div className="text-center py-12">
@@ -667,6 +794,9 @@ const EnhancedLibraryTab = () => {
                   showActions={true}
                   viewMode={viewMode}
                   isDragging={draggingImageId === item.id}
+                  selectionMode={selectionMode}
+                  isSelected={selectedImages.has(item.id)}
+                  onToggleSelect={handleToggleSelection}
                 />
               ))}
             </div>
