@@ -553,17 +553,69 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="duration_text">Duration *</Label>
-              <Input
-                id="duration_text"
-                type="text"
-                value={formData.duration_text || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, duration_text: e.target.value }))}
-                placeholder="e.g., 60 min, 1.5 hours, 45-90 min"
-                className="mt-1"
-              />
+              <Label>Duration *</Label>
+              <div className="grid grid-cols-2 gap-2 mt-1">
+                <div>
+                  <Select 
+                    value={Math.floor((formData.duration_minutes || 0) / 60).toString()} 
+                    onValueChange={(value) => {
+                      const hours = parseInt(value);
+                      const currentMinutes = (formData.duration_minutes || 0) % 60;
+                      const totalMinutes = hours * 60 + currentMinutes;
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        duration_minutes: totalMinutes,
+                        duration_text: hours === 0 && currentMinutes === 0 ? '0 min' : 
+                                      hours === 0 ? `${currentMinutes} min` :
+                                      currentMinutes === 0 ? `${hours}h` :
+                                      `${hours}h ${currentMinutes}m`
+                      }));
+                    }}
+                  >
+                    <SelectTrigger className="bg-white">
+                      <SelectValue placeholder="Hours" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border shadow-lg z-[100]">
+                      {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(hour => (
+                        <SelectItem key={hour} value={hour.toString()}>
+                          {hour} {hour === 1 ? 'hour' : 'hours'}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Select 
+                    value={((formData.duration_minutes || 0) % 60).toString()} 
+                    onValueChange={(value) => {
+                      const minutes = parseInt(value);
+                      const currentHours = Math.floor((formData.duration_minutes || 0) / 60);
+                      const totalMinutes = currentHours * 60 + minutes;
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        duration_minutes: totalMinutes,
+                        duration_text: currentHours === 0 && minutes === 0 ? '0 min' : 
+                                      currentHours === 0 ? `${minutes} min` :
+                                      minutes === 0 ? `${currentHours}h` :
+                                      `${currentHours}h ${minutes}m`
+                      }));
+                    }}
+                  >
+                    <SelectTrigger className="bg-white">
+                      <SelectValue placeholder="Minutes" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border shadow-lg z-[100]">
+                      {[0, 15, 30, 45].map(minute => (
+                        <SelectItem key={minute} value={minute.toString()}>
+                          {minute} min
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Enter duration in any format
+                Select hours and minutes for service duration
               </p>
             </div>
           </div>
