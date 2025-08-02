@@ -36,7 +36,7 @@ import {
   Trash2,
   BarChart3
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import BulkSlotCreator from './BulkSlotCreator';
 import { SocialMediaConnector } from '@/components/business/SocialMediaConnector';
 
@@ -94,7 +94,8 @@ interface Booking {
 }
 
 const ProviderDashboard = () => {
-  const [activeTab, setActiveTab] = useState('slots');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'slots');
   const [services, setServices] = useState<Service[]>([]);
   const [providerServices, setProviderServices] = useState<ProviderService[]>([]);
   const [mySlots, setMySlots] = useState<AvailabilitySlot[]>([]);

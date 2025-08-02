@@ -392,7 +392,7 @@ const EnhancedBusinessProfile = () => {
                       )}
                       
                       {isOwner && (
-                        <Button variant="provider-outline" size="sm" onClick={() => navigate('/dashboard')}>
+                        <Button variant="provider-outline" size="sm" onClick={() => navigate('/dashboard?tab=profile')}>
                           <Edit2 className="h-4 w-4 mr-2" />
                           Edit Profile
                         </Button>
