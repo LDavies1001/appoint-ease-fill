@@ -41,7 +41,7 @@ import {
   Copy,
   Plus
 } from 'lucide-react';
-import { CoverPhotoManager } from '@/components/business/CoverPhotoManager';
+import { ImageCropUpload } from '@/components/ui/image-crop-upload';
 
 
 interface ProviderProfile {
@@ -230,11 +230,38 @@ const EnhancedBusinessProfile = () => {
     }
   };
 
-  const handleCoverImageUpdate = (url: string | null) => {
-    if (providerDetails) {
-      setProviderDetails({
-        ...providerDetails,
-        cover_image_url: url
+  const handleCoverImageUpdate = async (url: string) => {
+    try {
+      // Update provider_details with the new cover image URL
+      const { error } = await supabase
+        .from('provider_details')
+        .upsert({ 
+          user_id: providerId,
+          cover_image_url: url 
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (error) throw error;
+
+      // Update local state
+      if (providerDetails) {
+        setProviderDetails({
+          ...providerDetails,
+          cover_image_url: url
+        });
+      }
+
+      toast({
+        title: "Cover photo updated",
+        description: "Your cover photo has been updated successfully"
+      });
+    } catch (error) {
+      console.error('Error updating cover photo:', error);
+      toast({
+        title: "Upload failed",
+        description: "Could not update the cover photo. Please try again.",
+        variant: "destructive"
       });
     }
   };
@@ -336,12 +363,19 @@ const EnhancedBusinessProfile = () => {
           )}
           {isOwner && (
             <div className="absolute top-4 right-4">
-              <CoverPhotoManager
-                coverImageUrl={providerDetails?.cover_image_url}
-                providerId={providerId || ''}
-                onCoverImageUpdate={handleCoverImageUpdate}
-                isOwner={isOwner}
-              />
+              <ImageCropUpload
+                onUpload={handleCoverImageUpdate}
+                bucket="business-photos"
+                aspectRatio={16/9}
+                minWidth={1200}
+                targetWidth={1200}
+                targetHeight={675}
+              >
+                <Button variant="secondary" size="sm" className="bg-white/90 hover:bg-white">
+                  <Edit2 className="h-4 w-4 mr-2" />
+                  Edit Cover
+                </Button>
+              </ImageCropUpload>
             </div>
           )}
         </div>
