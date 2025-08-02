@@ -11,7 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Stepper } from '@/components/ui/stepper';
 import { CategorySelector } from '@/components/ui/category-selector';
-import { AddressForm, AddressData } from '@/components/ui/address-form';
+import { AddressLookup } from '@/components/ui/address-lookup';
+import { AddressData } from '@/components/ui/address-form';
 import { SocialMediaConnector } from './SocialMediaConnector';
 import { ImageCropUpload } from '@/components/ui/image-crop-upload';
 import { 
@@ -602,7 +603,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 <Building className="h-5 w-5 mr-2" />
                 Business Address
               </h4>
-              <AddressForm
+              <AddressLookup
                 value={formData.business_address}
                 onChange={(address) => handleInputChange('business_address', address)}
                 errors={{
