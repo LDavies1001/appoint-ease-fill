@@ -114,7 +114,8 @@ const ProviderDashboard = () => {
     price: '',
     discount_price: '',
     notes: '',
-    image_url: ''
+    image_url: '',
+    use_service_image: true
   });
   const [uploading, setUploading] = useState(false);
   
@@ -312,7 +313,8 @@ const ProviderDashboard = () => {
         price: '',
         discount_price: '',
         notes: '',
-        image_url: ''
+        image_url: '',
+        use_service_image: true
       });
       setShowAddSlot(false);
       fetchMySlots();
@@ -422,7 +424,8 @@ const ProviderDashboard = () => {
         price: '',
         discount_price: '',
         notes: '',
-        image_url: ''
+        image_url: '',
+        use_service_image: true
       });
       setEditingSlot(null);
       fetchMySlots();
@@ -452,7 +455,8 @@ const ProviderDashboard = () => {
         price: editingSlot.price?.toString() || '',
         discount_price: editingSlot.discount_price?.toString() || '',
         notes: editingSlot.notes || '',
-        image_url: editingSlot.image_url || ''
+        image_url: editingSlot.image_url || '',
+        use_service_image: true
       });
     }
   }, [editingSlot, providerServices]);
@@ -955,109 +959,172 @@ const ProviderDashboard = () => {
                 </div>
 
                 {/* Image Upload Section */}
-                <div className="space-y-6 p-6 bg-gradient-to-br from-card/50 to-accent/5 rounded-2xl border border-border/50 backdrop-blur-sm">
+                <div className="space-y-6 p-6 bg-gradient-to-br from-card/50 to-green-50/20 rounded-2xl border border-border/50 backdrop-blur-sm">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-xl">
-                      <Image className="h-5 w-5 text-primary" />
+                    <div className="p-2 bg-green-100 rounded-xl">
+                      <Image className="h-5 w-5 text-green-600" />
                     </div>
                     <div>
                       <Label className="text-base font-semibold text-foreground">Slot Image</Label>
-                      <p className="text-sm text-muted-foreground">Showcase your service with an image</p>
+                      <p className="text-sm text-muted-foreground">Choose how to display your service image</p>
                     </div>
                   </div>
 
                   {slotForm.provider_service_id && providerServices.find(s => s.id === slotForm.provider_service_id)?.image_url ? (
-                    <div className="relative overflow-hidden bg-gradient-to-r from-primary/5 via-primary/10 to-accent/5 border border-primary/20 rounded-xl p-5 animate-fade-in">
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,119,198,0.1),_transparent_50%)]"></div>
-                      <div className="relative flex items-start space-x-4">
-                        <div className="flex-shrink-0">
-                          <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg">
-                            <span className="text-white text-lg font-bold">✓</span>
+                    <div className="space-y-4">
+                      {/* Option 1: Use Service Image */}
+                      <div 
+                        className={`relative overflow-hidden cursor-pointer transition-all duration-300 border-2 rounded-xl p-5 ${
+                          slotForm.use_service_image !== false 
+                            ? 'bg-gradient-to-r from-green-50 via-green-100/50 to-emerald-50/30 border-green-300 shadow-md' 
+                            : 'bg-muted/30 border-border/50 hover:border-green-200'
+                        }`}
+                        onClick={() => setSlotForm(prev => ({ ...prev, use_service_image: true, image_url: "" }))}
+                      >
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(34,197,94,0.1),_transparent_50%)]"></div>
+                        <div className="relative flex items-start space-x-4">
+                          <div className="flex-shrink-0">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-all ${
+                              slotForm.use_service_image !== false 
+                                ? 'bg-gradient-to-br from-green-500 to-green-600' 
+                                : 'bg-muted border border-border'
+                            }`}>
+                              {slotForm.use_service_image !== false ? (
+                                <span className="text-white text-lg font-bold">✓</span>
+                              ) : (
+                                <div className="w-4 h-4 border-2 border-muted-foreground rounded-full"></div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex-1 space-y-3">
+                            <div>
+                              <p className="font-semibold text-foreground mb-1">
+                                Use Service Image
+                              </p>
+                              <p className="text-sm text-muted-foreground leading-relaxed">
+                                Display the image from "{providerServices.find(s => s.id === slotForm.provider_service_id)?.service_name}" service
+                              </p>
+                            </div>
+                            {slotForm.use_service_image !== false && (
+                              <div className="bg-white/70 dark:bg-card/70 rounded-lg p-3 border border-green-200/50">
+                                <div className="flex items-center gap-3">
+                                  <img 
+                                    src={providerServices.find(s => s.id === slotForm.provider_service_id)?.image_url} 
+                                    alt="Service preview" 
+                                    className="w-16 h-16 object-cover rounded-lg border border-green-200"
+                                  />
+                                  <div>
+                                    <p className="text-sm font-medium text-green-700">Service Image Selected</p>
+                                    <p className="text-xs text-green-600">This image will be shown to customers</p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <div className="flex-1 space-y-3">
-                          <div>
-                            <p className="font-semibold text-foreground mb-1">
-                              Image available from "{providerServices.find(s => s.id === slotForm.provider_service_id)?.service_name}"
-                            </p>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                              Your selected service already has an image that will be used automatically
-                            </p>
+                      </div>
+
+                      {/* Option 2: Upload Custom Image */}
+                      <div 
+                        className={`relative overflow-hidden cursor-pointer transition-all duration-300 border-2 rounded-xl p-5 ${
+                          slotForm.use_service_image === false 
+                            ? 'bg-gradient-to-r from-green-50 via-green-100/50 to-emerald-50/30 border-green-300 shadow-md' 
+                            : 'bg-muted/30 border-border/50 hover:border-green-200'
+                        }`}
+                        onClick={() => setSlotForm(prev => ({ ...prev, use_service_image: false }))}
+                      >
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(34,197,94,0.1),_transparent_50%)]"></div>
+                        <div className="relative flex items-start space-x-4">
+                          <div className="flex-shrink-0">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-all ${
+                              slotForm.use_service_image === false 
+                                ? 'bg-gradient-to-br from-green-500 to-green-600' 
+                                : 'bg-muted border border-border'
+                            }`}>
+                              {slotForm.use_service_image === false ? (
+                                <span className="text-white text-lg font-bold">✓</span>
+                              ) : (
+                                <div className="w-4 h-4 border-2 border-muted-foreground rounded-full"></div>
+                              )}
+                            </div>
                           </div>
-                          <div className="bg-white/50 dark:bg-card/50 rounded-lg p-3 border border-border/30">
-                            <p className="text-sm font-medium text-foreground mb-1">Choose your option:</p>
-                            <div className="space-y-1 text-xs text-muted-foreground">
-                              <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                                <span><strong>Option 1:</strong> Keep the existing service image (automatic)</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
-                                <span><strong>Option 2:</strong> Upload a different image below</span>
-                              </div>
+                          <div className="flex-1 space-y-3">
+                            <div>
+                              <p className="font-semibold text-foreground mb-1">
+                                Upload Custom Image
+                              </p>
+                              <p className="text-sm text-muted-foreground leading-relaxed">
+                                Upload a specific image for this time slot that will override the service image
+                              </p>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-4">
-                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-lg border border-border/50">
-                        <Image className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Upload an image to showcase your service</span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-6">
-                      <label htmlFor="image-upload" className="cursor-pointer group">
-                        <div className="flex items-center gap-3 p-6 border-2 border-dashed border-border/60 rounded-2xl hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 group-hover:scale-[1.02] hover-scale">
-                          <div className="p-2 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
-                            <Upload className="h-6 w-6 text-primary" />
+
+                      {/* Upload Section - Only show when custom image option is selected */}
+                      {slotForm.use_service_image === false && (
+                        <div className="space-y-4 animate-fade-in">
+                          <div className="flex items-center gap-6">
+                            <label htmlFor="image-upload" className="cursor-pointer group">
+                              <div className="flex items-center gap-3 p-6 border-2 border-dashed border-green-300/60 rounded-2xl hover:border-green-400/60 hover:bg-green-50/30 transition-all duration-300 group-hover:scale-[1.02] hover-scale">
+                                <div className="p-2 bg-green-100 rounded-xl group-hover:bg-green-200 transition-colors">
+                                  <Upload className="h-6 w-6 text-green-600" />
+                                </div>
+                                <div className="text-left">
+                                  <span className="block text-sm font-semibold text-foreground">
+                                    {uploading ? "Uploading..." : "Upload Slot Image"}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {uploading ? "Please wait..." : "Choose a file to upload"}
+                                  </span>
+                                </div>
+                              </div>
+                              <input
+                                id="image-upload"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                className="hidden"
+                                disabled={uploading}
+                              />
+                            </label>
+                            
+                            {slotForm.image_url && (
+                              <div className="relative group">
+                                <div className="p-2 bg-gradient-to-br from-card to-green-50/20 rounded-2xl border border-green-200/50 shadow-lg">
+                                  <img 
+                                    src={slotForm.image_url} 
+                                    alt="Custom slot preview" 
+                                    className="w-24 h-24 object-cover rounded-xl"
+                                  />
+                                </div>
+                                <Button
+                                  type="button"
+                                  variant="destructive"
+                                  size="sm"
+                                  className="absolute -top-2 -right-2 w-7 h-7 p-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 shadow-lg"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSlotForm(prev => ({ ...prev, image_url: "" }));
+                                  }}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition-colors duration-200"></div>
+                              </div>
+                            )}
                           </div>
-                          <div className="text-left">
-                            <span className="block text-sm font-semibold text-foreground">
-                              {uploading ? "Uploading..." : "Upload New Image"}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              {uploading ? "Please wait..." : "Choose a file to upload"}
-                            </span>
-                          </div>
-                        </div>
-                        <input
-                          id="image-upload"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                          disabled={uploading}
-                        />
-                      </label>
-                      
-                      {slotForm.image_url && (
-                        <div className="relative group">
-                          <div className="p-2 bg-gradient-to-br from-card to-muted/20 rounded-2xl border border-border/50 shadow-lg">
-                            <img 
-                              src={slotForm.image_url} 
-                              alt="Slot preview" 
-                              className="w-24 h-24 object-cover rounded-xl"
-                            />
-                          </div>
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="sm"
-                            className="absolute -top-2 -right-2 w-7 h-7 p-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 shadow-lg"
-                            onClick={() => setSlotForm(prev => ({ ...prev, image_url: "" }))}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition-colors duration-200"></div>
                         </div>
                       )}
                     </div>
-                  </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="inline-flex items-center gap-2 px-6 py-3 bg-muted/50 rounded-lg border border-border/50">
+                        <Image className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Select a service first to choose image options</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Notes Section */}
