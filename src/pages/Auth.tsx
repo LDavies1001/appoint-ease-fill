@@ -847,7 +847,7 @@ const Auth = () => {
     );
   }
 
-  // Login Form - simplified and conversion-focused
+  // Clean, simple login form matching the screenshot
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 animate-fade-in">
       <div className="absolute top-4 left-4">
@@ -877,7 +877,7 @@ const Auth = () => {
             </p>
           </div>
 
-          <Card className="border border-primary/20 bg-white/80 backdrop-blur-sm shadow-xl rounded-xl md:rounded-2xl p-8 animate-scale-in">
+          <Card className="border border-primary/20 bg-white/90 backdrop-blur-sm shadow-xl rounded-xl md:rounded-2xl p-8 animate-scale-in">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-semibold text-foreground">Email</Label>
@@ -887,7 +887,7 @@ const Auth = () => {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 rounded-lg focus:ring-primary focus:border-primary"
+                  className="h-12 rounded-lg focus:ring-primary focus:border-primary"
                   required
                 />
               </div>
@@ -901,14 +901,14 @@ const Auth = () => {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-11 rounded-lg focus:ring-primary focus:border-primary pr-10"
+                    className="h-12 rounded-lg focus:ring-primary focus:border-primary pr-10"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-0 top-0 h-11 w-11 text-muted-foreground hover:text-foreground"
+                    className="absolute right-0 top-0 h-12 w-12 text-muted-foreground hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -919,15 +919,15 @@ const Auth = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground font-bold py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg"
+                className="w-full bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold py-4 text-lg rounded-lg transition-all duration-300"
               >
                 {loading ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
           </Card>
 
-          <div className="text-center mt-6 space-y-4">
-            <p className="text-sm text-muted-foreground">
+          <div className="text-center mt-6">
+            <p className="text-sm text-muted-foreground mb-4">
               Don't have an account?
             </p>
             <Link to="/auth?tab=signup">
