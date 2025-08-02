@@ -406,16 +406,21 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
 
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <Label htmlFor="base_price">Price (£) *</Label>
-              <Input
-                id="base_price"
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData.base_price}
-                onChange={(e) => setFormData(prev => ({ ...prev, base_price: parseFloat(e.target.value) || 0 }))}
-                className="mt-1"
-              />
+              <Label htmlFor="base_price">Price *</Label>
+              <div className="relative mt-1">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">£</span>
+                <Input
+                  id="base_price"
+                  type="text"
+                  value={formData.base_price || ''}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9.]/g, ''); // Only allow numbers and decimal
+                    setFormData(prev => ({ ...prev, base_price: parseFloat(value) || 0 }))
+                  }}
+                  placeholder="0.00"
+                  className="pl-8"
+                />
+              </div>
             </div>
 
             <div>
