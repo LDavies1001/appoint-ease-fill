@@ -367,10 +367,11 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
                         id={service}
                         checked={selectedServices.includes(service)}
                         onCheckedChange={() => handleServiceToggle(service)}
+                        variant="provider"
                       />
                       <label
                         htmlFor={service}
-                        className="text-sm cursor-pointer hover:text-primary"
+                        className="text-sm cursor-pointer hover:text-accent"
                       >
                         {service}
                       </label>
@@ -382,10 +383,11 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
                       id={`${group.id}-other`}
                       checked={selectedServices.includes(`${group.name} - Other`)}
                       onCheckedChange={() => handleServiceToggle(`${group.name} - Other`)}
+                      variant="provider"
                     />
                     <label
                       htmlFor={`${group.id}-other`}
-                      className="text-sm cursor-pointer hover:text-primary"
+                      className="text-sm cursor-pointer hover:text-accent"
                     >
                       Other
                     </label>
@@ -425,7 +427,7 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
           Choose the main categories that best describe your business
         </p>
         {selectedCategories.length > 0 && (
-          <p className="text-sm font-medium text-primary">
+          <p className="text-sm font-medium text-accent">
             {selectedCategories.length} of {maxSelections} categories selected
           </p>
         )}
@@ -441,13 +443,13 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
               return categoryData ? (
                 <div
                   key={categoryId}
-                  className="flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
+                  className="flex items-center gap-2 bg-accent/10 text-accent px-3 py-1 rounded-full text-sm"
                 >
                   <span>{categoryData.emoji}</span>
                   <span>{categoryData.name}</span>
                   <button
                     onClick={() => handleRemoveCategory(categoryId)}
-                    className="hover:bg-primary/20 rounded-full p-0.5 ml-1"
+                    className="hover:bg-accent/20 rounded-full p-0.5 ml-1"
                   >
                     ×
                   </button>
@@ -471,8 +473,8 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
               className={cn(
                 "p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 text-center",
                 {
-                  "border-primary bg-primary/10": isSelected,
-                  "border-muted hover:border-primary/50 hover:bg-primary/5": canSelect,
+                  "border-accent bg-accent/10": isSelected,
+                  "border-muted hover:border-accent/50 hover:bg-accent/5": canSelect,
                   "border-muted opacity-50 cursor-not-allowed": !canSelect && !isSelected,
                 }
               )}
@@ -481,12 +483,12 @@ export const SimpleCategorySelector: React.FC<SimpleCategorySelectorProps> = ({
               <div className="space-y-3">
                 <div className="text-4xl">{category.emoji}</div>
                 <div className="p-3 rounded-lg bg-background">
-                  <IconComponent className="h-8 w-8 mx-auto text-primary" />
+                  <IconComponent className="h-8 w-8 mx-auto text-accent" />
                 </div>
                 <div>
                   <h3 className="font-medium text-sm">{category.name}</h3>
                   {isSelected && (
-                    <p className="text-xs text-primary font-medium mt-1">Selected</p>
+                    <p className="text-xs text-accent font-medium mt-1">Selected</p>
                   )}
                 </div>
               </div>

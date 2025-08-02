@@ -630,7 +630,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </p>
             </div>
             
-            <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+          <div className="bg-gradient-to-r from-accent/5 to-accent/10 rounded-xl p-6 border border-accent/20">
               <SimpleCategorySelector
                 categories={categories.map(cat => ({
                   id: cat.id,
