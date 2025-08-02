@@ -236,11 +236,12 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                     placeholder="Enter your phone number"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="pl-10"
+                    className="pl-10 pr-12 h-12 rounded-xl border-blush-200 focus:border-blush-500 focus:ring-blush-200"
+                    variant="customer"
                     required
                   />
                   {formData.phone && (
-                    <CheckCircle className="absolute right-3 top-3 h-4 w-4 text-green-500" />
+                    <CheckCircle className="absolute right-3 top-3 h-5 w-5 text-blush-600" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -257,7 +258,8 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                     placeholder="Enter your city, area, or postcode"
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
-                    className="pl-10 pr-12"
+                    className="pl-10 pr-12 h-12 rounded-xl border-blush-200 focus:border-blush-500 focus:ring-blush-200"
+                    variant="customer"
                     required
                   />
                   <Button
@@ -271,7 +273,7 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
                     <Locate className="h-4 w-4" />
                   </Button>
                   {formData.location && (
-                    <CheckCircle className="absolute right-10 top-3 h-4 w-4 text-green-500" />
+                    <CheckCircle className="absolute right-10 top-3 h-5 w-5 text-blush-600" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -426,102 +428,75 @@ export const CustomerStepper: React.FC<CustomerStepperProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Progress Bar */}
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Step {currentStep + 1} of {steps.length}</span>
-          <span className="text-primary font-medium">{Math.round(((currentStep + 1) / steps.length) * 100)}% Complete</span>
-        </div>
-        <div className="w-full bg-muted rounded-full h-2">
-          <div 
-            className="h-2 rounded-full transition-all duration-300 animate-scale-in"
-            style={{ 
-              background: 'var(--gradient-primary)', 
-              width: `${((currentStep + 1) / steps.length) * 100}%` 
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Step Indicator */}
-      <div className="flex justify-center space-x-4 mb-6">
-        {steps.map((step, index) => (
-          <div key={index} className="flex items-center">
-            <div className={`
-              w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300
-              ${index <= currentStep 
-                ? 'bg-primary text-primary-foreground shadow-lg' 
-                : 'bg-muted text-muted-foreground'
-              }
-            `}>
-              {index < currentStep ? (
-                <CheckCircle className="h-4 w-4" />
-              ) : (
-                index + 1
-              )}
+    <div className="min-h-screen bg-gradient-to-br from-blush-50 via-blush-25 to-background">
+      {/* Main Content */}
+      <div className="py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          {/* Progress Indicator */}
+          <div className="mb-8 text-center">
+            <div className="inline-flex items-center bg-blush-50 border border-blush-200 rounded-full px-4 py-2 text-sm text-blush-700">
+              <span className="w-6 h-6 bg-blush-600 text-white rounded-full flex items-center justify-center text-xs font-semibold mr-3">{currentStep + 1}</span>
+              Step {currentStep + 1} of {steps.length}: {steps[currentStep].title}
             </div>
-            {index < steps.length - 1 && (
-              <div className={`
-                w-12 h-0.5 mx-2 transition-all duration-300
-                ${index < currentStep ? 'bg-primary' : 'bg-muted'}
-              `} />
-            )}
           </div>
-        ))}
+
+          {/* Main Headings */}
+          <div className="text-center mb-10">
+            <h1 className="text-4xl font-bold text-foreground mb-4">
+              Complete Your Customer Profile
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              {steps[currentStep].description}
+            </p>
+          </div>
+
+          {/* Form Container */}
+          <Card className="bg-white/60 backdrop-blur-sm shadow-elegant rounded-2xl border border-blush-100/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+            <div className="p-8 lg:p-12">
+              {/* Step Content */}
+              {renderStepContent()}
+              
+              {/* Navigation Buttons */}
+              <div className="flex justify-between mt-8 pt-6 border-t border-blush-100">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handleBack}
+                  disabled={currentStep === 0 || isLoading}
+                  className={`flex items-center gap-2 text-muted-foreground hover:text-foreground ${currentStep === 0 ? 'invisible' : ''}`}
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </Button>
+                
+                <Button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={isLoading}
+                  className="flex items-center gap-2 bg-gradient-to-r from-blush-600 to-blush-700 hover:from-blush-700 hover:to-blush-800 text-white px-8 py-3 text-lg rounded-xl font-semibold shadow-elegant hover:shadow-lg transition-all duration-300"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Saving...
+                    </>
+                  ) : currentStep === steps.length - 1 ? (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Complete Profile
+                    </>
+                  ) : (
+                    <>
+                      Continue
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
-
-      {/* Step Content */}
-      <Card className="border-0 shadow-elegant bg-card/50 backdrop-blur-sm p-8 border-l-4 border-l-primary">
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-primary mb-1">
-            {steps[currentStep].title}
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            {steps[currentStep].description}
-          </p>
-        </div>
-
-        {renderStepContent()}
-
-        {/* Navigation */}
-        <div className="flex justify-between mt-8">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleBack}
-            disabled={currentStep === 0 || isLoading}
-            className={`border-primary/20 text-primary hover:bg-primary/5 ${currentStep === 0 ? 'invisible' : ''}`}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-
-          <Button
-            type="button"
-            onClick={handleNext}
-            disabled={isLoading}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6"
-          >
-            {isLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Saving...
-              </>
-            ) : currentStep === steps.length - 1 ? (
-              <>
-                <CheckCircle className="w-4 h-4 mr-2" />
-                Complete Profile
-              </>
-            ) : (
-              <>
-                Continue
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </>
-            )}
-          </Button>
-        </div>
-      </Card>
     </div>
   );
 };
