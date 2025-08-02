@@ -940,6 +940,11 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Set up your professional presence to attract customers and grow your business
           </p>
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-xl mx-auto">
+            <p className="text-sm text-blue-700 text-center">
+              💡 <strong>Don't worry!</strong> You can update and edit your profile information at any time after creating it.
+            </p>
+          </div>
         </div>
 
         {/* Enhanced Stepper */}
