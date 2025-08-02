@@ -592,7 +592,7 @@ const Auth = () => {
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-3 mb-6">
-                <BrandLogo className="w-7 h-7 md:w-8 md:h-8" />
+                <BrandLogo className="w-[200px] h-[200px]" />
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
                 Create Your Business Account
