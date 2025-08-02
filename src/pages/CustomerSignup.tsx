@@ -395,6 +395,7 @@ const CustomerSignup = () => {
                         placeholder="Enter your postcode (e.g. SW1A 1AA)"
                         className="h-14 rounded-2xl border-blush-200 focus:border-blush-500 focus:ring-blush-200 text-base"
                         showCoverageRadius={false}
+                        variant="customer"
                       />
                       {postcode && isFieldValid('postcode', postcode) && (
                         <div className="absolute right-4 top-4 text-blush-600">

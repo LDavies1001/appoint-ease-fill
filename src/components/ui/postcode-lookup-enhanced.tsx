@@ -42,6 +42,7 @@ interface PostcodeLookupProps {
   className?: string;
   showCoverageRadius?: boolean;
   radiusMiles?: number;
+  variant?: "default" | "provider" | "customer";
 }
 
 export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
@@ -50,7 +51,8 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
   placeholder = 'Enter your business postcode (e.g. SW1A 1AA)',
   className = '',
   showCoverageRadius = true,
-  radiusMiles = 5
+  radiusMiles = 5,
+  variant = "default"
 }) => {
   const [inputValue, setInputValue] = useState(value);
   const [isLoading, setIsLoading] = useState(false);
@@ -205,6 +207,7 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
             placeholder={placeholder}
             className={`pr-10 ${className}`}
             disabled={isLoading}
+            variant={variant}
           />
           {isLoading && (
             <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin text-muted-foreground" />
