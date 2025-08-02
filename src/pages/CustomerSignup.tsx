@@ -203,7 +203,6 @@ const CustomerSignup = () => {
                   alt="OpenSlot Logo" 
                   className="w-12 h-12 object-contain"
                 />
-                <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Customer Account Created!
