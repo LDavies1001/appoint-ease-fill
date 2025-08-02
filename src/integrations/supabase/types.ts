@@ -890,6 +890,7 @@ export type Database = {
           duration_minutes: number | null
           duration_text: string | null
           id: string
+          image_url: string | null
           is_active: boolean | null
           provider_id: string
           service_name: string
@@ -903,6 +904,7 @@ export type Database = {
           duration_minutes?: number | null
           duration_text?: string | null
           id?: string
+          image_url?: string | null
           is_active?: boolean | null
           provider_id: string
           service_name: string
@@ -916,6 +918,7 @@ export type Database = {
           duration_minutes?: number | null
           duration_text?: string | null
           id?: string
+          image_url?: string | null
           is_active?: boolean | null
           provider_id?: string
           service_name?: string
