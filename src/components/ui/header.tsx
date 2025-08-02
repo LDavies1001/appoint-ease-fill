@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/custom-button';
 import { Calendar, ChevronDown, User, Settings, LogOut, Building, Search, Menu, X } from 'lucide-react';
+import { LogoWithBgRemoval } from '@/components/ui/logo-with-bg-removal';
 import { useAuth } from '@/contexts/AuthContext';
 import { RoleSwitcher } from '@/components/ui/role-switcher';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -149,11 +150,11 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
-            <img 
+          <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
+            <LogoWithBgRemoval 
               src="/lovable-uploads/3fe42c9c-7458-4205-a88e-61bea2713e02.png" 
               alt="OpenSlot Logo" 
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
+              className="w-9 h-9 sm:w-10 sm:h-10"
             />
             <span className="text-lg sm:text-xl font-bold text-foreground">OpenSlot</span>
           </Link>
