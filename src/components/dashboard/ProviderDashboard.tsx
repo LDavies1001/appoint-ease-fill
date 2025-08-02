@@ -842,11 +842,14 @@ const ProviderDashboard = () => {
                             <SelectValue placeholder="Min" />
                           </SelectTrigger>
                           <SelectContent>
-                            {['00', '15', '30', '45'].map(minute => (
-                              <SelectItem key={minute} value={minute}>
-                                {minute}
-                              </SelectItem>
-                            ))}
+                            {Array.from({ length: 60 }, (_, i) => {
+                              const minute = i.toString().padStart(2, '0');
+                              return (
+                                <SelectItem key={minute} value={minute}>
+                                  {minute}
+                                </SelectItem>
+                              );
+                            })}
                           </SelectContent>
                         </Select>
                       </div>
