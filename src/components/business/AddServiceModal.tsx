@@ -58,6 +58,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
   // Fetch user's profile services
   useEffect(() => {
     const fetchProfileServices = async () => {
+      console.log('Attempting to fetch profile services for userId:', userId);
       try {
         const { data, error } = await supabase
           .from('provider_details')
@@ -65,15 +66,20 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
           .eq('user_id', userId)
           .single();
         
+        console.log('Supabase query result:', { data, error });
+        
         if (data && data.services_offered) {
-          // services_offered contains the individual services selected during onboarding
-          console.log('Fetched profile services:', data.services_offered);
+          console.log('Found services_offered:', data.services_offered);
+          console.log('Type of services_offered:', typeof data.services_offered);
+          console.log('Is array:', Array.isArray(data.services_offered));
           setProfileServices(data.services_offered);
         } else {
           console.log('No services_offered found in profile data:', data);
+          setProfileServices([]);
         }
       } catch (error) {
         console.error('Error fetching profile services:', error);
+        setProfileServices([]);
       }
     };
 
