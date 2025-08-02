@@ -101,21 +101,23 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     try {
       const { data: providerData, error } = await supabase
         .from('provider_details')
-        .select('services_offered')
+        .select('services_offered, services_selection')
         .eq('user_id', userId)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
       
-      if (providerData?.services_offered) {
-        // Parse the services_offered data which should contain category->services mapping
-        const servicesData = providerData.services_offered;
-        if (typeof servicesData === 'object' && !Array.isArray(servicesData)) {
-          setSelectedServices(servicesData);
-          setSelectedCategories(Object.keys(servicesData));
-        } else if (Array.isArray(servicesData)) {
-          // Legacy format - convert to new format
-          setSelectedCategories(servicesData);
+      if (providerData?.services_selection) {
+        // Use the new structured data format
+        const servicesData = providerData.services_selection as any;
+        if (typeof servicesData === 'object' && servicesData.services) {
+          setSelectedServices(servicesData.services as Record<string, string[]>);
+          setSelectedCategories((servicesData.categories as string[]) || Object.keys(servicesData.services));
+        }
+      } else if (providerData?.services_offered) {
+        // Fallback to legacy format if new format not available
+        if (Array.isArray(providerData.services_offered)) {
+          setSelectedCategories(providerData.services_offered);
         }
       }
     } catch (error) {
@@ -126,11 +128,17 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Save the onboarding services selection
+      // Save the onboarding services selection to both old and new columns
+      const servicesData = {
+        categories: selectedCategories,
+        services: selectedServices
+      };
+
       const { error } = await supabase
         .from('provider_details')
         .update({
-          services_offered: Object.keys(selectedServices),
+          services_offered: selectedCategories, // Legacy format (categories only)
+          services_selection: servicesData, // New structured format
           pricing_info: editData.pricing_info
         })
         .eq('user_id', userId);

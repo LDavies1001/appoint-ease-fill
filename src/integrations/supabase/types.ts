@@ -738,6 +738,7 @@ export type Database = {
           rating: number | null
           service_radius_miles: number | null
           services_offered: string[] | null
+          services_selection: Json | null
           social_media_links: Json | null
           tiktok_url: string | null
           total_reviews: number | null
@@ -797,6 +798,7 @@ export type Database = {
           rating?: number | null
           service_radius_miles?: number | null
           services_offered?: string[] | null
+          services_selection?: Json | null
           social_media_links?: Json | null
           tiktok_url?: string | null
           total_reviews?: number | null
@@ -856,6 +858,7 @@ export type Database = {
           rating?: number | null
           service_radius_miles?: number | null
           services_offered?: string[] | null
+          services_selection?: Json | null
           social_media_links?: Json | null
           tiktok_url?: string | null
           total_reviews?: number | null

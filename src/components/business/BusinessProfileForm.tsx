@@ -399,7 +399,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
         }).join('\n');
       };
 
-      // Save both categories and individual services
+      // Save both categories and individual services in the new structured format
       const allSelectedServices = Object.values(selectedServices).flat();
       const servicesData = {
         categories: formData.business_categories,
@@ -409,7 +409,8 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
       const submitData = {
         business_name: formData.business_name,
         business_category: formData.business_categories[0] || null, // Primary category
-        services_offered: servicesData, // Save structured data with both categories and services
+        services_offered: formData.business_categories, // Keep legacy format for backward compatibility
+        services_selection: servicesData, // New structured data
         business_phone: formData.business_phone,
         formatted_address: addressString, // Use correct column name
         business_postcode: formData.business_address.postcode, // Add postcode separately
