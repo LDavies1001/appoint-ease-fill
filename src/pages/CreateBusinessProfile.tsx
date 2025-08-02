@@ -121,7 +121,7 @@ const CreateBusinessProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-accent/10 overflow-x-hidden w-full">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-accent/20 overflow-x-hidden w-full">
       {/* Profile Form */}
       <div className="px-4 py-8 relative z-10">
         <BusinessProfileForm 
