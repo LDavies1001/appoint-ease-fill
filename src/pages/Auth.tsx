@@ -383,7 +383,7 @@ const Auth = () => {
             <div className="text-center mt-8">
               <p className="text-sm text-muted-foreground">
                 Already have an account?{' '}
-                <Link to="/auth" className="text-sage-700 hover:text-sage-800 font-semibold underline decoration-2 underline-offset-2">
+                <Link to="/auth" className="text-rose-600 hover:text-rose-700 font-semibold underline decoration-2 underline-offset-2">
                   Sign in here
                 </Link>
               </p>
