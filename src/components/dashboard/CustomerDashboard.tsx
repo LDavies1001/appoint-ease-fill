@@ -482,7 +482,7 @@ const CustomerDashboard = () => {
                       variant={viewMode === 'list' ? 'default' : 'ghost'}
                       size="sm"
                       onClick={() => setViewMode('list')}
-                      className="h-8 px-3"
+                      className={viewMode === 'list' ? 'h-8 px-3 bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400' : 'h-8 px-3 hover:bg-rose-100 hover:text-rose-800'}
                     >
                       <List className="h-4 w-4" />
                       <span className="hidden sm:inline ml-2">List</span>
@@ -491,7 +491,7 @@ const CustomerDashboard = () => {
                       variant={viewMode === 'grid' ? 'default' : 'ghost'}
                       size="sm"
                       onClick={() => setViewMode('grid')}
-                      className="h-8 px-3"
+                      className={viewMode === 'grid' ? 'h-8 px-3 bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400' : 'h-8 px-3 hover:bg-rose-100 hover:text-rose-800'}
                     >
                       <LayoutGrid className="h-4 w-4" />
                       <span className="hidden sm:inline ml-2">Grid</span>
@@ -500,7 +500,7 @@ const CustomerDashboard = () => {
                       variant={viewMode === 'compact' ? 'default' : 'ghost'}
                       size="sm"
                       onClick={() => setViewMode('compact')}
-                      className="h-8 px-3"
+                      className={viewMode === 'compact' ? 'h-8 px-3 bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400' : 'h-8 px-3 hover:bg-rose-100 hover:text-rose-800'}
                     >
                       <Grid3X3 className="h-4 w-4" />
                       <span className="hidden sm:inline ml-2">Compact</span>
