@@ -75,12 +75,11 @@ export const TestimonialsSection = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-              {displayedReviews.map((review, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {displayedReviews.map((review) => (
                 <div
                   key={review.id}
-                  className="bg-white/90 backdrop-blur-sm border-2 border-border/80 rounded-2xl p-8 shadow-lg hover:shadow-xl hover:border-primary/30 transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center mb-3">
                     <div className="flex space-x-1 mr-3">
