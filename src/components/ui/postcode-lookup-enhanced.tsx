@@ -210,9 +210,6 @@ export const PostcodeLookup: React.FC<PostcodeLookupProps> = ({
             <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin text-muted-foreground" />
           )}
         </div>
-        <p className="text-sm text-muted-foreground">
-          Enter your business postcode to automatically determine your service area
-        </p>
       </div>
 
       {postcodeData && (
