@@ -14,7 +14,7 @@ const Index = () => {
     <div className="w-full">
       {/* Hero Section with integrated sticky header */}
       <HeroContainer>
-        <div className="flex flex-col lg:grid lg:grid-cols-[1.1fr,0.9fr] gap-8 lg:gap-16 xl:gap-20 items-center py-8 sm:py-12 lg:py-16 xl:py-20 min-h-[80vh] w-full">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1.1fr,0.9fr] gap-8 lg:gap-16 xl:gap-20 items-center py-8 sm:py-12 lg:py-16 xl:py-20 w-full">
           {/* Left Side - Content */}
           <HeroContent />
 
