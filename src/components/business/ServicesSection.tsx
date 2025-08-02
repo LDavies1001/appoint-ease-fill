@@ -96,26 +96,23 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Convert selected category IDs to category objects
-      const selectedCategoryObjects = editData.business_categories.map(categoryId => 
-        allCategories.find(cat => cat.id === categoryId)
-      ).filter(Boolean);
-
+      // Use the selected categories directly as services_offered
       const { error } = await supabase
         .from('provider_details')
         .update({
-          services_offered: editData.services_offered,
-          pricing_info: editData.pricing_info,
-          business_category: selectedCategoryObjects.length > 0 ? selectedCategoryObjects[0].id : null
+          services_offered: editData.business_categories,
+          pricing_info: editData.pricing_info
         })
         .eq('user_id', userId);
 
       if (error) throw error;
 
       onUpdate({
-        services_offered: editData.services_offered,
+        services_offered: editData.business_categories,
         pricing_info: editData.pricing_info,
-        business_categories: selectedCategoryObjects
+        business_categories: editData.business_categories.map(categoryId => 
+          allCategories.find(cat => cat.id === categoryId)
+        ).filter(Boolean)
       });
 
       setIsEditing(false);
