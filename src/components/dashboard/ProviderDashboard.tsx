@@ -821,6 +821,7 @@ const ProviderDashboard = () => {
                       <div>
                         <Select
                           value={(() => {
+                            if (!slotForm.start_time) return '';
                             const hour = parseInt(slotForm.start_time.split(':')[0] || '0');
                             if (hour === 0) return '12';
                             if (hour > 12) return (hour - 12).toString();
@@ -860,7 +861,10 @@ const ProviderDashboard = () => {
                       {/* Minute Selection */}
                       <div>
                         <Select
-                          value={slotForm.start_time.split(':')[1] || '00'}
+                          value={(() => {
+                            if (!slotForm.start_time) return '';
+                            return slotForm.start_time.split(':')[1] || '';
+                          })()}
                           onValueChange={(minute) => {
                             const hour = slotForm.start_time.split(':')[0] || '00';
                             setSlotForm(prev => ({ ...prev, start_time: `${hour}:${minute}` }));
@@ -886,6 +890,7 @@ const ProviderDashboard = () => {
                       <div>
                         <Select
                           value={(() => {
+                            if (!slotForm.start_time) return '';
                             const hour = parseInt(slotForm.start_time.split(':')[0] || '0');
                             return hour < 12 ? 'AM' : 'PM';
                           })()}
