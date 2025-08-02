@@ -959,10 +959,10 @@ const ProviderDashboard = () => {
                 </div>
 
                 {/* Image Upload Section */}
-                <div className="space-y-6 p-6 bg-gradient-to-br from-card/50 to-slate-100/20 rounded-2xl border border-border/50 backdrop-blur-sm">
+                <div className="space-y-6 p-6 bg-gradient-to-br from-card/50 to-provider/10 rounded-2xl border border-border/50 backdrop-blur-sm">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-slate-200/50 rounded-xl">
-                      <Image className="h-5 w-5 text-slate-600" />
+                    <div className="p-2 bg-provider/20 rounded-xl">
+                      <Image className="h-5 w-5 text-provider" />
                     </div>
                     <div>
                       <Label className="text-base font-semibold text-foreground">Slot Image</Label>
@@ -976,21 +976,21 @@ const ProviderDashboard = () => {
                       <div 
                         className={`relative overflow-hidden cursor-pointer transition-all duration-300 border-2 rounded-xl p-5 ${
                           slotForm.use_service_image !== false 
-                            ? 'bg-gradient-to-r from-slate-50 via-slate-100/50 to-slate-200/30 border-slate-300 shadow-md' 
-                            : 'bg-muted/30 border-border/50 hover:border-slate-300'
+                            ? 'bg-gradient-to-r from-provider/20 via-provider/30 to-provider-glow/30 border-provider/40 shadow-md' 
+                            : 'bg-muted/30 border-border/50 hover:border-provider/30'
                         }`}
                         onClick={() => setSlotForm(prev => ({ ...prev, use_service_image: true, image_url: "" }))}
                       >
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(71,85,105,0.1),_transparent_50%)]"></div>
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,20%,75%,0.1),_transparent_50%)]"></div>
                         <div className="relative flex items-start space-x-4">
                           <div className="flex-shrink-0">
                             <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-all ${
                               slotForm.use_service_image !== false 
-                                ? 'bg-gradient-to-br from-slate-500 to-slate-600' 
+                                ? 'bg-gradient-to-br from-provider to-provider-glow' 
                                 : 'bg-muted border border-border'
                             }`}>
                               {slotForm.use_service_image !== false ? (
-                                <span className="text-white text-lg font-bold">✓</span>
+                                <span className="text-provider-foreground text-lg font-bold">✓</span>
                               ) : (
                                 <div className="w-4 h-4 border-2 border-muted-foreground rounded-full"></div>
                               )}
@@ -1006,16 +1006,16 @@ const ProviderDashboard = () => {
                               </p>
                             </div>
                             {slotForm.use_service_image !== false && (
-                              <div className="bg-white/70 dark:bg-card/70 rounded-lg p-3 border border-slate-200/50">
+                              <div className="bg-white/70 dark:bg-card/70 rounded-lg p-3 border border-provider/30">
                                 <div className="flex items-center gap-3">
                                   <img 
                                     src={providerServices.find(s => s.id === slotForm.provider_service_id)?.image_url} 
                                     alt="Service preview" 
-                                    className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+                                    className="w-16 h-16 object-cover rounded-lg border border-provider/30"
                                   />
                                   <div>
-                                    <p className="text-sm font-medium text-slate-700">Service Image Selected</p>
-                                    <p className="text-xs text-slate-600">This image will be shown to customers</p>
+                                    <p className="text-sm font-medium text-provider">Service Image Selected</p>
+                                    <p className="text-xs text-provider/80">This image will be shown to customers</p>
                                   </div>
                                 </div>
                               </div>
@@ -1028,21 +1028,21 @@ const ProviderDashboard = () => {
                       <div 
                         className={`relative overflow-hidden cursor-pointer transition-all duration-300 border-2 rounded-xl p-5 ${
                           slotForm.use_service_image === false 
-                            ? 'bg-gradient-to-r from-slate-50 via-slate-100/50 to-slate-200/30 border-slate-300 shadow-md' 
-                            : 'bg-muted/30 border-border/50 hover:border-slate-300'
+                            ? 'bg-gradient-to-r from-provider/20 via-provider/30 to-provider-glow/30 border-provider/40 shadow-md' 
+                            : 'bg-muted/30 border-border/50 hover:border-provider/30'
                         }`}
                         onClick={() => setSlotForm(prev => ({ ...prev, use_service_image: false }))}
                       >
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(71,85,105,0.1),_transparent_50%)]"></div>
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(120,20%,75%,0.1),_transparent_50%)]"></div>
                         <div className="relative flex items-start space-x-4">
                           <div className="flex-shrink-0">
                             <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-all ${
                               slotForm.use_service_image === false 
-                                ? 'bg-gradient-to-br from-slate-500 to-slate-600' 
+                                ? 'bg-gradient-to-br from-provider to-provider-glow' 
                                 : 'bg-muted border border-border'
                             }`}>
                               {slotForm.use_service_image === false ? (
-                                <span className="text-white text-lg font-bold">✓</span>
+                                <span className="text-provider-foreground text-lg font-bold">✓</span>
                               ) : (
                                 <div className="w-4 h-4 border-2 border-muted-foreground rounded-full"></div>
                               )}
@@ -1066,9 +1066,9 @@ const ProviderDashboard = () => {
                         <div className="space-y-4 animate-fade-in">
                           <div className="flex items-center gap-6">
                             <label htmlFor="image-upload" className="cursor-pointer group">
-                              <div className="flex items-center gap-3 p-6 border-2 border-dashed border-slate-300/60 rounded-2xl hover:border-slate-400/60 hover:bg-slate-50/30 transition-all duration-300 group-hover:scale-[1.02] hover-scale">
-                                <div className="p-2 bg-slate-200/50 rounded-xl group-hover:bg-slate-200 transition-colors">
-                                  <Upload className="h-6 w-6 text-slate-600" />
+                              <div className="flex items-center gap-3 p-6 border-2 border-dashed border-provider/40 rounded-2xl hover:border-provider/60 hover:bg-provider/10 transition-all duration-300 group-hover:scale-[1.02] hover-scale">
+                                <div className="p-2 bg-provider/20 rounded-xl group-hover:bg-provider/30 transition-colors">
+                                  <Upload className="h-6 w-6 text-provider" />
                                 </div>
                                 <div className="text-left">
                                   <span className="block text-sm font-semibold text-foreground">
@@ -1091,7 +1091,7 @@ const ProviderDashboard = () => {
                             
                             {slotForm.image_url && (
                               <div className="relative group">
-                                <div className="p-2 bg-gradient-to-br from-card to-slate-50/20 rounded-2xl border border-slate-200/50 shadow-lg">
+                                <div className="p-2 bg-gradient-to-br from-card to-provider/10 rounded-2xl border border-provider/30 shadow-lg">
                                   <img 
                                     src={slotForm.image_url} 
                                     alt="Custom slot preview" 
