@@ -4,11 +4,14 @@ import { useRouteProtection } from '@/hooks/useRouteProtection';
 import CustomerDashboard from '@/components/dashboard/CustomerDashboard';
 import ProviderDashboard from '@/components/dashboard/ProviderDashboard';
 import { Button } from '@/components/ui/button';
-import { Settings, User } from 'lucide-react';
+import { Settings, User, ChevronDown, Eye, Edit, LogOut } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Link } from 'react-router-dom';
 
 
 const Dashboard = () => {
-  const { user, profile, loading } = useRouteProtection();
+  const { user, profile, loading, signOut } = useAuth();
+  const { user: routeUser, profile: routeProfile, loading: routeLoading } = useRouteProtection();
 
   if (loading) {
     return (
@@ -54,10 +57,37 @@ const Dashboard = () => {
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
-              <Button variant="outline" size="sm">
-                <User className="h-4 w-4 mr-2" />
-                Profile
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <User className="h-4 w-4 mr-2" />
+                    Profile
+                    <ChevronDown className="h-4 w-4 ml-2" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-background border z-50" align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/public-portfolio" className="flex items-center">
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Public Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={signOut}
+                    className="flex items-center text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Log Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
