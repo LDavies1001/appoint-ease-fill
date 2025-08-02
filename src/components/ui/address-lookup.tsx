@@ -222,7 +222,10 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
         </div>
         <h3 className="text-xl font-semibold text-accent">Find Your Business Address</h3>
         <p className="text-muted-foreground">
-          Enter your postcode or start typing your address to get started
+          Enter your postcode to find your address quickly
+        </p>
+        <p className="text-xs text-muted-foreground">
+          💡 Try typing just your postcode (e.g., SW1A, M1, B1) for autocomplete suggestions
         </p>
       </div>
 
@@ -244,7 +247,7 @@ export const AddressLookup: React.FC<AddressLookupProps> = ({
             onFocus={() => {
               if (suggestions.length > 0) setShowSuggestions(true);
             }}
-            placeholder="e.g., SW1A 1AA or start typing your address..."
+            placeholder="Enter your postcode (e.g., SW1A 1AA, M1 1AA, B1 1HQ)"
             className="pl-10 pr-12 h-12 text-lg border-2 border-accent/30 focus:border-accent"
           />
           
