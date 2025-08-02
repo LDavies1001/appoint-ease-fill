@@ -288,16 +288,22 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({
             <Label htmlFor="service_name">Service Name *</Label>
             {!showCustomInput ? (
               <Select onValueChange={handleServiceSelection} value={formData.service_name || ""}>
-                <SelectTrigger className="mt-1">
+                <SelectTrigger className="mt-1 bg-white">
                   <SelectValue placeholder="Select a service or add custom..." />
                 </SelectTrigger>
-                <SelectContent className="bg-white border shadow-lg z-50">
-                  {profileServices.map((service) => (
-                    <SelectItem key={service} value={service}>
-                      {service}
+                <SelectContent className="bg-white border shadow-lg z-[100] max-h-[200px] overflow-y-auto">
+                  {profileServices.length > 0 ? (
+                    profileServices.map((service) => (
+                      <SelectItem key={service} value={service} className="cursor-pointer hover:bg-gray-100">
+                        {service}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="" disabled className="text-gray-500">
+                      No services found from profile setup
                     </SelectItem>
-                  ))}
-                  <SelectItem value="custom" className="font-medium text-primary">
+                  )}
+                  <SelectItem value="custom" className="font-medium text-primary cursor-pointer hover:bg-gray-100">
                     <div className="flex items-center gap-2">
                       <Plus className="h-4 w-4" />
                       Add Custom Service
