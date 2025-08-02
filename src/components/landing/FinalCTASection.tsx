@@ -44,7 +44,7 @@ export const FinalCTASection = () => {
         </div>
 
         <p className="text-sage-600 mt-8 text-sm">
-          No credit card required • Setup takes less than 5 minutes
+          Setup takes less than 5 minutes
         </p>
       </div>
     </section>
