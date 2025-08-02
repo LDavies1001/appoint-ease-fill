@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { User, Mail, Lock, Eye, EyeOff, CheckCircle, Phone, Heart, ArrowLeft, MapPin, Check } from 'lucide-react';
 import { PostcodeLookup } from '@/components/ui/postcode-lookup-enhanced';
 
+// Fixed import issue - using PostcodeLookup instead of LocationInput
 import { sanitizeInput, validateEmail, validatePhone, validatePassword, rateLimitCheck } from '@/utils/validation';
 
 const CustomerSignup = () => {
