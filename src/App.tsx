@@ -16,6 +16,7 @@ import SlotDiscovery from "./pages/SlotDiscovery";
 
 import NewBusinessProfile from "./pages/NewBusinessProfile";
 import CreateBusinessProfile from "./pages/CreateBusinessProfile";
+import CreateCustomerProfile from "./pages/CreateCustomerProfile";
 import Profile from "./pages/Profile";
 import PublicPortfolio from "./pages/PublicPortfolio";
 import EnhancedBusinessProfile from "./pages/EnhancedBusinessProfile";
@@ -49,6 +50,7 @@ const App = () => {
                     <Route path="/discover" element={<SlotDiscovery />} />
                     <Route path="/business-profile" element={<NewBusinessProfile />} />
                     <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
+                    <Route path="/create-customer-profile" element={<CreateCustomerProfile />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
                     <Route path="/business/:providerId" element={<EnhancedBusinessProfile />} />
