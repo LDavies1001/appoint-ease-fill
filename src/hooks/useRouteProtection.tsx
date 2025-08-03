@@ -8,6 +8,15 @@ export const useRouteProtection = () => {
   const location = useLocation();
 
   useEffect(() => {
+    console.log('Route Protection - State:', { 
+      loading, 
+      user: !!user, 
+      profile: !!profile, 
+      profileComplete: profile?.is_profile_complete,
+      role: profile?.role,
+      pathname: location.pathname 
+    });
+    
     // Don't redirect while auth is still loading
     if (loading) return;
 

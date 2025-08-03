@@ -28,43 +28,47 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <BookingNotificationHelper>
-          <BrowserRouter>
-            <div className="min-h-screen bg-background w-full">
-              <main className="w-full">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/signup/customer" element={<CustomerSignup />} />
-                  <Route path="/signup/business" element={<BusinessSignup />} />
-                  <Route path="/onboarding" element={<Onboarding />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/discover" element={<SlotDiscovery />} />
-                  <Route path="/business-profile" element={<NewBusinessProfile />} />
-                  <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
-                  <Route path="/business/:providerId" element={<EnhancedBusinessProfile />} />
-                  <Route path="/provider/:providerId/book" element={<ProviderBooking />} />
-                  <Route path="/customer/:customerId" element={<CustomerProfileView />} />
-                  <Route path="/business/:providerId/view" element={<CustomerBusinessView />} />
-                  <Route path="/review" element={<ReviewForm />} />
-                  <Route path="/settings" element={<UserSettings />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-            </div>
-            <Toaster />
-            <Sonner />
-          </BrowserRouter>
-        </BookingNotificationHelper>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log('App component rendering...');
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AuthProvider>
+          <BookingNotificationHelper>
+            <BrowserRouter>
+              <div className="min-h-screen bg-background w-full">
+                <main className="w-full">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/signup/customer" element={<CustomerSignup />} />
+                    <Route path="/signup/business" element={<BusinessSignup />} />
+                    <Route path="/onboarding" element={<Onboarding />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/discover" element={<SlotDiscovery />} />
+                    <Route path="/business-profile" element={<NewBusinessProfile />} />
+                    <Route path="/create-business-profile" element={<CreateBusinessProfile />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/portfolio/:providerId" element={<PublicPortfolio />} />
+                    <Route path="/business/:providerId" element={<EnhancedBusinessProfile />} />
+                    <Route path="/provider/:providerId/book" element={<ProviderBooking />} />
+                    <Route path="/customer/:customerId" element={<CustomerProfileView />} />
+                    <Route path="/business/:providerId/view" element={<CustomerBusinessView />} />
+                    <Route path="/review" element={<ReviewForm />} />
+                    <Route path="/settings" element={<UserSettings />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+              </div>
+              <Toaster />
+              <Sonner />
+            </BrowserRouter>
+          </BookingNotificationHelper>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
