@@ -43,7 +43,7 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string, latitude?: number, longitude?: number, serviceRadius?: number, postcodeData?: any) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
+  signOut: () => Promise<{ error: any }>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
   switchRole: (role: 'customer' | 'provider') => Promise<{ error: any }>;
   addRole: (role: 'customer' | 'provider', businessName?: string) => Promise<{ error: any }>;
@@ -280,7 +280,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    
+    // Ensure local state is cleared even if Supabase signOut has issues
+    setUser(null);
+    setSession(null);
+    setProfile(null);
+    setUserRoles([]);
+    
+    return { error };
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
