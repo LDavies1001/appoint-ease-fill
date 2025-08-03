@@ -173,7 +173,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string, latitude?: number, longitude?: number, serviceRadius?: number, postcodeData?: any) => {
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = 'https://dacfc008-5537-4731-87a3-048e52c0023f.lovableproject.com/';
     
     const { data, error } = await supabase.auth.signUp({
       email,
