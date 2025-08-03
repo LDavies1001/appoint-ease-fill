@@ -87,7 +87,7 @@ export const SecureAuthForm: React.FC<SecureAuthFormProps> = ({ mode, onSuccess 
       const sanitizedEmail = SecurityValidator.sanitizeInput(email);
       
       if (mode === 'signup') {
-        const redirectUrl = `${window.location.origin}/auth`;
+        const redirectUrl = 'https://openslot.uk/auth';
         const { error } = await supabase.auth.signUp({
           email: sanitizedEmail,
           password,
