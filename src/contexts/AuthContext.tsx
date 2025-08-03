@@ -188,7 +188,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, role: 'customer' | 'provider', fullName?: string, phone?: string, location?: string, businessName?: string, latitude?: number, longitude?: number, serviceRadius?: number, postcodeData?: any) => {
     console.log('SignUp called with:', { email, role, fullName, phone, location, businessName });
-    const redirectUrl = 'https://openslot.uk/auth';
+    const redirectUrl = `${window.location.origin}/auth`;
     
     const { data, error } = await supabase.auth.signUp({
       email,
