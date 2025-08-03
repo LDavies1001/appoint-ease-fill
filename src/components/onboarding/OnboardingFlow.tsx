@@ -158,6 +158,8 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
   };
 
   const handleOnboardingComplete = () => {
+    console.log('OnboardingFlow - handleOnboardingComplete called', { selectedRole, user: !!user });
+    
     // Clear any saved onboarding data
     if (user?.id) {
       localStorage.removeItem(`onboarding_form_${user.id}`);
@@ -165,6 +167,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
     }
 
     // Navigate to appropriate dashboard
+    console.log('OnboardingFlow - Navigating to dashboard for role:', selectedRole);
     if (selectedRole === 'customer') {
       navigate('/dashboard');
     } else {

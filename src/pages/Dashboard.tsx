@@ -19,6 +19,7 @@ const Dashboard = () => {
     hasProfile: !!profile, 
     profileComplete: profile?.is_profile_complete,
     activeRole: profile?.active_role,
+    role: profile?.role,
     isMobile 
   });
 

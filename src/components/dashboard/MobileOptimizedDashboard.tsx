@@ -130,11 +130,27 @@ const MobileOptimizedDashboard = () => {
   console.log('MobileOptimizedDashboard - State:', { 
     profile: !!profile,
     profileId: profile?.user_id,
+    profileName: profile?.name,
+    profileRole: profile?.role,
+    profileActiveRole: profile?.active_role,
     loading,
     availableSlotsCount: availableSlots.length,
     categoriesCount: categories.length,
     bookingsCount: myBookings.length
   });
+
+  // Safety check - if no profile, show loading or error
+  if (!profile) {
+    console.log('MobileOptimizedDashboard - No profile found');
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     fetchAvailableSlots();
