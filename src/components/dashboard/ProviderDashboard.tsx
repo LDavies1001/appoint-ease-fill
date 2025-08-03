@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import MobileOptimizedDashboard from './MobileOptimizedDashboard';
+
 import EnhancedLibraryTab from './EnhancedLibraryTab';
 import ProfileTab from './ProfileTab';
 import AnalyticsTab from './AnalyticsTab';

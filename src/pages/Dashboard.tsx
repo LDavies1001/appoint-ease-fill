@@ -1,9 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouteProtection } from '@/hooks/useRouteProtection';
-import { useIsMobile } from '@/hooks/use-mobile';
-import CustomerDashboard from '@/components/dashboard/CustomerDashboard';
-import MobileOptimizedDashboard from '@/components/dashboard/MobileOptimizedDashboard';
+import ResponsiveCustomerDashboard from '@/components/dashboard/ResponsiveCustomerDashboard';
 import ProviderDashboard from '@/components/dashboard/ProviderDashboard';
 import { Button } from '@/components/ui/button';
 import { Settings, User, ChevronDown, Eye, Edit, LogOut } from 'lucide-react';
@@ -12,37 +10,17 @@ import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
-  const isMobile = useIsMobile();
   
   // Use route protection to handle auth and profile checks
   useRouteProtection();
 
-  console.log('Dashboard - Auth state:', { 
-    loading, 
-    hasUser: !!user, 
-    hasProfile: !!profile, 
-    profileComplete: profile?.is_profile_complete,
-    activeRole: profile?.active_role,
-    role: profile?.role,
-    isMobile 
-  });
-
   if (loading || !profile) {
-    console.log('Dashboard - Still loading or no profile');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
-
-  // For mobile devices, use the mobile-optimized dashboard without the desktop wrapper
-  if (isMobile && profile.active_role === 'customer') {
-    console.log('Dashboard - Rendering mobile optimized dashboard for customer');
-    return <MobileOptimizedDashboard />;
-  }
-  
-  console.log('Dashboard - Rendering desktop dashboard', { isMobile, role: profile.active_role });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 overflow-x-hidden w-full">
@@ -111,7 +89,7 @@ const Dashboard = () => {
       <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-6 sm:py-8 lg:py-12">
         <div className="bg-gradient-to-r from-card via-card/95 to-card/90 rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-xl border border-border/50 backdrop-blur-sm overflow-hidden">
           {profile.active_role === 'customer' ? (
-            <CustomerDashboard />
+            <ResponsiveCustomerDashboard />
           ) : (
             <ProviderDashboard />
           )}
