@@ -1,7 +1,9 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouteProtection } from '@/hooks/useRouteProtection';
+import { useIsMobile } from '@/hooks/use-mobile';
 import CustomerDashboard from '@/components/dashboard/CustomerDashboard';
+import MobileOptimizedDashboard from '@/components/dashboard/MobileOptimizedDashboard';
 import ProviderDashboard from '@/components/dashboard/ProviderDashboard';
 import { Button } from '@/components/ui/button';
 import { Settings, User, ChevronDown, Eye, Edit, LogOut } from 'lucide-react';
@@ -12,6 +14,7 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
   const { user: routeUser, profile: routeProfile, loading: routeLoading } = useRouteProtection();
+  const isMobile = useIsMobile();
 
   if (loading) {
     return (
@@ -31,6 +34,11 @@ const Dashboard = () => {
   }
 
   // Route protection handles redirects, so if we're here, user is authenticated and profile is complete
+  
+  // For mobile devices, use the mobile-optimized dashboard without the desktop wrapper
+  if (isMobile && profile.active_role === 'customer') {
+    return <MobileOptimizedDashboard />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 overflow-x-hidden w-full">

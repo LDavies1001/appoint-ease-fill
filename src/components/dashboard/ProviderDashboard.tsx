@@ -533,19 +533,26 @@ const ProviderDashboard = () => {
     slot.date === new Date().toISOString().split('T')[0]
   );
 
-  // If mobile, use the mobile-optimized dashboard
+  // For mobile, use a simplified provider interface
   if (isMobile) {
     return (
-      <MobileOptimizedDashboard
-        mySlots={mySlots}
-        myBookings={myBookings}
-        businessData={businessData}
-        onBusinessUpdate={handleBusinessUpdate}
-        onShowAddSlot={() => setShowAddSlot(true)}
-        onShowBulkCreator={() => setShowBulkCreator(true)}
-        todaysSlots={todaysSlots}
-        upcomingBookings={upcomingBookings}
-      />
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 p-4">
+        <div className="space-y-4">
+          <div className="text-center">
+            <h1 className="text-lg font-semibold">Provider Dashboard</h1>
+            <p className="text-sm text-muted-foreground">Mobile view coming soon</p>
+          </div>
+          <Card className="p-6 text-center">
+            <p className="text-muted-foreground mb-4">
+              The full provider dashboard is optimized for desktop. 
+              Please use a desktop or tablet for the complete experience.
+            </p>
+            <Button onClick={() => window.location.reload()}>
+              Continue Anyway
+            </Button>
+          </Card>
+        </div>
+      </div>
     );
   }
 
