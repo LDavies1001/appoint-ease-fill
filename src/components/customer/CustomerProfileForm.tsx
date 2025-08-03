@@ -96,7 +96,7 @@ export const CustomerProfileForm: React.FC<CustomerProfileFormProps> = ({
           location: formData.location,
           bio: formData.bio,
           avatar_url: formData.avatar_url,
-          privacy_settings: formData.privacy_settings,
+          privacy_settings: formData.privacy_settings as any,
           gdpr_consent: formData.gdpr_consent,
           terms_accepted: formData.terms_accepted,
           is_profile_complete: true
