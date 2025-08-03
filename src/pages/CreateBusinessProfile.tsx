@@ -13,16 +13,26 @@ const CreateBusinessProfile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('CreateBusinessProfile - Auth state:', { 
+      hasUser: !!user, 
+      hasProfile: !!profile, 
+      profileRole: profile?.role, 
+      profileComplete: profile?.is_profile_complete 
+    });
+    
     if (!user || !profile) {
+      console.log('CreateBusinessProfile - Redirecting to auth - missing user or profile');
       navigate('/auth');
       return;
     }
 
     if (profile.role !== 'provider') {
+      console.log('CreateBusinessProfile - Redirecting to dashboard - not a provider');
       navigate('/dashboard');
       return;
     }
 
+    console.log('CreateBusinessProfile - Checking existing profile...');
     checkExistingProfile();
   }, [user, profile, navigate]);
 
