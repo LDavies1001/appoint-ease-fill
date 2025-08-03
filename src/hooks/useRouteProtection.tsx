@@ -31,9 +31,10 @@ export const useRouteProtection = () => {
       return;
     }
 
-    // If authenticated but no profile, something went wrong - redirect to auth
-    if (user && !profile && !['/auth'].includes(location.pathname)) {
-      navigate('/auth');
+    // If authenticated but no profile, redirect to onboarding to create profile
+    if (user && !profile && !['/auth', '/onboarding', '/create-business-profile'].includes(location.pathname)) {
+      console.log('Route Protection - User has no profile, redirecting to onboarding');
+      navigate('/onboarding');
       return;
     }
 

@@ -13,20 +13,20 @@ const Onboarding = () => {
   useRouteProtection();
 
   useEffect(() => {
-    if (!user || !profile) {
+    if (!user) {
       navigate('/auth');
       return;
     }
 
-    // If profile is complete, redirect to dashboard
-    if (profile.is_profile_complete) {
+    // If profile exists and is complete, redirect to dashboard
+    if (profile && profile.is_profile_complete) {
       navigate('/dashboard');
       return;
     }
   }, [user, profile, navigate]);
 
   // Show loading state while auth is being determined
-  if (!user || !profile) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-background">
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
@@ -40,7 +40,7 @@ const Onboarding = () => {
   }
 
   // If profile is already complete, show loading while redirecting
-  if (profile.is_profile_complete) {
+  if (profile && profile.is_profile_complete) {
     return (
       <div className="min-h-screen bg-background">
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
@@ -53,10 +53,10 @@ const Onboarding = () => {
     );
   }
 
-  // Determine initial role based on profile
-  const initialRole = profile.role !== 'customer' && profile.role !== 'provider' 
+  // Determine initial role based on profile (if it exists)
+  const initialRole = profile?.role !== 'customer' && profile?.role !== 'provider' 
     ? undefined 
-    : profile.role;
+    : profile?.role;
 
   return (
     <>

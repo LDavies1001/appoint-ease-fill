@@ -140,6 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (!profileData) {
         console.log('AuthContext - No profile found for user:', userId);
+        console.log('AuthContext - This user needs to complete profile setup');
         setProfile(null);
         setUserRoles([]);
         setLoading(false);
@@ -267,10 +268,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
+    console.log('AuthContext - signIn called with email:', email);
+    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password
     });
+    
+    console.log('AuthContext - signIn result:', { error: !!error, errorMessage: error?.message });
     return { error };
   };
 
