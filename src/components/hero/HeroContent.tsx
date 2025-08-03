@@ -18,7 +18,7 @@ export const HeroContent = () => {
         
         <p className="text-muted-foreground leading-relaxed max-w-2xl text-lg lg:text-xl font-medium">
           <span className="text-foreground font-semibold">Customers:</span> Discover available slots near you instantly
-          <br className="hidden sm:block" />
+          <br />
           <span className="text-foreground font-semibold">Businesses:</span> Fill empty appointments automatically
         </p>
       </div>
