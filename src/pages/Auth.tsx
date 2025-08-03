@@ -12,6 +12,7 @@ import { LocationInput } from '@/components/ui/location-input';
 
 
 const Auth = () => {
+  console.log('Auth component rendering...');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -30,6 +31,8 @@ const Auth = () => {
   const { signIn, signUp, user, profile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  
+  console.log('Auth state:', { user: !!user, profile: !!profile, showRoleSelection, selectedRole, showSuccessMessage });
 
   useEffect(() => {
     // Clear form data when switching tabs
