@@ -200,6 +200,8 @@ const CustomerDashboard = () => {
             business_phone, 
             rating, 
             business_description,
+            formatted_address,
+            business_postcode,
             business_category:business_categories(name)
           `)
           .eq('user_id', slot.provider_id)
@@ -210,7 +212,7 @@ const CustomerDashboard = () => {
           provider: {
             name: slot.provider?.name || 'Unknown',
             business_name: providerDetails?.business_name || slot.provider?.name || 'Unknown Business',
-            location: slot.provider?.location || 'Unknown Location',
+            location: providerDetails?.formatted_address || providerDetails?.business_postcode || slot.provider?.location || 'Location not specified',
             rating: providerDetails?.rating || 0,
             business_email: providerDetails?.business_email || '',
             business_phone: providerDetails?.business_phone || '',
