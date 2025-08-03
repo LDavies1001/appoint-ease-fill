@@ -8,9 +8,9 @@ export const HeroContent = () => {
     <div className="space-y-6 lg:space-y-8 animate-fade-in">
       {/* Main Headline */}
       <div className="space-y-4 lg:space-y-6">
-        <h1 className="font-bold text-foreground leading-[1.1] tracking-tight" 
-            style={{ fontSize: 'clamp(2rem, 7vw, 4rem)' }}>
+        <h1 className="font-bold text-foreground leading-[1.1] tracking-tight text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
           Find & Fill Last-Minute{' '}
+          <br className="sm:hidden" />
           <span className="bg-gradient-to-r from-sage-300 to-sage-500 bg-clip-text text-transparent">
             Appointments
           </span>
