@@ -31,10 +31,10 @@ export const useRouteProtection = () => {
       return;
     }
 
-    // If authenticated but no profile, redirect to customer signup to create profile
-    if (user && !profile && !['/auth', '/signup/customer', '/create-business-profile'].includes(location.pathname)) {
-      console.log('Route Protection - User has no profile, redirecting to customer signup');
-      navigate('/signup/customer');
+    // If authenticated but no profile, redirect to onboarding to create profile
+    if (user && !profile && !['/auth', '/onboarding', '/create-business-profile'].includes(location.pathname)) {
+      console.log('Route Protection - User has no profile, redirecting to onboarding');
+      navigate('/onboarding');
       return;
     }
 
@@ -48,7 +48,7 @@ export const useRouteProtection = () => {
           if (profile.role === 'provider') {
             navigate('/create-business-profile');
           } else {
-            navigate('/signup/customer');
+            navigate('/onboarding');
           }
         } else {
           // Restore last route or go to dashboard
@@ -67,16 +67,16 @@ export const useRouteProtection = () => {
         if (profile.role === 'provider' && location.pathname !== '/create-business-profile') {
           navigate('/create-business-profile');
           return;
-        } else if (profile.role === 'customer' && location.pathname !== '/signup/customer') {
-          navigate('/signup/customer');
+        } else if (profile.role === 'customer' && location.pathname !== '/onboarding') {
+          navigate('/onboarding');
           return;
         }
       }
 
       // If profile is complete and on onboarding pages, redirect to dashboard or last route
-      if (profile.is_profile_complete && ['/signup/customer', '/create-business-profile'].includes(location.pathname)) {
+      if (profile.is_profile_complete && ['/onboarding', '/create-business-profile'].includes(location.pathname)) {
         const lastRoute = localStorage.getItem('lastRoute');
-        if (lastRoute && !['/auth', '/signup/customer', '/create-business-profile'].includes(lastRoute)) {
+        if (lastRoute && !['/auth', '/onboarding', '/create-business-profile'].includes(lastRoute)) {
           navigate(lastRoute);
         } else {
           navigate('/dashboard');
