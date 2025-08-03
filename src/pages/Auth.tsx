@@ -66,15 +66,19 @@ const Auth = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    // Only redirect if user and profile exist AND they're not coming from email confirmation
-    // Check for email confirmation URL params that would indicate they just confirmed their email
+    // Check for email confirmation URL params
     const isEmailConfirmation = searchParams.get('type') === 'signup' || searchParams.get('message') === 'confirmed';
     
-    if (user && profile && !isEmailConfirmation) {
+    if (user && profile) {
       if (profile.is_profile_complete) {
         navigate('/dashboard');
       } else {
-        navigate('/onboarding');
+        // Route based on role for incomplete profiles
+        if (profile.role === 'provider') {
+          navigate('/create-business-profile');
+        } else {
+          navigate('/create-customer-profile');
+        }
       }
     }
   }, [user, profile, navigate, searchParams]);
