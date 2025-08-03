@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { useIsMobile } from '@/hooks/use-mobile';
 import CustomerDashboard from '@/components/dashboard/CustomerDashboard';
 import MobileOptimizedDashboard from '@/components/dashboard/MobileOptimizedDashboard';
@@ -9,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Settings, User, ChevronDown, Eye, Edit, LogOut } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
-
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
@@ -24,8 +22,8 @@ const Dashboard = () => {
     isMobile 
   });
 
-  if (loading) {
-    console.log('Dashboard - Still loading auth state');
+  if (loading || !profile) {
+    console.log('Dashboard - Still loading or no profile');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -33,33 +31,6 @@ const Dashboard = () => {
     );
   }
 
-  if (!user) {
-    console.log('Dashboard - No user, should redirect to auth');
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    console.log('Dashboard - No profile found');
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!profile.is_profile_complete) {
-    console.log('Dashboard - Profile incomplete');
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-  
   // For mobile devices, use the mobile-optimized dashboard without the desktop wrapper
   if (isMobile && profile.active_role === 'customer') {
     console.log('Dashboard - Rendering mobile optimized dashboard for customer');
