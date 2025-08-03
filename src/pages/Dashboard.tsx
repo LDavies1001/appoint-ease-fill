@@ -52,17 +52,20 @@ const Dashboard = () => {
             </div>
 
             {/* Account Management Options - Right */}
-            <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm">
+            <div className="flex items-center space-x-1 sm:space-x-3">
+              <Button variant="outline" size="sm" className="hidden sm:flex">
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
+              </Button>
+              <Button variant="outline" size="sm" className="sm:hidden">
+                <Settings className="h-4 w-4" />
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
-                    <User className="h-4 w-4 mr-2" />
-                    Profile
-                    <ChevronDown className="h-4 w-4 ml-2" />
+                    <User className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Profile</span>
+                    <ChevronDown className="h-4 w-4 sm:ml-2 ml-1" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 bg-background border z-50" align="end">
