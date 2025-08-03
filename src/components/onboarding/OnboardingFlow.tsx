@@ -28,6 +28,7 @@ type OnboardingStep = 'role-selection' | 'customer-setup' | 'business-setup' | '
 
 export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) => {
   console.log('OnboardingFlow rendering - initialRole:', initialRole);
+  console.log('OnboardingFlow - isMobile?:', window.innerWidth < 768);
   
   const [currentStep, setCurrentStep] = useState<OnboardingStep>(
     initialRole ? (initialRole === 'customer' ? 'customer-setup' : 'business-setup') : 'role-selection'
@@ -40,7 +41,15 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ initialRole }) =
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  console.log('OnboardingFlow state:', { currentStep, selectedRole, user: !!user, profile: !!profile });
+  console.log('OnboardingFlow state:', { 
+    currentStep, 
+    selectedRole, 
+    user: !!user, 
+    profile: !!profile,
+    profileRole: profile?.role,
+    profileComplete: profile?.is_profile_complete,
+    initialRole
+  });
 
   useEffect(() => {
     // Update progress based on current step
