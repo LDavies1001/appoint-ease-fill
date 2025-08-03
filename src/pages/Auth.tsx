@@ -66,14 +66,18 @@ const Auth = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    if (user && profile) {
+    // Only redirect if user and profile exist AND they're not coming from email confirmation
+    // Check for email confirmation URL params that would indicate they just confirmed their email
+    const isEmailConfirmation = searchParams.get('type') === 'signup' || searchParams.get('message') === 'confirmed';
+    
+    if (user && profile && !isEmailConfirmation) {
       if (profile.is_profile_complete) {
         navigate('/dashboard');
       } else {
         navigate('/onboarding');
       }
     }
-  }, [user, profile, navigate]);
+  }, [user, profile, navigate, searchParams]);
 
   const validatePhone = (phone: string) => {
     // Basic UK phone number validation
