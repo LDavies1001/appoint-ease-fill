@@ -210,7 +210,7 @@ const BusinessSignup = () => {
                 <img 
                   src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
                   alt="OpenSlot Logo" 
-                  className="w-12 h-12 object-contain"
+                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain"
                 />
                 <span className="text-2xl font-bold text-foreground">OpenSlot</span>
               </div>

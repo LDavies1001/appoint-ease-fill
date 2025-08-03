@@ -295,12 +295,11 @@ const Auth = () => {
         
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-4xl">
-            <div className="text-center mb-12">
-              <div className="flex items-center justify-center space-x-3 mb-6">
-                <BrandLogo className="w-[200px] h-[200px]" />
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="flex items-center justify-center space-x-3 mb-4 sm:mb-6">
+                <BrandLogo className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40" />
               </div>
-              <h1 className="font-bold text-foreground leading-[1.1] tracking-tight mb-4" 
-                  style={{ fontSize: 'clamp(1.5rem, 6vw, 3.5rem)' }}>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight tracking-tight mb-3 sm:mb-4">
                 Join OpenSlot
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium">
@@ -311,18 +310,18 @@ const Auth = () => {
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {/* Customer Option */}
               <Card 
-                className="group relative bg-gradient-to-br from-rose-50/80 via-white/60 to-rose-100/80 backdrop-blur-sm border border-rose-200/40 rounded-xl md:rounded-2xl p-8 hover:shadow-xl hover:shadow-rose-100/25 cursor-pointer transition-all duration-500 hover:-translate-y-1 animate-scale-in"
+                className="group relative bg-gradient-to-br from-rose-50/80 via-white/60 to-rose-100/80 backdrop-blur-sm border border-rose-200/40 rounded-xl p-6 sm:p-8 hover:shadow-xl hover:shadow-rose-100/25 cursor-pointer transition-all duration-500 hover:-translate-y-1 animate-scale-in"
                 onClick={() => {
                   setSelectedRole('customer');
                   setShowRoleSelection(false);
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-rose-50/0 to-rose-100/20 rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative text-center space-y-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-rose-200 to-rose-300 rounded-xl flex items-center justify-center mx-auto">
-                    <Heart className="h-8 w-8 text-rose-700" />
+                <div className="absolute inset-0 bg-gradient-to-br from-rose-50/0 to-rose-100/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative text-center space-y-4 sm:space-y-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-rose-200 to-rose-300 rounded-xl flex items-center justify-center mx-auto">
+                    <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-rose-700" />
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">For Customers</h3>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">For Customers</h3>
                   <p className="text-muted-foreground font-medium">
                     Discover available slots near you instantly and book trusted professionals
                   </p>
@@ -346,18 +345,18 @@ const Auth = () => {
 
               {/* Business Option */}
               <Card 
-                className="group relative bg-gradient-to-br from-sage-50/80 via-white/60 to-sage-100/80 backdrop-blur-sm border border-sage-200/40 rounded-xl md:rounded-2xl p-8 hover:shadow-xl hover:shadow-sage-100/25 cursor-pointer transition-all duration-500 hover:-translate-y-1 animate-scale-in"
+                className="group relative bg-gradient-to-br from-sage-50/80 via-white/60 to-sage-100/80 backdrop-blur-sm border border-sage-200/40 rounded-xl p-6 sm:p-8 hover:shadow-xl hover:shadow-sage-100/25 cursor-pointer transition-all duration-500 hover:-translate-y-1 animate-scale-in"
                 onClick={() => {
                   setSelectedRole('provider');
                   setShowRoleSelection(false);
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-sage-50/0 to-sage-100/20 rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative text-center space-y-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-sage-200 to-sage-300 rounded-xl flex items-center justify-center mx-auto">
-                    <Building className="h-8 w-8 text-sage-700" />
+                <div className="absolute inset-0 bg-gradient-to-br from-sage-50/0 to-sage-100/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative text-center space-y-4 sm:space-y-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-sage-200 to-sage-300 rounded-xl flex items-center justify-center mx-auto">
+                    <Building className="h-6 w-6 sm:h-8 sm:w-8 text-sage-700" />
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">For Businesses</h3>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">For Businesses</h3>
                   <p className="text-muted-foreground font-medium">
                     Fill empty appointments automatically and grow your business with new customers
                   </p>
@@ -400,11 +399,11 @@ const Auth = () => {
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 animate-fade-in">
         <div className="flex items-center justify-center p-4 min-h-screen">
           <div className="w-full max-w-md">
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center space-x-3 mb-6">
-                <BrandLogo className="w-[200px] h-[200px]" />
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="flex items-center justify-center space-x-3 mb-4 sm:mb-6">
+                <BrandLogo className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40" />
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-3 sm:mb-4">
                 Account Created Successfully!
               </h1>
               <p className="text-muted-foreground font-medium">
@@ -590,9 +589,9 @@ const Auth = () => {
         
         <div className="flex items-center justify-center p-4 min-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md">
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center space-x-3 mb-6">
-                <BrandLogo className="w-[200px] h-[200px]" />
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="flex items-center justify-center space-x-3 mb-4 sm:mb-6">
+                <BrandLogo className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40" />
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
                 Create Your Business Account
@@ -760,7 +759,7 @@ const Auth = () => {
             <Card className="border-2 border-sage-200/60 shadow-xl bg-white/95">
               <div className="p-8">
                 <div className="text-center mb-6">
-                  <BrandLogo className="w-[170px] h-[170px] mx-auto mb-4" />
+                  <BrandLogo className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto mb-4" />
                   <h2 className="text-2xl font-bold text-foreground">
                     Welcome Back
                   </h2>
