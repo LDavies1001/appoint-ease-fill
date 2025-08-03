@@ -401,7 +401,7 @@ const CustomerSignup = () => {
                           <Check className="h-5 w-5" />
                         </div>
                       )}
-                      <p className="text-sm text-muted-foreground">We'll show you available beauty services in your area</p>
+                      <p className="text-sm text-muted-foreground">We'll connect you with local services</p>
                     </div>
                   </div>
                 </div>
