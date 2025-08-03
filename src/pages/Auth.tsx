@@ -35,7 +35,19 @@ const Auth = () => {
   console.log('Auth state:', { user: !!user, profile: !!profile, showRoleSelection, selectedRole, showSuccessMessage });
 
   useEffect(() => {
-    // Clear form data when switching tabs
+    // Check for Supabase email confirmation parameters first
+    const accessToken = searchParams.get('access_token');
+    const refreshToken = searchParams.get('refresh_token');
+    const type = searchParams.get('type');
+    
+    // If this is an email confirmation, let Supabase handle it automatically
+    // The auth state change listener will pick up the session and redirect appropriately
+    if (accessToken && refreshToken && type === 'signup') {
+      console.log('Email confirmation detected, letting Supabase handle authentication...');
+      return; // Let the auth state listener handle the redirect
+    }
+    
+    // Clear form data when switching tabs (only if not email confirmation)
     setEmail('');
     setPassword('');
     setConfirmPassword('');
@@ -295,6 +307,32 @@ const Auth = () => {
       className={`${className} object-contain`}
     />
   );
+
+  // Check if this is an email confirmation and show loading
+  const accessToken = searchParams.get('access_token');
+  const refreshToken = searchParams.get('refresh_token');
+  const type = searchParams.get('type');
+  
+  if (accessToken && refreshToken && type === 'signup') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 animate-fade-in">
+        <div className="flex items-center justify-center p-4 min-h-screen">
+          <div className="w-full max-w-md text-center">
+            <div className="flex items-center justify-center space-x-3 mb-6">
+              <BrandLogo className="w-24 h-24 sm:w-32 sm:h-32" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-4">
+              Confirming Your Account
+            </h1>
+            <p className="text-muted-foreground mb-6">
+              Please wait while we verify your email address...
+            </p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Role Selection Page
   if (showRoleSelection) {
