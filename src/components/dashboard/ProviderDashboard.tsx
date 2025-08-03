@@ -533,6 +533,22 @@ const ProviderDashboard = () => {
     slot.date === new Date().toISOString().split('T')[0]
   );
 
+  // If mobile, use the mobile-optimized dashboard
+  if (isMobile) {
+    return (
+      <MobileOptimizedDashboard
+        mySlots={mySlots}
+        myBookings={myBookings}
+        businessData={businessData}
+        onBusinessUpdate={handleBusinessUpdate}
+        onShowAddSlot={() => setShowAddSlot(true)}
+        onShowBulkCreator={() => setShowBulkCreator(true)}
+        todaysSlots={todaysSlots}
+        upcomingBookings={upcomingBookings}
+      />
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Enhanced Hero Banner */}
