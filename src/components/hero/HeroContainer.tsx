@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Heart, Building } from 'lucide-react';
 import { LogoWithBgRemoval } from '@/components/ui/logo-with-bg-removal';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface HeroContainerProps {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ interface HeroContainerProps {
 export const HeroContainer = ({ children }: HeroContainerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,23 +84,41 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
 
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
-              <Link to="/auth" className="text-muted-foreground hover:text-foreground transition-colors font-medium">
-                Sign In
-              </Link>
-              <div className="flex space-x-2">
-                <Link to="/signup/customer">
-                  <Button variant="outline" size="sm" className="border-rose-200 text-rose-700 hover:bg-rose-50">
-                    <Heart className="h-4 w-4 mr-1" />
-                    Customer
+              {user ? (
+                <>
+                  <Link to="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors font-medium">
+                    Dashboard
+                  </Link>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={signOut}
+                    className="border-rose-200 text-rose-700 hover:bg-rose-50"
+                  >
+                    Sign Out
                   </Button>
-                </Link>
-                <Link to="/signup/business">
-                  <Button size="sm" className="bg-sage-600 hover:bg-sage-700 text-white">
-                    <Building className="h-4 w-4 mr-1" />
-                    Business
-                  </Button>
-                </Link>
-              </div>
+                </>
+              ) : (
+                <>
+                  <Link to="/auth" className="text-muted-foreground hover:text-foreground transition-colors font-medium">
+                    Sign In
+                  </Link>
+                  <div className="flex space-x-2">
+                    <Link to="/signup/customer">
+                      <Button variant="outline" size="sm" className="border-rose-200 text-rose-700 hover:bg-rose-50">
+                        <Heart className="h-4 w-4 mr-1" />
+                        Customer
+                      </Button>
+                    </Link>
+                    <Link to="/signup/business">
+                      <Button size="sm" className="bg-sage-600 hover:bg-sage-700 text-white">
+                        <Building className="h-4 w-4 mr-1" />
+                        Business
+                      </Button>
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -135,24 +155,40 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
                 
                 <hr className="border-border/40" />
                 
-                <Link to="/auth" className="text-muted-foreground hover:text-foreground transition-colors font-medium">
-                  Sign In
-                </Link>
-                
-                <div className="flex flex-col space-y-2 pt-2">
-                  <Link to="/signup/customer">
-                    <Button variant="outline" className="w-full border-rose-200 text-rose-700 hover:bg-rose-50">
-                      <Heart className="h-4 w-4 mr-2" />
-                      I'm a Customer
-                    </Button>
-                  </Link>
-                  <Link to="/signup/business">
-                    <Button className="w-full bg-sage-600 hover:bg-sage-700 text-white">
-                      <Building className="h-4 w-4 mr-2" />
-                      I'm a Business
-                    </Button>
-                  </Link>
-                </div>
+                {user ? (
+                  <>
+                    <Link to="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors font-medium">
+                      Dashboard
+                    </Link>
+                    <button 
+                      onClick={signOut}
+                      className="text-left text-muted-foreground hover:text-foreground transition-colors font-medium"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/auth" className="text-muted-foreground hover:text-foreground transition-colors font-medium">
+                      Sign In
+                    </Link>
+                    
+                    <div className="flex flex-col space-y-2 pt-2">
+                      <Link to="/signup/customer">
+                        <Button variant="outline" className="w-full border-rose-200 text-rose-700 hover:bg-rose-50">
+                          <Heart className="h-4 w-4 mr-2" />
+                          I'm a Customer
+                        </Button>
+                      </Link>
+                      <Link to="/signup/business">
+                        <Button className="w-full bg-sage-600 hover:bg-sage-700 text-white">
+                          <Building className="h-4 w-4 mr-2" />
+                          I'm a Business
+                        </Button>
+                      </Link>
+                    </div>
+                  </>
+                )}
               </nav>
             </div>
           )}
