@@ -1,5 +1,7 @@
 import React from 'react';
 import { Calendar, Star, Search, MapPin, Building, CheckCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { HeroContainer } from '@/components/hero/HeroContainer';
 import { HeroContent } from '@/components/hero/HeroContent';
 import { HeroImage } from '@/components/hero/HeroImage';
@@ -11,6 +13,17 @@ import { FinalCTASection } from '@/components/landing/FinalCTASection';
 import Footer from '@/components/landing/Footer';
 
 const Index = () => {
+  const { user, profile } = useAuth();
+  
+  // Use route protection to handle logged in users
+  useRouteProtection();
+  
+  console.log('Index page - Auth state:', { 
+    hasUser: !!user, 
+    hasProfile: !!profile, 
+    profileComplete: profile?.is_profile_complete 
+  });
+
   return (
     <div className="w-full">
       {/* Hero Section with integrated sticky header */}
