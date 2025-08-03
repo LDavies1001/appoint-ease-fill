@@ -56,7 +56,7 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
                 className="w-16 h-16 object-contain"
               />
               <span className="font-bold text-2xl text-foreground group-hover:text-sage-600 transition-colors">
-                OpenSlot
+                <span className="whitespace-nowrap">OpenSlot</span>
               </span>
             </Link>
 

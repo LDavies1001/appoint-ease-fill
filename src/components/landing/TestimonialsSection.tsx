@@ -36,7 +36,7 @@ export const TestimonialsSection = () => {
             What Our Users Say
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Real feedback from customers and businesses using OpenSlot
+            Real feedback from customers and businesses using <span className="whitespace-nowrap">OpenSlot</span>
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export const TestimonialsSection = () => {
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">No reviews yet!</h3>
               <p className="text-muted-foreground leading-relaxed mb-6">
-                Be one of the first to experience OpenSlot and help us build something amazing together. 
+                Be one of the first to experience <span className="whitespace-nowrap">OpenSlot</span> and help us build something amazing together. 
                 Your feedback will help shape the future of appointment booking.
               </p>
               

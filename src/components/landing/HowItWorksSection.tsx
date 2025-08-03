@@ -9,7 +9,7 @@ export const HowItWorksSection = () => {
     {
       icon: Search,
       title: 'Find Available Slots',
-      description: 'Browse real-time availability from local providers in your area',
+      description: 'Browse <span className="whitespace-nowrap">real-time</span> availability from local providers in your area',
       color: 'from-rose-500 to-rose-600'
     },
     {
@@ -111,8 +111,7 @@ export const HowItWorksSection = () => {
 
                 {/* Content */}
                 <h3 className="text-xl font-semibold text-foreground mb-3">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                  {step.description}
+                <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto" dangerouslySetInnerHTML={{ __html: step.description }}>
                 </p>
               </div>
 

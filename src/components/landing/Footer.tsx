@@ -10,9 +10,9 @@ const Footer = () => {
           
           {/* Column 1: Company Info */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">OpenSlot.uk</h3>
+            <h3 className="text-lg font-semibold text-foreground"><span className="whitespace-nowrap">OpenSlot.uk</span></h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Helping small businesses fill last-minute appointments
+              Helping small businesses fill <span className="whitespace-nowrap">last-minute</span> appointments
             </p>
             <div className="text-xs text-muted-foreground space-y-1">
               <p>Company registration no: 12345678</p>

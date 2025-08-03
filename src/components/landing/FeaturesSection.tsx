@@ -6,7 +6,7 @@ export const FeaturesSection = () => {
     {
       icon: Zap,
       title: 'Instant Booking',
-      description: 'Book available appointments in seconds, no back-and-forth messaging needed.',
+      description: 'Book available appointments in seconds, no <span className="whitespace-nowrap">back-and-forth</span> messaging needed.',
       color: 'text-yellow-600'
     },
     {
@@ -17,14 +17,14 @@ export const FeaturesSection = () => {
     },
     {
       icon: Clock,
-      title: 'Last-Minute Deals',
+      title: '<span className="whitespace-nowrap">Last-Minute</span> Deals',
       description: 'Get great prices on appointments that would otherwise go empty.',
       color: 'text-green-600'
     },
     {
       icon: Shield,
       title: 'Secure Platform',
-      description: 'Your bookings and payments are protected with enterprise-grade security.',
+      description: 'Your bookings and payments are protected with <span className="whitespace-nowrap">enterprise-grade</span> security.',
       color: 'text-purple-600'
     },
     {
@@ -62,8 +62,8 @@ export const FeaturesSection = () => {
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-${feature.color.split('-')[1]}-100 to-${feature.color.split('-')[1]}-200 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                 <feature.icon className={`h-6 w-6 ${feature.color}`} />
               </div>
-              <h3 className="text-xl font-semibold text-foreground mb-3">{feature.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+              <h3 className="text-xl font-semibold text-foreground mb-3" dangerouslySetInnerHTML={{ __html: feature.title }}></h3>
+              <p className="text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: feature.description }}></p>
             </div>
           ))}
         </div>
