@@ -66,10 +66,17 @@ const Auth = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    // Check for email confirmation URL params
-    const isEmailConfirmation = searchParams.get('type') === 'signup' || searchParams.get('message') === 'confirmed';
+    console.log('Auth redirect effect:', { 
+      hasUser: !!user, 
+      hasProfile: !!profile, 
+      profileComplete: profile?.is_profile_complete,
+      profileRole: profile?.role,
+      searchParams: Object.fromEntries(searchParams.entries())
+    });
     
+    // Only redirect if we have both user and profile
     if (user && profile) {
+      console.log('Redirecting authenticated user...');
       if (profile.is_profile_complete) {
         navigate('/dashboard');
       } else {
@@ -81,6 +88,7 @@ const Auth = () => {
         }
       }
     }
+    // If we don't have user or profile, stay on the auth page
   }, [user, profile, navigate, searchParams]);
 
   const validatePhone = (phone: string) => {
