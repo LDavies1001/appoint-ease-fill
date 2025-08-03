@@ -55,10 +55,10 @@ img, video, iframe, embed, object {
     table-layout: fixed;
   }
   
-  /* Ensure grid layouts are mobile-friendly */
-  .grid {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+  /* Fix overly aggressive grid rules - remove !important and make more selective */
+  .grid:not(.grid-cols-1):not(.grid-cols-2):not(.grid-cols-3):not(.grid-cols-4):not(.grid-cols-5):not(.grid-cols-6) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 
