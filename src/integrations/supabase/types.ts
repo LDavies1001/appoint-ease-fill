@@ -937,6 +937,33 @@ export type Database = {
           },
         ]
       }
+      rate_limits: {
+        Row: {
+          action_type: string
+          attempts: number
+          expires_at: string
+          id: string
+          identifier: string
+          window_start: string
+        }
+        Insert: {
+          action_type: string
+          attempts?: number
+          expires_at: string
+          id?: string
+          identifier: string
+          window_start?: string
+        }
+        Update: {
+          action_type?: string
+          attempts?: number
+          expires_at?: string
+          id?: string
+          identifier?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           booking_id: string
@@ -1034,6 +1061,36 @@ export type Database = {
           old_role?: string | null
           user_agent?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      security_audit_log: {
+        Row: {
+          created_at: string
+          event_details: Json
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_details?: Json
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_details?: Json
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1136,6 +1193,15 @@ export type Database = {
         Args: { lat1: number; lon1: number; lat2: number; lon2: number }
         Returns: number
       }
+      check_rate_limit: {
+        Args: {
+          p_identifier: string
+          p_action_type: string
+          p_max_attempts?: number
+          p_window_minutes?: number
+        }
+        Returns: boolean
+      }
       find_providers_within_radius: {
         Args: { search_lat: number; search_lon: number; radius_miles?: number }
         Returns: {
@@ -1154,6 +1220,15 @@ export type Database = {
       secure_role_switch: {
         Args: { target_role: string; business_name?: string }
         Returns: Json
+      }
+      validate_file_upload: {
+        Args: {
+          file_name: string
+          file_size: number
+          mime_type: string
+          bucket_name: string
+        }
+        Returns: boolean
       }
       verify_business_ownership: {
         Args: { user_id: string; business_name: string }

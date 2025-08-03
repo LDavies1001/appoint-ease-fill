@@ -1,15 +1,8 @@
-// Input validation utilities for security
+// Enhanced input validation utilities for security
+import { SecurityValidator } from './securityEnhanced';
 
 export const sanitizeInput = (input: string): string => {
-  if (!input) return '';
-  
-  // Remove HTML tags and scripts
-  const sanitized = input
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/<[^>]*>/g, '')
-    .trim();
-    
-  return sanitized;
+  return SecurityValidator.sanitizeInput(input);
 };
 
 export const validateEmail = (email: string): boolean => {
@@ -32,12 +25,7 @@ export const validateBusinessName = (name: string): boolean => {
 };
 
 export const validateUrl = (url: string): boolean => {
-  try {
-    const urlObj = new URL(url);
-    return ['http:', 'https:'].includes(urlObj.protocol);
-  } catch {
-    return false;
-  }
+  return SecurityValidator.validateSecureUrl(url);
 };
 
 export const validatePostcode = (postcode: string): boolean => {
@@ -77,56 +65,7 @@ export const validatePassword = (password: string): {
   isValid: boolean;
   score: number;
   errors: string[];
+  suggestions: string[];
 } => {
-  const errors: string[] = [];
-  let score = 0;
-  
-  if (password.length < 8) {
-    errors.push('Password must be at least 8 characters long');
-  } else {
-    score += 1;
-  }
-  
-  if (!/[a-z]/.test(password)) {
-    errors.push('Password must contain at least one lowercase letter');
-  } else {
-    score += 1;
-  }
-  
-  if (!/[A-Z]/.test(password)) {
-    errors.push('Password must contain at least one uppercase letter');
-  } else {
-    score += 1;
-  }
-  
-  if (!/\d/.test(password)) {
-    errors.push('Password must contain at least one number');
-  } else {
-    score += 1;
-  }
-  
-  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-    errors.push('Password must contain at least one special character');
-  } else {
-    score += 1;
-  }
-  
-  // Check for common patterns
-  const commonPatterns = [
-    /123456/,
-    /password/i,
-    /qwerty/i,
-    /abc/i,
-  ];
-  
-  if (commonPatterns.some(pattern => pattern.test(password))) {
-    errors.push('Password contains common patterns');
-    score = Math.max(0, score - 2);
-  }
-  
-  return {
-    isValid: errors.length === 0,
-    score: Math.min(score, 5),
-    errors
-  };
+  return SecurityValidator.validatePassword(password);
 };
