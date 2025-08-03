@@ -87,7 +87,7 @@ export const SecureAuthForm: React.FC<SecureAuthFormProps> = ({ mode, onSuccess 
       const sanitizedEmail = SecurityValidator.sanitizeInput(email);
       
       if (mode === 'signup') {
-        const redirectUrl = 'https://dacfc008-5537-4731-87a3-048e52c0023f.lovableproject.com/';
+        const redirectUrl = `${window.location.origin}/auth`;
         const { error } = await supabase.auth.signUp({
           email: sanitizedEmail,
           password,
