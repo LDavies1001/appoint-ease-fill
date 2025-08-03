@@ -13,10 +13,19 @@ import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
-  const { user: routeUser, profile: routeProfile, loading: routeLoading } = useRouteProtection();
   const isMobile = useIsMobile();
 
+  console.log('Dashboard - Auth state:', { 
+    loading, 
+    hasUser: !!user, 
+    hasProfile: !!profile, 
+    profileComplete: profile?.is_profile_complete,
+    activeRole: profile?.active_role,
+    isMobile 
+  });
+
   if (loading) {
+    console.log('Dashboard - Still loading auth state');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -24,8 +33,17 @@ const Dashboard = () => {
     );
   }
 
-  // Additional safety check for profile
+  if (!user) {
+    console.log('Dashboard - No user, should redirect to auth');
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   if (!profile) {
+    console.log('Dashboard - No profile found');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -33,7 +51,14 @@ const Dashboard = () => {
     );
   }
 
-  // Route protection handles redirects, so if we're here, user is authenticated and profile is complete
+  if (!profile.is_profile_complete) {
+    console.log('Dashboard - Profile incomplete');
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
   
   // For mobile devices, use the mobile-optimized dashboard without the desktop wrapper
   if (isMobile && profile.active_role === 'customer') {
