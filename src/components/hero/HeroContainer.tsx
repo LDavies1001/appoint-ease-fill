@@ -132,7 +132,7 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-border/40 bg-background/95 backdrop-blur-lg">
+            <div className="lg:hidden py-4 border-t border-border/40 bg-background/95 backdrop-blur-lg relative z-50">
               <nav className="flex flex-col space-y-4">
                 <button 
                   onClick={() => scrollToSection('features')}
@@ -157,12 +157,19 @@ export const HeroContainer = ({ children }: HeroContainerProps) => {
                 
                 {user ? (
                   <>
-                    <Link to="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors font-medium">
+                    <Link 
+                      to="/dashboard" 
+                      className="text-muted-foreground hover:text-foreground transition-colors font-medium block py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       Dashboard
                     </Link>
                     <button 
-                      onClick={signOut}
-                      className="text-left text-muted-foreground hover:text-foreground transition-colors font-medium"
+                      onClick={() => {
+                        signOut();
+                        setIsMenuOpen(false);
+                      }}
+                      className="text-left text-muted-foreground hover:text-foreground transition-colors font-medium py-2 w-full"
                     >
                       Sign Out
                     </button>
