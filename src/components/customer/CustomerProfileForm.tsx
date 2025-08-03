@@ -81,7 +81,7 @@ export const CustomerProfileForm: React.FC<CustomerProfileFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { user, profile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -104,6 +104,19 @@ export const CustomerProfileForm: React.FC<CustomerProfileFormProps> = ({
         .eq('user_id', user?.id);
       
       if (error) throw error;
+
+      // Refresh the profile in AuthContext to update local state
+      await updateProfile({
+        name: formData.name,
+        phone: formData.phone,
+        location: formData.location,
+        bio: formData.bio,
+        avatar_url: formData.avatar_url,
+        privacy_settings: formData.privacy_settings,
+        gdpr_consent: formData.gdpr_consent,
+        terms_accepted: formData.terms_accepted,
+        is_profile_complete: true
+      });
 
       toast({
         title: "Profile completed successfully!",
