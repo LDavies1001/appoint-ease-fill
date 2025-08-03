@@ -6,6 +6,7 @@ import BookingModal from '@/components/booking/BookingModal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 
 import ProfileTab from './ProfileTab';
@@ -132,6 +133,7 @@ const CustomerDashboard = () => {
   
   const { profile, signOut } = useAuth();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetchAvailableSlots();
@@ -395,47 +397,47 @@ const CustomerDashboard = () => {
     <div className="space-y-6">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Navigation Tabs */}
-        <div className="flex flex-wrap gap-1 mb-8">
+        {/* Navigation Tabs - Mobile Optimized */}
+        <div className={`${isMobile ? 'grid grid-cols-2 gap-2' : 'flex flex-wrap gap-1'} mb-8`}>
           <Button
             variant={activeTab === 'browse' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('browse')}
-            className={activeTab === 'browse' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
+            className={`${activeTab === 'browse' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'} ${isMobile ? 'flex-col py-3 h-auto' : ''}`}
           >
             <Search className="h-4 w-4 mr-2" />
-            Browse Slots
+            <span className={isMobile ? 'text-xs' : ''}>Browse{isMobile ? '' : ' Slots'}</span>
           </Button>
           <Button
             variant={activeTab === 'bookings' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('bookings')}
-            className={activeTab === 'bookings' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
+            className={`${activeTab === 'bookings' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'} ${isMobile ? 'flex-col py-3 h-auto' : ''}`}
           >
             <BookOpen className="h-4 w-4 mr-2" />
-            My Bookings
+            <span className={isMobile ? 'text-xs' : ''}>Bookings</span>
           </Button>
           <Button
             variant={activeTab === 'favourites' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('favourites')}
-            className={activeTab === 'favourites' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
+            className={`${activeTab === 'favourites' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'} ${isMobile ? 'flex-col py-3 h-auto' : ''}`}
           >
             <Heart className="h-4 w-4 mr-2" />
-            Favourites
+            <span className={isMobile ? 'text-xs' : ''}>Favourites</span>
           </Button>
           <Button
             variant={activeTab === 'offers' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('offers')}
-            className={activeTab === 'offers' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
+            className={`${activeTab === 'offers' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'} ${isMobile ? 'flex-col py-3 h-auto' : ''}`}
           >
             <Tag className="h-4 w-4 mr-2" />
-            Local Offers
+            <span className={isMobile ? 'text-xs' : ''}>Offers</span>
           </Button>
           <Button
             variant={activeTab === 'profile' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('profile')}
-            className={activeTab === 'profile' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'}
+            className={`${activeTab === 'profile' ? 'bg-gradient-to-br from-rose-200 to-rose-300 text-rose-800 hover:from-rose-300 hover:to-rose-400 hover:shadow-lg transition-all' : 'hover:bg-rose-100 hover:text-rose-800'} ${isMobile ? 'flex-col py-3 h-auto col-span-2' : ''}`}
           >
             <Settings className="h-4 w-4 mr-2" />
-            Profile
+            <span className={isMobile ? 'text-xs' : ''}>Profile</span>
           </Button>
         </div>
 
