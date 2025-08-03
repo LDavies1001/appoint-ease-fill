@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { useIsMobile } from '@/hooks/use-mobile';
 import CustomerDashboard from '@/components/dashboard/CustomerDashboard';
 import MobileOptimizedDashboard from '@/components/dashboard/MobileOptimizedDashboard';
@@ -12,6 +13,9 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
   const isMobile = useIsMobile();
+  
+  // Use route protection to handle auth and profile checks
+  useRouteProtection();
 
   console.log('Dashboard - Auth state:', { 
     loading, 
