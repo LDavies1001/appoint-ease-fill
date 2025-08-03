@@ -69,42 +69,63 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const availableRoles = userRoles.filter(role => role.is_active).map(role => role.role);
 
   useEffect(() => {
+    console.log('AuthContext - Setting up auth state listener');
+    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('AuthContext - Auth state changed:', { event, hasSession: !!session, hasUser: !!session?.user });
+        
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch user profile
+          console.log('AuthContext - User found, fetching profile...');
+          // Fetch user profile with timeout to prevent blocking
           setTimeout(async () => {
             await fetchUserProfile(session.user.id);
           }, 0);
         } else {
+          console.log('AuthContext - No user, clearing profile');
           setProfile(null);
+          setUserRoles([]);
+          setLoading(false);
         }
-        
-        setLoading(false);
       }
     );
 
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    console.log('AuthContext - Checking for existing session...');
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('AuthContext - Error getting session:', error);
+        setLoading(false);
+        return;
+      }
+      
+      console.log('AuthContext - Initial session check:', { hasSession: !!session, hasUser: !!session?.user });
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
+        console.log('AuthContext - Initial user found, fetching profile...');
         fetchUserProfile(session.user.id);
       } else {
+        console.log('AuthContext - No initial session, setting loading to false');
         setLoading(false);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      console.log('AuthContext - Cleaning up auth subscription');
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchUserProfile = async (userId: string) => {
     try {
+      console.log('AuthContext - Fetching profile for user:', userId);
+      
       // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
@@ -112,14 +133,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('user_id', userId)
         .maybeSingle();
       
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error('AuthContext - Profile error:', profileError);
+        throw profileError;
+      }
       
       if (!profileData) {
-        console.log('No profile found for user:', userId);
+        console.log('AuthContext - No profile found for user:', userId);
         setProfile(null);
         setUserRoles([]);
+        setLoading(false);
         return;
       }
+      
+      console.log('AuthContext - Profile found:', { 
+        userId: profileData.user_id, 
+        role: profileData.role, 
+        complete: profileData.is_profile_complete 
+      });
+      
+      // Transform the profile data to match our interface
+      const transformedProfile: Profile = {
+        ...profileData,
+        privacy_settings: profileData.privacy_settings && typeof profileData.privacy_settings === 'object' 
+          ? profileData.privacy_settings as { phone_visible: boolean; email_visible: boolean; location_visible: boolean; }
+          : undefined
+      };
+      
+      setProfile(transformedProfile);
 
       // Fetch user roles
       const { data: rolesData, error: rolesError } = await supabase
@@ -128,47 +169,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('user_id', userId)
         .eq('is_active', true);
       
-      if (rolesError) throw rolesError;
+      if (rolesError) {
+        console.error('AuthContext - Roles error:', rolesError);
+        throw rolesError;
+      }
       
+      console.log('AuthContext - Roles found:', rolesData?.length || 0);
       setUserRoles(rolesData || []);
-
-      let finalProfile: Profile = {
-        ...profileData,
-        privacy_settings: profileData.privacy_settings ? 
-          (typeof profileData.privacy_settings === 'string' ? 
-            JSON.parse(profileData.privacy_settings) : 
-            profileData.privacy_settings
-          ) : undefined
-      };
-
-      // If profile data is missing, try to get it from user metadata as fallback
-      if (user) {
-        const userMetadata = user.user_metadata || {};
-        finalProfile = {
-          ...finalProfile,
-          name: finalProfile.name || userMetadata.full_name || null,
-          phone: finalProfile.phone || userMetadata.phone || null,
-          location: finalProfile.location || userMetadata.location || null
-        };
-      }
-
-      // If user has provider role, also fetch business details
-      const hasProviderRole = rolesData?.some(role => role.role === 'provider');
-      if (hasProviderRole) {
-        const { data: businessData, error: businessError } = await supabase
-          .from('provider_details')
-          .select('business_name')
-          .eq('user_id', userId)
-          .maybeSingle();
-        
-        if (!businessError && businessData) {
-          finalProfile = { ...finalProfile, business_name: businessData.business_name };
-        }
-      }
-      
-      setProfile(finalProfile);
+      setLoading(false);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('AuthContext - Error fetching user data:', error);
+      setProfile(null);
+      setUserRoles([]);
+      setLoading(false);
     }
   };
 
