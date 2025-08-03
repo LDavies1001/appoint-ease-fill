@@ -756,16 +756,16 @@ const Auth = () => {
       <div className="container mx-auto px-4 py-8 flex min-h-screen items-center justify-center">
         <div className="w-full max-w-md">
           {/* Centered Login Form */}
-            <Card className="border-2 border-sage-200/60 shadow-xl bg-white/95">
-              <div className="p-8">
+          <Card className="border-2 border-sage-200/60 shadow-xl bg-white/95">
+            <div className="p-6 sm:p-8">
                 <div className="text-center mb-6">
                   <BrandLogo className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-foreground">
-                    Welcome Back
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Sign in to your OpenSlot account
-                  </p>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground">
+                  Welcome Back
+                </h2>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Sign in to your OpenSlot account
+                </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -810,28 +810,24 @@ const Auth = () => {
 
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-br from-sage-200 to-sage-300 hover:from-sage-300 hover:to-sage-400 text-sage-800 font-semibold py-3"
                     disabled={loading}
-                    size="lg"
+                    className="w-full mt-6 bg-gradient-to-br from-sage-200 to-sage-300 hover:from-sage-300 hover:to-sage-400 text-sage-800 font-semibold py-3 rounded-lg transition-all duration-300"
                   >
-                    {loading ? "Signing in..." : "Sign In"}
+                    {loading ? 'Signing in...' : 'Sign In'}
                   </Button>
                 </form>
 
-                <div className="mt-6 pt-6 border-t border-sage-100 text-center">
+                <div className="mt-6 text-center">
                   <p className="text-sm text-muted-foreground">
                     Don't have an account?{' '}
-                    <button
-                      onClick={() => navigate('?tab=signup')}
-                      className="text-rose-500 hover:text-rose-600 font-medium"
-                    >
+                    <Link to="/auth?tab=signup" className="text-sage-600 hover:text-sage-700 font-medium story-link">
                       Sign up here
-                    </button>
+                    </Link>
                   </p>
                 </div>
               </div>
             </Card>
-        </div>
+          </div>
       </div>
     </div>
   );
