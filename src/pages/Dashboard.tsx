@@ -37,8 +37,11 @@ const Dashboard = () => {
   
   // For mobile devices, use the mobile-optimized dashboard without the desktop wrapper
   if (isMobile && profile.active_role === 'customer') {
+    console.log('Dashboard - Rendering mobile optimized dashboard for customer');
     return <MobileOptimizedDashboard />;
   }
+  
+  console.log('Dashboard - Rendering desktop dashboard', { isMobile, role: profile.active_role });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 overflow-x-hidden w-full">

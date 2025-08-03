@@ -112,6 +112,7 @@ interface LocalOffer {
 }
 
 const MobileOptimizedDashboard = () => {
+  console.log('MobileOptimizedDashboard - Component rendering');
   const [availableSlots, setAvailableSlots] = useState<AvailableSlot[]>([]);
   const [myBookings, setMyBookings] = useState<Booking[]>([]);
   const [favouriteBusinesses, setFavouriteBusinesses] = useState<FavouriteBusiness[]>([]);
@@ -125,6 +126,15 @@ const MobileOptimizedDashboard = () => {
   
   const { profile, signOut } = useAuth();
   const { toast } = useToast();
+  
+  console.log('MobileOptimizedDashboard - State:', { 
+    profile: !!profile,
+    profileId: profile?.user_id,
+    loading,
+    availableSlotsCount: availableSlots.length,
+    categoriesCount: categories.length,
+    bookingsCount: myBookings.length
+  });
 
   useEffect(() => {
     fetchAvailableSlots();
