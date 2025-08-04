@@ -283,26 +283,20 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         throw profileError;
       }
 
-      console.log('Profile marked as complete, navigating to dashboard...');
+      console.log('Profile marked as complete, refreshing context and navigating to dashboard...');
 
       // Clear session storage
       sessionStorage.removeItem('businessProfileFormData');
 
-      // Temporarily store that we just completed profile to bypass route protection
-      localStorage.setItem('profileJustCompleted', 'true');
-
+      // Force reload the page to refresh all contexts and ensure dashboard access
       toast({
         title: "Success!",
         description: mode === 'create' ? "Business profile created successfully!" : "Profile updated successfully!"
       });
 
-      // Force navigate to dashboard immediately
-      console.log('Navigating to dashboard...');
-      navigate('/dashboard', { replace: true });
-      
-      // Remove the temporary flag after navigation
+      // Use window.location to force a full page refresh to dashboard
       setTimeout(() => {
-        localStorage.removeItem('profileJustCompleted');
+        window.location.href = '/dashboard';
       }, 1000);
     } catch (error) {
       console.error('Error saving profile:', error);
