@@ -88,7 +88,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   existingData, 
   onSuccess 
 }) => {
-  
+  const { user, profile } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   
   // Helper function to parse address data
   const parseAddressData = (addressData?: string | AddressData): AddressData => {
@@ -207,10 +209,6 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingCertifications, setUploadingCertifications] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const { user, profile } = useAuth();
-  const { toast } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCategories();
