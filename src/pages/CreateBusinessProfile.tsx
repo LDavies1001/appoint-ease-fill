@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import BusinessProfileForm from '@/components/business/BusinessProfileForm';
+import MobileBusinessProfileForm from '@/components/business/MobileBusinessProfileForm';
 
 
 const CreateBusinessProfile = () => {
@@ -62,9 +62,7 @@ const CreateBusinessProfile = () => {
               address_line_1: '',
               address_line_2: '',
               town_city: '',
-              county: '',
               postcode: '',
-              country: 'United Kingdom',
               is_public: false // Default to private for safety
             };
           }
@@ -73,9 +71,7 @@ const CreateBusinessProfile = () => {
             address_line_1: location,
             address_line_2: '',
             town_city: '',
-            county: '',
             postcode: '',
-            country: 'United Kingdom',
             is_public: false // Default to private for safety
           };
         };
@@ -100,9 +96,7 @@ const CreateBusinessProfile = () => {
           address_line_1: profile?.location || user?.user_metadata?.location || '',
           address_line_2: '',
           town_city: '',
-          county: '',
           postcode: '',
-          country: 'United Kingdom',
           is_public: false // Default to private for safety
         },
         business_categories: []
@@ -132,16 +126,11 @@ const CreateBusinessProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-accent/20 overflow-x-hidden w-full">
-      {/* Profile Form */}
-      <div className="px-4 py-8 relative z-10">
-        <BusinessProfileForm 
-          mode={hasExistingProfile ? 'edit' : 'create'}
-          existingData={existingProfile}
-          onSuccess={handleSuccess}
-        />
-      </div>
-    </div>
+    <MobileBusinessProfileForm 
+      mode={hasExistingProfile ? 'edit' : 'create'}
+      existingData={existingProfile}
+      onSuccess={handleSuccess}
+    />
   );
 };
 
