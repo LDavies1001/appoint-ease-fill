@@ -219,7 +219,7 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         business_phone: formData.business_phone,
         formatted_address: `${formData.business_address.address_line_1}${formData.business_address.address_line_2 ? ', ' + formData.business_address.address_line_2 : ''}, ${formData.business_address.town_city}, ${formData.business_address.postcode}`,
         business_postcode: formData.business_address.postcode,
-        business_categories: formData.business_categories,
+        business_category: formData.business_categories?.[0] || null,
         business_description: formData.business_description,
         business_logo_url: formData.business_logo_url,
         operating_hours: JSON.stringify(formData.operating_hours),
