@@ -291,11 +291,14 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         description: mode === 'create' ? "Business profile created successfully!" : "Profile updated successfully!"
       });
 
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        navigate('/profile');
-      }
+      // Small delay to ensure the profile completion update is processed
+      setTimeout(() => {
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigate('/dashboard', { replace: true });
+        }
+      }, 100);
     } catch (error) {
       console.error('Error saving profile:', error);
       toast({
