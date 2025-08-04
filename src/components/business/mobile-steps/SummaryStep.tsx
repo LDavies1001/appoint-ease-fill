@@ -148,7 +148,7 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
       {/* Operating Hours */}
       <Card>
         <CardContent className="p-6">
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5 text-primary" />
               <Label className="text-base font-medium">
@@ -156,93 +156,254 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
               </Label>
             </div>
 
-            {/* Quick Actions */}
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleSelectAll}
-                className="text-xs"
-              >
-                Select All (9-5)
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleDeselectAll}
-                className="text-xs"
-              >
-                Close All Days
-              </Button>
+            {/* Quick Presets */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium text-muted-foreground">Quick Setup</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const standardHours = {
+                      ...formData.operating_hours,
+                      monday: { open: '09:00', close: '17:00', closed: false },
+                      tuesday: { open: '09:00', close: '17:00', closed: false },
+                      wednesday: { open: '09:00', close: '17:00', closed: false },
+                      thursday: { open: '09:00', close: '17:00', closed: false },
+                      friday: { open: '09:00', close: '17:00', closed: false },
+                      saturday: { open: '09:00', close: '17:00', closed: true },
+                      sunday: { open: '09:00', close: '17:00', closed: true }
+                    };
+                    onUpdate({ operating_hours: standardHours });
+                  }}
+                  className="text-xs"
+                >
+                  Standard (Mon-Fri 9-5)
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const extendedHours = {
+                      ...formData.operating_hours,
+                      monday: { open: '08:00', close: '18:00', closed: false },
+                      tuesday: { open: '08:00', close: '18:00', closed: false },
+                      wednesday: { open: '08:00', close: '18:00', closed: false },
+                      thursday: { open: '08:00', close: '18:00', closed: false },
+                      friday: { open: '08:00', close: '18:00', closed: false },
+                      saturday: { open: '09:00', close: '17:00', closed: false },
+                      sunday: { open: '09:00', close: '17:00', closed: true }
+                    };
+                    onUpdate({ operating_hours: extendedHours });
+                  }}
+                  className="text-xs"
+                >
+                  Extended (Mon-Sat 8-6)
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const eveningHours = {
+                      ...formData.operating_hours,
+                      monday: { open: '12:00', close: '20:00', closed: false },
+                      tuesday: { open: '12:00', close: '20:00', closed: false },
+                      wednesday: { open: '12:00', close: '20:00', closed: false },
+                      thursday: { open: '12:00', close: '20:00', closed: false },
+                      friday: { open: '12:00', close: '20:00', closed: false },
+                      saturday: { open: '10:00', close: '18:00', closed: false },
+                      sunday: { open: '10:00', close: '18:00', closed: true }
+                    };
+                    onUpdate({ operating_hours: eveningHours });
+                  }}
+                  className="text-xs"
+                >
+                  Evening (12-8pm)
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDeselectAll}
+                  className="text-xs"
+                >
+                  Closed All Days
+                </Button>
+              </div>
             </div>
-            
+
+            {/* Weekdays Section */}
             <div className="space-y-4">
-              {DAYS.map(({ key, label }) => {
-                const hours = formData.operating_hours?.[key as keyof typeof formData.operating_hours];
-                
-                // Provide default if missing
-                const safeHours = hours || { open: '09:00', close: '17:00', closed: true };
-                
-                return (
-                  <div key={key} className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium">{label}</Label>
-                      <div className="flex items-center gap-2">
-                        <Label className="text-xs text-muted-foreground">Open</Label>
-                        <Switch
-                          checked={!safeHours.closed}
-                          onCheckedChange={(checked) => 
-                            updateOperatingHours(key, 'closed', !checked)
-                          }
-                        />
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium">Weekdays (Monday - Friday)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const weekdayHours = formData.operating_hours.monday;
+                    const updatedHours = {
+                      ...formData.operating_hours,
+                      tuesday: weekdayHours,
+                      wednesday: weekdayHours,
+                      thursday: weekdayHours,
+                      friday: weekdayHours
+                    };
+                    onUpdate({ operating_hours: updatedHours });
+                  }}
+                  className="text-xs text-primary hover:text-primary/80"
+                >
+                  Copy Monday to All
+                </Button>
+              </div>
+              
+              <div className="space-y-3 bg-muted/30 p-4 rounded-lg">
+                {['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].map((day) => {
+                  const dayLabels = {
+                    monday: 'Monday',
+                    tuesday: 'Tuesday', 
+                    wednesday: 'Wednesday',
+                    thursday: 'Thursday',
+                    friday: 'Friday'
+                  };
+                  const hours = formData.operating_hours?.[day as keyof typeof formData.operating_hours] || 
+                    { open: '09:00', close: '17:00', closed: false };
+                  
+                  return (
+                    <div key={day} className="flex items-center gap-3">
+                      <div className="w-20 text-sm font-medium">
+                        {dayLabels[day as keyof typeof dayLabels]}
                       </div>
+                      <Switch
+                        checked={!hours.closed}
+                        onCheckedChange={(checked) => updateOperatingHours(day, 'closed', !checked)}
+                        className="shrink-0"
+                      />
+                      {!hours.closed ? (
+                        <div className="flex items-center gap-2 flex-1">
+                          <Select
+                            value={hours.open}
+                            onValueChange={(value) => updateOperatingHours(day, 'open', value)}
+                          >
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[200px] z-50 bg-background">
+                              {TIME_OPTIONS.slice(0, 32).map((time) => (
+                                <SelectItem key={`${day}-open-${time.value}`} value={time.value} className="text-xs">
+                                  {time.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <span className="text-xs text-muted-foreground">to</span>
+                          <Select
+                            value={hours.close}
+                            onValueChange={(value) => updateOperatingHours(day, 'close', value)}
+                          >
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[200px] z-50 bg-background">
+                              {TIME_OPTIONS.slice(16, 48).map((time) => (
+                                <SelectItem key={`${day}-close-${time.value}`} value={time.value} className="text-xs">
+                                  {time.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ) : (
+                        <div className="flex-1 text-xs text-muted-foreground">Closed</div>
+                      )}
                     </div>
-                    
-                    {!safeHours.closed && (
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1">
-                          <Label className="text-xs text-muted-foreground">Opening Time</Label>
-                          <Select
-                            value={safeHours.open}
-                            onValueChange={(value) => updateOperatingHours(key, 'open', value)}
-                          >
-                            <SelectTrigger className="h-10">
-                              <SelectValue placeholder="Select time" />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-[200px] z-50 bg-background">
-                              {TIME_OPTIONS.map((time) => (
-                                <SelectItem key={`open-${time.value}`} value={time.value}>
-                                  {time.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="space-y-1">
-                          <Label className="text-xs text-muted-foreground">Closing Time</Label>
-                          <Select
-                            value={safeHours.close}
-                            onValueChange={(value) => updateOperatingHours(key, 'close', value)}
-                          >
-                            <SelectTrigger className="h-10">
-                              <SelectValue placeholder="Select time" />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-[200px] z-50 bg-background">
-                              {TIME_OPTIONS.map((time) => (
-                                <SelectItem key={`close-${time.value}`} value={time.value}>
-                                  {time.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Weekend Section */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium">Weekend (Saturday - Sunday)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const saturdayHours = formData.operating_hours.saturday;
+                    const updatedHours = {
+                      ...formData.operating_hours,
+                      sunday: saturdayHours
+                    };
+                    onUpdate({ operating_hours: updatedHours });
+                  }}
+                  className="text-xs text-primary hover:text-primary/80"
+                >
+                  Copy Saturday to Sunday
+                </Button>
+              </div>
+              
+              <div className="space-y-3 bg-muted/30 p-4 rounded-lg">
+                {['saturday', 'sunday'].map((day) => {
+                  const dayLabels = { saturday: 'Saturday', sunday: 'Sunday' };
+                  const hours = formData.operating_hours?.[day as keyof typeof formData.operating_hours] || 
+                    { open: '09:00', close: '17:00', closed: true };
+                  
+                  return (
+                    <div key={day} className="flex items-center gap-3">
+                      <div className="w-20 text-sm font-medium">
+                        {dayLabels[day as keyof typeof dayLabels]}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+                      <Switch
+                        checked={!hours.closed}
+                        onCheckedChange={(checked) => updateOperatingHours(day, 'closed', !checked)}
+                        className="shrink-0"
+                      />
+                      {!hours.closed ? (
+                        <div className="flex items-center gap-2 flex-1">
+                          <Select
+                            value={hours.open}
+                            onValueChange={(value) => updateOperatingHours(day, 'open', value)}
+                          >
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[200px] z-50 bg-background">
+                              {TIME_OPTIONS.slice(0, 32).map((time) => (
+                                <SelectItem key={`${day}-open-${time.value}`} value={time.value} className="text-xs">
+                                  {time.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <span className="text-xs text-muted-foreground">to</span>
+                          <Select
+                            value={hours.close}
+                            onValueChange={(value) => updateOperatingHours(day, 'close', value)}
+                          >
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[200px] z-50 bg-background">
+                              {TIME_OPTIONS.slice(16, 48).map((time) => (
+                                <SelectItem key={`${day}-close-${time.value}`} value={time.value} className="text-xs">
+                                  {time.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ) : (
+                        <div className="flex-1 text-xs text-muted-foreground">Closed</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </CardContent>
