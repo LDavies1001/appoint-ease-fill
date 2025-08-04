@@ -277,48 +277,50 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
                       <div className="w-20 text-sm font-medium">
                         {dayLabels[day as keyof typeof dayLabels]}
                       </div>
+                      <div className="flex-1">
+                        {!hours.closed ? (
+                          <div className="flex items-center gap-2">
+                            <Select
+                              value={hours.open}
+                              onValueChange={(value) => updateOperatingHours(day, 'open', value)}
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="max-h-[200px] z-50 bg-background">
+                                {TIME_OPTIONS.slice(0, 32).map((time) => (
+                                  <SelectItem key={`${day}-open-${time.value}`} value={time.value} className="text-xs">
+                                    {time.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <span className="text-xs text-muted-foreground">to</span>
+                            <Select
+                              value={hours.close}
+                              onValueChange={(value) => updateOperatingHours(day, 'close', value)}
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="max-h-[200px] z-50 bg-background">
+                                {TIME_OPTIONS.slice(16, 48).map((time) => (
+                                  <SelectItem key={`${day}-close-${time.value}`} value={time.value} className="text-xs">
+                                    {time.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        ) : (
+                          <div className="text-xs text-muted-foreground">Closed</div>
+                        )}
+                      </div>
                       <Switch
                         checked={!hours.closed}
                         onCheckedChange={(checked) => updateOperatingHours(day, 'closed', !checked)}
                         className="shrink-0"
                       />
-                      {!hours.closed ? (
-                        <div className="flex items-center gap-2 flex-1">
-                          <Select
-                            value={hours.open}
-                            onValueChange={(value) => updateOperatingHours(day, 'open', value)}
-                          >
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-[200px] z-50 bg-background">
-                              {TIME_OPTIONS.slice(0, 32).map((time) => (
-                                <SelectItem key={`${day}-open-${time.value}`} value={time.value} className="text-xs">
-                                  {time.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <span className="text-xs text-muted-foreground">to</span>
-                          <Select
-                            value={hours.close}
-                            onValueChange={(value) => updateOperatingHours(day, 'close', value)}
-                          >
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-[200px] z-50 bg-background">
-                              {TIME_OPTIONS.slice(16, 48).map((time) => (
-                                <SelectItem key={`${day}-close-${time.value}`} value={time.value} className="text-xs">
-                                  {time.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      ) : (
-                        <div className="flex-1 text-xs text-muted-foreground">Closed</div>
-                      )}
                     </div>
                   );
                 })}
@@ -358,48 +360,50 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
                       <div className="w-20 text-sm font-medium">
                         {dayLabels[day as keyof typeof dayLabels]}
                       </div>
+                      <div className="flex-1">
+                        {!hours.closed ? (
+                          <div className="flex items-center gap-2">
+                            <Select
+                              value={hours.open}
+                              onValueChange={(value) => updateOperatingHours(day, 'open', value)}
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="max-h-[200px] z-50 bg-background">
+                                {TIME_OPTIONS.slice(0, 32).map((time) => (
+                                  <SelectItem key={`${day}-open-${time.value}`} value={time.value} className="text-xs">
+                                    {time.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <span className="text-xs text-muted-foreground">to</span>
+                            <Select
+                              value={hours.close}
+                              onValueChange={(value) => updateOperatingHours(day, 'close', value)}
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="max-h-[200px] z-50 bg-background">
+                                {TIME_OPTIONS.slice(16, 48).map((time) => (
+                                  <SelectItem key={`${day}-close-${time.value}`} value={time.value} className="text-xs">
+                                    {time.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        ) : (
+                          <div className="text-xs text-muted-foreground">Closed</div>
+                        )}
+                      </div>
                       <Switch
                         checked={!hours.closed}
                         onCheckedChange={(checked) => updateOperatingHours(day, 'closed', !checked)}
                         className="shrink-0"
                       />
-                      {!hours.closed ? (
-                        <div className="flex items-center gap-2 flex-1">
-                          <Select
-                            value={hours.open}
-                            onValueChange={(value) => updateOperatingHours(day, 'open', value)}
-                          >
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-[200px] z-50 bg-background">
-                              {TIME_OPTIONS.slice(0, 32).map((time) => (
-                                <SelectItem key={`${day}-open-${time.value}`} value={time.value} className="text-xs">
-                                  {time.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <span className="text-xs text-muted-foreground">to</span>
-                          <Select
-                            value={hours.close}
-                            onValueChange={(value) => updateOperatingHours(day, 'close', value)}
-                          >
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-[200px] z-50 bg-background">
-                              {TIME_OPTIONS.slice(16, 48).map((time) => (
-                                <SelectItem key={`${day}-close-${time.value}`} value={time.value} className="text-xs">
-                                  {time.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      ) : (
-                        <div className="flex-1 text-xs text-muted-foreground">Closed</div>
-                      )}
                     </div>
                   );
                 })}
