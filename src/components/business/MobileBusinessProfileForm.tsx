@@ -368,6 +368,7 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
             </Button>
           ) : (
             <Button
+              variant="business"
               onClick={handleNext}
               disabled={!canProceed}
               className="flex-1"
