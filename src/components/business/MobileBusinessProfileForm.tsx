@@ -224,7 +224,7 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         business_logo_url: formData.business_logo_url,
         operating_hours: JSON.stringify(formData.operating_hours),
         certifications: formData.certifications,
-        dbs_checked: formData.dbs_checked,
+        background_check_verified: formData.dbs_checked,
         certification_files: formData.certification_files
       };
 
