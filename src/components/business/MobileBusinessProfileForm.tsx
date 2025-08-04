@@ -94,18 +94,55 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
     return addressData;
   };
 
+  // Helper to get default operating hours
+  const getDefaultOperatingHours = () => ({
+    monday: { open: '09:00', close: '17:00', closed: false },
+    tuesday: { open: '09:00', close: '17:00', closed: false },
+    wednesday: { open: '09:00', close: '17:00', closed: false },
+    thursday: { open: '09:00', close: '17:00', closed: false },
+    friday: { open: '09:00', close: '17:00', closed: false },
+    saturday: { open: '09:00', close: '17:00', closed: true },
+    sunday: { open: '09:00', close: '17:00', closed: true }
+  });
+
   // Initialize form data
-  const initializeFormData = () => {
+  const initializeFormData = (): BusinessProfileData => {
+    // Try to get saved data from session storage first
     const savedData = sessionStorage.getItem('businessProfileFormData');
     if (savedData) {
       try {
-        return JSON.parse(savedData);
+        const parsed = JSON.parse(savedData);
+        // Ensure operating hours are properly structured
+        if (parsed.operating_hours) {
+          const defaultHours = getDefaultOperatingHours();
+          parsed.operating_hours = { ...defaultHours, ...parsed.operating_hours };
+        } else {
+          parsed.operating_hours = getDefaultOperatingHours();
+        }
+        return parsed;
       } catch (error) {
         console.error('Error parsing saved form data:', error);
       }
     }
 
+    // If we have existing data (edit mode)
     if (existingData) {
+      // Parse operating hours carefully
+      let operatingHours = getDefaultOperatingHours();
+      
+      if (existingData.operating_hours) {
+        try {
+          const parsed = typeof existingData.operating_hours === 'string' 
+            ? JSON.parse(existingData.operating_hours)
+            : existingData.operating_hours;
+          
+          // Merge with defaults to ensure all days exist
+          operatingHours = { ...operatingHours, ...parsed };
+        } catch (error) {
+          console.warn('Failed to parse existing operating hours, using defaults:', error);
+        }
+      }
+
       return {
         business_name: existingData.business_name || '',
         business_categories: existingData.business_categories || existingData.services_offered || [],
@@ -113,57 +150,14 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         business_address: parseAddressData(existingData.business_address),
         business_description: existingData.business_description || '',
         business_logo_url: existingData.business_logo_url || '',
-        operating_hours: (() => {
-          if (existingData.operating_hours) {
-            try {
-              // If it's a string (from database), parse it
-              const parsed = typeof existingData.operating_hours === 'string' 
-                ? JSON.parse(existingData.operating_hours)
-                : existingData.operating_hours;
-              
-              // Ensure all days are present with proper structure
-              const defaultHours = {
-                monday: { open: '09:00', close: '17:00', closed: false },
-                tuesday: { open: '09:00', close: '17:00', closed: false },
-                wednesday: { open: '09:00', close: '17:00', closed: false },
-                thursday: { open: '09:00', close: '17:00', closed: false },
-                friday: { open: '09:00', close: '17:00', closed: false },
-                saturday: { open: '09:00', close: '17:00', closed: true },
-                sunday: { open: '09:00', close: '17:00', closed: true }
-              };
-              
-              // Merge parsed hours with defaults to ensure all days exist
-              return { ...defaultHours, ...parsed };
-            } catch {
-              // If parsing fails, return defaults
-              return {
-                monday: { open: '09:00', close: '17:00', closed: false },
-                tuesday: { open: '09:00', close: '17:00', closed: false },
-                wednesday: { open: '09:00', close: '17:00', closed: false },
-                thursday: { open: '09:00', close: '17:00', closed: false },
-                friday: { open: '09:00', close: '17:00', closed: false },
-                saturday: { open: '09:00', close: '17:00', closed: true },
-                sunday: { open: '09:00', close: '17:00', closed: true }
-              };
-            }
-          }
-          return {
-            monday: { open: '09:00', close: '17:00', closed: false },
-            tuesday: { open: '09:00', close: '17:00', closed: false },
-            wednesday: { open: '09:00', close: '17:00', closed: false },
-            thursday: { open: '09:00', close: '17:00', closed: false },
-            friday: { open: '09:00', close: '17:00', closed: false },
-            saturday: { open: '09:00', close: '17:00', closed: true },
-            sunday: { open: '09:00', close: '17:00', closed: true }
-          };
-        })(),
+        operating_hours: operatingHours,
         certifications: existingData.certifications || '',
         dbs_checked: existingData.dbs_checked || false,
         certification_files: existingData.certification_files || []
       };
     }
 
-    // Default form data
+    // Default form data for new profiles
     return {
       business_name: user?.user_metadata?.business_name || profile?.business_name || '',
       business_categories: [],
@@ -171,15 +165,7 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
       business_address: parseAddressData(profile?.location || user?.user_metadata?.location),
       business_description: '',
       business_logo_url: '',
-      operating_hours: {
-        monday: { open: '09:00', close: '17:00', closed: false },
-        tuesday: { open: '09:00', close: '17:00', closed: false },
-        wednesday: { open: '09:00', close: '17:00', closed: false },
-        thursday: { open: '09:00', close: '17:00', closed: false },
-        friday: { open: '09:00', close: '17:00', closed: false },
-        saturday: { open: '09:00', close: '17:00', closed: true },
-        sunday: { open: '09:00', close: '17:00', closed: true }
-      },
+      operating_hours: getDefaultOperatingHours(),
       certifications: '',
       dbs_checked: false,
       certification_files: []
@@ -187,10 +173,6 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
   };
 
   const [formData, setFormData] = useState<BusinessProfileData>(initializeFormData);
-  
-  // Debug: Log form data initialization
-  console.log('Initial form data:', formData);
-  console.log('Initial operating hours:', formData.operating_hours);
 
   // Fetch categories
   useEffect(() => {
