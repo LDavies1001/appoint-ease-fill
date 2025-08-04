@@ -252,10 +252,15 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
       if (error) throw error;
 
       // Mark profile as complete
-      await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({ is_profile_complete: true })
-        .eq('id', user.id);
+        .eq('user_id', user.id);
+
+      if (profileError) {
+        console.error('Error updating profile completion:', profileError);
+        throw profileError;
+      }
 
       // Clear session storage
       sessionStorage.removeItem('businessProfileFormData');
