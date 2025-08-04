@@ -10,7 +10,6 @@ import { Shield, Award, Share2, Upload } from 'lucide-react';
 interface BusinessProfileData {
   certifications: string;
   dbs_checked: boolean;
-  additional_checks: string;
   certification_files: string[];
 }
 
@@ -104,18 +103,6 @@ export const CredentialsStep: React.FC<CredentialsStepProps> = ({
               <Switch
                 checked={formData.dbs_checked}
                 onCheckedChange={(checked) => onUpdate({ dbs_checked: checked })}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">
-                Additional Security Checks
-              </Label>
-              <Textarea
-                value={formData.additional_checks}
-                onChange={(e) => onUpdate({ additional_checks: e.target.value })}
-                placeholder="Any other background checks or security clearances..."
-                className="text-base"
               />
             </div>
           </div>

@@ -37,7 +37,6 @@ interface BusinessProfileData {
   };
   certifications: string;
   dbs_checked: boolean;
-  additional_checks: string;
   certification_files: string[];
 }
 
@@ -125,7 +124,6 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         },
         certifications: existingData.certifications || '',
         dbs_checked: existingData.dbs_checked || false,
-        additional_checks: existingData.additional_checks || '',
         certification_files: existingData.certification_files || []
       };
     }
@@ -149,7 +147,6 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
       },
       certifications: '',
       dbs_checked: false,
-      additional_checks: '',
       certification_files: []
     };
   };
@@ -227,7 +224,6 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         operating_hours: JSON.stringify(formData.operating_hours),
         certifications: formData.certifications,
         dbs_checked: formData.dbs_checked,
-        additional_checks: formData.additional_checks,
         certification_files: formData.certification_files
       };
 
