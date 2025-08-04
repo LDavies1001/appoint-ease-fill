@@ -113,15 +113,50 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         business_address: parseAddressData(existingData.business_address),
         business_description: existingData.business_description || '',
         business_logo_url: existingData.business_logo_url || '',
-        operating_hours: existingData.operating_hours || {
-          monday: { open: '09:00', close: '17:00', closed: false },
-          tuesday: { open: '09:00', close: '17:00', closed: false },
-          wednesday: { open: '09:00', close: '17:00', closed: false },
-          thursday: { open: '09:00', close: '17:00', closed: false },
-          friday: { open: '09:00', close: '17:00', closed: false },
-          saturday: { open: '09:00', close: '17:00', closed: true },
-          sunday: { open: '09:00', close: '17:00', closed: true }
-        },
+        operating_hours: (() => {
+          if (existingData.operating_hours) {
+            try {
+              // If it's a string (from database), parse it
+              const parsed = typeof existingData.operating_hours === 'string' 
+                ? JSON.parse(existingData.operating_hours)
+                : existingData.operating_hours;
+              
+              // Ensure all days are present with proper structure
+              const defaultHours = {
+                monday: { open: '09:00', close: '17:00', closed: false },
+                tuesday: { open: '09:00', close: '17:00', closed: false },
+                wednesday: { open: '09:00', close: '17:00', closed: false },
+                thursday: { open: '09:00', close: '17:00', closed: false },
+                friday: { open: '09:00', close: '17:00', closed: false },
+                saturday: { open: '09:00', close: '17:00', closed: true },
+                sunday: { open: '09:00', close: '17:00', closed: true }
+              };
+              
+              // Merge parsed hours with defaults to ensure all days exist
+              return { ...defaultHours, ...parsed };
+            } catch {
+              // If parsing fails, return defaults
+              return {
+                monday: { open: '09:00', close: '17:00', closed: false },
+                tuesday: { open: '09:00', close: '17:00', closed: false },
+                wednesday: { open: '09:00', close: '17:00', closed: false },
+                thursday: { open: '09:00', close: '17:00', closed: false },
+                friday: { open: '09:00', close: '17:00', closed: false },
+                saturday: { open: '09:00', close: '17:00', closed: true },
+                sunday: { open: '09:00', close: '17:00', closed: true }
+              };
+            }
+          }
+          return {
+            monday: { open: '09:00', close: '17:00', closed: false },
+            tuesday: { open: '09:00', close: '17:00', closed: false },
+            wednesday: { open: '09:00', close: '17:00', closed: false },
+            thursday: { open: '09:00', close: '17:00', closed: false },
+            friday: { open: '09:00', close: '17:00', closed: false },
+            saturday: { open: '09:00', close: '17:00', closed: true },
+            sunday: { open: '09:00', close: '17:00', closed: true }
+          };
+        })(),
         certifications: existingData.certifications || '',
         dbs_checked: existingData.dbs_checked || false,
         certification_files: existingData.certification_files || []
