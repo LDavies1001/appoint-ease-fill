@@ -108,6 +108,12 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
             <div className="space-y-4">
               {DAYS.map(({ key, label }) => {
                 const hours = formData.operating_hours[key as keyof typeof formData.operating_hours];
+                
+                // Safety check: if hours is undefined, provide default values
+                if (!hours) {
+                  return null;
+                }
+                
                 return (
                   <div key={key} className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -147,7 +153,7 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
                     )}
                   </div>
                 );
-              })}
+              }).filter(Boolean)}
             </div>
           </div>
         </CardContent>
