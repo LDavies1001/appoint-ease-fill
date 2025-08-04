@@ -21,7 +21,7 @@ export const MobileProgressBar: React.FC<MobileProgressBarProps> = ({
       <div className="relative">
         <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500 ease-out"
+            className="h-full bg-gradient-to-r from-business to-business-accent transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
