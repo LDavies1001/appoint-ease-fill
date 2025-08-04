@@ -25,6 +25,17 @@ export const BusinessDetailsStep: React.FC<BusinessDetailsStepProps> = ({
   onUpdate
 }) => {
   const [isEditingAddress, setIsEditingAddress] = useState(!formData.business_address.address_line_1);
+  const [tempAddress, setTempAddress] = useState<AddressData>(formData.business_address);
+
+  const confirmAddress = () => {
+    onUpdate({ business_address: tempAddress });
+    setIsEditingAddress(false);
+  };
+
+  const startEditing = () => {
+    setTempAddress(formData.business_address);
+    setIsEditingAddress(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -107,21 +118,28 @@ export const BusinessDetailsStep: React.FC<BusinessDetailsStepProps> = ({
               {isEditingAddress ? (
                 <>
                   <AddressLookup
-                    value={formData.business_address}
-                    onChange={(address) => {
-                      onUpdate({ business_address: address });
-                      if (address.address_line_1) {
-                        setIsEditingAddress(false);
-                      }
-                    }}
+                    value={tempAddress}
+                    onChange={(address) => setTempAddress(address)}
                     className="text-base"
                   />
-                  {formData.business_address.address_line_1 && (
+                  {tempAddress.address_line_1 && (
                     <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setTempAddress(formData.business_address);
+                          setIsEditingAddress(false);
+                        }}
+                        className="flex-1"
+                      >
+                        <X className="h-4 w-4 mr-2" />
+                        Cancel
+                      </Button>
                       <Button
                         variant="business"
                         size="sm"
-                        onClick={() => setIsEditingAddress(false)}
+                        onClick={confirmAddress}
                         className="flex-1"
                       >
                         <Check className="h-4 w-4 mr-2" />
@@ -153,7 +171,7 @@ export const BusinessDetailsStep: React.FC<BusinessDetailsStepProps> = ({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setIsEditingAddress(true)}
+                        onClick={startEditing}
                         className="w-full"
                       >
                         <Edit3 className="h-4 w-4 mr-2" />
