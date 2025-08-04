@@ -15,6 +15,7 @@ import { AddressLookup } from '@/components/ui/address-lookup';
 import { AddressData } from '@/components/ui/address-form';
 import { SocialMediaConnector } from './SocialMediaConnector';
 import { ImageCropUpload } from '@/components/ui/image-crop-upload';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Building, 
   Phone, 
@@ -91,6 +92,7 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   const { user, profile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   // Helper function to parse address data
   const parseAddressData = (addressData?: string | AddressData): AddressData => {
@@ -516,9 +518,13 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               <div className="flex justify-center">
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-accent rounded-full opacity-50 group-hover:opacity-75 transition-opacity duration-300 blur"></div>
-                  <Avatar className="relative h-36 w-36 border-4 border-white shadow-xl">
+                  <Avatar className={`relative border-4 border-white shadow-xl ${
+                    isMobile ? 'h-24 w-24' : 'h-28 w-28 sm:h-32 sm:w-32 lg:h-36 lg:w-36'
+                  }`}>
                     <AvatarImage src={formData.business_logo_url} className="object-cover" />
-                    <AvatarFallback className="text-5xl bg-accent text-white font-bold">
+                    <AvatarFallback className={`bg-accent text-white font-bold ${
+                      isMobile ? 'text-2xl' : 'text-3xl sm:text-4xl lg:text-5xl'
+                    }`}>
                       {formData.business_name.charAt(0) || 'B'}
                     </AvatarFallback>
                   </Avatar>
@@ -534,9 +540,11 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                       <Button
                         type="button"
                         size="sm"
-                        className="h-12 w-12 rounded-full bg-accent hover:bg-accent/90 shadow-lg hover:shadow-xl transition-all duration-300"
+                        className={`rounded-full bg-accent hover:bg-accent/90 shadow-lg hover:shadow-xl transition-all duration-300 ${
+                          isMobile ? 'h-8 w-8' : 'h-10 w-10 sm:h-12 sm:w-12'
+                        }`}
                       >
-                        <Upload className="h-5 w-5 text-white" />
+                        <Upload className={`text-white ${isMobile ? 'h-3 w-3' : 'h-4 w-4 sm:h-5 sm:w-5'}`} />
                       </Button>
                     </ImageCropUpload>
                   </div>
@@ -549,8 +557,8 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
               </div>
             </div>
 
-            {/* Business Details Grid */}
-            <div className="grid md:grid-cols-2 gap-8">
+            {/* Business Details Grid - Mobile stacked */}
+            <div className={`grid gap-4 sm:gap-6 lg:gap-8 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-2'}`}>
               {/* Business Name */}
               <div className="space-y-3">
                 <Label htmlFor="business_name" className="text-base font-semibold text-accent flex items-center">
@@ -563,7 +571,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                     value={formData.business_name}
                     onChange={(e) => handleInputChange('business_name', e.target.value)}
                     placeholder="Enter your business name"
-                    className={`h-12 pl-4 pr-12 text-lg border-2 transition-all duration-300 focus:border-accent focus:ring-accent/20 focus:ring-4 ${errors.business_name ? 'border-destructive' : 'border-accent/30'}`}
+                    className={`pl-4 pr-12 border-2 transition-all duration-300 focus:border-accent focus:ring-accent/20 focus:ring-4 ${
+                      isMobile ? 'h-12 text-base' : 'h-12 sm:h-14 text-lg'
+                    } ${errors.business_name ? 'border-destructive' : 'border-accent/30'}`}
                   />
                   {formData.business_name && !errors.business_name && (
                     <CheckCircle className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-accent" />
@@ -589,7 +599,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                     value={formData.business_phone}
                     onChange={(e) => handleInputChange('business_phone', e.target.value)}
                     placeholder="+44 123 456 7890"
-                    className={`h-12 pl-4 pr-12 text-lg border-2 transition-all duration-300 focus:border-accent focus:ring-accent/20 focus:ring-4 ${errors.business_phone ? 'border-destructive' : 'border-accent/30'}`}
+                    className={`pl-4 pr-12 border-2 transition-all duration-300 focus:border-accent focus:ring-accent/20 focus:ring-4 ${
+                      isMobile ? 'h-12 text-base' : 'h-12 sm:h-14 text-lg'
+                    } ${errors.business_phone ? 'border-destructive' : 'border-accent/30'}`}
                   />
                   {formData.business_phone && !errors.business_phone && (
                     <CheckCircle className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-accent" />
@@ -605,7 +617,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
             </div>
 
             {/* Business Address */}
-            <div className="bg-gradient-to-r from-accent/5 to-primary/5 rounded-xl p-6 border border-accent/20">
+            <div className={`bg-gradient-to-r from-accent/5 to-primary/5 rounded-lg sm:rounded-xl border border-accent/20 ${
+              isMobile ? 'p-4' : 'p-5 sm:p-6'
+            }`}>
               <h4 className="text-lg font-semibold text-accent mb-4 flex items-center">
                 <Building className="h-5 w-5 mr-2" />
                 Business Address
@@ -929,63 +943,87 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/10 py-8 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMS41IiBmaWxsPSJoc2woMTIwIDMwJSA3NSUgLyAwLjEpIi8+Cjwvc3ZnPg==')] opacity-50"></div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/10 py-2 sm:py-4 lg:py-8 relative overflow-hidden">
+      {/* Background decorative elements - hidden on mobile for cleaner look */}
+      {!isMobile && (
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMS41IiBmaWxsPSJoc2woMTIwIDMwJSA3NSUgLyAwLjEpIi8+Cjwvc3ZnPg==')] opacity-50"></div>
+      )}
       
-      <div className="max-w-5xl mx-auto px-6 relative z-10">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-        <img 
-          src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
-          alt="OpenSlot Logo" 
-          className="w-56 h-56 object-contain mb-6 mx-auto"
-        />
-          <h1 className="text-5xl font-bold text-accent mb-4">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
+        {/* Header Section - Optimized for mobile */}
+        <div className="text-center mb-4 sm:mb-8 lg:mb-12">
+          <img 
+            src="/lovable-uploads/25374dab-f21c-463e-9a1b-4ed306a48b44.png" 
+            alt="OpenSlot Logo" 
+            className={`object-contain mb-3 sm:mb-4 lg:mb-6 mx-auto ${
+              isMobile ? 'w-32 h-32' : 'w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56'
+            }`}
+          />
+          <h1 className={`font-bold text-accent mb-2 sm:mb-3 lg:mb-4 ${
+            isMobile ? 'text-2xl' : 'text-3xl sm:text-4xl lg:text-5xl'
+          }`}>
             Complete Your Profile
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className={`text-muted-foreground mx-auto leading-relaxed ${
+            isMobile ? 'text-sm px-2' : 'text-lg sm:text-xl max-w-2xl'
+          }`}>
             Set up your professional presence to attract customers and grow your business
           </p>
         </div>
 
-        {/* Enhanced Stepper */}
-        <div className="mb-12">
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
+        {/* Enhanced Stepper - Mobile optimized */}
+        <div className="mb-4 sm:mb-8 lg:mb-12">
+          <div className={`bg-white/60 backdrop-blur-sm rounded-lg sm:rounded-2xl shadow-lg border border-white/20 ${
+            isMobile ? 'p-3' : 'p-4 sm:p-6'
+          }`}>
             <Stepper currentStep={currentStep} steps={STEPS} />
           </div>
         </div>
 
-        {/* Main Content Card */}
-        <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border border-white/30 relative overflow-hidden">
-          {/* Card background decoration */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-accent/10 to-transparent rounded-full -translate-y-32 translate-x-32"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-primary/10 to-transparent rounded-full translate-y-24 -translate-x-24"></div>
+        {/* Main Content Card - Mobile first design */}
+        <div className={`bg-white/80 backdrop-blur-md rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl border border-white/30 relative overflow-hidden ${
+          isMobile ? 'p-4' : 'p-6 sm:p-8 lg:p-12'
+        }`}>
+          {/* Card background decoration - Hidden on mobile for cleaner design */}
+          {!isMobile && (
+            <>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-accent/10 to-transparent rounded-full -translate-y-32 translate-x-32"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-primary/10 to-transparent rounded-full translate-y-24 -translate-x-24"></div>
+            </>
+          )}
           
           <div className="relative z-10">
             {renderStepContent()}
 
-            {/* Profile update note */}
-            <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-xl mx-auto">
-              <p className="text-sm text-blue-700 text-center">
+            {/* Profile update note - Mobile optimized */}
+            <div className={`bg-blue-50 border border-blue-200 rounded-lg max-w-xl mx-auto ${
+              isMobile ? 'mt-4 p-3' : 'mt-6 sm:mt-8 p-4'
+            }`}>
+              <p className={`text-blue-700 text-center ${isMobile ? 'text-xs' : 'text-sm'}`}>
                 💡 <strong>Don't worry!</strong> You can update and edit your profile information at any time after creating it.
               </p>
             </div>
 
-            {/* Enhanced Navigation Buttons */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-12 pt-8 border-t border-accent/20">
+            {/* Enhanced Navigation Buttons - Mobile optimized */}
+            <div className={`flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 border-t border-accent/20 ${
+              isMobile ? 'mt-6 pt-4' : 'mt-8 sm:mt-10 lg:mt-12 pt-6 sm:pt-8'
+            }`}>
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleBack}
                 disabled={currentStep === 1}
-                className="w-full sm:w-auto min-w-[140px] h-12 border-2 border-accent/30 hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group"
+                className={`border-2 border-accent/30 hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group ${
+                  isMobile ? 'w-full h-11 min-w-0' : 'w-full sm:w-auto min-w-[140px] h-12'
+                }`}
               >
                 <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
-                Back
+                {isMobile ? 'Back' : 'Back'}
               </Button>
 
-              <div className="flex items-center text-sm text-muted-foreground">
+              <div className={`flex items-center text-muted-foreground ${
+                isMobile ? 'text-xs order-last' : 'text-sm'
+              }`}>
                 Step {currentStep} of {STEPS.length}
               </div>
 
@@ -993,7 +1031,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
                 type="button"
                 onClick={handleNext}
                 disabled={loading}
-                className="w-full sm:w-auto min-w-[200px] h-12 bg-gradient-to-r from-accent to-accent-glow hover:from-accent/90 hover:to-accent-glow/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className={`bg-gradient-to-r from-accent to-accent-glow hover:from-accent/90 hover:to-accent-glow/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 group ${
+                  isMobile ? 'w-full h-11 min-w-0' : 'w-full sm:w-auto min-w-[200px] h-12'
+                }`}
               >
                 {loading ? (
                   <>
@@ -1016,9 +1056,9 @@ const BusinessProfileForm: React.FC<BusinessProfileFormProps> = ({
           </div>
         </div>
 
-        {/* Footer encouragement */}
-        <div className="text-center mt-8">
-          <p className="text-sm text-muted-foreground">
+        {/* Footer encouragement - Mobile optimized */}
+        <div className={`text-center ${isMobile ? 'mt-4' : 'mt-6 sm:mt-8'}`}>
+          <p className={`text-muted-foreground ${isMobile ? 'text-xs px-4' : 'text-sm'}`}>
             Join thousands of professionals growing their business with us
           </p>
         </div>
