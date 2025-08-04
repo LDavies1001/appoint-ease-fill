@@ -268,7 +268,7 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
       if (onSuccess) {
         onSuccess();
       } else {
-        navigate('/dashboard');
+        navigate('/profile');
       }
     } catch (error) {
       console.error('Error saving profile:', error);
