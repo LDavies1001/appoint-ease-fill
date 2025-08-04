@@ -297,48 +297,46 @@ const ResponsiveCustomerDashboard = () => {
   });
 
   const SlotCard = ({ slot }: { slot: AvailableSlot }) => (
-    <Card className="p-4 hover:shadow-md transition-all">
-      <div className="space-y-3">
+    <Card className="p-3 hover:shadow-md transition-all border-muted/50">
+      <div className="space-y-2">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-foreground truncate text-sm sm:text-base">
+            <h3 className="font-medium text-foreground truncate text-sm">
               {slot.provider.business_name}
             </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground truncate">
+            <p className="text-xs text-muted-foreground truncate">
               {slot.service.name}
             </p>
           </div>
           {slot.provider.rating > 0 && (
-            <div className="flex items-center text-xs sm:text-sm text-muted-foreground ml-2">
-              <Star className="h-3 w-3 sm:h-4 sm:w-4 mr-1 fill-current text-yellow-400" />
+            <div className="flex items-center text-xs text-muted-foreground ml-2">
+              <Star className="h-3 w-3 mr-1 fill-current text-yellow-400" />
               {slot.provider.rating.toFixed(1)}
             </div>
           )}
         </div>
 
-        {/* Details Grid - Mobile: Stack, Desktop: Grid */}
-        <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
+        {/* Details */}
+        <div className="flex flex-col gap-1 text-xs">
           <div className="flex items-center text-muted-foreground">
-            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-primary flex-shrink-0" />
+            <Calendar className="h-3 w-3 mr-2 text-primary flex-shrink-0" />
             <span className="truncate">{formatDate(slot.date)}</span>
-          </div>
-          <div className="flex items-center text-muted-foreground">
-            <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-primary flex-shrink-0" />
+            <Clock className="h-3 w-3 ml-3 mr-1 text-primary flex-shrink-0" />
             <span>{formatTime(slot.start_time)}</span>
           </div>
-          <div className="flex items-center text-muted-foreground sm:col-span-2">
-            <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-primary flex-shrink-0" />
+          <div className="flex items-center text-muted-foreground">
+            <MapPin className="h-3 w-3 mr-2 text-primary flex-shrink-0" />
             <span className="truncate">{slot.provider.location}</span>
           </div>
         </div>
 
         {/* Price and Book Button */}
-        <div className="flex items-center justify-between pt-2">
-          <div className="font-semibold text-sm sm:text-lg text-foreground">
+        <div className="flex items-center justify-between pt-1">
+          <div className="font-semibold text-sm text-foreground">
             {slot.discount_price ? (
-              <div className="flex items-center gap-2">
-                <span className="line-through text-muted-foreground text-xs sm:text-sm">
+              <div className="flex items-center gap-1">
+                <span className="line-through text-muted-foreground text-xs">
                   £{slot.price}
                 </span>
                 <span className="text-accent">
@@ -352,7 +350,7 @@ const ResponsiveCustomerDashboard = () => {
           <Button 
             onClick={() => handleBookSlot(slot)}
             size="sm"
-            className="text-xs sm:text-sm px-3 sm:px-4"
+            className="text-xs px-3 h-7"
           >
             Book
           </Button>
@@ -409,82 +407,78 @@ const ResponsiveCustomerDashboard = () => {
   );
 
   return (
-    <div className="w-full max-w-7xl mx-auto">
+    <div className="w-full">
       <Tabs defaultValue="browse" className="w-full">
         {/* Mobile-First Tab Navigation */}
-        <TabsList className="grid w-full grid-cols-4 mb-4 sm:mb-6 h-auto">
-          <TabsTrigger value="browse" className="text-xs sm:text-sm px-1 sm:px-3 py-2 flex flex-col gap-1">
-            <Search className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">Browse</span>
-            <span className="sm:hidden">Find</span>
+        <TabsList className="grid w-full grid-cols-4 mb-3 h-auto bg-muted/50">
+          <TabsTrigger value="browse" className="text-xs px-2 py-2 flex flex-col gap-1 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <Search className="h-4 w-4" />
+            <span>Browse</span>
           </TabsTrigger>
-          <TabsTrigger value="bookings" className="text-xs sm:text-sm px-1 sm:px-3 py-2 flex flex-col gap-1">
-            <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">Bookings</span>
-            <span className="sm:hidden">Mine</span>
+          <TabsTrigger value="bookings" className="text-xs px-2 py-2 flex flex-col gap-1 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <BookOpen className="h-4 w-4" />
+            <span>My Bookings</span>
           </TabsTrigger>
-          <TabsTrigger value="favourites" className="text-xs sm:text-sm px-1 sm:px-3 py-2 flex flex-col gap-1">
-            <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">Favourites</span>
-            <span className="sm:hidden">Faves</span>
+          <TabsTrigger value="favourites" className="text-xs px-2 py-2 flex flex-col gap-1 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <Heart className="h-4 w-4" />
+            <span>Favourites</span>
           </TabsTrigger>
-          <TabsTrigger value="profile" className="text-xs sm:text-sm px-1 sm:px-3 py-2 flex flex-col gap-1">
-            <User className="h-3 w-3 sm:h-4 sm:w-4" />
+          <TabsTrigger value="profile" className="text-xs px-2 py-2 flex flex-col gap-1 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <User className="h-4 w-4" />
             <span>Profile</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Browse Tab */}
-        <TabsContent value="browse" className="space-y-4">
+        <TabsContent value="browse" className="space-y-3">
           {/* Search and Filters */}
-          <Card className="p-4">
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search services or providers..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full sm:w-48">
-                    <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="All Categories" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <Card className="p-3 border-muted/50">
+            <div className="space-y-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search services..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 h-10"
+                />
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">
-                  {filteredSlots.length} slots available
-                </div>
-                <div className="flex items-center gap-2">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-full h-10">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">
+                  {filteredSlots.length} slots found
+                </span>
+                <div className="flex items-center gap-1">
                   <Button
                     variant={viewMode === 'list' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setViewMode('list')}
-                    className="hidden sm:flex"
+                    className="h-7 px-2"
                   >
-                    <List className="h-4 w-4" />
+                    <List className="h-3 w-3" />
                   </Button>
                   <Button
                     variant={viewMode === 'grid' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setViewMode('grid')}
-                    className="hidden sm:flex"
+                    className="h-7 px-2"
                   >
-                    <Grid3X3 className="h-4 w-4" />
+                    <Grid3X3 className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
