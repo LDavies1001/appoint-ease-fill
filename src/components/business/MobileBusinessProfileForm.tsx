@@ -213,13 +213,28 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
 
     setIsSubmitting(true);
     try {
+      // Debug: Log the categories array and what we're trying to save
+      console.log('Categories:', categories);
+      console.log('formData.business_categories:', formData.business_categories);
+      
+      // Find the UUID for the business category
+      let categoryUuid = null;
+      if (formData.business_categories?.length > 0) {
+        const firstCategory = formData.business_categories[0];
+        // Check if it's already a UUID or if we need to find it by name
+        const categoryRecord = categories.find(cat => 
+          cat.id === firstCategory || cat.name.toLowerCase() === firstCategory.toLowerCase()
+        );
+        categoryUuid = categoryRecord?.id || null;
+      }
+
       const profileData = {
         user_id: user.id,
         business_name: formData.business_name,
         business_phone: formData.business_phone,
         formatted_address: `${formData.business_address.address_line_1}${formData.business_address.address_line_2 ? ', ' + formData.business_address.address_line_2 : ''}, ${formData.business_address.town_city}, ${formData.business_address.postcode}`,
         business_postcode: formData.business_address.postcode,
-        business_category: formData.business_categories?.[0] || null,
+        business_category: categoryUuid,
         business_description: formData.business_description,
         business_logo_url: formData.business_logo_url,
         operating_hours: JSON.stringify(formData.operating_hours),
@@ -227,6 +242,8 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         background_check_verified: formData.dbs_checked,
         certification_files: formData.certification_files
       };
+
+      console.log('Saving profile data:', profileData);
 
       const { error } = mode === 'create' 
         ? await supabase.from('provider_details').insert([profileData])
