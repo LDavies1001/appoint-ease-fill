@@ -283,22 +283,27 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
         throw profileError;
       }
 
+      console.log('Profile marked as complete, navigating to dashboard...');
+
       // Clear session storage
       sessionStorage.removeItem('businessProfileFormData');
+
+      // Temporarily store that we just completed profile to bypass route protection
+      localStorage.setItem('profileJustCompleted', 'true');
 
       toast({
         title: "Success!",
         description: mode === 'create' ? "Business profile created successfully!" : "Profile updated successfully!"
       });
 
-      // Small delay to ensure the profile completion update is processed
+      // Force navigate to dashboard immediately
+      console.log('Navigating to dashboard...');
+      navigate('/dashboard', { replace: true });
+      
+      // Remove the temporary flag after navigation
       setTimeout(() => {
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          navigate('/dashboard', { replace: true });
-        }
-      }, 100);
+        localStorage.removeItem('profileJustCompleted');
+      }, 1000);
     } catch (error) {
       console.error('Error saving profile:', error);
       toast({

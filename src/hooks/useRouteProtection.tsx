@@ -73,8 +73,12 @@ export const useRouteProtection = () => {
         }
       }
 
+      // Check if user just completed profile (temporary bypass)
+      const profileJustCompleted = localStorage.getItem('profileJustCompleted');
+      
       // If profile is complete and on onboarding pages, redirect to dashboard or last route
-      if (profile.is_profile_complete && ['/onboarding', '/create-business-profile', '/create-customer-profile'].includes(location.pathname)) {
+      if ((profile.is_profile_complete || profileJustCompleted) && ['/onboarding', '/create-business-profile', '/create-customer-profile'].includes(location.pathname)) {
+        console.log('Route protection: Redirecting completed profile to dashboard');
         const lastRoute = localStorage.getItem('lastRoute');
         if (lastRoute && !['/auth', '/onboarding', '/create-business-profile', '/create-customer-profile'].includes(lastRoute)) {
           navigate(lastRoute);
