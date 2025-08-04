@@ -2,8 +2,9 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Clock, FileText, Calendar } from 'lucide-react';
 
 interface BusinessProfileData {
@@ -34,6 +35,25 @@ const DAYS = [
   { key: 'sunday', label: 'Sunday' }
 ];
 
+// Generate time options in 30-minute intervals
+const generateTimeOptions = () => {
+  const times = [];
+  for (let hour = 0; hour < 24; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      const displayTime = new Date(`2000-01-01T${timeString}`).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      times.push({ value: timeString, label: displayTime });
+    }
+  }
+  return times;
+};
+
+const TIME_OPTIONS = generateTimeOptions();
+
 export const SummaryStep: React.FC<SummaryStepProps> = ({
   formData,
   onUpdate
@@ -52,6 +72,37 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
         }
       }
     });
+  };
+
+  const handleSelectAll = () => {
+    const updatedHours = { ...formData.operating_hours };
+    DAYS.forEach(({ key }) => {
+      if (['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].includes(key)) {
+        updatedHours[key as keyof typeof updatedHours] = {
+          open: '09:00',
+          close: '17:00',
+          closed: false
+        };
+      } else {
+        updatedHours[key as keyof typeof updatedHours] = {
+          open: '09:00',
+          close: '17:00',
+          closed: true
+        };
+      }
+    });
+    onUpdate({ operating_hours: updatedHours });
+  };
+
+  const handleDeselectAll = () => {
+    const updatedHours = { ...formData.operating_hours };
+    DAYS.forEach(({ key }) => {
+      updatedHours[key as keyof typeof updatedHours] = {
+        ...updatedHours[key as keyof typeof updatedHours],
+        closed: true
+      };
+    });
+    onUpdate({ operating_hours: updatedHours });
   };
 
   return (
@@ -104,25 +155,44 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
                 Operating Hours
               </Label>
             </div>
+
+            {/* Quick Actions */}
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleSelectAll}
+                className="text-xs"
+              >
+                Select All (9-5)
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleDeselectAll}
+                className="text-xs"
+              >
+                Close All Days
+              </Button>
+            </div>
             
             <div className="space-y-4">
               {DAYS.map(({ key, label }) => {
                 const hours = formData.operating_hours?.[key as keyof typeof formData.operating_hours];
                 
-                // If hours is undefined, skip this day but log error
-                if (!hours) {
-                  console.error(`Missing hours for ${key}`);
-                  return null;
-                }
+                // Provide default if missing
+                const safeHours = hours || { open: '09:00', close: '17:00', closed: true };
                 
                 return (
                   <div key={key} className="space-y-3">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-medium">{label}</Label>
                       <div className="flex items-center gap-2">
-                        <Label className="text-xs text-muted-foreground">Closed</Label>
+                        <Label className="text-xs text-muted-foreground">Open</Label>
                         <Switch
-                          checked={!hours.closed}
+                          checked={!safeHours.closed}
                           onCheckedChange={(checked) => 
                             updateOperatingHours(key, 'closed', !checked)
                           }
@@ -130,31 +200,49 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
                       </div>
                     </div>
                     
-                    {!hours.closed && (
+                    {!safeHours.closed && (
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1">
-                          <Label className="text-xs text-muted-foreground">Open</Label>
-                          <Input
-                            type="time"
-                            value={hours.open}
-                            onChange={(e) => updateOperatingHours(key, 'open', e.target.value)}
-                            className="text-sm h-10"
-                          />
+                          <Label className="text-xs text-muted-foreground">Opening Time</Label>
+                          <Select
+                            value={safeHours.open}
+                            onValueChange={(value) => updateOperatingHours(key, 'open', value)}
+                          >
+                            <SelectTrigger className="h-10">
+                              <SelectValue placeholder="Select time" />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[200px] z-50 bg-background">
+                              {TIME_OPTIONS.map((time) => (
+                                <SelectItem key={`open-${time.value}`} value={time.value}>
+                                  {time.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs text-muted-foreground">Close</Label>
-                          <Input
-                            type="time"
-                            value={hours.close}
-                            onChange={(e) => updateOperatingHours(key, 'close', e.target.value)}
-                            className="text-sm h-10"
-                          />
+                          <Label className="text-xs text-muted-foreground">Closing Time</Label>
+                          <Select
+                            value={safeHours.close}
+                            onValueChange={(value) => updateOperatingHours(key, 'close', value)}
+                          >
+                            <SelectTrigger className="h-10">
+                              <SelectValue placeholder="Select time" />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[200px] z-50 bg-background">
+                              {TIME_OPTIONS.map((time) => (
+                                <SelectItem key={`close-${time.value}`} value={time.value}>
+                                  {time.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
                     )}
                   </div>
                 );
-              }).filter(Boolean)}
+              })}
             </div>
           </div>
         </CardContent>
