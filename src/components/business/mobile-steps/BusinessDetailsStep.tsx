@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { AddressLookup } from '@/components/ui/address-lookup';
 import { AddressData } from '@/components/ui/address-form';
 import { ImageCropUpload } from '@/components/ui/image-crop-upload';
-import { Building, Phone, MapPin, Upload } from 'lucide-react';
+import { Building, Phone, MapPin, Upload, Edit3, Check, X } from 'lucide-react';
 
 interface BusinessProfileData {
   business_name: string;
@@ -23,6 +24,8 @@ export const BusinessDetailsStep: React.FC<BusinessDetailsStepProps> = ({
   formData,
   onUpdate
 }) => {
+  const [isEditingAddress, setIsEditingAddress] = useState(!formData.business_address.address_line_1);
+
   return (
     <div className="space-y-6">
       {/* Business Logo */}
@@ -101,29 +104,70 @@ export const BusinessDetailsStep: React.FC<BusinessDetailsStepProps> = ({
               </Label>
             </div>
             <div className="space-y-3">
-              <AddressLookup
-                value={formData.business_address}
-                onChange={(address) => onUpdate({ business_address: address })}
-                className="text-base"
-              />
-              
-              {formData.business_address.address_line_1 && (
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <p className="text-sm font-medium text-foreground">
-                    {formData.business_address.address_line_1}
-                  </p>
-                  {formData.business_address.address_line_2 && (
-                    <p className="text-sm text-muted-foreground">
-                      {formData.business_address.address_line_2}
-                    </p>
+              {isEditingAddress ? (
+                <>
+                  <AddressLookup
+                    value={formData.business_address}
+                    onChange={(address) => {
+                      onUpdate({ business_address: address });
+                      if (address.address_line_1) {
+                        setIsEditingAddress(false);
+                      }
+                    }}
+                    className="text-base"
+                  />
+                  {formData.business_address.address_line_1 && (
+                    <div className="flex gap-2">
+                      <Button
+                        variant="business"
+                        size="sm"
+                        onClick={() => setIsEditingAddress(false)}
+                        className="flex-1"
+                      >
+                        <Check className="h-4 w-4 mr-2" />
+                        Confirm Address
+                      </Button>
+                    </div>
                   )}
-                  <p className="text-sm text-muted-foreground">
-                    {[
-                      formData.business_address.town_city,
-                      formData.business_address.postcode
-                    ].filter(Boolean).join(', ')}
-                  </p>
-                </div>
+                </>
+              ) : (
+                <>
+                  {formData.business_address.address_line_1 ? (
+                    <div className="space-y-3">
+                      <div className="p-3 bg-muted/50 rounded-lg">
+                        <p className="text-sm font-medium text-foreground">
+                          {formData.business_address.address_line_1}
+                        </p>
+                        {formData.business_address.address_line_2 && (
+                          <p className="text-sm text-muted-foreground">
+                            {formData.business_address.address_line_2}
+                          </p>
+                        )}
+                        <p className="text-sm text-muted-foreground">
+                          {[
+                            formData.business_address.town_city,
+                            formData.business_address.postcode
+                          ].filter(Boolean).join(', ')}
+                        </p>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsEditingAddress(true)}
+                        className="w-full"
+                      >
+                        <Edit3 className="h-4 w-4 mr-2" />
+                        Edit Address
+                      </Button>
+                    </div>
+                  ) : (
+                    <AddressLookup
+                      value={formData.business_address}
+                      onChange={(address) => onUpdate({ business_address: address })}
+                      className="text-base"
+                    />
+                  )}
+                </>
               )}
             </div>
           </div>
