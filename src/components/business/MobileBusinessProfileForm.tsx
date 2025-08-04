@@ -354,9 +354,10 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
           
           {isLastStep ? (
             <Button
+              variant="business"
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-primary to-accent text-white"
+              className="flex-1"
             >
               {isSubmitting ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />

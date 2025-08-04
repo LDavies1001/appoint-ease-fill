@@ -44,6 +44,14 @@ export default {
 					foreground: 'hsl(var(--primary-foreground))',
 					glow: 'hsl(var(--primary-glow))'
 				},
+				business: {
+					DEFAULT: 'hsl(var(--business-primary))',
+					foreground: 'hsl(var(--business-primary-foreground))',
+					secondary: 'hsl(var(--business-secondary))',
+					'secondary-foreground': 'hsl(var(--business-secondary-foreground))',
+					accent: 'hsl(var(--business-accent))',
+					muted: 'hsl(var(--business-muted))'
+				},
 				provider: {
 					DEFAULT: 'hsl(var(--provider-primary))',
 					foreground: 'hsl(var(--provider-primary-foreground))',

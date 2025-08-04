@@ -83,12 +83,20 @@ All colors MUST be HSL.
     --primary-foreground: 222 15% 15%;
     --primary-glow: 0 20% 95%;
 
-    /* Provider Theme - Light Sage Green */
-    --provider-primary: 120 20% 75%; /* Lighter, more muted sage */
-    --provider-primary-foreground: 120 15% 25%; /* Dark sage for contrast */
-    --provider-glow: 120 25% 85%; /* Very light sage */
-    --provider-secondary: 120 15% 90%; /* Almost white sage */
-    --provider-secondary-foreground: 120 15% 30%;
+    /* Business Theme - Muted Sage Green */
+    --business-primary: 120 25% 70%; /* Rich muted sage */
+    --business-primary-foreground: 120 15% 95%; /* Light text on sage */
+    --business-secondary: 120 15% 85%; /* Light sage background */
+    --business-secondary-foreground: 120 20% 25%; /* Dark sage text */
+    --business-accent: 120 30% 60%; /* Vibrant sage for accents */
+    --business-muted: 120 10% 90%; /* Very light sage for subtle backgrounds */
+    
+    /* Provider Theme - Light Sage Green (legacy support) */
+    --provider-primary: 120 25% 70%;
+    --provider-primary-foreground: 120 15% 95%;
+    --provider-glow: 120 30% 80%;
+    --provider-secondary: 120 15% 85%;
+    --provider-secondary-foreground: 120 20% 25%;
 
     /* Clean light grey as secondary */
     --secondary: 210 15% 95%; /* Clean light grey #F5F6F7 */
@@ -137,8 +145,11 @@ All colors MUST be HSL.
 
     /* Gradients for beautiful effects */
     --gradient-primary: linear-gradient(135deg, hsl(0 25% 90%), hsl(0 20% 95%));
-    --gradient-provider: linear-gradient(135deg, hsl(120 20% 75%), hsl(120 25% 85%));
-    --gradient-provider-secondary: linear-gradient(135deg, hsl(120 15% 90%), hsl(120 20% 95%));
+    --gradient-business: linear-gradient(135deg, hsl(120 25% 70%), hsl(120 30% 80%));
+    --gradient-business-secondary: linear-gradient(135deg, hsl(120 15% 85%), hsl(120 20% 90%));
+    --gradient-business-subtle: linear-gradient(135deg, hsl(120 10% 90%), hsl(120 15% 95%));
+    --gradient-provider: linear-gradient(135deg, hsl(120 25% 70%), hsl(120 30% 80%));
+    --gradient-provider-secondary: linear-gradient(135deg, hsl(120 15% 85%), hsl(120 20% 90%));
     --gradient-accent: linear-gradient(135deg, hsl(120 30% 75%), hsl(120 30% 85%));
     --gradient-bg: linear-gradient(180deg, hsl(36 44% 98%), hsl(36 44% 96%));
 
@@ -181,12 +192,20 @@ All colors MUST be HSL.
     --primary-foreground: 210 40% 98%;
     --primary-glow: 0 25% 80%;
 
-    /* Provider Theme - Light Sage Green for dark mode */
-    --provider-primary: 120 25% 65%; /* Muted sage for dark */
-    --provider-primary-foreground: 120 20% 95%;
-    --provider-glow: 120 30% 75%;
-    --provider-secondary: 120 20% 70%; /* Muted sage for dark */
-    --provider-secondary-foreground: 120 20% 95%;
+    /* Business Theme - Muted Sage Green for dark mode */
+    --business-primary: 120 30% 55%; /* Rich sage for dark mode */
+    --business-primary-foreground: 120 15% 95%;
+    --business-secondary: 120 20% 25%; /* Dark sage background */
+    --business-secondary-foreground: 120 20% 85%; /* Light sage text */
+    --business-accent: 120 35% 65%; /* Vibrant sage for dark mode */
+    --business-muted: 120 15% 20%; /* Dark sage for subtle backgrounds */
+    
+    /* Provider Theme - Light Sage Green for dark mode (legacy support) */
+    --provider-primary: 120 30% 55%;
+    --provider-primary-foreground: 120 15% 95%;
+    --provider-glow: 120 35% 70%;
+    --provider-secondary: 120 20% 25%;
+    --provider-secondary-foreground: 120 20% 85%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -244,21 +263,47 @@ All colors MUST be HSL.
     background: var(--gradient-accent);
   }
 
-  /* Provider theme components */
+  /* Business theme components */
+  .btn-business {
+    @apply shadow-md hover:shadow-lg transition-all duration-300 text-white font-medium;
+    background: var(--gradient-business);
+    color: hsl(var(--business-primary-foreground));
+  }
+  
+  .btn-business:hover {
+    background: linear-gradient(135deg, hsl(120 25% 65%), hsl(120 30% 75%));
+    transform: translateY(-1px);
+  }
+  
+  .btn-business-secondary {
+    @apply shadow-sm hover:shadow-md transition-all duration-300 border border-sage-300;
+    background: var(--gradient-business-secondary);
+    color: hsl(var(--business-secondary-foreground));
+  }
+
+  .btn-business-outline {
+    @apply border-2 border-sage-400 text-sage-700 hover:bg-sage-50 hover:text-sage-800 transition-all duration-300;
+  }
+
+  .btn-business-ghost {
+    @apply text-sage-700 hover:bg-sage-100 hover:text-sage-800 transition-all duration-300;
+  }
+  
+  /* Provider theme components (legacy support) */
   .btn-provider {
     @apply shadow-md hover:shadow-lg transition-all duration-300;
-    background: var(--gradient-provider);
-    color: hsl(var(--provider-primary-foreground));
+    background: var(--gradient-business);
+    color: hsl(var(--business-primary-foreground));
   }
   
   .btn-provider:hover {
-    background: linear-gradient(135deg, hsl(120 20% 70%), hsl(120 25% 80%));
+    background: linear-gradient(135deg, hsl(120 25% 65%), hsl(120 30% 75%));
   }
   
   .btn-provider-secondary {
     @apply shadow-md hover:shadow-lg transition-all duration-300;
-    background: var(--gradient-provider-secondary);
-    color: hsl(var(--provider-secondary-foreground));
+    background: var(--gradient-business-secondary);
+    color: hsl(var(--business-secondary-foreground));
   }
 
   /* Enhanced card styles */
