@@ -17,7 +17,8 @@ const CreateBusinessProfile = () => {
       hasUser: !!user, 
       hasProfile: !!profile, 
       profileRole: profile?.role, 
-      profileComplete: profile?.is_profile_complete 
+      profileComplete: profile?.is_profile_complete,
+      pathname: window.location.pathname
     });
     
     if (!user || !profile) {
@@ -27,12 +28,12 @@ const CreateBusinessProfile = () => {
     }
 
     if (profile.role !== 'provider') {
-      console.log('CreateBusinessProfile - Redirecting to dashboard - not a provider');
+      console.log('CreateBusinessProfile - Redirecting to dashboard - not a provider, role:', profile.role);
       navigate('/dashboard');
       return;
     }
 
-    console.log('CreateBusinessProfile - Checking existing profile...');
+    console.log('CreateBusinessProfile - Starting profile check for user:', user.id);
     checkExistingProfile();
   }, [user, profile, navigate]);
 

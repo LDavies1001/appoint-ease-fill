@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { User, UserCheck, Mail, Lock, Eye, EyeOff, Building, TrendingUp, Clock, CheckCircle, PoundSterling, Users, Search, Phone, Upload, AlertCircle, ArrowLeft, Calendar, Heart, MapPin, Award } from 'lucide-react';
 import { LocationInput } from '@/components/ui/location-input';
 
@@ -40,10 +41,19 @@ const Auth = () => {
     const refreshToken = searchParams.get('refresh_token');
     const type = searchParams.get('type');
     
-    // If this is an email confirmation, let Supabase handle it automatically
-    // The auth state change listener will pick up the session and redirect appropriately
+    // If this is an email confirmation, explicitly set the session
     if (accessToken && refreshToken && type === 'signup') {
-      console.log('Email confirmation detected, letting Supabase handle authentication...');
+      console.log('Email confirmation detected, setting session...');
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken
+      }).then(({ data, error }) => {
+        if (error) {
+          console.error('Error setting session:', error);
+        } else {
+          console.log('Session set successfully:', data);
+        }
+      });
       return; // Let the auth state listener handle the redirect
     }
     
