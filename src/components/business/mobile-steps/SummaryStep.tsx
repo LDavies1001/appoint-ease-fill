@@ -38,6 +38,10 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
   formData,
   onUpdate
 }) => {
+  // Debug: Log the operating hours data
+  console.log('SummaryStep formData:', formData);
+  console.log('Operating hours:', formData.operating_hours);
+  
   const updateOperatingHours = (
     day: string, 
     field: 'open' | 'close' | 'closed', 
@@ -106,12 +110,25 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({
             </div>
             
             <div className="space-y-4">
+              {/* Debug info */}
+              {!formData.operating_hours && (
+                <div className="text-red-500 text-sm">
+                  Operating hours data is missing
+                </div>
+              )}
+              
               {DAYS.map(({ key, label }) => {
-                const hours = formData.operating_hours[key as keyof typeof formData.operating_hours];
+                const hours = formData.operating_hours?.[key as keyof typeof formData.operating_hours];
+                console.log(`${key} hours:`, hours);
                 
                 // Safety check: if hours is undefined, provide default values
                 if (!hours) {
-                  return null;
+                  console.log(`Missing hours for ${key}, skipping...`);
+                  return (
+                    <div key={key} className="text-red-500 text-sm">
+                      Missing data for {label}
+                    </div>
+                  );
                 }
                 
                 return (

@@ -187,6 +187,10 @@ const MobileBusinessProfileForm: React.FC<MobileBusinessProfileFormProps> = ({
   };
 
   const [formData, setFormData] = useState<BusinessProfileData>(initializeFormData);
+  
+  // Debug: Log form data initialization
+  console.log('Initial form data:', formData);
+  console.log('Initial operating hours:', formData.operating_hours);
 
   // Fetch categories
   useEffect(() => {
