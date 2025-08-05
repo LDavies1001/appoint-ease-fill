@@ -4,7 +4,7 @@ import { useRouteProtection } from '@/hooks/useRouteProtection';
 import { useIsMobile } from '@/hooks/use-mobile';
 import ResponsiveCustomerDashboard from '@/components/dashboard/ResponsiveCustomerDashboard';
 import ProviderDashboard from '@/components/dashboard/ProviderDashboard';
-import MobileProviderDashboard from '@/components/dashboard/MobileProviderDashboard';
+import SimplifiedMobileBusinessDashboard from '@/components/dashboard/SimplifiedMobileBusinessDashboard';
 import { Button } from '@/components/ui/button';
 import { Settings, User, ChevronDown, Eye, Edit, LogOut } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
@@ -86,7 +86,7 @@ const Dashboard = () => {
         {profile.active_role === 'customer' ? (
           <ResponsiveCustomerDashboard />
         ) : isMobile ? (
-          <MobileProviderDashboard />
+          <SimplifiedMobileBusinessDashboard />
         ) : (
           <ProviderDashboard />
         )}
