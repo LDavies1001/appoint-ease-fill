@@ -217,22 +217,15 @@ const SimplifiedMobileBusinessDashboard = () => {
   }
 
   return (
-    <div className="w-full space-y-6 pb-20 bg-gradient-to-br from-background via-background/95 to-business/5 min-h-screen">
-      {/* Header with greeting - Enhanced */}
-      <div className="text-center py-6 px-4 bg-gradient-to-r from-business/10 via-business-accent/10 to-business/5 rounded-xl mx-3 border border-business/20 shadow-soft">
-        <div className="mb-2">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-business-primary to-business-accent bg-clip-text text-transparent">
-            Hello {profile?.name?.split(' ')[0] || 'there'} ✨
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Let's make today amazing!
-          </p>
-        </div>
-        <div className="flex items-center justify-center gap-2 text-xs text-business-accent font-medium">
-          <Star className="h-3 w-3 text-business-accent" />
-          <span>Your success starts here</span>
-          <Star className="h-3 w-3 text-business-accent" />
-        </div>
+    <div className="w-full space-y-4 pb-20 bg-gradient-to-br from-background via-background/95 to-business/5 min-h-screen">
+      {/* Header with greeting */}
+      <div className="text-center py-4 px-4 bg-gradient-to-r from-business/10 via-business-accent/10 to-business/5 rounded-xl mx-3 border border-business/20 shadow-soft">
+        <h1 className="text-xl font-bold bg-gradient-to-r from-business-primary to-business-accent bg-clip-text text-transparent">
+          Hello {profile?.name?.split(' ')[0] || 'there'} ✨
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Let's make today amazing!
+        </p>
       </div>
 
       {/* Retention Notifications */}
@@ -243,32 +236,7 @@ const SimplifiedMobileBusinessDashboard = () => {
         />
       )}
 
-      {/* At-a-glance stats - Enhanced */}
-      <div className="grid grid-cols-3 gap-3 px-3">
-        <Card className="p-4 text-center bg-gradient-to-br from-business-primary/15 to-business-primary/5 border border-business-primary/20 shadow-soft hover:shadow-medium transition-all duration-300 animate-fade-in">
-          <Calendar className="h-5 w-5 mx-auto text-business-primary mb-2" />
-          <div className="text-2xl font-bold text-business-primary mb-1">
-            {todaySlots.length}
-          </div>
-          <div className="text-xs text-muted-foreground font-medium">Today's Slots</div>
-        </Card>
-        <Card className="p-4 text-center bg-gradient-to-br from-accent/15 to-accent/5 border border-accent/20 shadow-soft hover:shadow-medium transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <Clock className="h-5 w-5 mx-auto text-accent mb-2" />
-          <div className="text-2xl font-bold text-accent mb-1">
-            {upcomingBookings.length}
-          </div>
-          <div className="text-xs text-muted-foreground font-medium">Upcoming</div>
-        </Card>
-        <Card className="p-4 text-center bg-gradient-to-br from-business-accent/15 to-business-accent/5 border border-business-accent/20 shadow-soft hover:shadow-medium transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <PoundSterling className="h-5 w-5 mx-auto text-business-accent mb-2" />
-          <div className="text-2xl font-bold text-business-accent mb-1">
-            £{weeklyStats.revenue}
-          </div>
-          <div className="text-xs text-muted-foreground font-medium">This Week</div>
-        </Card>
-      </div>
-
-      {/* Quick Add Slot - Enhanced Floating CTA */}
+      {/* Main Action - Add Slot (Most Important) */}
       <div className="px-3">
         <Button
           onClick={() => setShowSlotCreator(true)}
@@ -278,6 +246,185 @@ const SimplifiedMobileBusinessDashboard = () => {
           Add New Slot
           <Star className="h-4 w-4 ml-3 opacity-80" />
         </Button>
+      </div>
+
+      {/* Quick Stats Overview */}
+      <div className="grid grid-cols-3 gap-3 px-3">
+        <Card className="p-4 text-center bg-gradient-to-br from-business-primary/15 to-business-primary/5 border border-business-primary/20 shadow-soft">
+          <Calendar className="h-5 w-5 mx-auto text-business-primary mb-2" />
+          <div className="text-2xl font-bold text-business-primary mb-1">
+            {todaySlots.length}
+          </div>
+          <div className="text-xs text-muted-foreground font-medium">Today's Slots</div>
+        </Card>
+        <Card className="p-4 text-center bg-gradient-to-br from-accent/15 to-accent/5 border border-accent/20 shadow-soft">
+          <Clock className="h-5 w-5 mx-auto text-accent mb-2" />
+          <div className="text-2xl font-bold text-accent mb-1">
+            {upcomingBookings.length}
+          </div>
+          <div className="text-xs text-muted-foreground font-medium">Upcoming</div>
+        </Card>
+        <Card className="p-4 text-center bg-gradient-to-br from-business-accent/15 to-business-accent/5 border border-business-accent/20 shadow-soft">
+          <PoundSterling className="h-5 w-5 mx-auto text-business-accent mb-2" />
+          <div className="text-2xl font-bold text-business-accent mb-1">
+            £{weeklyStats.revenue}
+          </div>
+          <div className="text-xs text-muted-foreground font-medium">This Week</div>
+        </Card>
+      </div>
+
+      {/* Today's Slots - Always Visible */}
+      <div className="px-3">
+        <Card className="p-5 bg-gradient-to-r from-background to-business/5 border border-business/20 shadow-soft">
+          <h3 className="font-semibold text-base mb-4 flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-business-primary" />
+            <span>Today's Slots</span>
+          </h3>
+          {todaySlots.length === 0 ? (
+            <div className="text-center py-6 text-muted-foreground">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-business-primary/20 to-business-accent/20 rounded-full flex items-center justify-center">
+                <Calendar className="h-8 w-8 text-business-primary" />
+              </div>
+              <p className="text-sm mb-3">No slots posted today</p>
+              <Button 
+                onClick={() => setShowSlotCreator(true)}
+                className="bg-gradient-to-r from-business-primary to-business-accent hover:from-business-accent hover:to-business-primary text-white rounded-lg px-6 py-2 shadow-medium"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create Your First Slot
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {todaySlots.map((slot, index) => (
+                <div key={slot.id} className="flex items-center justify-between p-3 bg-gradient-to-r from-background to-business/5 rounded-lg border border-business/10 shadow-soft">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-gradient-to-r from-business-primary to-business-accent"></div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{slot.service_name}</p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {formatTime(slot.start_time)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-business-accent">£{slot.price}</p>
+                    <Badge 
+                      variant={slot.is_booked ? "default" : "outline"} 
+                      className={slot.is_booked ? "bg-business-primary text-white" : "border-business-primary/50 text-business-primary"}
+                    >
+                      {slot.is_booked ? "Booked" : "Available"}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* Upcoming Bookings - Always Visible */}
+      <div className="px-3">
+        <Card className="p-5 bg-gradient-to-r from-background to-business/5 border border-business/20 shadow-soft">
+          <h3 className="font-semibold text-base mb-4 flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-business-primary" />
+            <span>Upcoming Bookings</span>
+          </h3>
+          
+          {upcomingBookings.length === 0 ? (
+            <div className="text-center py-6 text-muted-foreground">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-business-primary/20 to-business-accent/20 rounded-full flex items-center justify-center">
+                <BookOpen className="h-8 w-8 text-business-primary" />
+              </div>
+              <p className="text-sm">No upcoming bookings</p>
+              <p className="text-xs mt-1">Your next booking will appear here</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {upcomingBookings.slice(0, 3).map((booking, index) => (
+                <div key={booking.id} className="flex items-start justify-between p-3 bg-gradient-to-r from-background to-business/5 rounded-lg border border-business/10 shadow-soft">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-2 h-2 rounded-full bg-gradient-to-r from-business-primary to-business-accent"></div>
+                      <p className="font-semibold text-sm text-foreground">{booking.customer_name}</p>
+                    </div>
+                    <p className="text-sm text-business-accent font-medium">{booking.service_name}</p>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {formatDate(booking.booking_date)}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {formatTime(booking.start_time)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 items-end">
+                    <Badge 
+                      variant={booking.status === 'confirmed' ? 'default' : 'outline'} 
+                      className={booking.status === 'confirmed' ? "bg-business-primary text-white border-business-primary" : "border-business-primary/50 text-business-primary"}
+                    >
+                      {booking.status}
+                    </Badge>
+                    {booking.status === 'confirmed' && (
+                      <div className="flex gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-3 text-xs border-business-primary/30 hover:bg-business-primary/10"
+                          onClick={() => markBookingComplete(booking.id)}
+                        >
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Complete
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {upcomingBookings.length > 3 && (
+                <p className="text-xs text-muted-foreground text-center pt-2">
+                  +{upcomingBookings.length - 3} more bookings
+                </p>
+              )}
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* This Week Performance */}
+      <div className="px-3">
+        <Card className="p-5 bg-gradient-to-r from-business/5 to-business-accent/5 border border-business/20 shadow-soft">
+          <h3 className="font-semibold text-base mb-4 flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-business-primary" />
+            <span>This Week's Performance</span>
+          </h3>
+          <div className="grid grid-cols-1 gap-3">
+            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-business-primary/10 to-business-primary/5 rounded-lg border border-business-primary/20">
+              <div className="flex items-center gap-3">
+                <BookOpen className="h-5 w-5 text-business-primary" />
+                <span className="text-sm font-medium">Bookings</span>
+              </div>
+              <span className="text-lg font-bold text-business-primary">{weeklyStats.bookings}</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-business-accent/10 to-business-accent/5 rounded-lg border border-business-accent/20">
+              <div className="flex items-center gap-3">
+                <PoundSterling className="h-5 w-5 text-business-accent" />
+                <span className="text-sm font-medium">Revenue</span>
+              </div>
+              <span className="text-lg font-bold text-business-accent">£{weeklyStats.revenue}</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg border border-accent/20">
+              <div className="flex items-center gap-3">
+                <Star className="h-5 w-5 text-accent" />
+                <span className="text-sm font-medium">Top Service</span>
+              </div>
+              <span className="text-sm font-bold text-accent truncate max-w-[120px]">{weeklyStats.popularService}</span>
+            </div>
+          </div>
+        </Card>
       </div>
 
       {/* Quick Slot Creator Modal */}
@@ -295,235 +442,25 @@ const SimplifiedMobileBusinessDashboard = () => {
         />
       )}
 
-      {/* Bottom Navigation Tabs */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-md border-t border-border z-50">
-        <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-transparent p-2">
-            <TabsTrigger 
-              value="dashboard" 
-              className="flex flex-col gap-1 py-3 data-[state=active]:bg-business-primary/20 data-[state=active]:text-business-primary"
-            >
-              <Home className="h-4 w-4" />
-              <span className="text-xs">Dashboard</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="bookings" 
-              className="flex flex-col gap-1 py-3 data-[state=active]:bg-business-primary/20 data-[state=active]:text-business-primary"
-            >
-              <BookOpen className="h-4 w-4" />
-              <span className="text-xs">Bookings</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="profile" 
-              className="flex flex-col gap-1 py-3 data-[state=active]:bg-business-primary/20 data-[state=active]:text-business-primary"
-            >
-              <User className="h-4 w-4" />
-              <span className="text-xs">Profile</span>
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Dashboard Tab Content */}
-          <TabsContent value="dashboard" className="px-4 pb-4 space-y-4">
-            {/* Simple Analytics - Enhanced */}
-            <Card className="p-5 bg-gradient-to-r from-business/5 to-business-accent/5 border border-business/20 shadow-soft">
-              <h3 className="font-semibold text-base mb-4 flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-business-primary" />
-                <span className="bg-gradient-to-r from-business-primary to-business-accent bg-clip-text text-transparent">
-                  This Week's Performance
-                </span>
-              </h3>
-              <div className="grid grid-cols-1 gap-4">
-                <div className="flex items-center justify-between p-3 bg-gradient-to-r from-business-primary/10 to-business-primary/5 rounded-lg border border-business-primary/20">
-                  <div className="flex items-center gap-3">
-                    <BookOpen className="h-5 w-5 text-business-primary" />
-                    <span className="text-sm font-medium text-muted-foreground">Bookings</span>
-                  </div>
-                  <span className="text-lg font-bold text-business-primary">{weeklyStats.bookings}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-gradient-to-r from-business-accent/10 to-business-accent/5 rounded-lg border border-business-accent/20">
-                  <div className="flex items-center gap-3">
-                    <PoundSterling className="h-5 w-5 text-business-accent" />
-                    <span className="text-sm font-medium text-muted-foreground">Revenue</span>
-                  </div>
-                  <span className="text-lg font-bold text-business-accent">£{weeklyStats.revenue}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg border border-accent/20">
-                  <div className="flex items-center gap-3">
-                    <Star className="h-5 w-5 text-accent" />
-                    <span className="text-sm font-medium text-muted-foreground">Top Service</span>
-                  </div>
-                  <span className="text-sm font-bold text-accent truncate max-w-[120px]">{weeklyStats.popularService}</span>
-                </div>
-              </div>
-            </Card>
-
-            {/* Today's Slots - Enhanced */}
-            <Card className="p-5 bg-gradient-to-r from-background to-business/5 border border-business/20 shadow-soft">
-              <h3 className="font-semibold text-base mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-business-primary" />
-                <span>Today's Slots</span>
-              </h3>
-              {todaySlots.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-business-primary/20 to-business-accent/20 rounded-full flex items-center justify-center">
-                    <Calendar className="h-8 w-8 text-business-primary" />
-                  </div>
-                  <p className="text-sm mb-3">No slots posted today</p>
-                  <Button 
-                    onClick={() => setShowSlotCreator(true)}
-                    className="bg-gradient-to-r from-business-primary to-business-accent hover:from-business-accent hover:to-business-primary text-white rounded-lg px-6 py-2 shadow-medium"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Your First Slot
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {todaySlots.map((slot, index) => (
-                    <div key={slot.id} className="flex items-center justify-between p-3 bg-gradient-to-r from-background to-business/5 rounded-lg border border-business/10 shadow-soft hover:shadow-medium transition-all duration-200">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-business-primary to-business-accent"></div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{slot.service_name}</p>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {formatTime(slot.start_time)}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-bold text-business-accent">£{slot.price}</p>
-                        <Badge 
-                          variant={slot.is_booked ? "default" : "outline"} 
-                          className={slot.is_booked ? "bg-business-primary text-white" : "border-business-primary/50 text-business-primary"}
-                        >
-                          {slot.is_booked ? "Booked" : "Available"}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Card>
-          </TabsContent>
-
-          {/* Bookings Tab Content - Enhanced */}
-          <TabsContent value="bookings" className="px-4 pb-4 space-y-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-base flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-business-primary" />
-                Upcoming Bookings
-              </h3>
-            </div>
-            
-            {upcomingBookings.length === 0 ? (
-              <Card className="p-8 text-center bg-gradient-to-r from-background to-business/5 border border-business/20">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-business-primary/20 to-business-accent/20 rounded-full flex items-center justify-center">
-                  <BookOpen className="h-8 w-8 text-business-primary" />
-                </div>
-                <p className="text-sm text-muted-foreground">No upcoming bookings</p>
-                <p className="text-xs text-muted-foreground mt-1">Your next booking will appear here</p>
-              </Card>
-            ) : (
-              <div className="space-y-3">
-                {upcomingBookings.map((booking, index) => (
-                  <Card key={booking.id} className="p-4 bg-gradient-to-r from-background to-business/5 border border-business/20 shadow-soft hover:shadow-medium transition-all duration-200">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <div className="w-2 h-2 rounded-full bg-gradient-to-r from-business-primary to-business-accent"></div>
-                          <p className="font-semibold text-sm text-foreground">{booking.customer_name}</p>
-                        </div>
-                        <p className="text-sm text-business-accent font-medium">{booking.service_name}</p>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {formatDate(booking.booking_date)}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {formatTime(booking.start_time)}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-2 items-end">
-                        <Badge 
-                          variant={booking.status === 'confirmed' ? 'default' : 'outline'} 
-                          className={booking.status === 'confirmed' ? "bg-business-primary text-white border-business-primary" : "border-business-primary/50 text-business-primary"}
-                        >
-                          {booking.status}
-                        </Badge>
-                        {booking.status === 'confirmed' && (
-                          <div className="flex gap-1">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-3 text-xs border-business-primary/30 hover:bg-business-primary/10 hover:border-business-primary/50"
-                              onClick={() => markBookingComplete(booking.id)}
-                            >
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              Complete
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-3 text-xs border-business-accent/30 hover:bg-business-accent/10 hover:border-business-accent/50"
-                            >
-                              <MessageCircle className="h-3 w-3 mr-1" />
-                              Message
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Profile Tab Content - Enhanced */}
-          <TabsContent value="profile" className="px-4 pb-4 space-y-4">
-            <Card className="p-6 text-center bg-gradient-to-r from-business/5 to-business-accent/5 border border-business/20 shadow-soft">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-business-primary/20 to-business-accent/20 rounded-full flex items-center justify-center">
-                <User className="h-10 w-10 text-business-primary" />
-              </div>
-              <h3 className="font-bold text-lg mb-1 bg-gradient-to-r from-business-primary to-business-accent bg-clip-text text-transparent">
-                {profile?.name}
-              </h3>
-              <p className="text-sm text-muted-foreground mb-6 flex items-center justify-center gap-2">
-                <Star className="h-3 w-3 text-business-accent" />
-                Business Profile
-                <Star className="h-3 w-3 text-business-accent" />
-              </p>
-              
-              <div className="space-y-3">
-                <Button
-                  variant="outline"
-                  className="w-full h-12 border-business-primary/30 hover:bg-business-primary/10 hover:border-business-primary/50 text-business-primary font-medium"
-                  onClick={() => navigate('/profile')}
-                >
-                  Edit Business Info
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  className="w-full h-12 border-business-accent/30 hover:bg-business-accent/10 hover:border-business-accent/50 text-business-accent font-medium"
-                  onClick={() => navigate(`/business/${profile?.user_id}`)}
-                >
-                  View Public Profile
-                </Button>
-                
-                <Button
-                  className="w-full h-12 bg-gradient-to-r from-business-primary to-business-accent hover:from-business-accent hover:to-business-primary text-white font-medium shadow-medium"
-                >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share Profile
-                </Button>
-              </div>
-            </Card>
-          </TabsContent>
-        </Tabs>
+      {/* Bottom Navigation - Simplified */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-md border-t border-border z-50 p-4">
+        <div className="grid grid-cols-2 gap-3">
+          <Button
+            variant="outline"
+            className="h-12 border-business-primary/30 hover:bg-business-primary/10 text-business-primary font-medium"
+            onClick={() => navigate('/profile')}
+          >
+            <User className="h-4 w-4 mr-2" />
+            Edit Profile
+          </Button>
+          <Button
+            className="h-12 bg-gradient-to-r from-business-primary to-business-accent hover:from-business-accent hover:to-business-primary text-white font-medium"
+            onClick={() => navigate(`/business/${profile?.user_id}`)}
+          >
+            <Share2 className="h-4 w-4 mr-2" />
+            Share Profile
+          </Button>
+        </div>
       </div>
     </div>
   );
