@@ -407,195 +407,320 @@ const ResponsiveCustomerDashboard = () => {
   );
 
   return (
-    <div className="w-full">
-      <Tabs defaultValue="browse" className="w-full">
-        {/* Mobile-First Tab Navigation */}
-        <TabsList className="grid w-full grid-cols-4 mb-3 h-auto bg-muted/50">
-          <TabsTrigger value="browse" className="text-xs px-2 py-2 flex flex-col gap-1 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-            <Search className="h-4 w-4" />
-            <span>Browse</span>
-          </TabsTrigger>
-          <TabsTrigger value="bookings" className="text-xs px-2 py-2 flex flex-col gap-1 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-            <BookOpen className="h-4 w-4" />
-            <span>My Bookings</span>
-          </TabsTrigger>
-          <TabsTrigger value="favourites" className="text-xs px-2 py-2 flex flex-col gap-1 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-            <Heart className="h-4 w-4" />
-            <span>Favourites</span>
-          </TabsTrigger>
-          <TabsTrigger value="profile" className="text-xs px-2 py-2 flex flex-col gap-1 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-            <User className="h-4 w-4" />
-            <span>Profile</span>
-          </TabsTrigger>
-        </TabsList>
+    <div className="w-full space-y-4 pb-20 bg-gradient-to-br from-background via-background/95 to-primary/5 min-h-screen">
+      {/* Header with greeting */}
+      <div className="text-center py-4 px-4 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/5 rounded-xl mx-3 border border-primary/20 shadow-soft">
+        <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          Hello {profile?.name?.split(' ')[0] || 'there'} ✨
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Find your perfect appointment today!
+        </p>
+      </div>
 
-        {/* Browse Tab */}
-        <TabsContent value="browse" className="space-y-3">
-          {/* Search and Filters */}
-          <Card className="p-3 border-muted/50">
-            <div className="space-y-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search services..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-10"
-                />
-              </div>
-              
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full h-10">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">
-                  {filteredSlots.length} slots found
-                </span>
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                    className="h-7 px-2"
-                  >
-                    <List className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                    className="h-7 px-2"
-                  >
-                    <Grid3X3 className="h-3 w-3" />
-                  </Button>
-                </div>
+      {/* Quick Search - Most Important */}
+      <div className="px-3">
+        <Card className="p-4 bg-gradient-to-r from-background to-primary/5 border border-primary/20 shadow-soft">
+          <h3 className="font-semibold text-base mb-3 flex items-center gap-2">
+            <Search className="h-5 w-5 text-primary" />
+            <span>Find Available Slots</span>
+          </h3>
+          <div className="space-y-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search services or businesses..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 h-12 text-base"
+              />
+            </div>
+            
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full h-12">
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground font-medium">
+                {filteredSlots.length} slots available now
+              </span>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                  className="h-8 px-3"
+                >
+                  <List className="h-3 w-3 mr-1" />
+                  List
+                </Button>
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                  className="h-8 px-3"
+                >
+                  <Grid3X3 className="h-3 w-3 mr-1" />
+                  Grid
+                </Button>
               </div>
             </div>
-          </Card>
-
-          {/* Slots List/Grid */}
-          <div className="min-h-96">
-            {loading ? (
-              <div className="flex justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              </div>
-            ) : filteredSlots.length === 0 ? (
-              <Card className="p-8 text-center">
-                <p className="text-muted-foreground">No available slots found.</p>
-              </Card>
-            ) : (
-              <div className={
-                viewMode === 'grid' && window.innerWidth >= 640
-                  ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
-                  : "space-y-3"
-              }>
-                {filteredSlots.map((slot) => 
-                  viewMode === 'grid' && window.innerWidth >= 640 ? (
-                    <GridSlotCard key={slot.id} slot={slot} />
-                  ) : (
-                    <SlotCard key={slot.id} slot={slot} />
-                  )
-                )}
-              </div>
-            )}
           </div>
-        </TabsContent>
+        </Card>
+      </div>
 
-        {/* Bookings Tab */}
-        <TabsContent value="bookings" className="space-y-4">
-          <Card className="p-4">
-            <h3 className="text-lg font-semibold mb-4">My Bookings</h3>
-            <ScrollArea className="h-96">
-              {myBookings.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">No bookings found.</p>
-              ) : (
-                <div className="space-y-3">
-                  {myBookings.map((booking) => (
-                    <Card key={booking.id} className="p-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-medium">{booking.service.name}</h4>
-                            <p className="text-sm text-muted-foreground">with {booking.provider.name}</p>
-                          </div>
-                          <Badge variant={booking.status === 'confirmed' ? 'default' : 'secondary'}>
-                            {booking.status}
-                          </Badge>
+      {/* Available Slots - Always Visible */}
+      <div className="px-3">
+        <Card className="p-4 bg-gradient-to-r from-background to-primary/5 border border-primary/20 shadow-soft">
+          <h3 className="font-semibold text-base mb-4 flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-primary" />
+            <span>Available This Week</span>
+          </h3>
+          
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : filteredSlots.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center">
+                <Search className="h-8 w-8 text-primary" />
+              </div>
+              <p className="text-sm mb-2">No slots found</p>
+              <p className="text-xs">Try adjusting your search or category filter</p>
+            </div>
+          ) : (
+            <div className={
+              viewMode === 'grid' 
+                ? "grid grid-cols-2 gap-3"
+                : "space-y-3"
+            }>
+              {filteredSlots.slice(0, 8).map((slot) => 
+                viewMode === 'grid' ? (
+                  <Card key={slot.id} className="p-3 hover:shadow-medium transition-all duration-200 bg-gradient-to-br from-background to-primary/5 border border-primary/10">
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-foreground truncate text-sm">
+                            {slot.provider.business_name}
+                          </h4>
+                          <p className="text-xs text-primary font-medium truncate">
+                            {slot.service.name}
+                          </p>
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            {formatDate(booking.booking_date)}
+                        {slot.provider.rating > 0 && (
+                          <div className="flex items-center text-xs text-muted-foreground">
+                            <Star className="h-3 w-3 mr-1 fill-current text-yellow-400" />
+                            {slot.provider.rating.toFixed(1)}
                           </div>
-                          <div className="flex items-center">
-                            <Clock className="h-4 w-4 mr-1" />
-                            {formatTime(booking.start_time)}
-                          </div>
-                        </div>
-                        <div className="text-sm font-medium">£{booking.price}</div>
+                        )}
                       </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </Card>
-        </TabsContent>
+                      
+                      <div className="space-y-1 text-xs">
+                        <div className="flex items-center text-muted-foreground">
+                          <Calendar className="h-3 w-3 mr-1 text-primary" />
+                          <span className="truncate">{formatDate(slot.date)}</span>
+                        </div>
+                        <div className="flex items-center text-muted-foreground">
+                          <Clock className="h-3 w-3 mr-1 text-primary" />
+                          <span>{formatTime(slot.start_time)}</span>
+                        </div>
+                      </div>
 
-        {/* Favourites Tab */}
-        <TabsContent value="favourites" className="space-y-4">
-          <Card className="p-4">
-            <h3 className="text-lg font-semibold mb-4">Favourite Businesses</h3>
-            <ScrollArea className="h-96">
-              {favouriteBusinesses.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">No favourites yet.</p>
-              ) : (
-                <div className="space-y-3">
-                  {favouriteBusinesses.map((business) => (
-                    <Card key={business.id} className="p-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-medium">{business.provider.business_name}</h4>
-                            <p className="text-sm text-muted-foreground">{business.provider.business_category}</p>
-                          </div>
-                          {business.provider.rating > 0 && (
-                            <div className="flex items-center text-sm">
-                              <Star className="h-4 w-4 mr-1 fill-current text-yellow-400" />
-                              {business.provider.rating.toFixed(1)}
+                      <div className="flex items-center justify-between pt-1">
+                        <div className="font-semibold text-sm">
+                          {slot.discount_price ? (
+                            <div className="flex items-center gap-1">
+                              <span className="line-through text-muted-foreground text-xs">
+                                £{slot.price}
+                              </span>
+                              <span className="text-accent">
+                                £{slot.discount_price}
+                              </span>
                             </div>
+                          ) : (
+                            <span className="text-primary">£{slot.price}</span>
                           )}
                         </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          {business.provider.location}
+                        <Button 
+                          onClick={() => handleBookSlot(slot)}
+                          size="sm"
+                          className="text-xs px-2 h-7 bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary"
+                        >
+                          Book
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ) : (
+                  <Card key={slot.id} className="p-4 hover:shadow-medium transition-all duration-200 bg-gradient-to-r from-background to-primary/5 border border-primary/10">
+                    <div className="space-y-3">
+                      {/* Header */}
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-foreground truncate">
+                            {slot.provider.business_name}
+                          </h4>
+                          <p className="text-sm text-primary font-medium truncate">
+                            {slot.service.name}
+                          </p>
+                        </div>
+                        {slot.provider.rating > 0 && (
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Star className="h-4 w-4 mr-1 fill-current text-yellow-400" />
+                            {slot.provider.rating.toFixed(1)}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Details */}
+                      <div className="flex flex-col gap-2 text-sm">
+                        <div className="flex items-center text-muted-foreground">
+                          <Calendar className="h-4 w-4 mr-2 text-primary flex-shrink-0" />
+                          <span className="truncate">{formatDate(slot.date)}</span>
+                          <Clock className="h-4 w-4 ml-4 mr-1 text-primary flex-shrink-0" />
+                          <span>{formatTime(slot.start_time)}</span>
+                        </div>
+                        <div className="flex items-center text-muted-foreground">
+                          <MapPin className="h-4 w-4 mr-2 text-primary flex-shrink-0" />
+                          <span className="truncate">{slot.provider.location}</span>
                         </div>
                       </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </Card>
-        </TabsContent>
 
-        {/* Profile Tab */}
-        <TabsContent value="profile">
-          <ProfileTab />
-        </TabsContent>
-      </Tabs>
+                      {/* Price and Book Button */}
+                      <div className="flex items-center justify-between pt-2">
+                        <div className="font-bold text-lg">
+                          {slot.discount_price ? (
+                            <div className="flex items-center gap-2">
+                              <span className="line-through text-muted-foreground text-sm">
+                                £{slot.price}
+                              </span>
+                              <span className="text-accent">
+                                £{slot.discount_price}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-primary">£{slot.price}</span>
+                          )}
+                        </div>
+                        <Button 
+                          onClick={() => handleBookSlot(slot)}
+                          className="px-6 py-2 bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white font-medium shadow-medium"
+                        >
+                          Book Now
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                )
+              )}
+            </div>
+          )}
+          
+          {filteredSlots.length > 8 && (
+            <div className="text-center mt-4">
+              <Button variant="outline" className="border-primary/30 hover:bg-primary/10 text-primary">
+                View {filteredSlots.length - 8} More Slots
+              </Button>
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* My Upcoming Bookings - Always Visible */}
+      <div className="px-3">
+        <Card className="p-4 bg-gradient-to-r from-background to-accent/5 border border-accent/20 shadow-soft">
+          <h3 className="font-semibold text-base mb-4 flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-accent" />
+            <span>My Upcoming Bookings</span>
+          </h3>
+          
+          {myBookings.length === 0 ? (
+            <div className="text-center py-6 text-muted-foreground">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full flex items-center justify-center">
+                <BookOpen className="h-8 w-8 text-accent" />
+              </div>
+              <p className="text-sm">No upcoming bookings</p>
+              <p className="text-xs mt-1">Book your first appointment above!</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {myBookings.slice(0, 3).map((booking) => (
+                <div key={booking.id} className="flex items-start justify-between p-3 bg-gradient-to-r from-background to-accent/5 rounded-lg border border-accent/10 shadow-soft">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-2 h-2 rounded-full bg-gradient-to-r from-accent to-primary"></div>
+                      <p className="font-semibold text-sm text-foreground">{booking.service.name}</p>
+                    </div>
+                    <p className="text-sm text-accent font-medium">with {booking.provider.name}</p>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {formatDate(booking.booking_date)}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {formatTime(booking.start_time)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-accent">£{booking.price}</p>
+                    <Badge 
+                      variant={booking.status === 'confirmed' ? 'default' : 'outline'} 
+                      className={booking.status === 'confirmed' ? "bg-accent text-white border-accent" : "border-accent/50 text-accent"}
+                    >
+                      {booking.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+              {myBookings.length > 3 && (
+                <p className="text-xs text-muted-foreground text-center pt-2">
+                  +{myBookings.length - 3} more bookings
+                </p>
+              )}
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="px-3">
+        <Card className="p-4 bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/20 shadow-soft">
+          <h3 className="font-semibold text-base mb-3 flex items-center gap-2">
+            <Heart className="h-5 w-5 text-primary" />
+            <span>Quick Actions</span>
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              variant="outline"
+              className="h-12 border-primary/30 hover:bg-primary/10 text-primary font-medium flex items-center gap-2"
+            >
+              <Heart className="h-4 w-4" />
+              My Favourites
+            </Button>
+            <Button
+              variant="outline"
+              className="h-12 border-accent/30 hover:bg-accent/10 text-accent font-medium flex items-center gap-2"
+            >
+              <User className="h-4 w-4" />
+              My Profile
+            </Button>
+          </div>
+        </Card>
+      </div>
 
       {/* Booking Modal */}
       {selectedSlot && (
