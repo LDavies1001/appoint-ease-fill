@@ -85,10 +85,8 @@ const Dashboard = () => {
       <div className="px-3 py-4 pb-20">
         {profile.active_role === 'customer' ? (
           <ResponsiveCustomerDashboard />
-        ) : isMobile ? (
-          <SimplifiedMobileBusinessDashboard />
         ) : (
-          <ProviderDashboard />
+          <SimplifiedMobileBusinessDashboard />
         )}
       </div>
     </div>
